@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/00.01.a/JavaScript/jquery.js"
+       Sequence="11101"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/00.01.a/JavaScript/jquery-ui.js"
+       Sequence="11151"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/00.01.a/JavaScript/jquery.SPServices.js"
+       Sequence="11201"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/00.01.a/JavaScript/ssw.js"
+       Sequence="11301"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/00.01.a/JavaScript/jquery.SPEasyForms.js"
+       Sequence="11401"
+    />
+    <CustomAction
+         Location="ScriptLink"
+         ScriptBlock="$(window).bind('load', function() { $.spEasyForms.init(); });"
+         Sequence="11501"
+     />
+</Elements>

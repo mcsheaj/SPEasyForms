@@ -1,0 +1,45 @@
+;*** BEGIN **********************************************************
+;**                                                                **
+;** Automatically generated on: Sat Jun 21 12:17:06 2014           **
+;**                                                                **
+;** MakeCAB Version: 6.3.9600.16384                                 **
+;**                                                                **
+;*** BEGIN **********************************************************
+[disk list]
+1,Disk 1
+[cabinet list]
+1,1,SPEasyForms.wsp
+[file list]
+1,1,Manifest.xml,285
+1,1,SPEasyForms\Feature.xml,2477
+1,1,SPEasyForms\SPEasyFormsScriptLinks.xml,1203
+1,1,SPEasyForms\SPEasyFormsCustomActions.xml,4062
+1,1,SPEasyForms\SPEasyFormsAssets.xml,4312
+1,1,SPEasyForms\SPEasyFormsAssets\jquery.js,282766
+1,1,SPEasyForms\SPEasyFormsAssets\jquery-ui.js,450163
+1,1,SPEasyForms\SPEasyFormsAssets\jquery.SPServices.js,217322
+1,1,SPEasyForms\SPEasyFormsAssets\ssw.js,13500
+1,1,SPEasyForms\SPEasyFormsAssets\jquery.SPEasyForms.js,85825
+1,1,SPEasyForms\SPEasyFormsAssets\jquery-ui.css,30949
+1,1,SPEasyForms\SPEasyFormsAssets\jquery.ui.theme.css,17650
+1,1,SPEasyForms\SPEasyFormsAssets\ui-bg_flat_0_aaaaaa_40x100.png,180
+1,1,SPEasyForms\SPEasyFormsAssets\ui-bg_flat_55_fbec88_40x100.png,213
+1,1,SPEasyForms\SPEasyFormsAssets\ui-bg_glass_75_d0e5f5_1x400.png,124
+1,1,SPEasyForms\SPEasyFormsAssets\ui-bg_glass_85_dfeffc_1x400.png,155
+1,1,SPEasyForms\SPEasyFormsAssets\ui-bg_glass_95_fef1ec_1x400.png,119
+1,1,SPEasyForms\SPEasyFormsAssets\ui-bg_gloss-wave_55_5c9ccc_500x100.png,3457
+1,1,SPEasyForms\SPEasyFormsAssets\ui-bg_inset-hard_100_f5f8f9_1x100.png,104
+1,1,SPEasyForms\SPEasyFormsAssets\ui-bg_inset-hard_100_fcfdfd_1x100.png,112
+1,1,SPEasyForms\SPEasyFormsAssets\ui-icons_2e83ff_256x240.png,4369
+1,1,SPEasyForms\SPEasyFormsAssets\ui-icons_6da8d5_256x240.png,4369
+1,1,SPEasyForms\SPEasyFormsAssets\ui-icons_217bc0_256x240.png,4369
+1,1,SPEasyForms\SPEasyFormsAssets\ui-icons_469bdd_256x240.png,4369
+1,1,SPEasyForms\SPEasyFormsAssets\ui-icons_cd0a0a_256x240.png,4369
+1,1,SPEasyForms\SPEasyFormsAssets\ui-icons_d8e7f3_256x240.png,4369
+1,1,SPEasyForms\SPEasyFormsAssets\ui-icons_f9bd01_256x240.png,4369
+1,1,SPEasyForms\SPEasyFormsAssets\SPEasyFormsSettings.aspx,7242
+;*** END ************************************************************
+;**                                                                **
+;** Automatically generated on: Sat Jun 21 12:17:06 2014           **
+;**                                                                **
+;*** END ************************************************************

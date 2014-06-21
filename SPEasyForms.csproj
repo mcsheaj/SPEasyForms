@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CC09E273-AB49-4BF4-981B-89B593162B9B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SPEasyForms</RootNamespace>
+    <AssemblyName>SPEasyForms</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Elements\SPEasyFormsAssets.xml" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_flat_55_fbec88_40x100.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_glass_75_d0e5f5_1x400.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_glass_85_dfeffc_1x400.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_217bc0_256x240.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_469bdd_256x240.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_6da8d5_256x240.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_f9bd01_256x240.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\jquery-ui.css" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\jquery.ui.theme.css" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPServices.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\ssw.js" />
+    <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="Elements\SPEasyFormsCustomActions.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Elements\SPEasyFormsScriptLinks.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Features\SPEasyForms\Feature.xml" />
+    <Content Include="Package\Manifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Package\Build.bat" />
+    <None Include="Package\Package.ddf" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>cd ..\..\Package
+Build.bat</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
