@@ -227,6 +227,7 @@
 
             // if it looks like a form, apply transforms
             if (Object.keys(opt.rows).length > 0) {
+
                 $("#spEasyFormsContainersPre").remove();
                 $("#spEasyFormsContainersPost").remove();
 
@@ -571,7 +572,7 @@
                 label: 'Save'
             }).click(function () {
                 $.ajax({
-                    url: spContext.get().webRelativeUrl + "/spef-layout-" +
+                    url: spContext.get().webRelativeUrl + "/SiteAssets/spef-layout-" +
                         spContext.getCurrentListId(opt) + ".txt",
                     type: "PUT",
                     headers: {
@@ -931,12 +932,12 @@
         var opt = $.extend({}, spEasyForms.defaults, options);
         var result = [];
         var divId = "spEasyFormsAccordionDiv" + opt.index;
-        var divClass = "spEasyFormsAccordionDiv spEasyFormsAccordionDiv" + opt.index;
+        var divClass = "speasyforms-container speasyforms-accordion speasyforms-accordion" + opt.index;
         $("#" + opt.containerId).append("<div id='" + divId + "' class='" + divClass + "'></div>");
         $.each(opt.layout.fieldGroups, function (idx, fieldGroup) {
-            var itemClass = "spEasyFormsTabsItem spEasyFormsTabsItem" +
+            var itemClass = "speasyforms-accordion speasyforms-accordion" +
                 opt.index + "" + idx;
-            var tableClass = "spEasyFormsTabsTable spEasyFormsTabsTable" +
+            var tableClass = "speasyforms-accordions speasyforms-accordions" +
                 opt.index + "" + idx;
             var tableId = "spEasyFormsTabsTable" + opt.index + "" + idx;
             $("#" + divId).append("<h3>" + fieldGroup.name + "</h3>");
@@ -957,6 +958,39 @@
     master.containerImplementations.accordion = $.spEasyForms.accordion;
 
     ////////////////////////////////////////////////////////////////////////////
+    // Columns container implementation.
+    ////////////////////////////////////////////////////////////////////////////
+    $.spEasyForms.columns = Object.create(baseContainer);
+    $.spEasyForms.columns.containerType = "Columns";
+    $.spEasyForms.columns.transform = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var result = [];
+        var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
+        var outerTableClass = "speasyforms-container speasyforms-columns speasyforms-columns" + opt.index;
+        $("#" + opt.containerId).append("<table id='" + outerTableId +
+            "' class='" + outerTableClass + "'><tr></tr></table>");
+        $.each(opt.layout.fieldGroups, function (idx, fieldGroup) {
+            var itemClass = "speasyforms-columns speasyforms-columns" +
+                opt.index + "" + idx;
+            var tableClass = "speasyforms-columns speasyforms-columns" +
+                opt.index + "" + idx;
+            var tableId = "spEasyFormsColumnsTable" + opt.index + "" + idx;
+            $("#" + outerTableId).append(
+                "<td><table class='" + tableClass + "' id='" + tableId +
+                "'></table></td>");
+            $.each(fieldGroup.fields, function (fieldIdx, field) {
+                var currentRow = opt.rows[field.fieldInternalName];
+                result.push(field.fieldInternalName);
+                if (currentRow !== undefined) {
+                    currentRow.row.appendTo("#" + tableId);
+                }
+            });
+        });
+        return result;
+    };
+    master.containerImplementations.columns = $.spEasyForms.columns;
+
+    ////////////////////////////////////////////////////////////////////////////
     // Tabs container implementation.
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.tabs = Object.create(baseContainer);
@@ -965,16 +999,16 @@
         var opt = $.extend({}, spEasyForms.defaults, options);
         var result = [];
         var divId = "spEasyFormsTabDiv" + opt.index;
-        var divClass = "spEasyFormsTabsDiv spEasyFormsTabsDiv" + opt.index;
-        var listId = "spEasyFormsTabList" + opt.index;
-        var listClass = "spEasyFormsTabList spEasyFormsTabList" + opt.index;
+        var divClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" + opt.index;
+        var listId = "spEasyFormsTabsList" + opt.index;
+        var listClass = "speasyforms-tabs speasyforms-tabs" + opt.index;
         var containerDiv = $("#" + opt.containerId);
         containerDiv.append("<div id='" + divId + "' class='" + divClass +
             "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
         $.each(opt.layout.fieldGroups, function (idx, fieldGroup) {
-            var itemClass = "spEasyFormsTabsItem spEasyFormsTabsItem" +
+            var itemClass = "speasyforms-tabs speasyforms-tabs" +
                 opt.index + "" + idx;
-            var tableClass = "spEasyFormsTabsTable spEasyFormsTabsTable" +
+            var tableClass = "speasyforms-tabs speasyforms-tabs" +
                 opt.index + "" + idx;
             var tableId = "spEasyFormsTabsTable" + opt.index + "" + idx;
             $("#" + listId).append("<li class='" + itemClass +
