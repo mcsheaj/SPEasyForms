@@ -601,6 +601,8 @@
                             var implname = $("#containerType").val()[0].toLowerCase() +
                                 $("#containerType").val().substring(1);
                             var impl = master.containerImplementations[implname];
+                            opt.containerType = $("#containerType").val();
+                            $("#addMultiGroupContainerType").val(opt.containerType);
                             impl.settings(opt);
                         } else {
                             $("#chooseContainerError").html(
