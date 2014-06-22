@@ -33,7 +33,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Elements\SPEasyFormsAssets.xml" />
+    <Content Include="Elements\SPEasyFormsAssets.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_flat_55_fbec88_40x100.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_glass_75_d0e5f5_1x400.png" />
@@ -51,6 +53,7 @@
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_f9bd01_256x240.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\jquery-ui.css" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\jquery.ui.theme.css" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\speasyforms.css" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.js" />
@@ -65,7 +68,9 @@
     <Content Include="Elements\SPEasyFormsScriptLinks.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Features\SPEasyForms\Feature.xml" />
+    <Content Include="Features\SPEasyForms\Feature.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Package\Manifest.xml" />
   </ItemGroup>
   <ItemGroup>

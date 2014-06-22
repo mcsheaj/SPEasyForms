@@ -10,6 +10,7 @@
         <ElementManifest Location="SPEasyFormsScriptLinks.xml" />
         <ElementManifest Location="SPEasyFormsCustomActions.xml" />
         <ElementManifest Location="SPEasyFormsAssets.xml" />
+        <ElementFile Location="SPEasyFormsAssets\speasyforms.css" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui.css" />
         <ElementFile Location="SPEasyFormsAssets\jquery.ui.theme.css" />
 

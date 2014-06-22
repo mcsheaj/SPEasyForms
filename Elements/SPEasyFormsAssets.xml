@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <Module Name="SPEasyFormsAssetsCss" Url="Style Library/SPEasyFormsAssets/00.01.a/Css">
+        <File Path="SPEasyFormsAssets\speasyforms.css" Url="speasyforms.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+    </Module>
     <Module Name="SPEasyFormsAssetsCss" Url="Style Library/SPEasyFormsAssets/00.01.a/Css/jquery-ui-redmond">
         <File Path="SPEasyFormsAssets\jquery-ui.css" Url="jquery-ui.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.ui.theme.css" Url="jquery.ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

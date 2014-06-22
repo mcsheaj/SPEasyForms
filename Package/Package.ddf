@@ -17,6 +17,7 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\JavaScript\ssw.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.js
 
+..\Elements\SPEasyFormsAssets\Css\speasyforms.css
 
 ..\Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\jquery-ui.css
 ..\Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\jquery.ui.theme.css
