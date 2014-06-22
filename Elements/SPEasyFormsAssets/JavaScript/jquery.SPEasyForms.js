@@ -291,7 +291,10 @@
             this.transform(opt);
             $("#spEasyFormsOuterDiv").show();
 
-            $.each(this.hiddenObjects, function (ind, obj) {
+            var i;
+            var keys = Object.keys(this.hiddenObjects);
+            for (i = 0; i < keys.length; i++) {
+                var obj = this.hiddenObjects[keys[i]];
                 var container = $("td[data-containerIndex='" + obj.primaryIndex + "']");
                 if ("secondaryIndex" in obj) {
                     var table = $("table[data-tableIndex='" + obj.secondaryIndex + "']");
@@ -300,7 +303,8 @@
                 else {
                     container.find(".speasyforms-sortablefields").hide();
                 }
-            });
+            }
+
             this.initialized = true;
         },
 
@@ -312,8 +316,9 @@
                 var type = $(container).find("input[type='hidden'][id$='Hidden']").val();
                 var impl = type[0].toLowerCase() + type.substring(1);
                 if (impl in master.containerImplementations) {
-                    if (impl != 'masterContainer') {
+                    if (impl != 'defaultForm') {
                         opt.container = container;
+                        opt.containerType = type;
                         result.push(
                             master.containerImplementations[impl].toLayout(opt));
                     } else {
@@ -538,6 +543,7 @@
                 },
                 label: 'Expand'
             }).click(function () {
+                master.hiddenObjects = [];
                 $('.speasyforms-sortablefields').show();
                 return false;
             });
@@ -549,7 +555,10 @@
                 },
                 label: 'Collapse'
             }).click(function () {
-                master.hiddenObjects = [];
+                $("td.speasyforms-sortablecontainers").each(function () {
+                    var containerIndex = $(this).attr("data-containerIndex");
+                    master.hiddenObjects[containerIndex] = { primaryIndex: containerIndex };
+                });
                 $('.speasyforms-sortablefields').hide();
                 return false;
             });
@@ -732,7 +741,7 @@
         }
     };
     var master = $.spEasyForms.masterContainer;
-    master.containerImplementations.masterContainer = master;
+    master.containerImplementations.defaultForm = master;
 
     ////////////////////////////////////////////////////////////////////////////
     // This abstract container implements all of the editor functionality for any
