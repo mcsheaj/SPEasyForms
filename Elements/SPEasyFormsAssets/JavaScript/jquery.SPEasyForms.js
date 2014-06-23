@@ -280,6 +280,11 @@
                 }
             }
 
+            $.each(opt.rows, function (i, currentRow) {
+                currentRow.row.find("*[data-transformAdded='true']").remove();
+                currentRow.row.find("*[data-transformHidden='true']").attr("data-transformHidden", "false").show();
+            });
+
             opt.layout = this.getLayout(opt);
             $("td.speasyforms-sortablecontainers").parent().remove();
             opt.fieldsInUse = this.initContainers(opt);
@@ -982,6 +987,14 @@
                 var currentRow = opt.rows[field.fieldInternalName];
                 result.push(field.fieldInternalName);
                 if (currentRow !== undefined) {
+                    if (currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").length === 0) {
+                        var tdh = currentRow.row.find("td.ms-formlabel");
+                        currentRow.row.find("td.ms-formbody").prepend(
+                            tdh.html() + "<br data-transformAdded='true'/>");
+                        currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").attr("data-transformAdded", "true");
+                        tdh.hide();
+                        tdh.attr("data-transformHidden", "true");
+                    }
                     currentRow.row.appendTo("#" + tableId);
                 }
             });

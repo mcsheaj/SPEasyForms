@@ -2,3 +2,9 @@
     margin-top: 10px;
     margin-bottom: 20px;
 }
+h3.ms-standardheader {
+    font-weight: bold;
+}
+table.speasyforms-columns td {
+    vertical-align: top;
+}
