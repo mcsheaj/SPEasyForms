@@ -58,10 +58,10 @@ SPEasyForms Settings
         background-color: white !important;
     }
 
-        tr.speasyforms-sortablefields:hover {
-            cursor: move !important;
-            background: lightyellow !important;
-        }
+    tr.speasyforms-sortablefields:hover {
+        cursor: move !important;
+        background: lightyellow !important;
+    }
 
     table.speasyforms-sortablecontainers {
         width: 400px;
@@ -74,9 +74,9 @@ SPEasyForms Settings
         padding-bottom: 30px;
     }
 
-        td.speasyforms-sortablecontainers:hover {
-            background: #eeffee !important;
-        }
+    td.speasyforms-sortablecontainers:hover {
+        background: #eeffee !important;
+    }
 
     table.ms-formtable {
         //display: none;
@@ -130,6 +130,7 @@ SPEasyForms Settings
     .ui-accordion .ui-accordion-content {
         overflow: auto;
     }
+
     table.speasyforms-fieldsheader {
         
         width: 100%;
@@ -139,6 +140,13 @@ SPEasyForms Settings
     td.speasyforms-headercell {
         
         width: 50%;
+
+    }
+
+
+    .spEasyFormsOuterDiv {
+
+        display: none;
 
     }
 </style>

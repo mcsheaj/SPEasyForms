@@ -15,7 +15,6 @@
  * @license under the MIT license: 
  *    http://www.opensource.org/licenses/mit-license.php
  *
- * TBD - cleanup/normalize
  * TBD - make localizable?
  */
 (function ($, undefined) {
@@ -36,14 +35,6 @@
     // Main entry point is init.
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms = {
-        /*
-         * You must set useCache to false before any call to a function that
-         * uses the cross-page cache or a cross-paged cached object is already
-         * in use.  Most objects will only be loaded once within a page
-         * regardless of the value of this option, so once a cross-page cached
-         * object is in use it will continue to be used even if you set this
-         * option to false later.  
-         */
         defaults: {
             // use cross-page caching
             useCache: (typeof (ssw) != 'undefined' || typeof (ssw_init) != 'undefined'),
@@ -51,7 +42,9 @@
             maxWebCache: 6,
             // the maximum number of lists to cache per web
             maxListCache: 10,
+            // path to the jquery-ui style sheet
             jQueryUITheme: undefined,
+            // path to the spEasyForms style sheet
             css: undefined,
             // selector for an element in a form table row from which row 
             // will be obtained via .closest("tr")
@@ -67,7 +60,6 @@
             fieldTypeRegex: /FieldType=\"([^\"]*)\"/i,
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('fiddle') >= 0
-            //fieldDisplayNameAlt: /<nobr>([^<]*)</i,
         },
 
         /********************************************************************
@@ -80,38 +72,9 @@
          ********************************************************************/
         init: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-
-            if (typeof (cache) === 'undefined' && opt.cache !== undefined) {
-                cache = opt.cache;
-            }
-
-            if (typeof (ssw) == 'undefined' && typeof (ssw_init) != 'undefined') {
-                ssw_init(window, document);
-                if (typeof (cache) === 'undefined') {
-                    cache = ssw.get();
-                }
-            }
-
-            if(opt.jQueryUITheme === undefined) {
-                opt.jQueryUITheme = _spPageContextInfo.siteServerRelativeUrl + 
-                    '/Style Library/SPEasyFormsAssets/2014.00.01/Css/jquery-ui-redmond/jquery-ui.css';
-            }
-            $("head").append(
-                '<link rel="stylesheet" type="text/css" href="' + opt.jQueryUITheme + '">');
-
-            if (opt.css === undefined) {
-                opt.css = _spPageContextInfo.siteServerRelativeUrl +
-                    '/Style Library/SPEasyFormsAssets/2014.00.01/Css/speasyforms.css';
-            }
-            $("head").append(
-                '<link rel="stylesheet" type="text/css" href="' + opt.css + '">');
-
-            var groups = spContext.getGroups(opt);
-            var userInfo = spContext.getUserInformation(opt);
-            if (spContext.getCurrentListId(opt) !== undefined) {
-                var listCtx = spContext.getListContext(opt);
-            }
-
+            this.initCacheLibrary(opt);
+            this.loadDynamicStyles(opt);
+            opt.currentContext = spContext.get(opt);
             opt.rows = spRows.init(opt);
             if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0 ||
                 window.location.href.indexOf('fiddle') >= 0) {
@@ -122,6 +85,49 @@
             this.appendContext(opt);
 
             return this;
+        },
+    
+        /********************************************************************
+         * Initialize the ssw caching library.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         ********************************************************************/
+        initCacheLibrary: function(options) {
+            if (typeof (cache) === 'undefined' && options.cache !== undefined) {
+                cache = options.cache;
+            }
+
+            if (typeof (ssw) == 'undefined' && typeof (ssw_init) != 'undefined') {
+                ssw_init(window, document);
+                if (typeof (cache) === 'undefined') {
+                    cache = ssw.get();
+                }
+            }
+        },
+        
+        /********************************************************************
+         * Load the jquery-ui and spEasyForms style sheets.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         ********************************************************************/
+        loadDynamicStyles: function(options) {
+            if(options.jQueryUITheme === undefined) {
+                options.jQueryUITheme = _spPageContextInfo.siteServerRelativeUrl + 
+                    '/Style Library/SPEasyFormsAssets/2014.00.01/Css/jquery-ui-redmond/jquery-ui.css';
+            }
+            $("head").append(
+                '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
+
+            if (options.css === undefined) {
+                options.css = _spPageContextInfo.siteServerRelativeUrl +
+                    '/Style Library/SPEasyFormsAssets/2014.00.01/Css/speasyforms.css';
+            }
+            $("head").append(
+                '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
         },
 
         /*********************************************************************
@@ -135,7 +141,6 @@
         clearCachedContext: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             if (opt.useCache) {
-                spContext.ctx = undefined;
                 cache = {};
                 ssw.clear();
             }
@@ -152,15 +157,14 @@
         writeCachedContext: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             if (typeof (ssw) != 'undefined') {
-                var key = "spEasyForms_spContext_" + spContext.get().webRelativeUrl;
-
+                var key = "spEasyForms_spContext_" + opt.currentContext.webRelativeUrl;
                 if (!(key in cache)) {
                     if (Object.keys(cache).length >= opt.maxWebCache) {
                         ssw.remove(Object.keys(cache)[0]);
                     }
                 }
                 var obj = {};
-                obj[key] = spContext.get();
+                obj[key] = opt.currentContext;
                 ssw.add(obj);
             }
         },
@@ -180,8 +184,9 @@
                 if (opt.siteUrl) {
                     key += opt.siteUrl;
                 }
-                spContext.ctx = cache[key];
+                return cache[key];
             }
+            return undefined;
         },
 
         /*********************************************************************
@@ -220,6 +225,15 @@
         containerImplementations: {},
         hiddenObjects: {},
 
+        /*********************************************************************
+         * Transform the OOB form by looping through each layout part and calling
+         * the appropriate implementation to transform that part.
+         *
+         * @param {object} options - {
+         *     rows: {obect} - map of field internal names to a structured break down
+         *         of form rows, including the jQuery object representing the actual tr.
+         * }
+         *********************************************************************/
         transform: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var listctx = spContext.getListContext(opt);
@@ -227,7 +241,6 @@
 
             // if it looks like a form, apply transforms
             if (Object.keys(opt.rows).length > 0) {
-
                 $("#spEasyFormsContainersPre").remove();
                 $("#spEasyFormsContainersPost").remove();
 
@@ -255,17 +268,29 @@
             return fieldsInUse;
         },
 
+        /*********************************************************************
+         * Convert a layout to an editor properties panel by looping through each 
+         * layout part and calling the appropriate implementation's toEditor function.
+         *
+         * @param {object} options - {
+         *     rows: {obect} - map of field internal names to a structured break down
+         *         of form rows, including the jQuery object representing the actual tr.
+         *         If ommitted, call the current lists edit form and parse it to get rows.
+         * }
+         *********************************************************************/
         toEditor: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.listctx = spContext.getListContext(options);
 
+            // get the rows if not passed in
             var currentListId = spContext.getCurrentListId(opt);
             if (opt.rows === undefined || Object.keys(opt.rows).length === 0) {
                 if (currentListId !== undefined && currentListId.length > 0) {
+                    var context = spContext.get();
                     $.ajax({
                         async: false,
                         cache: false,
-                        url: spContext.get().webRelativeUrl +
+                        url: context.webAppUrl + context.webRelativeUrl +
                             "/_layouts/listform.aspx?PageType=6&ListId=" +
                         encodeURIComponent(currentListId).replace('-', '%2D') + "&RootFolder=",
                         complete: function (xData) {
@@ -280,15 +305,20 @@
                 }
             }
 
+            // undo changes to the row that might have been applied by the transforms,
+            // since they may have moved.
             $.each(opt.rows, function (i, currentRow) {
                 currentRow.row.find("*[data-transformAdded='true']").remove();
                 currentRow.row.find("*[data-transformHidden='true']").attr("data-transformHidden", "false").show();
             });
 
+            // draw the editor properties panel
             opt.layout = this.getLayout(opt);
             $("td.speasyforms-sortablecontainers").parent().remove();
             opt.fieldsInUse = this.initContainers(opt);
             this.initDefaultFieldGroup(opt);
+            
+            // wire buttons, click events, and sorting events
             this.wireContainerEvents(opt);
             if (!this.initialized) {
                 this.wireButtonEvents(opt);
@@ -297,6 +327,7 @@
             this.transform(opt);
             $("#spEasyFormsOuterDiv").show();
 
+            // hide any objects that were hidden when we started
             var i;
             var keys = Object.keys(this.hiddenObjects);
             for (i = 0; i < keys.length; i++) {
@@ -314,6 +345,12 @@
             this.initialized = true;
         },
 
+        /*********************************************************************
+         * Convert a an editor properties panel back to a layout, by looping through each 
+         * editor and calling the appropriate implementation's toLayout function.
+         *
+         * @returns {object} - the layout
+         *********************************************************************/        
         toLayout: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var containers = $("td.speasyforms-sortablecontainers");
@@ -338,6 +375,13 @@
             return result;
         },
 
+        /*********************************************************************
+         * Get the current layout for the current form, either by calling spContext
+         * to read it from the server, or pulling it from the hidden div where the
+         * working copy is stored.
+         *
+         * @returns {object} - the layout
+         *********************************************************************/        
         getLayout: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var currentLayout;
@@ -357,6 +401,12 @@
             return currentLayout;
         },
 
+        /*********************************************************************
+         * Loop through the layouts and call the implementation's toEditor function.
+         *
+         * @returns {object} - an array of all internal field names that are already
+         *     on one of the editors.
+         *********************************************************************/        
         initContainers: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var fieldsInUse = [];
@@ -387,6 +437,14 @@
             return fieldsInUse;
         },
 
+        /*********************************************************************
+         * Put any fields not on an editor on the default form editor.
+         *
+         * @param {object} options - {
+         *    fieldsInUse: [string] - array of field internal names that are on
+         *        one of the editors.
+         * }
+         *********************************************************************/        
         initDefaultFieldGroup: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var table = "";
@@ -397,7 +455,6 @@
                     });
                 }
             });
-
             $("#spEasyFormsFormTd").append(this.createFieldGroup({
                 trs: table,
                 id: "spEasyFormsFormTable",
@@ -406,6 +463,9 @@
             }));
         },
 
+        /*********************************************************************
+         * Wire the container sorting, clicking, and editor button events.
+         *********************************************************************/        
         wireContainerEvents: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
 
@@ -526,6 +586,9 @@
             });
         },
 
+        /*********************************************************************
+         * Wire the top/bottom button bar events.
+         *********************************************************************/        
         wireButtonEvents: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
 
@@ -576,8 +639,9 @@
                 },
                 label: 'Save'
             }).click(function () {
+                var ctx = spContext.get();
                 $.ajax({
-                    url: spContext.get().webRelativeUrl + "/SiteAssets/spef-layout-" +
+                    url: ctx.webAppUrl + ctx.webRelativeUrl + "/SiteAssets/spef-layout-" +
                         spContext.getCurrentListId(opt) + ".txt",
                     type: "PUT",
                     headers: {
@@ -596,6 +660,9 @@
             //$(".speasyforms-add").button({ disabled: true });
         },
 
+        /*********************************************************************
+         * Wire the dialog events.
+         *********************************************************************/        
         wireDialogEvents: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var chooseContainerOpts = {
@@ -661,6 +728,21 @@
             $('#editFieldGroupDialog').dialog(editFieldsTableOpts);
         },
 
+        /*********************************************************************
+         * Utility function to create a uniform container div for a given editor.
+         *
+         * @param {object} options - {
+         *    id: {string} - the element id to be used for the container td
+         *    containerIndex: {string} - an immutable container index that is assigned
+         *        to a container the first time it is created (generally containers.length,
+         *        but it really doesn't matter as long as it doesn't change); this is needed
+         *        to uniquely identify containers as they move around, for instance for the
+         *        hiddenObjects array.
+         *    title: {string} - usually the container implementation, it's displayed as the
+         *        header for the editor.
+         *    currentLayout: {object} - the layout configuration instance of the container.
+         * }
+         *********************************************************************/        
         appendContainer: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
 
@@ -702,6 +784,15 @@
             return result;
         },
 
+        /*********************************************************************
+         * Utility function to construct the HTML for a single row in a field groups
+         * table.
+         *
+         * @param {object} options - {
+         *    row: {string} - the row object representing the field, as returned
+         *        by spFieldRows.init(opt).
+         * }
+         *********************************************************************/        
         createFieldRow: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var r = opt.row;
@@ -715,6 +806,22 @@
             return tr;
         },
 
+        /*********************************************************************
+         * Utility function to construct the HTML the table representing a field
+         * group.
+         *
+         * @param {object} options - {
+         *    trs {string} - the HTML for all of the table rows for the table
+         *    name {string} - the name of the field group used for the header
+         *    id {string} - the element id for the table
+         *    tableIndex {string} - an immutable table index that is assigned
+         *        to a table the first time it is created (generally tables.length 
+         *        for the tables within the current editor/container, but it really 
+         *        doesn't matter as long as it doesn't change); this is needed
+         *        to uniquely identify tables as their containers move around, for instance for the
+         *        hiddenObjects array.
+         * }
+         *********************************************************************/        
         createFieldGroup: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var trs = opt.trs;
@@ -959,7 +1066,7 @@
         });
         $("#" + divId).accordion({ heightStyle: "auto" });
         return result;
-    }
+    };
     master.containerImplementations.accordion = $.spEasyForms.accordion;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1039,7 +1146,7 @@
         });
         $("#" + divId).tabs({ heightStyle: "auto" });
         return result;
-    }
+    };
     master.containerImplementations.tabs = $.spEasyForms.tabs;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1251,39 +1358,39 @@
          *********************************************************************/
         get: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            if (typeof (this.ctx) == 'undefined') {
-                if (typeof (opt.useCache) != 'undefined' && opt.useCache) {
-                    opt.siteUrl = this.getCurrentSiteUrl(opt);
-                    spEasyForms.readCachedContext(opt);
-                }
-                if (typeof (this.ctx) == 'undefined') {
-                    this.ctx = {};
-                    this.ctx.siteRelativeUrl = _spPageContextInfo.siteServerRelativeUrl;
-                    this.ctx.webAppUrl = window.location.href.substring(0,
-                        window.location.href.indexOf(window.location.pathname));
-                    this.ctx.webRelativeUrl = opt.siteUrl;
-                    this.ctx.webUIVersion = _spPageContextInfo.webUIVersion;
-                    if ("pageListId" in _spPageContextInfo) {
-                        this.ctx.listId = _spPageContextInfo.pageListId;
-                    } else {
-                        this.ctx.listId = "";
-                    }
-                    this.ctx.userId = _spPageContextInfo.userId;
-                    this.ctx.userProfile = {};
-                    this.ctx.userInformation = {};
-                    this.ctx.groups = {};
-                    this.ctx.listContexts = {};
-                    spEasyForms.writeCachedContext(opt);
-                    return this;
-                }
+            var result;
+            if (opt.useCache) {
+                opt.siteUrl = this.getCurrentSiteUrl(opt);
+                result = spEasyForms.readCachedContext(opt);
             }
-            this.ctx.webUIVersion = _spPageContextInfo.webUIVersion;
+            if (typeof (result) == 'undefined') {
+                result = {};
+                result.siteRelativeUrl = _spPageContextInfo.siteServerRelativeUrl;
+                result.webAppUrl = window.location.href.substring(0,
+                    window.location.href.indexOf(window.location.pathname));
+                result.webRelativeUrl = opt.siteUrl;
+                result.webUIVersion = _spPageContextInfo.webUIVersion;
+                if ("pageListId" in _spPageContextInfo) {
+                    result.listId = _spPageContextInfo.pageListId;
+                } else {
+                    result.listId = "";
+                }
+                result.userId = _spPageContextInfo.userId;
+                result.userProfile = {};
+                result.userInformation = {};
+                result.groups = {};
+                result.listContexts = {};
+            }
             if ("pageListId" in _spPageContextInfo) {
-                this.ctx.listId = _spPageContextInfo.pageListId;
+                result.listId = _spPageContextInfo.pageListId;
             } else {
-                this.ctx.listId = "";
+                result.listId = "";
             }
-            return this.ctx;
+            if (opt.useCache) {
+                opt.currentContext = result;
+                spEasyForms.writeCachedContext(opt);                
+            }
+            return result;
         },
 
         /*********************************************************************
@@ -1305,18 +1412,15 @@
          * }
          *********************************************************************/
         getUserInformation: function (options) {
-            this.get(options);
+            var currentContext = this.get(options);
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var user = (typeof (this.ctx.userInformation) != 'undefined' ?
-                        this.ctx.userInformation : {});
-            if (!('name' in this.ctx.userInformation) ||
-                this.ctx.userInformation.name.length === 0 ||
-                'userId' in opt) {
+            var user = ("userInformation" in currentContext ? currentContext.userInformation : {});
+            if (!opt.useCache || 'userId' in opt || $.isEmptyObject(user)) {
                 var id = (typeof (opt.userId) != 'undefined' ? "ID=" +
                           opt.userId + "&" : "");
                 $.ajax({
                     async: false,
-                    url: this.ctx.webRelativeUrl +
+                    url: currentContext.webAppUrl + currentContext.webRelativeUrl +
                         "/_layouts/userdisp.aspx?Force=True&" + id + new Date().getTime(),
                     complete: function (xData) {
                         $(xData.responseText).find(
@@ -1333,8 +1437,9 @@
                         });
                     }
                 });
-                if (typeof (opt.userId) === 'undefined') {
-                    this.ctx.userInformation = user;
+                if (opt.useCache && !("userId" in opt)) {
+                    currentContext.userInformation = user;
+                    opt.currentContext = currentContext;
                     $.spEasyForms.writeCachedContext(opt);
                 }
             }
@@ -1363,29 +1468,26 @@
          * }
          *********************************************************************/
         getUserProfile: function (options) {
-            this.get(options);
+            var currentContext = this.get(options);
             var opt = $.extend({}, spEasyForms.defaults, options);
-            var user = (typeof (this.ctx.userProfile) != 'undefined' ?
-                        this.ctx.userProfile : {});
-            if (typeof (this.ctx.userProfile.accountName) == 'undefined' ||
-                (typeof (opt.accountName) != 'undefined' && opt.accountName.length > 0)) {
+            var user = ("userProfile" in currentContext ? currentContext.userProfile : {});
+            if (!opt.useCache || "accountName" in opt || $.isEmptyObject(user)) {
                 var params = {
                     operation: 'GetUserProfileByName',
                     async: false,
                     completefunc: function (xData, Status) {
-                        $(xData.responseXML).SPFilterNode(
-                            "PropertyData").each(function () {
-                                var name = $(this).find("Name").text().replace(
-                                    "SPS-", "");
-                                name = name[0].toLowerCase() + name.substring(
-                                1);
-                                user[name] = $(this).find("Value").text();
-                            });
+                        $(xData.responseXML).SPFilterNode("PropertyData").each(function () {
+                            var name = $(this).find("Name").text().replace(
+                                "SPS-", "");
+                            name = name[0].toLowerCase() + name.substring(1);
+                            user[name] = $(this).find("Value").text();
+                        });
                     }
                 };
                 $().SPServices(params);
-                if (typeof (opt.accountName) == 'undefined') {
-                    this.ctx.userProfile = user;
+                if (opt.useCache && !("accountName" in opt)) {
+                    currentContext.userProfile = user;
+                    opt.currentContext = currentContext;
                     spEasyForms.writeCachedContext(opt);
                 }
             }
@@ -1409,21 +1511,17 @@
          * }
          *********************************************************************/
         getGroups: function (options) {
-            this.get(options);
+            var currentContext = this.get(options);
             var opt = $.extend({}, spEasyForms.defaults, options);
-            var groups = ("groups" in this.ctx ? this.ctx.groups : {});
-            if (("accountName" in opt && opt.accountName.length > 0) ||
-                $.isEmptyObject(groups)) {
+            var groups = ("groups" in currentContext ? currentContext.groups : {});
+            if (!opt.useCache || "accountName" in opt || $.isEmptyObject(groups)) {
                 $().SPServices({
                     operation: "GetGroupCollectionFromUser",
-                    userLoginName: (
-                    ("accountName" in opt && opt.accountName.length > 0) ? opt.accountName :
-                        this.getUserInformation().name),
+                    userLoginName: (("accountName" in opt && opt.accountName.length > 0) ? 
+                        opt.accountName : this.getUserInformation(opt).name),
                     async: false,
                     completefunc: function (xData, Status) {
-                        $(xData.responseXML).find("Group").each(
-
-                        function () {
+                        $(xData.responseXML).find("Group").each(function () {
                             group = {};
                             group.name = $(this).attr("Name");
                             group.id = $(this).attr("ID");
@@ -1432,8 +1530,9 @@
                         });
                     }
                 });
-                if (!("loginName" in opt) || opt.loginName.length < 1) {
-                    this.ctx.groups = groups;
+                if (opt.useCache && (!("accountName" in opt) || opt.accountName.length < 1)) {
+                    currentContext.groups = groups;
+                    opt.currentContext = currentContext;
                     spEasyForms.writeCachedContext(opt);
                 }
             }
@@ -1458,41 +1557,39 @@
          * }
          *********************************************************************/
         getListContext: function (options) {
-            this.get(options);
+            var currentContext = this.get(options);
             var opt = $.extend({}, spEasyForms.defaults, options);
-            opt.listId = this.getCurrentListId();
+            opt.currentContext = currentContext;
+            opt.listId = this.getCurrentListId(opt);
             if (opt.listId === undefined || opt.listId.length === 0) {
                 return undefined;
             }
-            if (opt.listId in this.ctx.listContexts) {
-                return this.ctx.listContexts[opt.listId];
+            if (opt.useCache && opt.listId in currentContext.listContexts) {
+                return currentContext.listContexts[opt.listId];
             } else {
                 result = {};
                 result.fields = {};
                 $.ajax({
                     async: false,
-                    url: this.ctx.webRelativeUrl +
-                        "/_layouts/listform.aspx?PageType=6&ListId=" +
-                        opt.listId + "&RootFolder=",
+                    url: currentContext.webAppUrl + currentContext.webRelativeUrl +
+                        "/_layouts/listform.aspx?PageType=6&ListId=" + opt.listId + "&RootFolder=",
                     complete: function (xData) {
-                        $(xData.responseText).find(
-                            "table.ms-formtable td.ms-formbody").each(
-
-                        function () {
+                        $(xData.responseText).find("table.ms-formtable td.ms-formbody").each(function () {
                             var tr = $(this).closest("tr");
                             var fieldRef = utils.row2FieldRef(tr);
                             result.fields[fieldRef.internalName] = fieldRef;
-                            result.fields[fieldRef.displayName] = fieldRef;
                         });
                     }
                 });
-                var listCount = Object.keys(this.ctx.listContexts).length;
-                if (listCount >= opt.maxListCache) {
-                    delete this.ctx.listContexts[
-                    Object.keys(this.ctx.listContexts)[0]];
+                if (opt.useCache) {
+                    var listCount = Object.keys(currentContext.listContexts).length;
+                    if (listCount >= opt.maxListCache) {
+                        delete currentContext.listContexts[Object.keys(currentContext.listContexts)[0]];
+                    }
+                    currentContext.listContexts[opt.listId] = result;
+                    opt.currentContext = currentContext;
+                    spEasyForms.writeCachedContext(opt);
                 }
-                this.ctx.listContexts[opt.listId] = result;
-                spEasyForms.writeCachedContext(opt);
                 return result;
             }
         },
@@ -1511,21 +1608,26 @@
          *********************************************************************/
         getLayout: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            var listctx = this.getListContext(opt);
-            if (listctx === undefined) {
-                return undefined;
-            }
-            if (listctx.layout !== undefined) {
-                return listctx.layout;
-            }
-            opt.listId = this.getCurrentListId();
+            opt.currentContext = this.get(opt);
+            opt.listId = this.getCurrentListId(opt);
             if (opt.listId === undefined || opt.listId.length === 0) {
                 return undefined;
+            }            
+            var listctx;
+            if (opt.listId in opt.currentContext.listContexts) {
+                listctx = opt.currentContext[opt.listId];
             }
+            if (listctx === undefined) {
+                listctx = this.getListContext(opt);
+            }
+            if (listctx !== undefined && listctx.layout !== undefined) {
+                return listctx.layout;
+            }
+
             var resultText = '';
             $.ajax({
                 type: "GET",
-                url: spContext.get().webRelativeUrl + "/SiteAssets/spef-layout-" +
+                url: opt.currentContext.webAppUrl + opt.currentContext.webRelativeUrl + "/SiteAssets/spef-layout-" +
                     opt.listId + ".txt",
                 headers: {
                     "Content-Type": "text/plain"
@@ -1558,10 +1660,17 @@
          *********************************************************************/
         getCurrentListId: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
+            var currentContext;
+            if("currentContext" in opt) {
+                currentContext = opt.currentContext;
+            }
+            else {
+                currentContext = this.get(opt);
+            }
             if (!("listId" in opt)) {
                 opt.listId = utils.getRequestParameters().ListId;
                 if (opt.listId === undefined) {
-                    opt.listId = this.ctx.listId;
+                    opt.listId = currentContext.listId;
                 }
             }
             return opt.listId;
@@ -1585,7 +1694,7 @@
                 if (opt.siteUrl === undefined) {
                     opt.siteUrl = _spPageContextInfo.webServerRelativeUrl;
                 } else {
-                    a = document.createElement("a");
+                    var a = document.createElement("a");
                     a.href = opt.siteUrl;
                     opt.siteUrl = '/' + a.pathname;
                 }
@@ -1669,12 +1778,14 @@
          *********************************************************************/
         getRequestParameters: function () {
             var result = {};
-            var nvPairs = window.location.search.slice(
-            window.location.search.indexOf('?') + 1).split('&');
-            for (var i = 0; i < nvPairs.length; i++) {
-                var nvPair = nvPairs[i].split('=', 2);
-                if (nvPair.length == 2) {
-                    result[nvPair[0]] = decodeURIComponent(nvPair[1]);
+            if(window.location.search.length > 0 && window.location.search.indexOf('?') >= 0) {
+                var nvPairs = window.location.search.slice(
+                    window.location.search.indexOf('?') + 1).split('&');
+                for (var i = 0; i < nvPairs.length; i++) {
+                    var nvPair = nvPairs[i].split('=', 2);
+                    if (nvPair.length == 2) {
+                        result[nvPair[0]] = decodeURIComponent(nvPair[1]);
+                    }
                 }
             }
             return result;
@@ -1682,4 +1793,5 @@
     };
     var utils = $.spEasyForms.utilities;
 })(jQuery);
+
 
