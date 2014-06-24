@@ -191,7 +191,7 @@
 
         /*********************************************************************
          * Append a dump of all of the cached context information to the body
-         * of the current page.
+         * of the current page if defaults.verbose equals true.
          *
          * @param {object} options - {
          *     // see the definition of defaults for options
@@ -865,6 +865,17 @@
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.baseContainer = {
 
+        /*********************************************************************
+         * Convert the layout to an editor for any container containing one or 
+         * more field groups.
+         *
+         * @param {object} options = {
+         *     parentId {string} - the id of the outer div for the container
+         *     index {string} - one up index of the container, use to create unique ids
+         *     rows [object] - array of objects representing rows in the form
+         *     layout {object} - object representing the configuration for this container
+         * }
+         *********************************************************************/
         toEditor: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var parent = opt.parentId;
@@ -915,6 +926,11 @@
             return result;
         },
 
+        /*********************************************************************
+         * Convert the editor back to a layout.
+         *
+         * @returns {object} - the layout
+         *********************************************************************/
         toLayout: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var result = {
@@ -941,6 +957,9 @@
             return result;
         },
 
+        /*********************************************************************
+         * Launch the settings dialog for this container.
+         *********************************************************************/
         settings: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             $("#addFieldGroupNames").val("");
@@ -948,6 +967,10 @@
             $("#addMultiGroupContainerDialog").dialog("open");
         },
 
+        /*********************************************************************
+         * Wire the initial configuration and add field group dialogs for this
+         * container.
+         *********************************************************************/
         wireDialogEvents: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
 
