@@ -132,22 +132,19 @@ SPEasyForms Settings
     }
 
     table.speasyforms-fieldsheader {
-        
         width: 100%;
-    
     }
     
     td.speasyforms-headercell {
-        
         width: 50%;
-
     }
 
-
     .spEasyFormsOuterDiv {
-
         display: none;
+    }
 
+    button.ui-button-icon-only {
+        font-size: 5px;
     }
 </style>
 </asp:content>
@@ -196,6 +193,11 @@ SPEasyForms Settings
                         <textarea id='addFieldGroupNames2' rows='5' cols='50'></textarea>
                         <input type='hidden' id='addFieldGroupsContainerId' value='' />
                         <div id='addFieldGroupsToContainerDialogError' class='speasyforms-error'></div>
+                    </div>
+                    <div id='layoutSavedDialog' class='speasyforms-dialogdiv' title='Configuration Saved'>
+
+                        <span>Your configuration was successfully saved.</span>
+
                     </div>
                 </div>
             </td>

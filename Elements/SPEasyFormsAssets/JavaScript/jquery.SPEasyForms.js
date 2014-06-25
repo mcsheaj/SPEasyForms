@@ -2,7 +2,7 @@
  * SPEasyForms - modify SharePoint forms using jQuery (i.e. put fields on 
  * tabs, show/hide fields, validate field values, etc.)
  *
- * @version 2014.00.01
+ * @version 2014.00.02
  * @requires jQuery v1.8.3 (I intend to test it with later 1.x versions
  *     but have not done so yet)
  * @requires jQuery-ui v1.9.2 (I intend to test it with later 1.x 
