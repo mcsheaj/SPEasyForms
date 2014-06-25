@@ -3,8 +3,17 @@
     margin-bottom: 20px;
 }
 h3.ms-standardheader {
-    font-weight: bold;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
 }
 table.speasyforms-columns td {
     vertical-align: top;
+}
+.speasyforms-tabvalidationerror {
+    border-top: 1px solid red;
+    border-left: 1px solid red;
+    border-right: 1px solid red;
+}
+.speasyforms-accordionvalidationerror {
+    border: 1px solid red;
 }

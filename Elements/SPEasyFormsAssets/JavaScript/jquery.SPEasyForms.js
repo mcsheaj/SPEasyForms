@@ -117,14 +117,14 @@
         loadDynamicStyles: function(options) {
             if(options.jQueryUITheme === undefined) {
                 options.jQueryUITheme = _spPageContextInfo.siteServerRelativeUrl + 
-                    '/Style Library/SPEasyFormsAssets/2014.00.01/Css/jquery-ui-redmond/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.02/Css/jquery-ui-redmond/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
                 options.css = _spPageContextInfo.siteServerRelativeUrl +
-                    '/Style Library/SPEasyFormsAssets/2014.00.01/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.02/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -372,6 +372,35 @@
                     }
                 }
             });
+            return result;
+        },
+        
+        /*********************************************************************
+         * Called on submit.  Overridden from core.js to allow containers to 
+         * perform actions on submit (like highlight tabs with validation errors
+         * and select the first tab with validation errors).
+         *
+         * @returns {bool} - true if the submit should proceed, false if it should
+         *     be cancelled.
+         *********************************************************************/        
+        preSaveItem: function() {
+            var result = true;
+            if(SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
+                var opt = $.extend({}, spEasyForms.defaults, {});
+                var layout = this.getLayout(opt);
+                $.each(layout, function(index, current) {
+                    if (layout.containerType != 'DefaultForm') {
+                        var containerType = current.containerType[0].toLowerCase() +
+                            current.containerType.substring(1);
+                        if(containerType != "defaultForm") {
+                            var impl = master.containerImplementations[containerType];
+                            opt.index = index;
+                            opt.layout = current;
+                            result = result && impl.preSaveItem(opt);
+                        }
+                    }
+                });
+            }
             return result;
         },
 
@@ -1063,6 +1092,7 @@
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.accordion = Object.create(baseContainer);
     $.spEasyForms.accordion.containerType = "Accordion";
+    
     $.spEasyForms.accordion.transform = function (options) {
         var opt = $.extend({}, spEasyForms.defaults, options);
         var result = [];
@@ -1072,10 +1102,11 @@
         $.each(opt.layout.fieldGroups, function (idx, fieldGroup) {
             var itemClass = "speasyforms-accordion speasyforms-accordion" +
                 opt.index + "" + idx;
-            var tableClass = "speasyforms-accordions speasyforms-accordions" +
+            var tableClass = "speasyforms-accordion speasyforms-accordion" +
                 opt.index + "" + idx;
-            var tableId = "spEasyFormsTabsTable" + opt.index + "" + idx;
-            $("#" + divId).append("<h3>" + fieldGroup.name + "</h3>");
+            var tableId = "spEasyFormsAccordionTable" + opt.index + "" + idx;
+            var headerId = "spEasyFormsAccordionHeader" + opt.index + "" + idx;
+            $("#" + divId).append("<h3 id='" + headerId + "' class='" + tableClass + "'>" + fieldGroup.name + "</h3>");
             $("#" + divId).append(
                 "<div><table class='" + tableClass + "' id='" + tableId +
                 "'></table></div>");
@@ -1090,6 +1121,26 @@
         $("#" + divId).accordion({ heightStyle: "auto" });
         return result;
     };
+    
+    $.spEasyForms.accordion.preSaveItem = function(options) {
+        var opt = $.extend({}, spEasyForms.defaults, options);
+        var divId = "spEasyFormsAccordionDiv" + opt.index;
+        var selected = false;
+        $("#" + divId).find("table.speasyforms-accordion").each(function(idx, content) {
+            if ($(content).find(".ms-formbody span.ms-formvalidation").length > 0) {
+                $("#spEasyFormsAccordionHeader" + opt.index + "" + idx).addClass("speasyforms-accordionvalidationerror");
+                if(!selected) {
+                    $("#" + divId).accordion({ active: idx });
+                    selected = true;
+                }
+            }
+            else {
+                $("#spEasyFormsAccordionHeader" + opt.index + "" + idx).removeClass("speasyforms-accordionvalidationerror");
+            }
+        });
+        return true;
+    };
+
     master.containerImplementations.accordion = $.spEasyForms.accordion;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1097,6 +1148,7 @@
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.columns = Object.create(baseContainer);
     $.spEasyForms.columns.containerType = "Columns";
+    
     $.spEasyForms.columns.transform = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
         var result = [];
@@ -1131,6 +1183,11 @@
         });
         return result;
     };
+        
+    $.spEasyForms.columns.preSaveItem = function(options) {
+        return true;
+    };
+
     master.containerImplementations.columns = $.spEasyForms.columns;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1138,6 +1195,7 @@
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.tabs = Object.create(baseContainer);
     $.spEasyForms.tabs.containerType = "Tabs";
+    
     $.spEasyForms.tabs.transform = function (options) {
         var opt = $.extend({}, spEasyForms.defaults, options);
         var result = [];
@@ -1148,6 +1206,12 @@
         var containerDiv = $("#" + opt.containerId);
         containerDiv.append("<div id='" + divId + "' class='" + divClass +
             "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
+        var mostFields = 0;
+        $.each(opt.layout.fieldGroups, function (idx, fieldGroup) {
+            if(fieldGroup.fields.length > mostFields) {
+                mostFields = fieldGroup.fields.length;
+            }
+        });
         $.each(opt.layout.fieldGroups, function (idx, fieldGroup) {
             var itemClass = "speasyforms-tabs speasyforms-tabs" +
                 opt.index + "" + idx;
@@ -1166,10 +1230,33 @@
                     currentRow.row.appendTo("#" + tableId);
                 }
             });
+            for(var i=fieldGroup.fields.length; i<mostFields; i++) {
+                $("<tr><td><br /><br /></td></tr>").appendTo("#" + tableId);
+            }
         });
         $("#" + divId).tabs({ heightStyle: "auto" });
         return result;
     };
+    
+    $.spEasyForms.tabs.preSaveItem = function(options) {
+        var opt = $.extend({}, spEasyForms.defaults, options);
+        var divId = "spEasyFormsTabDiv" + opt.index;
+        var selected = false;
+        $("#" + divId).find("table.speasyforms-tabs").each(function(idx, tab) {
+            if ($(tab).find(".ms-formbody span.ms-formvalidation").length > 0) {
+                $("a[href$='#spEasyFormsTabsTable" + opt.index + "" + idx + "']").addClass("speasyforms-tabvalidationerror");
+                if (!selected) {
+                    $("#" + divId).tabs('select', idx);
+                    selected = true;
+                }
+            }
+            else {
+                $("a[href$='#spEasyFormsTabsTable" + opt.index + "" + idx + "']").removeClass("speasyforms-tabvalidationerror");                
+            }
+        });
+        return true;
+    };
+
     master.containerImplementations.tabs = $.spEasyForms.tabs;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1381,28 +1468,30 @@
          *********************************************************************/
         get: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            var result;
-            if (opt.useCache) {
-                opt.siteUrl = this.getCurrentSiteUrl(opt);
-                result = spEasyForms.readCachedContext(opt);
-            }
-            if (typeof (result) == 'undefined') {
-                result = {};
-                result.siteRelativeUrl = _spPageContextInfo.siteServerRelativeUrl;
-                result.webAppUrl = window.location.href.substring(0,
-                    window.location.href.indexOf(window.location.pathname));
-                result.webRelativeUrl = opt.siteUrl;
-                result.webUIVersion = _spPageContextInfo.webUIVersion;
-                if ("pageListId" in _spPageContextInfo) {
-                    result.listId = _spPageContextInfo.pageListId;
-                } else {
-                    result.listId = "";
+            var result = this.ctx;
+            if(result === undefined) {
+                if (opt.useCache) {
+                    opt.siteUrl = this.getCurrentSiteUrl(opt);
+                    result = spEasyForms.readCachedContext(opt);
                 }
-                result.userId = _spPageContextInfo.userId;
-                result.userProfile = {};
-                result.userInformation = {};
-                result.groups = {};
-                result.listContexts = {};
+                if (typeof (result) == 'undefined') {
+                    result = {};
+                    result.siteRelativeUrl = _spPageContextInfo.siteServerRelativeUrl;
+                    result.webAppUrl = window.location.href.substring(0,
+                        window.location.href.indexOf(window.location.pathname));
+                    result.webRelativeUrl = opt.siteUrl;
+                    result.webUIVersion = _spPageContextInfo.webUIVersion;
+                    if ("pageListId" in _spPageContextInfo) {
+                        result.listId = _spPageContextInfo.pageListId;
+                    } else {
+                        result.listId = "";
+                    }
+                    result.userId = _spPageContextInfo.userId;
+                    result.userProfile = {};
+                    result.userInformation = {};
+                    result.groups = {};
+                    result.listContexts = {};
+                }
             }
             if ("pageListId" in _spPageContextInfo) {
                 result.listId = _spPageContextInfo.pageListId;
@@ -1413,6 +1502,7 @@
                 opt.currentContext = result;
                 spEasyForms.writeCachedContext(opt);                
             }
+            this.ctx = result;
             return result;
         },
 
@@ -1637,13 +1727,13 @@
                 return undefined;
             }            
             var listctx;
-            if (opt.listId in opt.currentContext.listContexts) {
+            if (opt.useCache && opt.listId in opt.currentContext.listContexts) {
                 listctx = opt.currentContext[opt.listId];
             }
             if (listctx === undefined) {
                 listctx = this.getListContext(opt);
             }
-            if (listctx !== undefined && listctx.layout !== undefined) {
+            if (opt.useCache && listctx !== undefined && listctx.layout !== undefined) {
                 return listctx.layout;
             }
 
@@ -1667,7 +1757,12 @@
                     }
                 }
             });
-            return utils.parseJSON(resultText);
+            var result = utils.parseJSON(resultText);
+            if (opt.useCache) {
+                opt.currentContext.listContexts[opt.listId].layout = result;
+                spEasyForms.writeCachedContext(opt);
+            }
+            return result;
         },
 
         /*********************************************************************
@@ -1815,6 +1910,351 @@
         }
     };
     var utils = $.spEasyForms.utilities;
+    
+    if (typeof(PreSaveItem) !== 'undefined') {
+        var originalPreSaveItem = PreSaveItem;
+        PreSaveItem = function() {
+            var result = master.preSaveItem();
+            if(result && "function" === typeof(OriginalPreSaveItem)) {
+                return originalPreSaveItem();
+            }
+            return result;
+        };
+    }
 })(jQuery);
 
 
+if (window.location.href.indexOf('fiddle') >= 0) {
+    _spPageContextInfo = {
+        siteServerRelativeUrl: "/sites/devjmcshea",
+        webServerRelativeUrl: "/sites/devjmcshea",
+        webUIVersion: 15,
+        pageListId: "{8fcf63aa-827d-4b9b-88bb-958abb8bf105}",
+        userId: 9
+    };
+    var hardCodedCache = {
+        "spEasyForms_spContext_/sites/devjmcshea": {
+            "siteRelativeUrl": "/sites/devjmcshea",
+            "webAppUrl": "https://flexpointtech.sharepoint.com",
+            "webRelativeUrl": "/sites/devjmcshea",
+            "webUIVersion": 15,
+            "listId": "{8fcf63aa-827d-4b9b-88bb-958abb8bf105}",
+            "userId": 9,
+            "userProfile": {},
+            "userInformation": {
+                "name": "i:0#.f|membership|jmcshea@haystax.com",
+                "title": "Joe McShea",
+                "eMail": "jmcshea@haystax.com",
+                "mobilePhone": "703-439-7822",
+                "notes": "",
+                "picture": "https://flexpointtech-my.sharepoint.com:443/User%20Photos/Profile%20Pictures/jmcshea_haystax_com_MThumb.jpg",
+                "department": "",
+                "jobTitle": "",
+                "sipAddress": "jmcshea@haystax.com",
+                "firstName": "Joe",
+                "lastName": "McShea",
+                "workPhone": "",
+                "userName": "jmcshea@haystax.com",
+                "webSite": "",
+                "sPSResponsibility": "",
+                "office": "",
+                "sPSPictureTimestamp": "63531755205",
+                "sPSPicturePlaceholderState": "",
+                "sPSPictureExchangeSyncState": "",
+                "attachments": ""
+            },
+            "groups": {
+                "6": {
+                    "name": "Joe McShea - Dev Site Owners",
+                    "id": "6"
+                },
+                "8": {
+                    "name": "Joe McShea - Dev Site Members",
+                    "id": "8"
+                },
+                "19": {
+                    "name": "Test Group",
+                    "id": "19"
+                },
+                "Joe McShea - Dev Site Members": {
+                    "name": "Joe McShea - Dev Site Members",
+                    "id": "8"
+                },
+                "Joe McShea - Dev Site Owners": {
+                    "name": "Joe McShea - Dev Site Owners",
+                    "id": "6"
+                },
+                "Test Group": {
+                    "name": "Test Group",
+                    "id": "19"
+                }
+            },
+            "listContexts": {
+                "{8fcf63aa-827d-4b9b-88bb-958abb8bf105}": {
+                    "fields": {
+                        "Title": {
+                            "internalName": "Title",
+                            "displayName": "Last Name",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "Last Name": {
+                            "internalName": "Title",
+                            "displayName": "Last Name",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "FirstName": {
+                            "internalName": "FirstName",
+                            "displayName": "First Name",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "First Name": {
+                            "internalName": "FirstName",
+                            "displayName": "First Name",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "FullName": {
+                            "internalName": "FullName",
+                            "displayName": "Full Name",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "Full Name": {
+                            "internalName": "FullName",
+                            "displayName": "Full Name",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "Email": {
+                            "internalName": "Email",
+                            "displayName": "Email Address",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "Email Address": {
+                            "internalName": "Email",
+                            "displayName": "Email Address",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "Company": {
+                            "internalName": "Company",
+                            "displayName": "Company",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "JobTitle": {
+                            "internalName": "JobTitle",
+                            "displayName": "Job Title",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "Job Title": {
+                            "internalName": "JobTitle",
+                            "displayName": "Job Title",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "WorkPhone": {
+                            "internalName": "WorkPhone",
+                            "displayName": "Business Phone",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "Business Phone": {
+                            "internalName": "WorkPhone",
+                            "displayName": "Business Phone",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "HomePhone": {
+                            "internalName": "HomePhone",
+                            "displayName": "Home Phone",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "Home Phone": {
+                            "internalName": "HomePhone",
+                            "displayName": "Home Phone",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "CellPhone": {
+                            "internalName": "CellPhone",
+                            "displayName": "Mobile Number",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "Mobile Number": {
+                            "internalName": "CellPhone",
+                            "displayName": "Mobile Number",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "WorkFax": {
+                            "internalName": "WorkFax",
+                            "displayName": "Fax Number",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "Fax Number": {
+                            "internalName": "WorkFax",
+                            "displayName": "Fax Number",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "WorkAddress": {
+                            "internalName": "WorkAddress",
+                            "displayName": "Address",
+                            "type": "SPFieldNote",
+                            "value": ""
+                        },
+                        "Address": {
+                            "internalName": "WorkAddress",
+                            "displayName": "Address",
+                            "type": "SPFieldNote",
+                            "value": ""
+                        },
+                        "WorkCity": {
+                            "internalName": "WorkCity",
+                            "displayName": "City",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "City": {
+                            "internalName": "WorkCity",
+                            "displayName": "City",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "WorkState": {
+                            "internalName": "WorkState",
+                            "displayName": "State/Province",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "State/Province": {
+                            "internalName": "WorkState",
+                            "displayName": "State/Province",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "WorkZip": {
+                            "internalName": "WorkZip",
+                            "displayName": "ZIP/Postal Code",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "ZIP/Postal Code": {
+                            "internalName": "WorkZip",
+                            "displayName": "ZIP/Postal Code",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "WorkCountry": {
+                            "internalName": "WorkCountry",
+                            "displayName": "Country/Region",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "Country/Region": {
+                            "internalName": "WorkCountry",
+                            "displayName": "Country/Region",
+                            "type": "SPFieldText",
+                            "value": ""
+                        },
+                        "WebPage": {
+                            "internalName": "WebPage",
+                            "displayName": "Web Page",
+                            "type": "SPFieldURL",
+                            "value": ""
+                        },
+                        "Web Page": {
+                            "internalName": "WebPage",
+                            "displayName": "Web Page",
+                            "type": "SPFieldURL",
+                            "value": ""
+                        },
+                        "Comments": {
+                            "internalName": "Comments",
+                            "displayName": "Notes",
+                            "type": "SPFieldNote",
+                            "value": ""
+                        },
+                        "Notes": {
+                            "internalName": "Comments",
+                            "displayName": "Notes",
+                            "type": "SPFieldNote",
+                            "value": ""
+                        },
+                        "Attachments": {
+                            "internalName": "Attachments",
+                            "displayName": "Attachments",
+                            "type": "SPFieldAttachments",
+                            "value": ""
+                        }
+                    },
+                    "layout": [{
+                        "containerType": "Tabs",
+                        "index": "0",
+                        "fieldGroups": [
+                            {
+                                "name": "one",
+                                "fields": [
+                                    {
+                                        "fieldInternalName": "Title"
+                                    },
+                                    {
+                                        "fieldInternalName": "FirstName"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "two",
+                                "fields": [
+                                    {
+                                        "fieldInternalName": "FullName"
+                                    },
+                                    {
+                                        "fieldInternalName": "JobTitle"
+                                    },
+                                    {
+                                        "fieldInternalName": "Email"
+                                    },
+                                    {
+                                        "fieldInternalName": "Company"
+                                    }
+                                ]
+                            }
+                        ]
+                    }, {
+                        "containerType": "DefaultForm"
+                    }, {
+                        "containerType": "Accordion",
+                        "fieldGroups": [{
+                            "name": "alpha",
+                            "fields": [{
+                                "fieldInternalName": "WorkState"
+                            }]
+                        }, {
+                            "name": "beta",
+                            "fields": [{
+                                "fieldInternalName": "CellPhone"
+                            }]
+                        }]
+                    }]
+                }
+            }
+        }
+    };
+    $().ready(function () {
+        $.spEasyForms.defaults = $.extend({}, $.spEasyForms.defaults, {
+            useCache: true,
+            cache: hardCodedCache
+        });
+        $.spEasyForms.init();
+    });
+}

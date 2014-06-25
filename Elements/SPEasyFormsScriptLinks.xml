@@ -2,27 +2,27 @@
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.01/JavaScript/jquery.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.02/JavaScript/jquery.js"
        Sequence="11101"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.01/JavaScript/jquery-ui.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.02/JavaScript/jquery-ui.js"
        Sequence="11151"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.01/JavaScript/jquery.SPServices.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.02/JavaScript/jquery.SPServices.js"
        Sequence="11201"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.01/JavaScript/ssw.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.02/JavaScript/ssw.js"
        Sequence="11301"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.01/JavaScript/jquery.SPEasyForms.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.02/JavaScript/jquery.SPEasyForms.js"
        Sequence="11401"
     />
     <CustomAction
