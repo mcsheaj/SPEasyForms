@@ -83,7 +83,7 @@
                 master.transform(opt);
             }
             this.appendContext(opt);
-
+            $("#s4-bodyContainer").scrollTop();
             return this;
         },
     
@@ -385,7 +385,15 @@
          *********************************************************************/        
         preSaveItem: function() {
             var result = true;
-            if(SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
+
+            var hasValidationErrors = true;
+            if (typeof (SPClientForms) !== undefined &&
+                typeof (SPClientForms.ClientFormManager) !== undefined &&
+                typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
+                hasValidationErrors = SPClientForms.ClientFormManager.SubmitClientForm('WPQ2');
+            }
+
+            if (hasValidationErrors) {
                 var opt = $.extend({}, spEasyForms.defaults, {});
                 var layout = this.getLayout(opt);
                 $.each(layout, function(index, current) {
@@ -401,6 +409,9 @@
                     }
                 });
             }
+
+            $("#s4-bodyContainer").scrollTop();
+
             return result;
         },
 
