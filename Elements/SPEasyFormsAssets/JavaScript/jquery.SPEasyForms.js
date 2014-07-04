@@ -959,7 +959,7 @@ $("table.ms-formtable ").hide();
 
             $("#s4-bodyContainer").scrollTop();
 
-            return result;
+            return result && !hasValidationErrors;
         },
 
         /*********************************************************************
