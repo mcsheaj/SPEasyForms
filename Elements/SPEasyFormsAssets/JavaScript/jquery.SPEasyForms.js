@@ -2087,6 +2087,9 @@ $("table.ms-formtable ").hide();
                         break;
                 }
             } catch (e) { }
+            if (!tr.value) {
+                tr.value = "";
+            }
             return tr.value;
         }
     };
