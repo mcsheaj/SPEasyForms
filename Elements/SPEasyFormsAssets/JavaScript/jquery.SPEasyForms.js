@@ -521,9 +521,11 @@ $("table.ms-formtable ").hide();
             }).click(function () {
                 var internalName = this.id.replace("ConditionalVisibility", "");
                 $("#conditionalVisibilityField").val(internalName);
-                $('#conditionalVisibilityDialogHeader').text(
-                    "Visibility Rules for " + internalName);
                 opt.config = configManager.get(opt);
+                $('#conditionalVisibilityDialogHeader').text(
+                    "Rules for Field '" +
+                    spContext.get(opt).listContexts[spContext.getCurrentListId(opt)].fields[internalName].displayName +
+                    "'");
                 opt.fieldName = internalName;
                 opt.config.visibility = visibilityManager.getVisibility(opt);
                 $("#conditonalVisibilityRulesDialog").dialog('open');
