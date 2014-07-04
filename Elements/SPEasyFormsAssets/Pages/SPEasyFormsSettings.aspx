@@ -270,6 +270,14 @@
         #spEasyFormsTextareaDiv {
             display: none;
         }
+
+        h3.speasyforms-staticrules {
+            margin-top: 20px;
+        }
+
+        td.speasyforms-staticrules {
+            padding: 5px 10px;
+        }
     </style>
 </asp:content>
 

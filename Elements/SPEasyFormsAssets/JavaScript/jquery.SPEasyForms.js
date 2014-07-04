@@ -84,6 +84,13 @@ $("table.ms-formtable ").hide();
                 master.toEditor(opt);
             } else {
                 master.transform(opt);
+                $("input[value='Save']").each(function () {
+                    var onSave = this.getAttributeNode("onclick").nodeValue;
+                    onSave = onSave.replace("if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
+                    var newOnSave = document.createAttribute('onclick');
+                    newOnSave.value = onSave;
+                    this.setAttributeNode(newOnSave);
+                });
             }
             this.appendContext(opt);
             $("#s4-bodyContainer").scrollTop();
