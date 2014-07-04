@@ -10,7 +10,7 @@
         Sequence="10256"
         Rights="ManageLists"
     >
-        <UrlAction Url="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.04/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}"/>
+        <UrlAction Url="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.03/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}"/>
     </CustomAction>
 
     <CustomAction 
@@ -75,7 +75,7 @@
             <CommandUIHandlers>
                 <CommandUIHandler 
                     Command="Ribbon.List.Settings.Controls.SPEasyForms.Command" 
-                    CommandAction="javascript:window.location=_spPageContextInfo.siteServerRelativeUrl + '/Style Library/SPEasyFormsAssets/2014.00.04/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}'" 
+                    CommandAction="javascript:window.location=_spPageContextInfo.siteServerRelativeUrl + '/Style Library/SPEasyFormsAssets/2014.00.03/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}'" 
                  />
             </CommandUIHandlers>
 

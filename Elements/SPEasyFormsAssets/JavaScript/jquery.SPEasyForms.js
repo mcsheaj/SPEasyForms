@@ -2,7 +2,7 @@
  * SPEasyForms - modify SharePoint forms using jQuery (i.e. put fields on 
  * tabs, show/hide fields, validate field values, etc.)
  *
- * @version 2014.00.04
+ * @version 2014.00.03
  * @requires jQuery v1.8.3 (I intend to test it with later 1.x versions
  *     but have not done so yet)
  * @requires jQuery-ui v1.9.2 (I intend to test it with later 1.x 
@@ -128,14 +128,14 @@ $("table.ms-formtable ").hide();
         loadDynamicStyles: function (options) {
             if (options.jQueryUITheme === undefined) {
                 options.jQueryUITheme = _spPageContextInfo.siteServerRelativeUrl +
-                    '/Style Library/SPEasyFormsAssets/2014.00.04/Css/jquery-ui-redmond/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.03/Css/jquery-ui-redmond/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
                 options.css = _spPageContextInfo.siteServerRelativeUrl +
-                    '/Style Library/SPEasyFormsAssets/2014.00.04/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.03/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
