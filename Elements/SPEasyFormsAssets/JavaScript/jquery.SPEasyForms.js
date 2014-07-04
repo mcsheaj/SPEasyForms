@@ -16,7 +16,10 @@
  *    http://www.opensource.org/licenses/mit-license.php
  *
  * TBD - make localizable?
- */
+ */ 
+
+$("table.ms-formtable ").hide();
+
 (function ($, undefined) {
 
     // cross-page caching object
@@ -59,8 +62,7 @@
             // result in match[1]
             fieldTypeRegex: /FieldType=\"([^\"]*)\"/i,
             // appends a table with a bunch of context info to the page body
-            verbose: (window.location.href.indexOf('fiddle') >= 0 ||
-                window.location.href.indexOf('spEasyFormsVerbose=true') >= 0)
+            verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0
         },
 
         /********************************************************************
@@ -77,7 +79,7 @@
             this.loadDynamicStyles(opt);
             opt.currentContext = spContext.get(opt);
             opt.rows = spRows.init(opt);
-            if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0 ||
+            if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0 || 
                 window.location.href.indexOf('fiddle') >= 0) {
                 master.toEditor(opt);
             } else {
@@ -85,6 +87,7 @@
             }
             this.appendContext(opt);
             $("#s4-bodyContainer").scrollTop();
+            $("table.ms-formtable ").show();
             return this;
         },
 
@@ -209,22 +212,21 @@
                     "    pageListId: '{8fcf63aa-827d-4b9b-88bb-958abb8bf105}',\r\n" +
                     "    userId: 9\r\n" +
                     "};\r\n";
-                output += "var cache = " +
-                    JSON.stringify(cache, null, 4) + ";\r\n";
-                output += "cache['spEasyForms_spContext_/sites/devjmcshea'].groups = " +
+                output += "var cache = " + JSON.stringify(cache, null, 4) + ";\r\n";
+                output += "cache['spEasyForms_spContext_/sites/devjmcshea'].groups = " + 
                     JSON.stringify(spContext.getUserGroups(), null, 4) + ";\r\n";
-                output += "cache['spEasyForms_spContext_/sites/devjmcshea'].siteGroups = " +
+                output += "cache['spEasyForms_spContext_/sites/devjmcshea'].siteGroups = " + 
                     JSON.stringify(spContext.getSiteGroups(), null, 4) + ";\r\n";
                 output += "cache['spEasyForms_spContext_/sites/devjmcshea']." +
                     "listContexts['{8fcf63aa-827d-4b9b-88bb-958abb8bf105}'].config = " +
                     JSON.stringify(spContext.getConfig(), null, 4) + ";\r\n";
                 output += "$().ready(function () {\r\n" +
-                          "    $.spEasyForms.defaults = $.extend({}, $.spEasyForms.defaults, {\r\n" +
-                          "        useCache: true,\r\n" +
-                          "        cache: cache\r\n" +
-                          "    });\r\n" +
-                          "    $.spEasyForms.init();\r\n" +
-                          "});\r\n";
+                    "    $.spEasyForms.defaults = $.extend({}, $.spEasyForms.defaults, {\r\n" +
+                    "        useCache: true,\r\n" +
+                    "        cache: cache\r\n" +
+                    "    });\r\n" +
+                    "    $.spEasyForms.init();\r\n" +
+                    "});\r\n";
                 output += "</pre></td></tr></table>";
                 if (window.location.href.indexOf('fiddle') <= 0) {
                     $("#s4-bodyContainer").append(output);
@@ -252,6 +254,10 @@
                         def: [{
                             "containerType": "DefaultForm"
                         }]
+                    },
+                    visibility: {
+                        def: {
+                        }
                     }
                 };
                 $("#spEasyFormsJson pre").text(JSON.stringify(currentConfig, null, 4));
@@ -279,7 +285,7 @@
                 type: "PUT",
                 headers: {
                     "Content-Type": "text/plain",
-                    "Overwrite": "T"
+                        "Overwrite": "T"
                 },
                 data: $("#spEasyFormsJson pre").text(),
                 success: function (data) {
@@ -305,24 +311,27 @@
 
         siteGroups: [],
 
-        transform: function (optioins) {
+        transform: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.config = spContext.getConfig(opt);
-            if (config.visibility && config.visibility.def && Object.keys(config.visibility.def).length > 0) {
+            if (opt.config && opt.config.visibility && opt.config.visibility.def && 
+                Object.keys(opt.config.visibility.def).length > 0) {
                 var userGroups = spContext.getUserGroups(opt);
                 $.each(opt.rows, function (idx, row) {
-                    if (row.internalName in config.visibility.def) {
-                        $.each(config.visibility.def[row.internalName], function (index, rule) {
-                            var formType = this.getFormType(opt);
-                            var formMatch = $.inArray(formType, rule.forms.split(';')) >= 0;
+                    if (row.internalName in opt.config.visibility.def) {
+                        $.each(opt.config.visibility.def[row.internalName], function (index, rule) {
+                            var formType = visibilityManager.getFormType(opt);
+                            var ruleForms = rule.forms.split(';').map(function (elem) {
+                                return elem.toLowerCase();
+                            });
+                            var formMatch = $.inArray(formType, ruleForms) >= 0;
                             var appliesMatch = false;
                             if (rule.appliesTo.length === 0) {
                                 appliesMatch = true;
-                            }
-                            else {
+                            } else {
                                 var appliesToGroups = rule.appliesTo.split(';');
                                 $.each(userGroups, function (i, group) {
-                                    if ($.inArray(group, appliesToGroups) >= 0) {
+                                    if ($.inArray(group.name, appliesToGroups) >= 0) {
                                         appliesMatch = true;
                                         return false;
                                     }
@@ -330,11 +339,18 @@
                             }
                             if (formMatch && appliesMatch) {
                                 if (rule.state == "Hidden") {
-                                    row.row.attr("data-visibilityhidden", "true").hide();
+                                       row.row.attr("data-visibilityhidden", "true").hide();
                                 }
-                                else if (rule.state == "ReadOnly") {
-                                    row.row.find("td.ms-formbody *").attr("data-visibilityhidden", "true").hide();
-                                    row.row.fine("td.ms-formbody").append("<span>" + row.value + "</span>");
+                                else if (rule.state === "ReadOnly") {
+                                    if(formType !== "display" && row.displayName !== "Attachments") {
+                                        var html = '<tr><td nowrap="true" valign="top" width="113px" ' +
+                                            'class="ms-formlabel"><h3 class="ms-standardheader"><nobr>' +
+                                            row.displayName + '</nobr></h3></td>' +
+                                            '<td valign="top" width="350px" class="ms-formbody">' +
+                                            row.value + '</td></tr>';
+                                        row.row.attr("data-visibilityhidden", "true").hide();
+                                        row.row.after(html);
+                                    }
                                 }
                                 return false;
                             }
@@ -350,6 +366,7 @@
                 this.wireDialogEvents(opt);
             }
             this.wireButtonEvents(opt);
+            this.drawRuleTable(opt);
             this.initialized = true;
         },
 
@@ -398,8 +415,7 @@
                         if (opt.state === '') {
                             $('#addVisibilityRuleStateError').text(
                                 "You must select a value for state!");
-                        }
-                        else {
+                        } else {
                             opt.config = configManager.get(opt);
                             opt.fieldName = $("#addVisibilityRuleField").val();
                             opt.config.visibility = visibilityManager.getVisibility(opt);
@@ -407,8 +423,7 @@
                             if (opt.index.length === 0) {
                                 var newRule = visibilityManager.getRule(opt);
                                 opt.config.visibility.def[opt.fieldName].push(newRule);
-                            }
-                            else {
+                            } else {
                                 var rule = visibilityManager.getRule(opt);
                                 opt.config.visibility.def[opt.fieldName][opt.index] = rule;
                             }
@@ -419,7 +434,7 @@
                         }
                         return false;
                     },
-                    "Cancel": function () {
+                        "Cancel": function () {
                         $('#addVisibilityRuleDialog').dialog("close");
                         $("#conditonalVisibilityRulesDialog").dialog("open");
                         return false;
@@ -450,14 +465,16 @@
                 select: function (e, ui) {
                     var group = ui.item.value;
                     var span = $("<span>").addClass("speasyforms-entity").
-                        attr('title', group).text(group);
-                    var a = $("<a>").addClass("speasyforms-remove").attr(
-                        { "href": "#", "title": "Remove " + group }).
-                        text("x").appendTo(span);
+                    attr('title', group).text(group);
+                    var a = $("<a>").addClass("speasyforms-remove").attr({
+                        "href": "#",
+                        "title": "Remove " + group
+                    }).
+                    text("x").appendTo(span);
                     span.insertBefore(this);
                     $(this).val("").css("top", 2);
                     visibilityManager.siteGroups.splice(
-                        visibilityManager.siteGroups.indexOf(group), 1);
+                    visibilityManager.siteGroups.indexOf(group), 1);
                     $(this).autocomplete(
                         "option", "source", visibilityManager.siteGroups.sort());
                     return false;
@@ -469,8 +486,8 @@
             $("#spEasyFormsEntityPicker").on("click", ".speasyforms-remove", function () {
                 visibilityManager.siteGroups.push($(this).parent().attr("title"));
                 $(this).closest("div").find("input").
-                    autocomplete("option", "source", visibilityManager.siteGroups.sort()).
-                    focus();
+                autocomplete("option", "source", visibilityManager.siteGroups.sort()).
+                focus();
                 $(this).parent().remove();
             });
         },
@@ -482,8 +499,7 @@
                 if (tds.length > 0) {
                     var internalName = $(this).find("td")[1].innerText;
                     $(this).append(
-                        "<td class='speasyforms-conditionalvisibility'><button id='" +
-                        internalName +
+                        "<td class='speasyforms-conditionalvisibility'><button id='" + internalName +
                         "ConditionalVisibility' class='speasyforms-containerbtn " +
                         "speasyforms-conditionalvisibility'>" +
                         "Edit Conditional Visibility</button></td>");
@@ -511,106 +527,137 @@
 
         drawRuleTable: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            if (opt.config.visibility.def[opt.fieldName].length === 0) {
-                $("#conditionalVisibilityRules").html(
-                    "There are currently no rules for this field. Click the plus sign to add one.");
-            }
-            else {
-                var table = "<center><table id='conditionalVisibilityRulesTable' " +
-                    "class='speasyforms-rulestable'><tbody class='speasyforms-sortablerules'>" +
-                    "<th class='speasyforms-rulestable'>State</th>" +
-                    "<th class='speasyforms-rulestable'>Applies To</th>" +
-                    "<th class='speasyforms-rulestable'>On Forms</th>";
+            if (opt.fieldName && opt.config.visibility.def[opt.fieldName].length === 0) {
+                if(!opt.static) {
+                    $("#conditionalVisibilityRules").html(
+                        "There are currently no rules for this field. Click the plus sign to add one.");
+                }
+            } else if (opt.fieldName) {
+                var klass = 'speasyforms-sortablerules';
+                if(opt.static)
+                    klass = 'speasyforms-staticrules';
+                var id = 'conditionalVisibilityRulesTable';
+                var table = "<center>";
+                if(opt.static) {
+                    id += opt.index;
+                    table = "<h3 class='"+klass+"'>Rules for Field '"+opt.displayName+"'</h3>";
+                }
+                table += "<table id='"+id+"' " +
+                    "class='"+klass+"'><tbody class='"+klass+"'>" +
+                    "<th class='"+klass+"'>State</th>" +
+                    "<th class='"+klass+"'>Applies To</th>" +
+                    "<th class='"+klass+"'>On Forms</th>";
                 $.each(opt.config.visibility.def[opt.fieldName], function (idx, rule) {
-                    table += "<tr class='speasyforms-sortablerules'>" +
-                        "<td class='speasyforms-sortablerules'>" +
-                        rule.state +
+                    table += "<tr class='"+klass+"'>" +
+                        "<td class='"+klass+"'>" + rule.state +
                         "</td>" +
-                        "<td class='speasyforms-sortablerules'>" +
+                        "<td class='"+klass+"'>" +
                         (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone") +
                         "</td>" +
-                        "<td class='speasyforms-sortablerules'>" + rule.forms + "</td>" +
-                        "<td class='speasyforms-addvisibilityrulebutton speasyforms-visibilityrulebutton'>" +
+                        "<td class='"+klass+"'>" + rule.forms + "</td>";
+                    if(!opt.static) {
+                        table += "<td class='speasyforms-visibilityrulebutton'>" +
                         "<button id='addVisililityRuleButton" + idx +
-                        "' class='speasyforms-addvisibilityrulebutton'>Edit Rule</button></td>" +
-                        "<td class='speasyforms-delvisibilityrulebutton speasyforms-visibilityrulebutton'>" +
+                        "' >Edit Rule</button></td>" +
+                        "<td class='speasyforms-visibilityrulebutton'>" +
                         "<button id='delVisililityRuleButton" + idx +
-                        "' class='speasyforms-delvisibilityrulebutton'>Delete Rule</button></td>" +
-                        "</tr>";
+                        "' >Delete Rule</button></td>";
+                    }
+                    table += "</tr>";
                 });
-                table += "</tbody></table></center>";
-                $("#conditionalVisibilityRules").html(table);
-
-                $("button.speasyforms-delvisibilityrulebutton").button({
-                    icons: {
-                        primary: "ui-icon-closethick"
-                    },
-                    text: false
-                }).click(function () {
-                    opt.index = this.id.replace("delVisililityRuleButton", "");
-                    opt.fieldName = $("#conditionalVisibilityField").val();
-                    opt.config = configManager.get(opt);
-                    opt.config.visibility.def[opt.fieldName].splice(opt.index, 1);
-                    configManager.set(opt);
+                table += "</tbody></table>";
+                if(!opt.static) {
+                    $("#conditionalVisibilityRules").html(table + "</center>");
+                    this.wireVisibilityRulesTable(opt);
+                }
+                else {
+                    $("#tabs-min-visibility").append(table);
+                }
+            }
+            if(!opt.static) {
+                $("#tabs-min-visibility").html("");
+                $.each(Object.keys(opt.config.visibility.def), function(idx, key) {
+                    opt.fieldName = key;
+                    opt.displayName = spContext.getListContext().fields[key].displayName;
+                    opt.static = true;
+                    opt.index = idx;
                     visibilityManager.drawRuleTable(opt);
                 });
+            }
+        },
+            
+        wireVisibilityRulesTable: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            $("[id^='delVisililityRuleButton']").button({
+                icons: {
+                    primary: "ui-icon-closethick"
+                },
+                text: false
+            }).click(function () {
+                opt.index = this.id.replace("delVisililityRuleButton", "");
+                opt.fieldName = $("#conditionalVisibilityField").val();
+                opt.config = configManager.get(opt);
+                opt.config.visibility.def[opt.fieldName].splice(opt.index, 1);
+                configManager.set(opt);
+                visibilityManager.drawRuleTable(opt);
+            });
 
-                $("button.speasyforms-addvisibilityrulebutton").button({
-                    icons: {
-                        primary: "ui-icon-gear"
-                    },
-                    text: false
-                }).click(function () {
-                    visibilityManager.clearRuleDialog(opt);
-                    opt.index = this.id.replace("addVisililityRuleButton", "");
-                    $("#visibilityRuleIndex").val(opt.index);
-                    opt.fieldName = $("#conditionalVisibilityField").val();
-                    $("#addVisibilityRuleField").val(opt.fieldName);
-                    opt.config = configManager.get(opt);
-                    var rule = opt.config.visibility.def[opt.fieldName][opt.index];
-                    $("#addVisibilityRuleState").val(rule.state);
-                    $.each(rule.appliesTo.split(';'), function (idx, entity) {
-                        if (entity === "AUTHOR") {
-                            $("#addVisibilityRuleApplyToAuthor")[0].checked = true;
-                        }
-                        else if (entity.length > 0) {
-                            var span = $("<span>").addClass("speasyforms-entity").
-                                attr('title', entity).text(entity);
-                            var a = $("<a>").addClass("speasyforms-remove").attr(
-                                { "href": "#", "title": "Remove " + entity }).
-                                text("x").appendTo(span);
-                            $("#spEasyFormsEntityPicker").prepend(span);
-                            $("#addVisibilityRuleApplyTo").val("").css("top", 2);
-                            visibilityManager.siteGroups.splice(
-                                visibilityManager.siteGroups.indexOf(entity), 1);
-                        }
-                    });
-                    if (rule.forms.indexOf('New') >= 0)
-                        $("#addVisibilityRuleNewForm")[0].checked = true;
-                    if (rule.forms.indexOf('Edit') >= 0)
-                        $("#addVisibilityRuleEditForm")[0].checked = true;
-                    if (rule.forms.indexOf('Display') >= 0)
-                        $("#addVisibilityRuleDisplayForm")[0].checked = true;
-                    $('#addVisibilityRuleDialog').dialog("open");
-                    return false;
-                });
-
-                // make the visibility rules sortable sortable
-                $("tbody.speasyforms-sortablerules").sortable({
-                    connectWith: ".speasyforms-rulestable",
-                    items: "> tr:not(:first)",
-                    helper: "clone",
-                    zIndex: 990,
-                    update: function (event, ui) {
-                        if (!event.handled) {
-                            opt.config = visibilityManager.toConfig(opt);
-                            configManager.set(opt);
-                            visibilityManager.drawRuleTable(opt);
-                            event.handled = true;
-                        }
+            $("[id^='addVisililityRuleButton']").button({
+                icons: {
+                    primary: "ui-icon-gear"
+                },
+                text: false
+            }).click(function () {
+                visibilityManager.clearRuleDialog(opt);
+                opt.index = this.id.replace("addVisililityRuleButton", "");
+                $("#visibilityRuleIndex").val(opt.index);
+                opt.fieldName = $("#conditionalVisibilityField").val();
+                $("#addVisibilityRuleField").val(opt.fieldName);
+                opt.config = configManager.get(opt);
+                var rule = opt.config.visibility.def[opt.fieldName][opt.index];
+                $("#addVisibilityRuleState").val(rule.state);
+                $.each(rule.appliesTo.split(';'), function (idx, entity) {
+                    if (entity === "AUTHOR") {
+                        $("#addVisibilityRuleApplyToAuthor")[0].checked = true;
+                    } else if (entity.length > 0) {
+                        var span = $("<span>").addClass("speasyforms-entity").
+                        attr('title', entity).text(entity);
+                        var a = $("<a>").addClass("speasyforms-remove").attr({
+                            "href": "#",
+                            "title": "Remove " + entity
+                        }).
+                        text("x").appendTo(span);
+                        $("#spEasyFormsEntityPicker").prepend(span);
+                        $("#addVisibilityRuleApplyTo").val("").css("top", 2);
+                        visibilityManager.siteGroups.splice(
+                        visibilityManager.siteGroups.indexOf(entity), 1);
                     }
                 });
-            }
+                if (rule.forms.indexOf('New') >= 0) 
+                    $("#addVisibilityRuleNewForm")[0].checked = true;
+                if (rule.forms.indexOf('Edit') >= 0) 
+                    $("#addVisibilityRuleEditForm")[0].checked = true;
+                if (rule.forms.indexOf('Display') >= 0) 
+                    $("#addVisibilityRuleDisplayForm")[0].checked = true;
+                $('#addVisibilityRuleDialog').dialog("open");
+                return false;
+            });
+
+            // make the visibility rules sortable sortable
+            $("tbody.speasyforms-sortablerules").sortable({
+                connectWith: ".speasyforms-rulestable",
+                items: "> tr:not(:first)",
+                helper: "clone",
+                zIndex: 990,
+                update: function (event, ui) {
+                    if (!event.handled) {
+                        opt.config = visibilityManager.toConfig(opt);
+                        configManager.set(opt);
+                        visibilityManager.drawRuleTable(opt);
+                        event.handled = true;
+                    }
+                }
+            });
         },
 
         getVisibility: function (options) {
@@ -678,15 +725,13 @@
 
         getFormType: function (options) {
             var result = "";
-            var page = window.location.pathName;
+            var page = window.location.pathname;
             page = page.substring(page.lastIndexOf("/") + 1).toLowerCase();
             if (page.indexOf("new") >= 0) {
                 result = "new";
-            }
-            else if (page.indexOf("edit") >= 0) {
+            } else if (page.indexOf("edit") >= 0) {
                 result = "edit";
-            }
-            else if (page.indexOf("display") >= 0) {
+            } else if (page.indexOf("display") >= 0) {
                 result = "display";
             }
             return result;
@@ -736,8 +781,8 @@
                 opt.prepend = true;
                 $.each(currentConfig.layout.def, function (index, layout) {
                     if (layout.containerType != 'DefaultForm') {
-                        var implementation = layout.containerType[0].toLowerCase() + layout.containerType.substring(1);
-
+                        var implementation = layout.containerType[0].toLowerCase() + 
+                            layout.containerType.substring(1);
                         opt.index = index;
                         opt.layout = layout;
                         opt.containerId = "spEasyFormsContainers" + (opt.prepend ? "Pre" : "Post");
@@ -748,6 +793,9 @@
                     }
                 });
             }
+
+            visibilityManager.transform(opt);
+
             return fieldsInUse;
         },
 
@@ -774,7 +822,8 @@
                         async: false,
                         cache: false,
                         url: context.webAppUrl + context.webRelativeUrl +
-                            "/_layouts/listform.aspx?PageType=6&ListId=" + encodeURIComponent(currentListId).replace('-', '%2D') + "&RootFolder=",
+                            "/_layouts/listform.aspx?PageType=6&ListId=" + 
+                            encodeURIComponent(currentListId).replace('-', '%2D') + "&RootFolder=",
                         complete: function (xData) {
                             opt.input = $(xData.responseText);
                             opt.rows = spRows.init(opt);
@@ -791,7 +840,8 @@
             // since they may have moved.
             $.each(opt.rows, function (i, currentRow) {
                 currentRow.row.find("*[data-transformAdded='true']").remove();
-                currentRow.row.find("*[data-transformHidden='true']").attr("data-transformHidden", "false").show();
+                currentRow.row.find("*[data-transformHidden='true']").
+                    attr("data-transformHidden", "false").show();
             });
 
             // draw the editor properties panel
@@ -825,6 +875,7 @@
             }
 
             visibilityManager.toEditor(opt);
+            $("#tabs-min").tabs();
 
             this.initialized = true;
         },
@@ -839,7 +890,9 @@
             var opt = $.extend({}, spEasyForms.defaults, options);
             var containers = $("td.speasyforms-sortablecontainers");
             var result = configManager.get(opt);
-            result.layout = { def: [] };
+            result.layout = {
+                def: []
+            };
             $.each(containers, function (idx, container) {
                 var type = $(container).find("input[type='hidden'][id$='Hidden']").val();
                 var impl = type[0].toLowerCase() + type.substring(1);
@@ -848,7 +901,7 @@
                         opt.container = container;
                         opt.containerType = type;
                         result.layout.def.push(
-                            master.containerImplementations[impl].toLayout(opt));
+                        master.containerImplementations[impl].toLayout(opt));
                     } else {
                         result.layout.def.push({
                             containerType: "DefaultForm",
@@ -872,7 +925,9 @@
             var result = true;
 
             var hasValidationErrors = true;
-            if (typeof (SPClientForms) !== undefined && typeof (SPClientForms.ClientFormManager) !== undefined && typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
+            if (typeof (SPClientForms) !== undefined && 
+                typeof (SPClientForms.ClientFormManager) !== undefined && 
+                typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
                 hasValidationErrors = SPClientForms.ClientFormManager.SubmitClientForm('WPQ2');
             }
 
@@ -881,7 +936,8 @@
                 var config = configManager.get(opt);
                 $.each(config.layout.def, function (index, current) {
                     if (current.containerType != 'DefaultForm') {
-                        var containerType = current.containerType[0].toLowerCase() + current.containerType.substring(1);
+                        var containerType = current.containerType[0].toLowerCase() + 
+                            current.containerType.substring(1);
                         if (containerType != "defaultForm") {
                             var impl = master.containerImplementations[containerType];
                             opt.index = index;
@@ -913,7 +969,8 @@
                     opt.currentLayout = layout;
                     opt.containerIndex = (layout.index !== undefined ? layout.index : index);
                     master.appendContainer(opt);
-                    var implementation = layout.containerType[0].toLowerCase() + layout.containerType.substring(1);
+                    var implementation = layout.containerType[0].toLowerCase() + 
+                        layout.containerType.substring(1);
                     var tmp = master.containerImplementations[implementation].toEditor({
                         index: index,
                         rows: opt.rows,
@@ -1152,7 +1209,9 @@
                 }
                 return false;
             });
-            $(".speasyforms-save").button({ disabled: true });
+            $(".speasyforms-save").button({
+                disabled: true
+            });
         },
 
         /*********************************************************************
@@ -1168,7 +1227,8 @@
                     "Add": function () {
                         if ($("#containerType").val().length > 0) {
                             $("#chooseContainerDialog").dialog("close");
-                            var implname = $("#containerType").val()[0].toLowerCase() + $("#containerType").val().substring(1);
+                            var implname = $("#containerType").val()[0].toLowerCase() +
+                                $("#containerType").val().substring(1);
                             var impl = master.containerImplementations[implname];
                             opt.containerType = $("#containerType").val();
                             $("#addMultiGroupContainerType").val(opt.containerType);
@@ -1178,7 +1238,7 @@
                                 "* You must select a container type.");
                         }
                     },
-                    "Cancel": function () {
+                        "Cancel": function () {
                         $("#chooseContainerDialog").dialog("close");
                     }
                 },
@@ -1212,7 +1272,7 @@
                         master.toEditor(opt);
                         $("#editFieldGroupDialog").dialog("close");
                     },
-                    "Cancel": function () {
+                        "Cancel": function () {
                         $("#editFieldGroupDialog").dialog("close");
                     }
                 },
@@ -1506,7 +1566,7 @@
                         }
                         return false;
                     },
-                    "Cancel": function () {
+                        "Cancel": function () {
                         $("#addMultiGroupContainerDialog").dialog("close");
                         return false;
                     }
@@ -1524,7 +1584,8 @@
                         if ($("#addFieldGroupNames2").val().length > 0) {
                             var tabNames = $("#addFieldGroupNames2").val().split('\n');
                             var index = $("#addFieldGroupsContainerId").val();
-                            var nextFieldGroupIndex = $("#spEasyFormsContainer" + index + " table.speasyforms-sortablefields").length;
+                            var nextFieldGroupIndex = $("#spEasyFormsContainer" + index + 
+                                                        " table.speasyforms-sortablefields").length;
                             $.each(tabNames, function (idx, name) {
                                 opt.trs = "";
                                 opt.id = "spEasyFormsSortableFields" + index + "" + nextFieldGroupIndex++;
@@ -1543,7 +1604,7 @@
                         }
                         return false;
                     },
-                    "Cancel": function () {
+                        "Cancel": function () {
                         $("#addFieldGroupsToContainerDialog").dialog("close");
                         return false;
                     }
@@ -1566,7 +1627,8 @@
         var opt = $.extend({}, spEasyForms.defaults, options);
         var result = [];
         var divId = "spEasyFormsAccordionDiv" + opt.index;
-        var divClass = "speasyforms-container speasyforms-accordion speasyforms-accordion" + opt.index;
+        var divClass = "speasyforms-container speasyforms-accordion speasyforms-accordion" + 
+            opt.index;
         $("#" + opt.containerId).append("<div id='" + divId + "' class='" + divClass + "'></div>");
         $.each(opt.layout.fieldGroups, function (idx, fieldGroup) {
             var itemClass = "speasyforms-accordion speasyforms-accordion" + opt.index + "" + idx;
@@ -1574,7 +1636,8 @@
                 "speasyforms-accordion" + opt.index + "" + idx;
             var tableId = "spEasyFormsAccordionTable" + opt.index + "" + idx;
             var headerId = "spEasyFormsAccordionHeader" + opt.index + "" + idx;
-            $("#" + divId).append("<h3 id='" + headerId + "' class='" + tableClass + "'>" + fieldGroup.name + "</h3>");
+            $("#" + divId).append("<h3 id='" + headerId + "' class='" + tableClass + "'>" + 
+                                  fieldGroup.name + "</h3>");
             $("#" + divId).append(
                 "<div><table class='" + tableClass + "' id='" + tableId +
                 "'></table></div>");
@@ -1587,7 +1650,9 @@
             });
         });
         $("#" + divId).accordion({
-            heightStyle: "auto"
+            heightStyle: "auto",
+            active: false,
+            collapsible: true
         });
         return result;
     };
@@ -1598,7 +1663,8 @@
         var selected = false;
         $("#" + divId).find("table.speasyforms-accordion").each(function (idx, content) {
             if ($(content).find(".ms-formbody span.ms-formvalidation").length > 0) {
-                $("#spEasyFormsAccordionHeader" + opt.index + "" + idx).addClass("speasyforms-accordionvalidationerror");
+                $("#spEasyFormsAccordionHeader" + opt.index + "" + idx).
+                addClass("speasyforms-accordionvalidationerror");
                 if (!selected) {
                     $("#" + divId).accordion({
                         active: idx
@@ -1606,7 +1672,8 @@
                     selected = true;
                 }
             } else {
-                $("#spEasyFormsAccordionHeader" + opt.index + "" + idx).removeClass("speasyforms-accordionvalidationerror");
+                $("#spEasyFormsAccordionHeader" + opt.index + "" + idx).
+                    removeClass("speasyforms-accordionvalidationerror");
             }
         });
         return true;
@@ -1624,33 +1691,55 @@
         var opt = $.extend({}, $.spEasyForms.defaults, options);
         var result = [];
         var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
-        var outerTableClass = "speasyforms-container speasyforms-columns speasyforms-columns" + opt.index;
+        var outerTableClass = "speasyforms-container speasyforms-columns";
         $("#" + opt.containerId).append("<table id='" + outerTableId +
-            "' class='" + outerTableClass + "'><tr></tr></table>");
+            "' class='" + outerTableClass + "'></table>");
+        
+        var columnCount = opt.layout.fieldGroups.count;
+        var rowCount = 0;
         $.each(opt.layout.fieldGroups, function (idx, fieldGroup) {
-            var itemClass = "speasyforms-columns speasyforms-columns" + opt.index + "" + idx;
-            var tableClass = "speasyforms-container speasyforms-columns" +
-                " speasyforms-columns" + opt.index + "" + idx;
-            var tableId = "spEasyFormsColumnsTable" + opt.index + "" + idx;
-            $("#" + outerTableId).append(
-                "<td><table class='" + tableClass + "' id='" + tableId +
-                "'></table></td>");
-            $.each(fieldGroup.fields, function (fieldIdx, field) {
-                var currentRow = opt.rows[field.fieldInternalName];
-                result.push(field.fieldInternalName);
-                if (currentRow !== undefined) {
-                    if (currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").length === 0) {
-                        var tdh = currentRow.row.find("td.ms-formlabel");
-                        currentRow.row.find("td.ms-formbody").prepend(
-                        tdh.html() + "<br data-transformAdded='true'/>");
-                        currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").attr("data-transformAdded", "true");
-                        tdh.hide();
-                        tdh.attr("data-transformHidden", "true");
-                    }
-                    currentRow.row.appendTo("#" + tableId);
-                }
-            });
+            if(fieldGroup.fields.length > rowCount)
+                rowCount = fieldGroup.fields.length;
         });
+               
+        for(var i=0; i<rowCount; i++)
+        {
+            var rowId = "spEasyFormsColumnRow" + i;
+            $("#" + outerTableId).append("<tr id='"+rowId+"' class='speasyforms-columnrow'></tr>");     
+            for(var idx=0; idx<opt.layout.fieldGroups.length; idx++)
+            {
+                var fieldGroup = opt.layout.fieldGroups[idx];
+                var tdId = "spEasyFormsColumnCell" + i + "" + idx;
+                var innerTableId = "spEasyFormsInnerTable" + i + "" + idx;
+                if(fieldGroup.fields.length > i) {
+                    var field = fieldGroup.fields[i];
+                    var currentRow = opt.rows[field.fieldInternalName];
+                    result.push(field.fieldInternalName);
+                    if (currentRow !== undefined) {
+                        if (currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").length === 0) {
+                            var tdh = currentRow.row.find("td.ms-formlabel");
+                            currentRow.row.find("td.ms-formbody").prepend(
+                            tdh.html() + "<br data-transformAdded='true'/>");
+                            currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").
+                                attr("data-transformAdded", "true");
+                            tdh.hide();
+                            tdh.attr("data-transformHidden", "true");
+                        }
+                        $("#" + rowId).append(
+                            "<td id='" + tdId + "' class='speasyforms-columncell'><table id='" +
+                            innerTableId + "' style='width: 100%'></table></td>");
+                        currentRow.row.appendTo("#" + innerTableId);
+                    }
+                    else {
+                        $("#" + rowId).append("<td id='"+tdId+"' class='speasyforms-columncell'>&nbsp;</td>");
+                    }
+                }
+                else {
+                    $("#" + rowId).append("<td id='"+tdId+"' class='speasyforms-columncell'>&nbsp;</td>");
+                }
+            }
+        }
+        
         return result;
     };
 
@@ -1714,13 +1803,15 @@
         var selected = false;
         $("#" + divId).find("table.speasyforms-tabs").each(function (idx, tab) {
             if ($(tab).find(".ms-formbody span.ms-formvalidation").length > 0) {
-                $("a[href$='#spEasyFormsTabsTable" + opt.index + "" + idx + "']").addClass("speasyforms-tabvalidationerror");
+                $("a[href$='#spEasyFormsTabsTable" + opt.index + "" + idx + "']").
+                    addClass("speasyforms-tabvalidationerror");
                 if (!selected) {
                     $("#" + divId).tabs('select', idx);
                     selected = true;
                 }
             } else {
-                $("a[href$='#spEasyFormsTabsTable" + opt.index + "" + idx + "']").removeClass("speasyforms-tabvalidationerror");
+                $("a[href$='#spEasyFormsTabsTable" + opt.index + "" + idx + "']").
+                    removeClass("speasyforms-tabvalidationerror");
             }
         });
         return true;
@@ -1887,22 +1978,107 @@
             var tr = options.row;
             try {
                 switch (tr.spFieldType) {
-                    /*
-             case "SPFieldNote":
-                 tr.value = tr.row.find("td[id^='SPField']").
-                     find("div").html().trim();
-                 break;
-             case "SPFieldURL":
-                 tr.value = tr.row.find("td[id^='SPField']").
-                     find("img").attr("src");
-                 break;
-                 */
-                    default: tr.value = tr.row.find("td.ms-formbody").text().trim();
+                    case "SPFieldChoice":
+                        var select = tr.row.find("td.ms-formbody select");
+                        if(select.length > 0) {
+                            tr.value = tr.row.find("td.ms-formbody select").val();
+                        }
+                        else {
+                            tr.value = tr.row.find("input[checked='checked']").val();
+                        }
+                        break;
+                    case "SPFieldNote":
+                        var input = tr.row.find("td.ms-formbody input");
+                        if(input.length > 0 && !(input.val().search(/^<p>.*<\/p>$/) >= 0 && input.val().length == 8)) {
+                            tr.value = input.val().trim();
+                        }
+                        var textarea =  tr.row.find("td.ms-formbody textarea");
+                        if(textarea.length > 0) {
+                            tr.value = textarea.val();
+                        }
+                        var appendedText = tr.row.find(".ms-imnSpan").parent().parent();
+                        if (appendedText.length > 0) {
+                            if (tr.value === undefined)
+                                tr.value = appendedText.html();
+                            else
+                                tr.value += appendedText.html();
+                        }
+                        break;
+                    case "SPFieldMultiChoice":
+                        tr.value = "";
+                        tr.row.find("input[checked='checked']").each(function() {
+                            if(tr.value.length > 0)
+                                tr.value += "; ";
+                            tr.value += $(this).next().text();
+                        });
+                        break;
+                    case "SPFieldDateTime":
+                        tr.value = tr.row.find("td.ms-formbody input").val().trim();
+                        var selects = tr.row.find("select");
+                        if(selects.length == 2) {
+                            var tmp = $(selects[0]).find("option:selected").text().split(' ');
+                            if(tmp.length == 2) {
+                                var hour = tmp[0];
+                                var ampm = tmp[1];
+                                var minutes = $(selects[1]).val();
+                                tr.value += " " + hour + ":" + minutes + " " + ampm;
+                            }
+                        }
+                        break;
+                    case "SPFieldLookup":
+                        tr.value = tr.row.find("option:selected").text();
+                        break;
+                    case "SPFieldLookupMulti":
+                        tr.value = tr.row.find("td.ms-formbody input").val().trim();
+                        if (tr.value.indexOf("|t") >= 0) {
+                            var parts = tr.value.split("|t");
+                            tr.value = "";
+                            for (i=1; i<parts.length; i+=2) {
+                                if(tr.value.length === 0) {
+                                    tr.value += parts[i];
+                                }
+                                else {
+                                    tr.value += "; " + parts[i];
+                                }
+                            }
+                        }
+                        break;
+                    case "SPFieldBoolean":
+                        tr.value = tr.row.find("td.ms-formbody input").val().trim();
+                        if(tr.value === "on") {
+                            tr.value = "Yes";
+                        }
+                        else {
+                            tr.value = "No";
+                        }
+                        break;
+                    case "SPFieldURL":
+                        var inputs = tr.row.find("td.ms-formbody input");
+                        if ($(inputs[0]).val().length > 0 && $(inputs[1]).val().length > 0)
+                            tr.value = "<a href='" + $(inputs[0]).val() + "' target='_blank'>" + $(inputs[1]).val() + "</a>";
+                        else if ($(inputs[0]).val().length > 0)
+                            tr.value = "<a href='" + $(inputs[0]).val() + "' target='_blank'>" + $(inputs[0]).val() + "</a>";
+                        else
+                            tr.value = "";
+                        break;
+                    case "SPFieldUser":
+                    case "SPFieldUserMulti":
+                        var hiddenInput = utils.parseJSON(tr.row.find("input[type='hidden']").val());
+                        tr.value = "";
+                        $.each(hiddenInput, function (idx, entity) {
+                            if (tr.value.length > 0) {
+                                tr.value += "; ";
+                            }
+                            tr.value += "<a href='" + spContext.get().webRelativeUrl + "/_layouts/userdisp.aspx?ID=" +
+                                entity.EntityData.SPUserID + "' target='_blank'>" + entity.DisplayText + "</a>";
+                        });
+                        break;
+                    default:
+                        tr.value = tr.row.find("td.ms-formbody input").val().trim();
                         break;
                 }
-            } catch (e) {
-                console.log(e);
-            }
+            } catch (e) { }
+            return tr.value;
         }
     };
     var spRows = $.spEasyForms.sharePointFieldRows;
@@ -1958,7 +2134,6 @@
                     result.userId = _spPageContextInfo.userId;
                     result.userProfile = {};
                     result.userInformation = {};
-                    result.groups = {};
                     result.listContexts = {};
                 }
             }
@@ -2002,7 +2177,7 @@
                 $.ajax({
                     async: false,
                     url: currentContext.webAppUrl + currentContext.webRelativeUrl +
-                        "/_layouts/userdisp.aspx?Force=True&" + id + new Date().getTime(),
+                        "/_layouts/userdisp.aspx?Force=True&" + id + "&" + new Date().getTime(),
                     complete: function (xData) {
                         $(xData.responseText).find(
                             "table.ms-formtable td[id^='SPField']").each(
@@ -2011,7 +2186,8 @@
                             var tr = $(this).closest("tr");
                             var nv = utils.row2FieldRef(tr);
                             if (nv.internalName.length > 0) {
-                                var prop = nv.internalName[0].toLowerCase() + nv.internalName.substring(1);
+                                var prop = nv.internalName[0].toLowerCase() + 
+                                    nv.internalName.substring(1);
                                 user[prop] = nv.value;
                             }
                         });
@@ -2151,7 +2327,8 @@
             if (!this.groups) {
                 this.groups = ("groups" in currentContext ? currentContext.groups : {});
             }
-            if (!opt.useCache || "accountName" in opt || $.isEmptyObject(this.groups)) {
+            if (!opt.useCache || "accountName" in opt || this.groups === undefined ||
+                $.isEmptyObject(this.groups)) {
                 $().SPServices({
                     operation: "GetGroupCollectionFromUser",
                     userLoginName: (("accountName" in opt && opt.accountName.length > 0) ?
@@ -2177,7 +2354,8 @@
             }
             var opt = $.extend({}, spEasyForms.defaults, options);
             var currentContext = this.get(options);
-            if (opt.useCache && currentContext.siteGroups !== undefined && !$.isEmptyObject(currentContext.siteGroups)) {
+            if (opt.useCache && currentContext.siteGroups !== undefined && 
+                !$.isEmptyObject(currentContext.siteGroups)) {
                 this.siteGroups = currentContext.siteGroups;
             }
             if (!this.siteGroups) {
@@ -2233,14 +2411,15 @@
                 type: "GET",
                 url: opt.currentContext.webAppUrl + opt.currentContext.webRelativeUrl +
                     "/SiteAssets/spef-layout-" + opt.listId + ".txt",
-                headers: { "Content-Type": "text/plain" },
+                headers: {
+                    "Content-Type": "text/plain"
+                },
                 async: false,
                 cache: false,
                 success: function (data) {
                     var resultText = data;
                     opt.config = utils.parseJSON(resultText);
                     opt.config = spContext.layout2Config(opt);
-                    opt.lstContext.config = opt.config;
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     if (xhr.status != 404) {
@@ -2441,7 +2620,7 @@
         var originalPreSaveItem = PreSaveItem;
         PreSaveItem = function () {
             var result = master.preSaveItem();
-            if (result && "function" === typeof (OriginalPreSaveItem)) {
+            if (result && "function" === typeof (originalPreSaveItem)) {
                 return originalPreSaveItem();
             }
             return result;
@@ -2450,405 +2629,3 @@
 })(jQuery);
 
 
-
-if (window.location.href.indexOf('fiddle') >= 0) {
-    _spPageContextInfo = {
-        siteServerRelativeUrl: '/sites/devjmcshea',
-        webServerRelativeUrl: '/sites/devjmcshea',
-        webUIVersion: 15,
-        pageListId: '{8fcf63aa-827d-4b9b-88bb-958abb8bf105}',
-        userId: 9
-    };
-    var cache = {
-        "spEasyForms_spContext_/sites/devjmcshea": {
-            "siteRelativeUrl": "/sites/devjmcshea",
-            "webAppUrl": "https://flexpointtech.sharepoint.com",
-            "webRelativeUrl": "/sites/devjmcshea",
-            "webUIVersion": 15,
-            "listId": "{8fcf63aa-827d-4b9b-88bb-958abb8bf105}",
-            "userId": 9,
-            "userProfile": {},
-            "userInformation": {
-                "name": "i:0#.f|membership|jmcshea@haystax.com",
-                "title": "Joe McShea",
-                "eMail": "jmcshea@haystax.com",
-                "mobilePhone": "703-439-7822",
-                "notes": "",
-                "picture": "",
-                "department": "",
-                "jobTitle": "",
-                "sipAddress": "jmcshea@haystax.com",
-                "firstName": "Joe",
-                "lastName": "McShea",
-                "workPhone": "",
-                "userName": "jmcshea@haystax.com",
-                "webSite": "",
-                "sPSResponsibility": "",
-                "office": "",
-                "sPSPictureTimestamp": "63531755205",
-                "sPSPicturePlaceholderState": "",
-                "sPSPictureExchangeSyncState": "",
-                "attachments": ""
-            },
-            "listContexts": {
-                "{8fcf63aa-827d-4b9b-88bb-958abb8bf105}": {
-                    "fields": {
-                        "Title": {
-                            "internalName": "Title",
-                            "displayName": "Last Name",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "Last Name": {
-                            "internalName": "Title",
-                            "displayName": "Last Name",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "FirstName": {
-                            "internalName": "FirstName",
-                            "displayName": "First Name",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "First Name": {
-                            "internalName": "FirstName",
-                            "displayName": "First Name",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "FullName": {
-                            "internalName": "FullName",
-                            "displayName": "Full Name",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "Full Name": {
-                            "internalName": "FullName",
-                            "displayName": "Full Name",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "Email": {
-                            "internalName": "Email",
-                            "displayName": "Email Address",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "Email Address": {
-                            "internalName": "Email",
-                            "displayName": "Email Address",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "Company": {
-                            "internalName": "Company",
-                            "displayName": "Company",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "JobTitle": {
-                            "internalName": "JobTitle",
-                            "displayName": "Job Title",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "Job Title": {
-                            "internalName": "JobTitle",
-                            "displayName": "Job Title",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "WorkPhone": {
-                            "internalName": "WorkPhone",
-                            "displayName": "Business Phone",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "Business Phone": {
-                            "internalName": "WorkPhone",
-                            "displayName": "Business Phone",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "HomePhone": {
-                            "internalName": "HomePhone",
-                            "displayName": "Home Phone",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "Home Phone": {
-                            "internalName": "HomePhone",
-                            "displayName": "Home Phone",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "CellPhone": {
-                            "internalName": "CellPhone",
-                            "displayName": "Mobile Number",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "Mobile Number": {
-                            "internalName": "CellPhone",
-                            "displayName": "Mobile Number",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "WorkFax": {
-                            "internalName": "WorkFax",
-                            "displayName": "Fax Number",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "Fax Number": {
-                            "internalName": "WorkFax",
-                            "displayName": "Fax Number",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "WorkAddress": {
-                            "internalName": "WorkAddress",
-                            "displayName": "Address",
-                            "type": "SPFieldNote",
-                            "value": ""
-                        },
-                        "Address": {
-                            "internalName": "WorkAddress",
-                            "displayName": "Address",
-                            "type": "SPFieldNote",
-                            "value": ""
-                        },
-                        "WorkCity": {
-                            "internalName": "WorkCity",
-                            "displayName": "City",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "City": {
-                            "internalName": "WorkCity",
-                            "displayName": "City",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "WorkState": {
-                            "internalName": "WorkState",
-                            "displayName": "State/Province",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "State/Province": {
-                            "internalName": "WorkState",
-                            "displayName": "State/Province",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "WorkZip": {
-                            "internalName": "WorkZip",
-                            "displayName": "ZIP/Postal Code",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "ZIP/Postal Code": {
-                            "internalName": "WorkZip",
-                            "displayName": "ZIP/Postal Code",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "WorkCountry": {
-                            "internalName": "WorkCountry",
-                            "displayName": "Country/Region",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "Country/Region": {
-                            "internalName": "WorkCountry",
-                            "displayName": "Country/Region",
-                            "type": "SPFieldText",
-                            "value": ""
-                        },
-                        "WebPage": {
-                            "internalName": "WebPage",
-                            "displayName": "Web Page",
-                            "type": "SPFieldURL",
-                            "value": ""
-                        },
-                        "Web Page": {
-                            "internalName": "WebPage",
-                            "displayName": "Web Page",
-                            "type": "SPFieldURL",
-                            "value": ""
-                        },
-                        "Comments": {
-                            "internalName": "Comments",
-                            "displayName": "Notes",
-                            "type": "SPFieldNote",
-                            "value": ""
-                        },
-                        "Notes": {
-                            "internalName": "Comments",
-                            "displayName": "Notes",
-                            "type": "SPFieldNote",
-                            "value": ""
-                        },
-                        "Attachments": {
-                            "internalName": "Attachments",
-                            "displayName": "Attachments",
-                            "type": "SPFieldAttachments",
-                            "value": ""
-                        }
-                    }
-                }
-            }
-        }
-    };
-    cache['spEasyForms_spContext_/sites/devjmcshea'].groups = {
-        "6": {
-            "name": "Teams Tester Owners",
-            "id": "6"
-        },
-        "8": {
-            "name": "Teams Tester Members",
-            "id": "8"
-        },
-        "19": {
-            "name": "Test Group",
-            "id": "19"
-        },
-        "Teams Tester Members": {
-            "name": "Teams Tester Members",
-            "id": "8"
-        },
-        "Teams Tester Owners": {
-            "name": "Teams Tester Owners",
-            "id": "6"
-        },
-        "Test Group": {
-            "name": "Test Group",
-            "id": "19"
-        }
-    };
-    cache['spEasyForms_spContext_/sites/devjmcshea'].siteGroups = {
-        "6": {
-            "name": "Teams Tester Owners",
-            "id": "6"
-        },
-        "8": {
-            "name": "Teams Tester Members",
-            "id": "8"
-        },
-        "9": {
-            "name": "Teams Tester Visitors",
-            "id": "9"
-        },
-        "19": {
-            "name": "Test Group",
-            "id": "19"
-        },
-        "20": {
-            "name": "Approvers",
-            "id": "20"
-        },
-        "21": {
-            "name": "Designers",
-            "id": "21"
-        },
-        "Approvers": {
-            "name": "Approvers",
-            "id": "20"
-        },
-        "Designers": {
-            "name": "Designers",
-            "id": "21"
-        },
-        "Teams Tester Members": {
-            "name": "Teams Tester Members",
-            "id": "8"
-        },
-        "Teams Tester Owners": {
-            "name": "Teams Tester Owners",
-            "id": "6"
-        },
-        "Teams Tester Visitors": {
-            "name": "Teams Tester Visitors",
-            "id": "9"
-        },
-        "Test Group": {
-            "name": "Test Group",
-            "id": "19"
-        }
-    };
-    cache['spEasyForms_spContext_/sites/devjmcshea'].listContexts['{8fcf63aa-827d-4b9b-88bb-958abb8bf105}'].config = {
-        "layout": {
-            "def": [
-                {
-                    "containerType": "Tabs",
-                    "index": "1",
-                    "fieldGroups": [
-                        {
-                            "name": "one",
-                            "fields": [
-                                {
-                                    "fieldInternalName": "Title"
-                                },
-                                {
-                                    "fieldInternalName": "FirstName"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "two",
-                            "fields": [
-                                {
-                                    "fieldInternalName": "FullName"
-                                },
-                                {
-                                    "fieldInternalName": "JobTitle"
-                                },
-                                {
-                                    "fieldInternalName": "Email"
-                                },
-                                {
-                                    "fieldInternalName": "Company"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "containerType": "DefaultForm",
-                    "index": "0"
-                },
-                {
-                    "containerType": "Accordion",
-                    "index": "2",
-                    "fieldGroups": [
-                        {
-                            "name": "alpha",
-                            "fields": [
-                                {
-                                    "fieldInternalName": "WorkState"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "beta",
-                            "fields": [
-                                {
-                                    "fieldInternalName": "CellPhone"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-    };
-    $().ready(function () {
-        $.spEasyForms.defaults = $.extend({}, $.spEasyForms.defaults, {
-            useCache: true,
-            cache: cache
-        });
-        $.spEasyForms.init();
-    });
-}
