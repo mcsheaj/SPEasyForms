@@ -2935,12 +2935,3 @@ $("table.ms-formtable ").hide();
         };
     }
 })(jQuery);
-
-
-function expandCal() {
-    setInterval(expandCalCheck, 900);
-}
-function expandCalCheck() {
-    $(".ms-acal-vcont a[title='Add']").attr("href", "NewForm.aspx");
-}
-ExecuteOrDelayUntilScriptLoaded(expandCal, "sp.ui.applicationpages.calendar.js");
