@@ -526,6 +526,8 @@ $("table.ms-formtable ").hide();
                         opt.prepend = false;
                     }
                 });
+
+                this.highlightValidationErrors(opt);
             }
 
             visibilityManager.transform(opt);
@@ -656,35 +658,42 @@ $("table.ms-formtable ").hide();
          *     be cancelled.
          *********************************************************************/
         preSaveItem: function () {
+            var opt = $.extend({}, spEasyForms.defaults, {});
             var result = true;
 
-            var hasValidationErrors = true;
-            if (typeof (SPClientForms) !== undefined && 
-                typeof (SPClientForms.ClientFormManager) !== undefined && 
+            var hasValidationErrors = false;
+            if (typeof (SPClientForms) !== 'undefined' && 
+                typeof (SPClientForms.ClientFormManager) !== 'undefined' && 
                 typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
                 hasValidationErrors = SPClientForms.ClientFormManager.SubmitClientForm('WPQ2');
             }
 
             if (hasValidationErrors) {
-                var opt = $.extend({}, spEasyForms.defaults, {});
-                var config = configManager.get(opt);
-                $.each(config.layout.def, function (index, current) {
-                    if (current.containerType != 'DefaultForm') {
-                        var containerType = current.containerType[0].toLowerCase() + 
-                            current.containerType.substring(1);
-                        if (containerType != "defaultForm") {
-                            var impl = master.containerImplementations[containerType];
-                            opt.index = index;
-                            opt.layout = current;
-                            result = result && impl.preSaveItem(opt);
-                        }
-                    }
-                });
+                result = this.highlightValidationErrors(opt);
             }
 
             $("#s4-bodyContainer").scrollTop();
 
             return result && !hasValidationErrors;
+        },
+
+        highlightValidationErrors: function(options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            var result = true;
+            var config = configManager.get(opt);
+            $.each(config.layout.def, function (index, current) {
+                if (current.containerType != 'DefaultForm') {
+                    var containerType = current.containerType[0].toLowerCase() + 
+                        current.containerType.substring(1);
+                    if (containerType != "defaultForm") {
+                        var impl = master.containerImplementations[containerType];
+                        opt.index = index;
+                        opt.layout = current;
+                        result = result && impl.preSaveItem(opt);
+                    }
+                }
+            });
+            return result;
         },
 
         /*********************************************************************
@@ -2928,3 +2937,10 @@ $("table.ms-formtable ").hide();
 })(jQuery);
 
 
+function expandCal() {
+    setInterval(expandCalCheck, 900);
+}
+function expandCalCheck() {
+    $(".ms-acal-vcont a[title='Add']").attr("href", "NewForm.aspx");
+}
+ExecuteOrDelayUntilScriptLoaded(expandCal, "sp.ui.applicationpages.calendar.js");

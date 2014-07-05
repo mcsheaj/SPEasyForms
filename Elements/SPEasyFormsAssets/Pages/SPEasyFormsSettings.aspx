@@ -8,7 +8,7 @@
 </asp:content>
 
 <asp:content runat="server" contentplaceholderid="PlaceHolderPageTitleInTitleArea">
-    <h1>SPEasyForms Settings</h1>
+    <h2>SPEasyForms Settings</h2>
 </asp:content>
 
 <asp:content runat="server" contentplaceholderid="PlaceHolderAdditionalPageHead">
@@ -65,13 +65,9 @@
             vertical-align: top;
         }
 
-        .speasyforms-editor {
-            padding: 20px 0px;
-        }
-
         .speasyforms-form {
             vertical-align: top;
-            padding: 100px 20px;
+            padding:30px 20px;
             width: 100%;
         }
 
