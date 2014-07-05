@@ -74,6 +74,7 @@ $("table.ms-formtable ").hide();
          * }
          ********************************************************************/
         init: function (options) {
+            debugger;
             var opt = $.extend({}, spEasyForms.defaults, options);
             this.initCacheLibrary(opt);
             this.loadDynamicStyles(opt);
@@ -240,6 +241,7 @@ $("table.ms-formtable ").hide();
                 } else {
                     $("body").append(output);
                 }
+                $("#spEasyFormsTextareaDiv").show();
             }
         }
     };
@@ -564,6 +566,8 @@ $("table.ms-formtable ").hide();
                             opt.input = $(xData.responseText);
                             opt.rows = spRows.init(opt);
                             $.each(opt.rows, function (fieldIdx, row) {
+                                var td = row.row.find("td.ms-formbody");
+                                td.html("<div style='display:none'>" + td.html() + "</div>");
                                 $('.ms-formtable').append(row.row);
                             });
                             delete opt.input;
@@ -2094,7 +2098,7 @@ $("table.ms-formtable ").hide();
                 result = "new";
             } else if (page.indexOf("edit") >= 0) {
                 result = "edit";
-            } else if (page.indexOf("display") >= 0) {
+            } else if (page.indexOf("disp") >= 0 || page.indexOf("display") >= 0) {
                 result = "display";
             }
             return result;
