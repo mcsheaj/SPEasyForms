@@ -2,9 +2,9 @@
  * SPEasyForms - modify SharePoint forms using jQuery (i.e. put fields on 
  * tabs, show/hide fields, validate field values, etc.)
  *
- * @version 2014.00.03
- * @requires jQuery v1.8.3 (I intend to test it with later 1.x versions
- *     but have not done so yet)
+ * @version 2014.00.04
+ * @requires jQuery v1.11.1 (I intend to test it with 1.8.3 versions
+ *     or better but have not done so yet)
  * @requires jQuery-ui v1.9.2 (I intend to test it with later 1.x 
  *     versions but have not done so yet)
  * @requires jQuery.SPServices v2014.01 or greater
@@ -128,14 +128,14 @@ $("table.ms-formtable ").hide();
         loadDynamicStyles: function (options) {
             if (options.jQueryUITheme === undefined) {
                 options.jQueryUITheme = _spPageContextInfo.siteServerRelativeUrl +
-                    '/Style Library/SPEasyFormsAssets/2014.00.03/Css/jquery-ui-redmond/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.04/Css/jquery-ui-redmond/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
                 options.css = _spPageContextInfo.siteServerRelativeUrl +
-                    '/Style Library/SPEasyFormsAssets/2014.00.03/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.04/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -245,7 +245,149 @@ $("table.ms-formtable ").hide();
     };
     var spEasyForms = $.spEasyForms;
 
+    ////////////////////////////////////////////////////////////////////////////
+    // Class that encapsulates getting, setting, and saving the SPEasyForms
+    // configuration file for the current list.
+    ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.configManager = {
+        /*********************************************************************
+         * Get the configuration file for the current list.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *
+         * @return {object} - the configuration object, in the form:
+         *
+         * {
+         *     "layout": { // configuration of containers
+         *         "def": [ // the default layout, later there will be other layouts for other content types
+         *             // the default form container has any fields not placed on another container,
+         *             // this is not necessarily the first container
+         *             { 
+         *                 "containerType": "DefaultForm",
+         *                 "index": "d"
+         *             },
+         *             // each additional property is another container
+         *             { 
+         *                 // the type is used to find the implementation 
+         *                 "containerType": "Tabs",
+         *                 // this is an immutable index that is set at the time the container
+         *                 // was added to the configuration, and is used to find it as things
+         *                 // are moved around through drag and drop, the actual value is 
+         *                 // not important, just that it is unique
+         *                 "index": "1",
+         *                 // technically, the rest of the container configuration is implementation
+         *                 // specific, but all of the built-in container implemenations have an
+         *                 // array of field groups; for tabs, one field group equals one tab, for
+         *                 // accordion one content area, etc.
+         *                 "fieldGroups": [
+         *                     {
+         *                         // the name of the field group, how theis is used is container
+         *                         // specific; for tabs this is the tab header, for columns this
+         *                         // isn't used at all when transforming the form, only in the
+         *                         // editor
+         *                         "name": "one",
+         *                         // an array of field internal names
+         *                         "fields": [
+         *                             {
+         *                                 "fieldInternalName": "FirstName"
+         *                             },
+         *                             {
+         *                                 "fieldInternalName": "FullName"
+         *                             }
+         *                         ]
+         *                     },
+         *                     {
+         *                         "name": "two",
+         *                         "fields": [
+         *                             {
+         *                                 "fieldInternalName": "Email"
+         *                             },
+         *                             {
+         *                                 "fieldInternalName": "Company"
+         *                             }
+         *                         ]
+         *                     }
+         *                 ]
+         *             },
+         *             {
+         *                 "containerType": "Columns",
+         *                 "index": "2",
+         *                 "fieldGroups": [
+         *                     {
+         *                         "name": "1",
+         *                         "fields": [
+         *                             {
+         *                                 "fieldInternalName": "JobTitle"
+         *                             },
+         *                             {
+         *                                 "fieldInternalName": "WorkPhone"
+         *                             }
+         *                         ]
+         *                     },
+         *                     {
+         *                         "name": "2",
+         *                         "fields": [
+         *                             {
+         *                                 "fieldInternalName": "HomePhone"
+         *                             },
+         *                             {
+         *                                 "fieldInternalName": "CellPhone"
+         *                             }
+         *                         ]
+         *                     }
+         *                 ]
+         *             }
+         *         ]
+         *     },
+         *     "visibility": { the conditional visibility rules
+         *         "def": { // the default rule set, again, there could be multiples in the future for multiple content types
+         *             // the field internal name is the key to an array of rules, the first rule that matches
+         *             // the current user is the only one executed
+         *             "FirstName": [
+         *                 {
+         *                     // Hidden, ReadOnly, or Editable; Editable really does nothing to the form,
+         *                     // but stops processing
+         *                     "state": "Editable",
+         *                     // rules can be written for specific forms, the default is all forms
+         *                     "forms": "New;Edit;Display",
+         *                     // rules can be applied to specific SharePoint groups and/or the original
+         *                     // author of the current item, the default is applies to everyone
+         *                     "appliesTo": "Joe McShea - Dev Site Members"
+         *                 },
+         *                 {
+         *                     "state": "ReadOnly",
+         *                     "forms": "New;Edit;Display",
+         *                     "appliesTo": "Joe McShea - Dev Site Visitors"
+         *                 },
+         *                 {
+         *                     "state": "Hidden",
+         *                     "forms": "New;Edit;Display",
+         *                     "appliesTo": ""
+         *                 }
+         *             ],
+         *             "Email": [
+         *                 {
+         *                     "state": "Editable",
+         *                     "forms": "New;Edit;Display",
+         *                     "appliesTo": "Joe McShea - Dev Site Members"
+         *                 },
+         *                 {
+         *                     "state": "ReadOnly",
+         *                     "forms": "New;Edit;Display",
+         *                     "appliesTo": "Joe McShea - Dev Site Visitors"
+         *                 },
+         *                 {
+         *                     "state": "Hidden",
+         *                     "forms": "New;Edit;Display",
+         *                     "appliesTo": ""
+         *                 }
+         *             ]
+         *         }
+         *     }
+         * }
+         *********************************************************************/
         get: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var currentConfig;
@@ -273,6 +415,15 @@ $("table.ms-formtable ").hide();
             return currentConfig;
         },
 
+        /*********************************************************************
+         * Set the current configuration.  This stores it in a control on the
+         * page, it does not write it back to the server.  Use save to write it
+         * back to the server. The save button is also enabled by this function.
+         *
+         * @param {object} options - {
+         *     config: {object}  // the configuration object to be set
+         * }
+         *********************************************************************/
         set: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var newConfig = JSON.stringify(opt.config, null, 4);
@@ -283,6 +434,15 @@ $("table.ms-formtable ").hide();
             }
         },
 
+        /*********************************************************************
+         * Write the configuration back to a file in the SiteAssets library. The
+         * save button is also disabled by this function, since there are no
+         * changes to be saved.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *********************************************************************/
         save: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var ctx = spContext.get();
@@ -312,452 +472,6 @@ $("table.ms-formtable ").hide();
         }
     };
     var configManager = $.spEasyForms.configManager;
-
-    $.spEasyForms.visibilityManager = {
-        initialized: false,
-
-        siteGroups: [],
-
-        transform: function (options) {
-            var opt = $.extend({}, spEasyForms.defaults, options);
-            opt.config = spContext.getConfig(opt);
-            if (opt.config && opt.config.visibility && opt.config.visibility.def && 
-                Object.keys(opt.config.visibility.def).length > 0) {
-                var userGroups = spContext.getUserGroups(opt);
-                $.each(opt.rows, function (idx, row) {
-                    if (row.internalName in opt.config.visibility.def) {
-                        $.each(opt.config.visibility.def[row.internalName], function (index, rule) {
-                            var formType = visibilityManager.getFormType(opt);
-                            var ruleForms = rule.forms.split(';').map(function (elem) {
-                                return elem.toLowerCase();
-                            });
-                            var formMatch = $.inArray(formType, ruleForms) >= 0;
-                            var appliesMatch = false;
-                            if (rule.appliesTo.length === 0) {
-                                appliesMatch = true;
-                            } else {
-                                var appliesToGroups = rule.appliesTo.split(';');
-                                $.each(userGroups, function (i, group) {
-                                    if ($.inArray(group.name, appliesToGroups) >= 0) {
-                                        appliesMatch = true;
-                                        return false;
-                                    }
-                                });
-                                if (appliesToGroups[0] === "AUTHOR") {
-                                    var authorHref = $("span:contains('Created  at')").
-                                        find("a.ms-subtleLink").attr("href");
-                                    if (authorHref) {
-                                        var authorId = parseInt(
-                                            authorHref.substring(authorHref.indexOf("ID=") + 3));
-                                        if (authorId === spContext.get(opt).userId) {
-                                            appliesMatch = true;
-                                        }
-                                    }
-                                }
-                            }
-                            if (formMatch && appliesMatch) {
-                                if (rule.state == "Hidden") {
-                                       row.row.attr("data-visibilityhidden", "true").hide();
-                                }
-                                else if (rule.state === "ReadOnly") {
-                                    if(formType !== "display" && row.displayName !== "Attachments") {
-                                        var html = '<tr><td nowrap="true" valign="top" width="113px" ' +
-                                            'class="ms-formlabel"><h3 class="ms-standardheader"><nobr>' +
-                                            row.displayName + '</nobr></h3></td>' +
-                                            '<td valign="top" width="350px" class="ms-formbody">' +
-                                            row.value + '</td></tr>';
-                                        row.row.attr("data-visibilityhidden", "true").hide();
-                                        row.row.after(html);
-                                    }
-                                }
-                                return false;
-                            }
-                        });
-                    }
-                });
-            }
-        },
-
-        toEditor: function (options) {
-            var opt = $.extend({}, spEasyForms.defaults, options);
-            if (!this.initialized) {
-                this.wireDialogEvents(opt);
-            }
-            this.wireButtonEvents(opt);
-            this.drawRuleTable(opt);
-            this.initialized = true;
-        },
-
-        toConfig: function (options) {
-            var opt = $.extend({}, spEasyForms.defaults, options);
-            var rules = [];
-            var fieldName = $("#conditionalVisibilityField").val();
-            $("#conditionalVisibilityRules tr:not(:first)").each(function (idx, tr) {
-                var tds = $(tr).find("td");
-                var appliesTo = tds[1].innerText != "Everyone" ? tds[1].innerText : "";
-                var rule = {
-                    state: tds[0].innerText,
-                    appliesTo: appliesTo,
-                    forms: tds[2].innerText
-                };
-                rules.push(rule);
-            });
-            var config = configManager.get(opt);
-            config.visibility.def[fieldName] = rules;
-            return config;
-        },
-
-        wireDialogEvents: function (options) {
-            var opt = $.extend({}, spEasyForms.defaults, options);
-
-            // wire the conditional visilibity dialog
-            var conditionalVisiblityOpts = {
-                modal: true,
-                buttons: {
-                    "Ok": function () {
-                        $('#conditonalVisibilityRulesDialog').dialog("close");
-                        return false;
-                    }
-                },
-                autoOpen: false,
-                width: "600px"
-            };
-            $('#conditonalVisibilityRulesDialog').dialog(conditionalVisiblityOpts);
-
-            // wire the add/edit visibility rule dialog
-            var addVisibilityRuleOpts = {
-                modal: true,
-                buttons: {
-                    "Ok": function () {
-                        opt.state = $('#addVisibilityRuleState').val();
-                        if (opt.state === '') {
-                            $('#addVisibilityRuleStateError').text(
-                                "You must select a value for state!");
-                        } else {
-                            opt.config = configManager.get(opt);
-                            opt.fieldName = $("#addVisibilityRuleField").val();
-                            opt.config.visibility = visibilityManager.getVisibility(opt);
-                            opt.index = $("#visibilityRuleIndex").val();
-                            if (opt.index.length === 0) {
-                                var newRule = visibilityManager.getRule(opt);
-                                opt.config.visibility.def[opt.fieldName].push(newRule);
-                            } else {
-                                var rule = visibilityManager.getRule(opt);
-                                opt.config.visibility.def[opt.fieldName][opt.index] = rule;
-                            }
-                            configManager.set(opt);
-                            $('#addVisibilityRuleDialog').dialog("close");
-                            $("#conditonalVisibilityRulesDialog").dialog("open");
-                            visibilityManager.drawRuleTable(opt);
-                        }
-                        return false;
-                    },
-                        "Cancel": function () {
-                        $('#addVisibilityRuleDialog').dialog("close");
-                        $("#conditonalVisibilityRulesDialog").dialog("open");
-                        return false;
-                    }
-                },
-                autoOpen: false,
-                width: "650px"
-            };
-            $('#addVisibilityRuleDialog').dialog(addVisibilityRuleOpts);
-
-            // wire the button to launch the add/edit rule dialog
-            $("#addVisibilityRule").button({
-                icons: {
-                    primary: "ui-icon-plusthick"
-                },
-                text: false
-            }).click(function () {
-                $("#conditonalVisibilityRulesDialog").dialog("close");
-                visibilityManager.clearRuleDialog(opt);
-                $('#addVisibilityRuleDialog').dialog("open");
-                return false;
-            });
-
-            // wire the entity picker on the add/edit rule dialog
-            $("input.speasyforms-entitypicker").autocomplete({
-                source: this.siteGroups.sort(),
-
-                select: function (e, ui) {
-                    var group = ui.item.value;
-                    var span = $("<span>").addClass("speasyforms-entity").
-                    attr('title', group).text(group);
-                    var a = $("<a>").addClass("speasyforms-remove").attr({
-                        "href": "#",
-                        "title": "Remove " + group
-                    }).
-                    text("x").appendTo(span);
-                    span.insertBefore(this);
-                    $(this).val("").css("top", 2);
-                    visibilityManager.siteGroups.splice(
-                    visibilityManager.siteGroups.indexOf(group), 1);
-                    $(this).autocomplete(
-                        "option", "source", visibilityManager.siteGroups.sort());
-                    return false;
-                }
-            });
-            $(".speasyforms-entitypicker").click(function () {
-                $(this).find("input").focus();
-            });
-            $("#spEasyFormsEntityPicker").on("click", ".speasyforms-remove", function () {
-                visibilityManager.siteGroups.push($(this).parent().attr("title"));
-                $(this).closest("div").find("input").
-                autocomplete("option", "source", visibilityManager.siteGroups.sort()).
-                focus();
-                $(this).parent().remove();
-            });
-        },
-
-        wireButtonEvents: function (options) {
-            var opt = $.extend({}, spEasyForms.defaults, options);
-            $("tr.speasyforms-sortablefields").each(function (idx, tr) {
-                var tds = $(this).find("td");
-                if (tds.length > 0) {
-                    var internalName = $(this).find("td")[1].innerText;
-                    $(this).append(
-                        "<td class='speasyforms-conditionalvisibility'><button id='" + internalName +
-                        "ConditionalVisibility' class='speasyforms-containerbtn " +
-                        "speasyforms-conditionalvisibility'>" +
-                        "Edit Conditional Visibility</button></td>");
-                }
-            });
-
-            $("button.speasyforms-conditionalvisibility").button({
-                icons: {
-                    primary: "ui-icon-key"
-                },
-                text: false
-            }).click(function () {
-                var internalName = this.id.replace("ConditionalVisibility", "");
-                $("#conditionalVisibilityField").val(internalName);
-                opt.config = configManager.get(opt);
-                $('#conditionalVisibilityDialogHeader').text(
-                    "Rules for Field '" +
-                    spContext.get(opt).listContexts[spContext.getCurrentListId(opt)].fields[internalName].displayName +
-                    "'");
-                opt.fieldName = internalName;
-                opt.config.visibility = visibilityManager.getVisibility(opt);
-                $("#conditonalVisibilityRulesDialog").dialog('open');
-                visibilityManager.drawRuleTable(opt);
-                return false;
-            });
-        },
-
-        drawRuleTable: function (options) {
-            var opt = $.extend({}, spEasyForms.defaults, options);
-            if (opt.fieldName && opt.config.visibility.def[opt.fieldName].length === 0) {
-                if(!opt.static) {
-                    $("#conditionalVisibilityRules").html(
-                        "There are currently no rules for this field. Click the plus sign to add one.");
-                }
-            } else if (opt.fieldName) {
-                var klass = 'speasyforms-sortablerules';
-                if(opt.static)
-                    klass = 'speasyforms-staticrules';
-                var id = 'conditionalVisibilityRulesTable';
-                var table = "<center>";
-                if(opt.static) {
-                    id += opt.index;
-                    table = "<h3 class='"+klass+"'>Rules for Field '"+opt.displayName+"'</h3>";
-                }
-                table += "<table id='"+id+"' " +
-                    "class='"+klass+"'><tbody class='"+klass+"'>" +
-                    "<th class='"+klass+"'>State</th>" +
-                    "<th class='"+klass+"'>Applies To</th>" +
-                    "<th class='"+klass+"'>On Forms</th>";
-                $.each(opt.config.visibility.def[opt.fieldName], function (idx, rule) {
-                    table += "<tr class='"+klass+"'>" +
-                        "<td class='"+klass+"'>" + rule.state +
-                        "</td>" +
-                        "<td class='"+klass+"'>" +
-                        (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone") +
-                        "</td>" +
-                        "<td class='"+klass+"'>" + rule.forms + "</td>";
-                    if(!opt.static) {
-                        table += "<td class='speasyforms-visibilityrulebutton'>" +
-                        "<button id='addVisililityRuleButton" + idx +
-                        "' >Edit Rule</button></td>" +
-                        "<td class='speasyforms-visibilityrulebutton'>" +
-                        "<button id='delVisililityRuleButton" + idx +
-                        "' >Delete Rule</button></td>";
-                    }
-                    table += "</tr>";
-                });
-                table += "</tbody></table>";
-                if(!opt.static) {
-                    $("#conditionalVisibilityRules").html(table + "</center>");
-                    this.wireVisibilityRulesTable(opt);
-                }
-                else {
-                    $("#tabs-min-visibility").append(table);
-                }
-            }
-            if(!opt.static) {
-                $("#tabs-min-visibility").html("");
-                $.each(Object.keys(opt.config.visibility.def), function(idx, key) {
-                    opt.fieldName = key;
-                    opt.displayName = spContext.getListContext().fields[key].displayName;
-                    opt.static = true;
-                    opt.index = idx;
-                    visibilityManager.drawRuleTable(opt);
-                });
-            }
-        },
-            
-        wireVisibilityRulesTable: function (options) {
-            var opt = $.extend({}, spEasyForms.defaults, options);
-            $("[id^='delVisililityRuleButton']").button({
-                icons: {
-                    primary: "ui-icon-closethick"
-                },
-                text: false
-            }).click(function () {
-                opt.index = this.id.replace("delVisililityRuleButton", "");
-                opt.fieldName = $("#conditionalVisibilityField").val();
-                opt.config = configManager.get(opt);
-                opt.config.visibility.def[opt.fieldName].splice(opt.index, 1);
-                configManager.set(opt);
-                visibilityManager.drawRuleTable(opt);
-            });
-
-            $("[id^='addVisililityRuleButton']").button({
-                icons: {
-                    primary: "ui-icon-gear"
-                },
-                text: false
-            }).click(function () {
-                visibilityManager.clearRuleDialog(opt);
-                opt.index = this.id.replace("addVisililityRuleButton", "");
-                $("#visibilityRuleIndex").val(opt.index);
-                opt.fieldName = $("#conditionalVisibilityField").val();
-                $("#addVisibilityRuleField").val(opt.fieldName);
-                opt.config = configManager.get(opt);
-                var rule = opt.config.visibility.def[opt.fieldName][opt.index];
-                $("#addVisibilityRuleState").val(rule.state);
-                $.each(rule.appliesTo.split(';'), function (idx, entity) {
-                    if (entity === "AUTHOR") {
-                        $("#addVisibilityRuleApplyToAuthor")[0].checked = true;
-                    } else if (entity.length > 0) {
-                        var span = $("<span>").addClass("speasyforms-entity").
-                        attr('title', entity).text(entity);
-                        var a = $("<a>").addClass("speasyforms-remove").attr({
-                            "href": "#",
-                            "title": "Remove " + entity
-                        }).
-                        text("x").appendTo(span);
-                        $("#spEasyFormsEntityPicker").prepend(span);
-                        $("#addVisibilityRuleApplyTo").val("").css("top", 2);
-                        visibilityManager.siteGroups.splice(
-                        visibilityManager.siteGroups.indexOf(entity), 1);
-                    }
-                });
-                if (rule.forms.indexOf('New') >= 0) 
-                    $("#addVisibilityRuleNewForm")[0].checked = true;
-                if (rule.forms.indexOf('Edit') >= 0) 
-                    $("#addVisibilityRuleEditForm")[0].checked = true;
-                if (rule.forms.indexOf('Display') >= 0) 
-                    $("#addVisibilityRuleDisplayForm")[0].checked = true;
-                $('#addVisibilityRuleDialog').dialog("open");
-                return false;
-            });
-
-            // make the visibility rules sortable sortable
-            $("tbody.speasyforms-sortablerules").sortable({
-                connectWith: ".speasyforms-rulestable",
-                items: "> tr:not(:first)",
-                helper: "clone",
-                zIndex: 990,
-                update: function (event, ui) {
-                    if (!event.handled) {
-                        opt.config = visibilityManager.toConfig(opt);
-                        configManager.set(opt);
-                        visibilityManager.drawRuleTable(opt);
-                        event.handled = true;
-                    }
-                }
-            });
-        },
-
-        getVisibility: function (options) {
-            var opt = $.extend({}, spEasyForms.defaults, options);
-            if (!opt.config.visibility) {
-                opt.config.visibility = {
-                    def: {}
-                };
-            }
-            if (!opt.config.visibility.def[opt.fieldName]) {
-                opt.config.visibility.def[opt.fieldName] = [];
-            }
-            return opt.config.visibility;
-        },
-
-        getRule: function (options) {
-            var opt = $.extend({}, spEasyForms.defaults, options);
-            var result = {};
-            result.state = opt.state;
-            result.forms = "";
-            $(".speasyforms-formcb").each(function (idx, cb) {
-                if (cb.checked) {
-                    if (result.forms.length > 0) {
-                        result.forms += ";";
-                    }
-                    result.forms += this.id.replace("addVisibilityRule", "").replace("Form", "");
-                }
-            });
-            result.appliesTo = "";
-            $('#spEasyFormsEntityPicker .speasyforms-entity').each(function (idx, span) {
-                if (result.appliesTo.length > 0) {
-                    result.appliesTo += ";";
-                }
-                result.appliesTo += $(span).attr("title");
-            });
-            var author = $("#addVisibilityRuleApplyToAuthor")[0].checked;
-            if (author) {
-                if (result.appliesTo.length > 0) {
-                    result.appliesTo = ";" + result.appliesTo;
-                }
-                result.appliesTo = "AUTHOR" + result.appliesTo;
-            }
-            return result;
-        },
-
-        clearRuleDialog: function (options) {
-            var opt = $.extend({}, spEasyForms.defaults, options);
-            $("#addVisibilityRuleField").val($("#conditionalVisibilityField").val());
-            $("#visibilityRuleIndex").val("");
-            $('#addVisibilityRuleState').val('');
-            $('#addVisibilityRuleStateError').val('');
-            $('#addVisibilityRuleApplyToAuthor').attr('checked', false);
-            $('#addVisibilityRuleApplyTo').val('');
-            $('#spEasyFormsEntityPicker .speasyforms-entity').remove();
-            $('#addVisibilityRuleNewForm').attr('checked', true);
-            $('#addVisibilityRuleEditForm').attr('checked', true);
-            $('#addVisibilityRuleDisplayForm').attr('checked', true);
-            var siteGroups = spContext.getSiteGroups(opt);
-            $.each(siteGroups, function (idx, group) {
-                if ($.inArray(group.name, visibilityManager.siteGroups) < 0) {
-                    visibilityManager.siteGroups.push(group.name);
-                }
-            });
-        },
-
-        getFormType: function (options) {
-            var result = "";
-            var page = window.location.pathname;
-            page = page.substring(page.lastIndexOf("/") + 1).toLowerCase();
-            if (page.indexOf("new") >= 0) {
-                result = "new";
-            } else if (page.indexOf("edit") >= 0) {
-                result = "edit";
-            } else if (page.indexOf("display") >= 0) {
-                result = "display";
-            }
-            return result;
-        }
-    };
-    var visibilityManager = $.spEasyForms.visibilityManager;
 
     ////////////////////////////////////////////////////////////////////////////
     // Compound container representing the array of containers for a layout. This
@@ -1840,6 +1554,546 @@ $("table.ms-formtable ").hide();
     master.containerImplementations.tabs = $.spEasyForms.tabs;
 
     ////////////////////////////////////////////////////////////////////////////
+    // Class that encapsulates getting, setting, and saving the SPEasyForms
+    // configuration file for the current list.
+    ////////////////////////////////////////////////////////////////////////////
+    $.spEasyForms.visibilityManager = {
+        initialized: false,
+
+        siteGroups: [],
+
+        /*********************************************************************
+         * Transform the current form by hiding fields or makin them read-only
+         * as required by the current configuration and the group membership
+         * of the current user.
+         *
+         * @param {object} options - {
+         *     config: {object}
+         * }
+         *********************************************************************/
+        transform: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            opt.config = spContext.getConfig(opt);
+            if (opt.config && opt.config.visibility && opt.config.visibility.def &&
+                Object.keys(opt.config.visibility.def).length > 0) {
+                var userGroups = spContext.getUserGroups(opt);
+                $.each(opt.rows, function (idx, row) {
+                    if (row.internalName in opt.config.visibility.def) {
+                        $.each(opt.config.visibility.def[row.internalName], function (index, rule) {
+                            var formType = visibilityManager.getFormType(opt);
+                            var ruleForms = rule.forms.split(';').map(function (elem) {
+                                return elem.toLowerCase();
+                            });
+                            var formMatch = $.inArray(formType, ruleForms) >= 0;
+                            var appliesMatch = false;
+                            if (rule.appliesTo.length === 0) {
+                                appliesMatch = true;
+                            } else {
+                                var appliesToGroups = rule.appliesTo.split(';');
+                                $.each(userGroups, function (i, group) {
+                                    if ($.inArray(group.name, appliesToGroups) >= 0) {
+                                        appliesMatch = true;
+                                        return false;
+                                    }
+                                });
+                                if (appliesToGroups[0] === "AUTHOR") {
+                                    var authorHref = $("span:contains('Created  at')").
+                                        find("a.ms-subtleLink").attr("href");
+                                    if (authorHref) {
+                                        var authorId = parseInt(
+                                            authorHref.substring(authorHref.indexOf("ID=") + 3));
+                                        if (authorId === spContext.get(opt).userId) {
+                                            appliesMatch = true;
+                                        }
+                                    }
+                                }
+                            }
+                            if (formMatch && appliesMatch) {
+                                if (rule.state == "Hidden") {
+                                    row.row.attr("data-visibilityhidden", "true").hide();
+                                }
+                                else if (rule.state === "ReadOnly") {
+                                    if (formType !== "display" && row.displayName !== "Attachments") {
+                                        var html = '<tr><td nowrap="true" valign="top" width="113px" ' +
+                                            'class="ms-formlabel"><h3 class="ms-standardheader"><nobr>' +
+                                            row.displayName + '</nobr></h3></td>' +
+                                            '<td valign="top" width="350px" class="ms-formbody">' +
+                                            row.value + '</td></tr>';
+                                        row.row.attr("data-visibilityhidden", "true").hide();
+                                        row.row.after(html);
+                                    }
+                                }
+                                return false;
+                            }
+                        });
+                    }
+                });
+            }
+        },
+
+        /*********************************************************************
+         * Convert the conditional visibility rules for the current config into
+         * an editor.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *********************************************************************/
+        toEditor: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            if (!this.initialized) {
+                this.wireDialogEvents(opt);
+            }
+            this.wireButtonEvents(opt);
+            this.drawRuleTable(opt);
+            this.initialized = true;
+        },
+
+        /*********************************************************************
+         * Convert the editor back into a set of conditional visibility rules.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *********************************************************************/
+        toConfig: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            var rules = [];
+            var fieldName = $("#conditionalVisibilityField").val();
+            $("#conditionalVisibilityRules tr:not(:first)").each(function (idx, tr) {
+                var tds = $(tr).find("td");
+                var appliesTo = tds[1].innerText != "Everyone" ? tds[1].innerText : "";
+                var rule = {
+                    state: tds[0].innerText,
+                    appliesTo: appliesTo,
+                    forms: tds[2].innerText
+                };
+                rules.push(rule);
+            });
+            var config = configManager.get(opt);
+            config.visibility.def[fieldName] = rules;
+            return config;
+        },
+
+        /*********************************************************************
+         * Draw a set of rules for a single field as a table. This function draws
+         * the rules table for the conditional visibility dialog as well as all
+         * the rule tables on the conditional visibility tab of the main editor.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *********************************************************************/
+        drawRuleTable: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            if (opt.fieldName && opt.config.visibility.def[opt.fieldName].length === 0) {
+                if (!opt.static) {
+                    $("#conditionalVisibilityRules").html(
+                        "There are currently no rules for this field. Click the plus sign to add one.");
+                }
+            } else if (opt.fieldName) {
+                var klass = 'speasyforms-sortablerules';
+                if (opt.static)
+                    klass = 'speasyforms-staticrules';
+                var id = 'conditionalVisibilityRulesTable';
+                var table = "<center>";
+                if (opt.static) {
+                    id += opt.index;
+                    table = "<h3 class='" + klass + "'>Rules for Field '" + opt.displayName + "'</h3>";
+                }
+                table += "<table id='" + id + "' " +
+                    "class='" + klass + "'><tbody class='" + klass + "'>" +
+                    "<th class='" + klass + "'>State</th>" +
+                    "<th class='" + klass + "'>Applies To</th>" +
+                    "<th class='" + klass + "'>On Forms</th>";
+                $.each(opt.config.visibility.def[opt.fieldName], function (idx, rule) {
+                    table += "<tr class='" + klass + "'>" +
+                        "<td class='" + klass + "'>" + rule.state +
+                        "</td>" +
+                        "<td class='" + klass + "'>" +
+                        (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone") +
+                        "</td>" +
+                        "<td class='" + klass + "'>" + rule.forms + "</td>";
+                    if (!opt.static) {
+                        table += "<td class='speasyforms-visibilityrulebutton'>" +
+                        "<button id='addVisililityRuleButton" + idx +
+                        "' >Edit Rule</button></td>" +
+                        "<td class='speasyforms-visibilityrulebutton'>" +
+                        "<button id='delVisililityRuleButton" + idx +
+                        "' >Delete Rule</button></td>";
+                    }
+                    table += "</tr>";
+                });
+                table += "</tbody></table>";
+                if (!opt.static) {
+                    $("#conditionalVisibilityRules").html(table + "</center>");
+                    this.wireVisibilityRulesTable(opt);
+                }
+                else {
+                    $("#tabs-min-visibility").append(table);
+                }
+            }
+            if (!opt.static) {
+                $("#tabs-min-visibility").html("");
+                $.each(Object.keys(opt.config.visibility.def), function (idx, key) {
+                    opt.fieldName = key;
+                    opt.displayName = spContext.getListContext().fields[key].displayName;
+                    opt.static = true;
+                    opt.index = idx;
+                    visibilityManager.drawRuleTable(opt);
+                });
+            }
+        },
+
+        /*********************************************************************
+         * Wire up the buttons for a rules table (only applicable to the conditional
+         * visibility dialog since the rules tables on the main editor are static)
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *********************************************************************/
+        wireVisibilityRulesTable: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            $("[id^='delVisililityRuleButton']").button({
+                icons: {
+                    primary: "ui-icon-closethick"
+                },
+                text: false
+            }).click(function () {
+                opt.index = this.id.replace("delVisililityRuleButton", "");
+                opt.fieldName = $("#conditionalVisibilityField").val();
+                opt.config = configManager.get(opt);
+                opt.config.visibility.def[opt.fieldName].splice(opt.index, 1);
+                configManager.set(opt);
+                visibilityManager.drawRuleTable(opt);
+            });
+
+            $("[id^='addVisililityRuleButton']").button({
+                icons: {
+                    primary: "ui-icon-gear"
+                },
+                text: false
+            }).click(function () {
+                visibilityManager.clearRuleDialog(opt);
+                opt.index = this.id.replace("addVisililityRuleButton", "");
+                $("#visibilityRuleIndex").val(opt.index);
+                opt.fieldName = $("#conditionalVisibilityField").val();
+                $("#addVisibilityRuleField").val(opt.fieldName);
+                opt.config = configManager.get(opt);
+                var rule = opt.config.visibility.def[opt.fieldName][opt.index];
+                $("#addVisibilityRuleState").val(rule.state);
+                $.each(rule.appliesTo.split(';'), function (idx, entity) {
+                    if (entity === "AUTHOR") {
+                        $("#addVisibilityRuleApplyToAuthor")[0].checked = true;
+                    } else if (entity.length > 0) {
+                        var span = $("<span>").addClass("speasyforms-entity").
+                        attr('title', entity).text(entity);
+                        var a = $("<a>").addClass("speasyforms-remove").attr({
+                            "href": "#",
+                            "title": "Remove " + entity
+                        }).
+                        text("x").appendTo(span);
+                        $("#spEasyFormsEntityPicker").prepend(span);
+                        $("#addVisibilityRuleApplyTo").val("").css("top", 2);
+                        visibilityManager.siteGroups.splice(
+                        visibilityManager.siteGroups.indexOf(entity), 1);
+                    }
+                });
+                if (rule.forms.indexOf('New') >= 0)
+                    $("#addVisibilityRuleNewForm")[0].checked = true;
+                if (rule.forms.indexOf('Edit') >= 0)
+                    $("#addVisibilityRuleEditForm")[0].checked = true;
+                if (rule.forms.indexOf('Display') >= 0)
+                    $("#addVisibilityRuleDisplayForm")[0].checked = true;
+                $('#addVisibilityRuleDialog').dialog("open");
+                return false;
+            });
+
+            // make the visibility rules sortable sortable
+            $("tbody.speasyforms-sortablerules").sortable({
+                connectWith: ".speasyforms-rulestable",
+                items: "> tr:not(:first)",
+                helper: "clone",
+                zIndex: 990,
+                update: function (event, ui) {
+                    if (!event.handled) {
+                        opt.config = visibilityManager.toConfig(opt);
+                        configManager.set(opt);
+                        visibilityManager.drawRuleTable(opt);
+                        event.handled = true;
+                    }
+                }
+            });
+        },
+
+        /*********************************************************************
+         * Wire up the conditional visibility dialog boxes.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *********************************************************************/
+        wireDialogEvents: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+
+            // wire the conditional visilibity dialog
+            var conditionalVisiblityOpts = {
+                modal: true,
+                buttons: {
+                    "Ok": function () {
+                        $('#conditonalVisibilityRulesDialog').dialog("close");
+                        return false;
+                    }
+                },
+                autoOpen: false,
+                width: "600px"
+            };
+            $('#conditonalVisibilityRulesDialog').dialog(conditionalVisiblityOpts);
+
+            // wire the add/edit visibility rule dialog
+            var addVisibilityRuleOpts = {
+                modal: true,
+                buttons: {
+                    "Ok": function () {
+                        opt.state = $('#addVisibilityRuleState').val();
+                        if (opt.state === '') {
+                            $('#addVisibilityRuleStateError').text(
+                                "You must select a value for state!");
+                        } else {
+                            opt.config = configManager.get(opt);
+                            opt.fieldName = $("#addVisibilityRuleField").val();
+                            opt.config.visibility = visibilityManager.getVisibility(opt);
+                            opt.index = $("#visibilityRuleIndex").val();
+                            if (opt.index.length === 0) {
+                                var newRule = visibilityManager.getRule(opt);
+                                opt.config.visibility.def[opt.fieldName].push(newRule);
+                            } else {
+                                var rule = visibilityManager.getRule(opt);
+                                opt.config.visibility.def[opt.fieldName][opt.index] = rule;
+                            }
+                            configManager.set(opt);
+                            $('#addVisibilityRuleDialog').dialog("close");
+                            $("#conditonalVisibilityRulesDialog").dialog("open");
+                            visibilityManager.drawRuleTable(opt);
+                        }
+                        return false;
+                    },
+                    "Cancel": function () {
+                        $('#addVisibilityRuleDialog').dialog("close");
+                        $("#conditonalVisibilityRulesDialog").dialog("open");
+                        return false;
+                    }
+                },
+                autoOpen: false,
+                width: "650px"
+            };
+            $('#addVisibilityRuleDialog').dialog(addVisibilityRuleOpts);
+
+            // wire the button to launch the add/edit rule dialog
+            $("#addVisibilityRule").button({
+                icons: {
+                    primary: "ui-icon-plusthick"
+                },
+                text: false
+            }).click(function () {
+                $("#conditonalVisibilityRulesDialog").dialog("close");
+                visibilityManager.clearRuleDialog(opt);
+                $('#addVisibilityRuleDialog').dialog("open");
+                return false;
+            });
+
+            // wire the entity picker on the add/edit rule dialog
+            $("input.speasyforms-entitypicker").autocomplete({
+                source: this.siteGroups.sort(),
+
+                select: function (e, ui) {
+                    var group = ui.item.value;
+                    var span = $("<span>").addClass("speasyforms-entity").
+                    attr('title', group).text(group);
+                    var a = $("<a>").addClass("speasyforms-remove").attr({
+                        "href": "#",
+                        "title": "Remove " + group
+                    }).
+                    text("x").appendTo(span);
+                    span.insertBefore(this);
+                    $(this).val("").css("top", 2);
+                    visibilityManager.siteGroups.splice(
+                    visibilityManager.siteGroups.indexOf(group), 1);
+                    $(this).autocomplete(
+                        "option", "source", visibilityManager.siteGroups.sort());
+                    return false;
+                }
+            });
+            $(".speasyforms-entitypicker").click(function () {
+                $(this).find("input").focus();
+            });
+            $("#spEasyFormsEntityPicker").on("click", ".speasyforms-remove", function () {
+                visibilityManager.siteGroups.push($(this).parent().attr("title"));
+                $(this).closest("div").find("input").
+                autocomplete("option", "source", visibilityManager.siteGroups.sort()).
+                focus();
+                $(this).parent().remove();
+            });
+        },
+
+        /*********************************************************************
+         * Wire the add rule button and make the rules sortable.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *********************************************************************/
+        wireButtonEvents: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            $("tr.speasyforms-sortablefields").each(function (idx, tr) {
+                var tds = $(this).find("td");
+                if (tds.length > 0) {
+                    var internalName = $(this).find("td")[1].innerText;
+                    $(this).append(
+                        "<td class='speasyforms-conditionalvisibility'><button id='" + internalName +
+                        "ConditionalVisibility' class='speasyforms-containerbtn " +
+                        "speasyforms-conditionalvisibility'>" +
+                        "Edit Conditional Visibility</button></td>");
+                }
+            });
+
+            $("button.speasyforms-conditionalvisibility").button({
+                icons: {
+                    primary: "ui-icon-key"
+                },
+                text: false
+            }).click(function () {
+                var internalName = this.id.replace("ConditionalVisibility", "");
+                $("#conditionalVisibilityField").val(internalName);
+                opt.config = configManager.get(opt);
+                $('#conditionalVisibilityDialogHeader').text(
+                    "Rules for Field '" +
+                    spContext.get(opt).listContexts[spContext.getCurrentListId(opt)].fields[internalName].displayName +
+                    "'");
+                opt.fieldName = internalName;
+                opt.config.visibility = visibilityManager.getVisibility(opt);
+                $("#conditonalVisibilityRulesDialog").dialog('open');
+                visibilityManager.drawRuleTable(opt);
+                return false;
+            });
+        },
+
+        /*********************************************************************
+         * Get the current visibility rules.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *
+         * @return {object} - the current visibility rules.
+         *********************************************************************/
+        getVisibility: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            if (!opt.config.visibility) {
+                opt.config.visibility = {
+                    def: {}
+                };
+            }
+            if (!opt.config.visibility.def[opt.fieldName]) {
+                opt.config.visibility.def[opt.fieldName] = [];
+            }
+            return opt.config.visibility;
+        },
+
+        /*********************************************************************
+         * Construct a rule from the add/edit rule dialog box.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *
+         * @return {object} - the new rule.
+         *********************************************************************/
+        getRule: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            var result = {};
+            result.state = opt.state;
+            result.forms = "";
+            $(".speasyforms-formcb").each(function (idx, cb) {
+                if (cb.checked) {
+                    if (result.forms.length > 0) {
+                        result.forms += ";";
+                    }
+                    result.forms += this.id.replace("addVisibilityRule", "").replace("Form", "");
+                }
+            });
+            result.appliesTo = "";
+            $('#spEasyFormsEntityPicker .speasyforms-entity').each(function (idx, span) {
+                if (result.appliesTo.length > 0) {
+                    result.appliesTo += ";";
+                }
+                result.appliesTo += $(span).attr("title");
+            });
+            var author = $("#addVisibilityRuleApplyToAuthor")[0].checked;
+            if (author) {
+                if (result.appliesTo.length > 0) {
+                    result.appliesTo = ";" + result.appliesTo;
+                }
+                result.appliesTo = "AUTHOR" + result.appliesTo;
+            }
+            return result;
+        },
+
+        /*********************************************************************
+         * Reset the add/edit rule dialog box.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *********************************************************************/
+        clearRuleDialog: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            $("#addVisibilityRuleField").val($("#conditionalVisibilityField").val());
+            $("#visibilityRuleIndex").val("");
+            $('#addVisibilityRuleState').val('');
+            $('#addVisibilityRuleStateError').val('');
+            $('#addVisibilityRuleApplyToAuthor').attr('checked', false);
+            $('#addVisibilityRuleApplyTo').val('');
+            $('#spEasyFormsEntityPicker .speasyforms-entity').remove();
+            $('#addVisibilityRuleNewForm').attr('checked', true);
+            $('#addVisibilityRuleEditForm').attr('checked', true);
+            $('#addVisibilityRuleDisplayForm').attr('checked', true);
+            var siteGroups = spContext.getSiteGroups(opt);
+            $.each(siteGroups, function (idx, group) {
+                if ($.inArray(group.name, visibilityManager.siteGroups) < 0) {
+                    visibilityManager.siteGroups.push(group.name);
+                }
+            });
+        },
+
+        /*********************************************************************
+         * Get the current form type. This function looks for the word new, edit,
+         * or display in the current page name (case insensative.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         *
+         * @return {string} - new, edit, display, or "".
+         *********************************************************************/
+        getFormType: function (options) {
+            var result = "";
+            var page = window.location.pathname;
+            page = page.substring(page.lastIndexOf("/") + 1).toLowerCase();
+            if (page.indexOf("new") >= 0) {
+                result = "new";
+            } else if (page.indexOf("edit") >= 0) {
+                result = "edit";
+            } else if (page.indexOf("display") >= 0) {
+                result = "display";
+            }
+            return result;
+        }
+    };
+    var visibilityManager = $.spEasyForms.visibilityManager;
+
+    ////////////////////////////////////////////////////////////////////////////
     // Utility class to parse field rows into a map.
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.sharePointFieldRows = {
@@ -2329,8 +2583,8 @@ $("table.ms-formtable ").hide();
         },
 
         /*********************************************************************
-         * Get a map of SharePoint groups by account login, keyed on group id
-         * and/or name.
+         * Get a map of SharePoint groups by account login. Returns an object 
+         * with two keys per group, one by name and one by id.
          *
          * @param {string} options - {
          *     // see the definition for $.spEasyForms.defaults for 
@@ -2342,6 +2596,7 @@ $("table.ms-formtable ").hide();
          * @returns {object} - {
          *     <groupid>: { id: <id>, name: <name> },
          *     <groupname>: { id: <id>, name: <name> }
+         *     ... // additional groups
          * }
          *********************************************************************/
         getUserGroups: function (options) {
@@ -2371,6 +2626,23 @@ $("table.ms-formtable ").hide();
             return this.groups;
         },
 
+        /*********************************************************************
+         * Get map of site collection groups. Returns an object with two 
+         * keys per group, one by name and one by id.
+         *
+         * @param {string} options - {
+         *     // see the definition for $.spEasyForms.defaults for 
+         *     // additional globally applicable options
+         *     accountName: <string> // the person whose profile you want,
+         *         // default undefined meaning current user
+         * }
+         *
+         * @returns {object} - {
+         *     <groupid>: { id: <id>, name: <name> },
+         *     <groupname>: { id: <id>, name: <name> }
+         *     ... // additional groups
+         * }
+         *********************************************************************/
         getSiteGroups: function (options) {
             if (this.siteGroups) {
                 return this.siteGroups;
@@ -2639,6 +2911,10 @@ $("table.ms-formtable ").hide();
     };
     var utils = $.spEasyForms.utilities;
 
+    /*
+     * Override the core.js PreSaveItem function, to allow containers to react
+     * to validation errors.
+     */
     if (typeof (PreSaveItem) !== 'undefined') {
         var originalPreSaveItem = PreSaveItem;
         PreSaveItem = function () {
