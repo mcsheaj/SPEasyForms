@@ -74,7 +74,6 @@ $("table.ms-formtable ").hide();
          * }
          ********************************************************************/
         init: function (options) {
-            debugger;
             var opt = $.extend({}, spEasyForms.defaults, options);
             this.initCacheLibrary(opt);
             this.loadDynamicStyles(opt);
@@ -1173,6 +1172,9 @@ $("table.ms-formtable ").hide();
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.baseContainer = {
 
+        fieldGroupsDlgTitle: "Enter the names of the field groups, one per line",
+        fieldGroupsDlgPrompt: "Field Group Names (one per line):",
+
         /*********************************************************************
          * Convert the layout to an editor for any container containing one or 
          * more field groups.
@@ -1212,6 +1214,8 @@ $("table.ms-formtable ").hide();
 
             this.wireDialogEvents(opt);
 
+            var header = this.fieldGroupsDlgTitle;
+            var prompt = this.fieldGroupsDlgPrompt;
             if ($("#" + parent + "AddTFieldGroups").length === 0) {
                 $("#" + parent + "Delete").parent().prepend(
                     '<button id="' + parent +
@@ -1226,6 +1230,8 @@ $("table.ms-formtable ").hide();
                 }).click(function () {
                     $("#addFieldGroupNames2").val("");
                     $("#addFieldGroupsContainerId").val(index);
+                    $("#addFieldGroupsToContainerDialog").attr("title", header);
+                    $("label[for='addFieldGroupNames2']").text(prompt);
                     $("#addFieldGroupsToContainerDialog").dialog('open');
                     return false;
                 });
@@ -1272,6 +1278,8 @@ $("table.ms-formtable ").hide();
             var opt = $.extend({}, spEasyForms.defaults, options);
             $("#addFieldGroupNames").val("");
             this.wireDialogEvents(opt);
+            $("#addMultiGroupContainerDialog").attr("title", this.fieldGroupsDlgTitle);
+            $("label[for='addFieldGroupNames']").text(this.fieldGroupsDlgPrompt);
             $("#addMultiGroupContainerDialog").dialog("open");
         },
 
@@ -1369,6 +1377,8 @@ $("table.ms-formtable ").hide();
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.accordion = Object.create(baseContainer);
     $.spEasyForms.accordion.containerType = "Accordion";
+    $.spEasyForms.accordion.fieldGroupsDlgTitle = "Enter the names of the accordion content areas, one per line";
+    $.spEasyForms.accordion.fieldGroupsDlgPrompt = "Content Area Names (one per line):";
 
     $.spEasyForms.accordion.transform = function (options) {
         var opt = $.extend({}, spEasyForms.defaults, options);
@@ -1433,6 +1443,8 @@ $("table.ms-formtable ").hide();
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.columns = Object.create(baseContainer);
     $.spEasyForms.columns.containerType = "Columns";
+    $.spEasyForms.columns.fieldGroupsDlgTitle = "Enter the names of the columns, one per line; these are only displayed on the settings page, not on the form itself.";
+    $.spEasyForms.columns.fieldGroupsDlgPrompt = "Column Names (one per line):";
 
     $.spEasyForms.columns.transform = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -1501,6 +1513,8 @@ $("table.ms-formtable ").hide();
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.tabs = Object.create(baseContainer);
     $.spEasyForms.tabs.containerType = "Tabs";
+    $.spEasyForms.tabs.fieldGroupsDlgTitle = "Enter the names of the tabs, one per line";
+    $.spEasyForms.tabs.fieldGroupsDlgPrompt = "Tab Names (one per line):";
 
     $.spEasyForms.tabs.transform = function (options) {
         var opt = $.extend({}, spEasyForms.defaults, options);

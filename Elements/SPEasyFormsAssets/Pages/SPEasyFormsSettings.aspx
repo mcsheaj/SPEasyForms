@@ -310,7 +310,7 @@
                             <input type="text" id="fieldGroupName" name="fieldGroupNames" />
                             <input type='hidden' id='editFieldGroupContainerId' value='' />
                         </div>
-                        <div id='addMultiGroupContainerDialog' class='speasyforms-dialogdiv' title='Add Multiple Field Group Container'>
+                        <div id='addMultiGroupContainerDialog' class='speasyforms-dialogdiv' title='Add Container'>
                             <label for='addFieldGroupNames'>Field Group Names (one per line):</label>
                             <textarea id='addFieldGroupNames' rows='5' cols='50'></textarea>
                             <input type='hidden' id='addMultiGroupContainerType' value='' />
