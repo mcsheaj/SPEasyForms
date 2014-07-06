@@ -274,6 +274,10 @@
         td.speasyforms-staticrules {
             padding: 5px 10px;
         }
+
+        table.speasyforms-staticrules {
+            width: 80%;
+        }
     </style>
 </asp:content>
 
