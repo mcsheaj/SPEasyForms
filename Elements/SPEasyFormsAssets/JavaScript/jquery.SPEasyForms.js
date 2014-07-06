@@ -1623,7 +1623,10 @@ $("table.ms-formtable ").hide();
                                         return false;
                                     }
                                 });
-                                if (!appliesMatch && (formType === "new" || appliesToGroups[0] === "AUTHOR")) {
+                                if (!appliesMatch && formType === "new") {
+                                    appliesMatch = true;
+                                }
+                                else if (!appliesMatch && appliesToGroups[0] === "AUTHOR") {
                                     var authorHref = $("span:contains('Created  at')").
                                         find("a.ms-subtleLink").attr("href");
                                     if (authorHref) {
