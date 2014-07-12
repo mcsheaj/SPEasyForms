@@ -2892,6 +2892,9 @@ $("table.ms-formtable ").hide();
                 opt.config = {
                     layout: {
                         def: opt.config
+                    },
+                    visibility: {
+                        def: {}
                     }
                 };
             }
