@@ -485,8 +485,15 @@ $("table.ms-formtable ").hide();
                     //$("#layoutSavedDialog").dialog("open");
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert("Error uploading configuration.\nStatus: " + xhr.status +
-                        "\nStatus Text: " + thrownError);
+                    if (xhr.status === 409) {
+                        alert("The web service returned 409 - CONFLICT. This most likely means you do\n" +
+                            "not have a 'Site Assets' library in the current site with a URL of SiteAssets.\n" +
+                            "This is required before you can load and save SPEasyForms configuration files.");
+                    }
+                    else {
+                        alert("Error uploading configuration.\nStatus: " + xhr.status +
+                            "\nStatus Text: " + thrownError);
+                    }
                 }
             });
         }
@@ -2787,7 +2794,12 @@ $("table.ms-formtable ").hide();
                     opt.config = spContext.layout2Config(opt);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    if (xhr.status != 404 && opt.configFileName.indexOf("{") < 0) {
+                    if (xhr.status === 409) {
+                        alert("The web service returned 409 - CONFLICT. This most likely means you do\n" +
+                            "not have a 'Site Assets' library in the current site with a URL of SiteAssets.\n" +
+                            "This is required before you can load and save SPEasyForms configuration files.");
+                    }
+                    else if (xhr.status !== 404 && opt.configFileName.indexOf("{") < 0) {
                         alert("Error getting configuration.\nStatus: " + xhr.status +
                             "\nStatus Text: " + thrownError);
                     }
