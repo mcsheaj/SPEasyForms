@@ -62,9 +62,6 @@
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="Elements\SPEasyFormsAssets\Pages\wkpstd.aspx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
     <Content Include="Elements\SPEasyFormsCustomActions.xml">
       <SubType>Designer</SubType>
     </Content>
