@@ -1645,21 +1645,28 @@ $("table.ms-formtable ").hide();
                                 appliesMatch = true;
                             } else {
                                 var appliesToGroups = rule.appliesTo.split(';');
-                                $.each(userGroups, function (i, group) {
-                                    if ($.inArray(group.name, appliesToGroups) >= 0) {
-                                        appliesMatch = true;
-                                        return false;
-                                    }
-                                });
-                                if (appliesToGroups[0] === "AUTHOR") {
-                                    var authorHref = $("span:contains('Created  at')").
-                                        find("a.ms-subtleLink").attr("href");
-                                    if (authorHref) {
-                                        var authorId = parseInt(
-                                            authorHref.substring(authorHref.indexOf("ID=") + 3), 10);
-                                        if (authorId === spContext.get(opt).userId) {
-                                            appliesMatch = true;
+                                if (formType === "new") {
+                                    appliesMatch = true;
+                                }
+                                else {
+                                    if (appliesToGroups[0] === "AUTHOR") {
+                                        var authorHref = $("span:contains('Created  at')").
+                                            find("a.ms-subtleLink").attr("href");
+                                        if (authorHref) {
+                                            var authorId = parseInt(
+                                                authorHref.substring(authorHref.indexOf("ID=") + 3), 10);
+                                            if (authorId === spContext.get(opt).userId) {
+                                                appliesMatch = true;
+                                            }
                                         }
+                                    }
+                                    if (!appliesMatch) {
+                                        $.each(userGroups, function (i, group) {
+                                            if ($.inArray(group.name, appliesToGroups) >= 0) {
+                                                appliesMatch = true;
+                                                return false;
+                                            }
+                                        });
                                     }
                                 }
                             }
