@@ -2,7 +2,7 @@
  * SPEasyForms - modify SharePoint forms using jQuery (i.e. put fields on 
  * tabs, show/hide fields, validate field values, etc.)
  *
- * @version 2014.00.04
+ * @version 2014.00.05
  * @requires jQuery v1.11.1 (I intend to test it with 1.8.3 versions
  *     or better but have not done so yet)
  * @requires jQuery-ui v1.9.2 (I intend to test it with later 1.x 
@@ -21,6 +21,9 @@
 $("table.ms-formtable ").hide();
 
 (function ($, undefined) {
+    
+    // save a reference to our instance of jQuery just in case
+    spefjQuery = $;
 
     // cross-page caching object
     var cache = (typeof (ssw) != 'undefined' ? ssw.get() : undefined);
@@ -31,6 +34,15 @@ $("table.ms-formtable ").hide();
             return $.map(obj, function (v, k) {
                 return k;
             });
+        };
+    }
+    
+    // define Object.create for bowsers that don't support it
+    if (!Object.create) {
+        Object.create = function (o) {
+            function F () {}
+            F.prototype = o;
+            return new F();
         };
     }
 
@@ -75,26 +87,30 @@ $("table.ms-formtable ").hide();
          ********************************************************************/
         init: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            this.initCacheLibrary(opt);
-            this.loadDynamicStyles(opt);
-            opt.currentContext = spContext.get(opt);
-            opt.rows = spRows.init(opt);
-            if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0 || 
-                window.location.href.indexOf('fiddle') >= 0) {
-                master.toEditor(opt);
-            } else {
-                master.transform(opt);
-                $("input[value='Save']").each(function () {
-                    var onSave = this.getAttributeNode("onclick").nodeValue;
-                    onSave = onSave.replace("if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
-                    var newOnSave = document.createAttribute('onclick');
-                    newOnSave.value = onSave;
-                    this.setAttributeNode(newOnSave);
-                });
+            try {
+                this.initCacheLibrary(opt);
+                this.loadDynamicStyles(opt);
+                opt.currentContext = spContext.get(opt);
+                opt.rows = spRows.init(opt);
+                if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0 || 
+                    window.location.href.indexOf('fiddle') >= 0) {
+                    master.toEditor(opt);
+                } else if (opt.currentContext.listId && visibilityManager.getFormType(opt).length > 0) {
+                    master.transform(opt);
+                    $("input[value='Save']").each(function () {
+                        var onSave = this.getAttributeNode("onclick").nodeValue;
+                        onSave = onSave.replace("if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
+                        var newOnSave = document.createAttribute('onclick');
+                        newOnSave.value = onSave;
+                        this.setAttributeNode(newOnSave);
+                    });
+                }
+                this.appendContext(opt);
+                $("#s4-bodyContainer").scrollTop();
             }
-            this.appendContext(opt);
-            $("#s4-bodyContainer").scrollTop();
-            $("table.ms-formtable ").show();
+            finally {
+                $("table.ms-formtable ").show();
+            }
             return this;
         },
 
@@ -127,15 +143,15 @@ $("table.ms-formtable ").hide();
          ********************************************************************/
         loadDynamicStyles: function (options) {
             if (options.jQueryUITheme === undefined) {
-                options.jQueryUITheme = _spPageContextInfo.siteServerRelativeUrl +
-                    '/Style Library/SPEasyFormsAssets/2014.00.04/Css/jquery-ui-redmond/jquery-ui.css';
+                options.jQueryUITheme = (_spPageContextInfo.siteServerRelativeUrl != "/" ? _spPageContextInfo.siteServerRelativeUrl : "") +
+                    '/Style Library/SPEasyFormsAssets/2014.00.05/Css/jquery-ui-redmond/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
-                options.css = _spPageContextInfo.siteServerRelativeUrl +
-                    '/Style Library/SPEasyFormsAssets/2014.00.04/Css/speasyforms.css';
+                options.css = (_spPageContextInfo.siteServerRelativeUrl != "/" ? _spPageContextInfo.siteServerRelativeUrl : "") +
+                    '/Style Library/SPEasyFormsAssets/2014.00.05/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -211,21 +227,24 @@ $("table.ms-formtable ").hide();
         appendContext: function () {
             if (spEasyForms.defaults.verbose) {
                 $('#outputTable').remove();
+                var context = spContext.get();
                 var output = "<table id='outputTable'><tr><td><pre>";
                 output += "_spPageContextInfo = {\r\n" +
-                    "    siteServerRelativeUrl: '/sites/devjmcshea',\r\n" +
-                    "    webServerRelativeUrl: '/sites/devjmcshea',\r\n" +
+                    "    siteServerRelativeUrl: '"+context.siteRelativeUrl+"',\r\n" +
+                    "    webServerRelativeUrl: '"+context.webRelativeUrl+"',\r\n" +
                     "    webUIVersion: 15,\r\n" +
-                    "    pageListId: '{8fcf63aa-827d-4b9b-88bb-958abb8bf105}',\r\n" +
-                    "    userId: 9\r\n" +
+                    "    pageListId: '"+spContext.getCurrentListId()+"',\r\n" +
+                    "    userId: "+context.userId+"\r\n" +
                     "};\r\n";
                 output += "var cache = " + JSON.stringify(cache, null, 4) + ";\r\n";
-                output += "cache['spEasyForms_spContext_/sites/devjmcshea'].groups = " + 
+                output += "cache['spEasyForms_spContext_"+context.webRelativeUrl+"'].groups = " + 
                     JSON.stringify(spContext.getUserGroups(), null, 4) + ";\r\n";
-                output += "cache['spEasyForms_spContext_/sites/devjmcshea'].siteGroups = " + 
+                output += "cache['spEasyForms_spContext_"+context.webRelativeUrl+"'].siteGroups = " + 
                     JSON.stringify(spContext.getSiteGroups(), null, 4) + ";\r\n";
-                output += "cache['spEasyForms_spContext_/sites/devjmcshea']." +
-                    "listContexts['{8fcf63aa-827d-4b9b-88bb-958abb8bf105}'].config = " +
+                //output += "cache['spEasyForms_spContext_"+context.webRelativeUrl+"']." +
+                  //  "listContexts['"+context.listId+"'] = " + JSON.stringify(spContext.getListContext(), null, 4) + ";\r\n";
+                output += "cache['spEasyForms_spContext_"+context.webRelativeUrl+"']." +
+                    "listContexts['"+context.listId+"'].config = " +
                     JSON.stringify(spContext.getConfig(), null, 4) + ";\r\n";
                 output += "$().ready(function () {\r\n" +
                     "    $.spEasyForms.defaults = $.extend({}, $.spEasyForms.defaults, {\r\n" +
@@ -449,7 +468,7 @@ $("table.ms-formtable ").hide();
             var ctx = spContext.get();
             var listId = spContext.getCurrentListId(opt);
             $.ajax({
-                url: ctx.webAppUrl + ctx.webRelativeUrl + "/SiteAssets/spef-layout-" + listId + ".txt",
+                url: ctx.webAppUrl + ctx.webRelativeUrl + "/SiteAssets/spef-layout-" + listId.replace("{", "").replace("}", "") + ".txt",
                 type: "PUT",
                 headers: {
                     "Content-Type": "text/plain",
@@ -566,7 +585,7 @@ $("table.ms-formtable ").hide();
                             opt.rows = spRows.init(opt);
                             $.each(opt.rows, function (fieldIdx, row) {
                                 var td = row.row.find("td.ms-formbody");
-                                td.html("<div style='display:none'>" + td.html() + "</div>");
+                                td.html("");
                                 $('.ms-formtable').append(row.row);
                             });
                             delete opt.input;
@@ -606,8 +625,8 @@ $("table.ms-formtable ").hide();
                 var obj = this.hiddenObjects[keys[i]];
                 var container = $("td[data-containerIndex='" + obj.primaryIndex + "']");
                 if ("secondaryIndex" in obj) {
-                    var table = $("table[data-tableIndex='" + obj.secondaryIndex + "']");
-                    table.hide();
+                    $("td[data-containerIndex='" + obj.primaryIndex + "']").find(
+                        "table[data-tableIndex='" + obj.secondaryIndex + "']").hide();
                 } else {
                     container.find(".speasyforms-sortablefields").hide();
                 }
@@ -782,6 +801,10 @@ $("table.ms-formtable ").hide();
                         master.toEditor(opt);
                         event.handled = true;
                     }
+                },
+                // added to fix issues with huge placeholder in SP 2010
+                start: function(event, ui) {
+                    ui.placeholder.height("20px");
                 }
             });
 
@@ -798,6 +821,10 @@ $("table.ms-formtable ").hide();
                         master.toEditor(opt);
                         event.handled = true;
                     }
+                },
+                // added to fix issues with huge placeholder in SP 2010
+                start: function(event, ui) {
+                    ui.placeholder.height("100px");
                 }
             });
 
@@ -1608,8 +1635,9 @@ $("table.ms-formtable ").hide();
                     if (row.internalName in opt.config.visibility.def) {
                         $.each(opt.config.visibility.def[row.internalName], function (index, rule) {
                             var formType = visibilityManager.getFormType(opt);
-                            var ruleForms = rule.forms.split(';').map(function (elem) {
-                                return elem.toLowerCase();
+                            // modified for 2010, not sure why it worked in 2013 as it was
+                            var ruleForms = $(rule.forms.split(';')).map(function (elem) {
+                                return this.toLowerCase();
                             });
                             var formMatch = $.inArray(formType, ruleForms) >= 0;
                             var appliesMatch = false;
@@ -1623,15 +1651,12 @@ $("table.ms-formtable ").hide();
                                         return false;
                                     }
                                 });
-                                if (!appliesMatch && formType === "new") {
-                                    appliesMatch = true;
-                                }
-                                else if (!appliesMatch && appliesToGroups[0] === "AUTHOR") {
+                                if (appliesToGroups[0] === "AUTHOR") {
                                     var authorHref = $("span:contains('Created  at')").
                                         find("a.ms-subtleLink").attr("href");
                                     if (authorHref) {
                                         var authorId = parseInt(
-                                            authorHref.substring(authorHref.indexOf("ID=") + 3));
+                                            authorHref.substring(authorHref.indexOf("ID=") + 3), 10);
                                         if (authorId === spContext.get(opt).userId) {
                                             appliesMatch = true;
                                         }
@@ -2164,12 +2189,13 @@ $("table.ms-formtable ").hide();
          *
          *     $.ajax({
          *         async: false,
-         *         url: <your url>,
+         *         url: <your edit form url>,
          *         complete: function (xData) {
-         *             var rows $.spEasyForms.sharePointFieldRows.init(
-         *                 $(xData.responseText));
+         *             var rows = $.spEasyForms.sharePointFieldRows.init(
+         *                 { input: $(xData.responseText) });
          *             // have fun with rows
          *         }
+         *     });
          ********************************************************************/
         init: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
@@ -2215,34 +2241,44 @@ $("table.ms-formtable ").hide();
         processTr: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var current = opt.tr;
-            var internal = this.capture({
-                row: current,
-                regex: opt.fieldInternalNameRegex
-            });
-            var display = this.capture({
-                row: current,
-                regex: opt.fieldDisplayNameRegex
-            });
-            var fieldType = this.capture({
-                row: current,
-                regex: opt.fieldTypeRegex
-            });
-            var result = {
-                row: current,
-                internalName: internal,
-                displayName: display,
-                spFieldType: fieldType
-            };
-            if (result.internalName !== undefined) {
-                if (result.displayName === undefined) {
-                    result.displayName = result.internalName;
-                }
-                if (result.spFieldType === undefined) {
-                    result.spFieldType = "SPFieldText";
-                }
-                result.value = this.value({
-                    row: result
+            // attachments is a special case because there is no comment to parse in SP 2010
+            if (current.html().indexOf("idAttachmentsRow") >= 0) {
+                result.row = current;
+                result.internalName = "Attachments";
+                result.displayName = "Attachments";
+                result.type = "SPFieldAttachments";
+                result.value = "";
+            }
+            else {
+                var internal = this.capture({
+                    row: current,
+                    regex: opt.fieldInternalNameRegex
                 });
+                var display = this.capture({
+                    row: current,
+                    regex: opt.fieldDisplayNameRegex
+                });
+                var fieldType = this.capture({
+                    row: current,
+                    regex: opt.fieldTypeRegex
+                });
+                result = {
+                    row: current,
+                    internalName: internal,
+                    displayName: display,
+                    spFieldType: fieldType
+                };
+                if (result.internalName !== undefined) {
+                    if (result.displayName === undefined) {
+                        result.displayName = result.internalName;
+                    }
+                    if (result.spFieldType === undefined) {
+                        result.spFieldType = "SPFieldText";
+                    }
+                    result.value = this.value({
+                        row: result
+                    });
+                }
             }
             return result;
         },
@@ -2263,7 +2299,8 @@ $("table.ms-formtable ").hide();
          ********************************************************************/
         capture: function (options) {
             var matches = options.row.html().match(options.regex);
-            if (matches.length >= 2) return matches[1];
+            // TBD attachments need to be hard-coded for 2010, expect comment is missing
+            if (matches && matches.length >= 2) return matches[1];
             return undefined;
         },
 
@@ -2433,22 +2470,14 @@ $("table.ms-formtable ").hide();
                     window.location.href.indexOf(window.location.pathname));
                     result.webRelativeUrl = opt.siteUrl;
                     result.webUIVersion = _spPageContextInfo.webUIVersion;
-                    if ("pageListId" in _spPageContextInfo) {
-                        result.listId = _spPageContextInfo.pageListId;
-                    } else {
-                        result.listId = "";
-                    }
+                    result.listId = this.getCurrentListId(opt);
                     result.userId = _spPageContextInfo.userId;
                     result.userProfile = {};
                     result.userInformation = {};
                     result.listContexts = {};
                 }
             }
-            if ("pageListId" in _spPageContextInfo) {
-                result.listId = _spPageContextInfo.pageListId;
-            } else {
-                result.listId = "";
-            }
+            result.listId = this.getCurrentListId(opt);
             if (opt.useCache) {
                 opt.currentContext = result;
                 spEasyForms.writeCachedContext(opt);
@@ -2732,10 +2761,14 @@ $("table.ms-formtable ").hide();
                 return opt.config;
             }
 
+            if(!opt.configFileName) {
+                opt.configFileName = opt.currentContext.webAppUrl + opt.currentContext.webRelativeUrl +
+                    "/SiteAssets/spef-layout-" + opt.listId.replace("{", "").replace("}", "") + ".txt";
+            }
+            
             $.ajax({
                 type: "GET",
-                url: opt.currentContext.webAppUrl + opt.currentContext.webRelativeUrl +
-                    "/SiteAssets/spef-layout-" + opt.listId + ".txt",
+                url: opt.configFileName,
                 headers: {
                     "Content-Type": "text/plain"
                 },
@@ -2747,9 +2780,20 @@ $("table.ms-formtable ").hide();
                     opt.config = spContext.layout2Config(opt);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    if (xhr.status != 404) {
+                    if (xhr.status != 404 && opt.configFileName.indexOf("{") < 0) {
                         alert("Error getting configuration.\nStatus: " + xhr.status +
                             "\nStatus Text: " + thrownError);
+                    }
+                    // added to get old filenames and save in new filename format, 
+                    // required because {} are verboten in 2010 fielnames
+                    if (opt.configFileName.indexOf("{") < 0) {
+                        opt.configFileName = opt.currentContext.webAppUrl + opt.currentContext.webRelativeUrl +
+                            "/SiteAssets/spef-layout-" + opt.listId + ".txt";
+                        opt.config = spContext.getConfig(opt);
+                        if($("#spEasyFormsJson pre").length > 0) {
+                            $("#spEasyFormsJson pre").text(JSON.stringify(opt.config, null, 4));
+                            configManager.save(opt);
+                        }
                     }
                 }
             });
@@ -2798,13 +2842,16 @@ $("table.ms-formtable ").hide();
             var currentContext;
             if ("currentContext" in opt) {
                 currentContext = opt.currentContext;
-            } else {
-                currentContext = this.get(opt);
-            }
+            } 
             if (!("listId" in opt)) {
                 opt.listId = utils.getRequestParameters().ListId;
-                if (opt.listId === undefined) {
-                    opt.listId = currentContext.listId;
+                if (!opt.listId) {
+                    if(typeof(currentContext) !== 'undefined') {
+                        opt.listId = currentContext.listId;
+                    }
+                    else {
+                        opt.listId = _spPageContextInfo.pageListId;
+                    }
                 }
             }
             return opt.listId;
@@ -2871,26 +2918,24 @@ $("table.ms-formtable ").hide();
             var result = {
                 internalName: "",
                 displayName: "",
-                type: "",
-                value: ""
+                type: ""
             };
             var src = tr.html();
             try {
-                result.internalName = src.match(/FieldInternalName=\"([^\"]*)\"/)[1];
-                result.displayName = src.match(/FieldName=\"([^\"]*)\"/)[1];
-                result.type = src.match(/FieldType=\"([^\"]*)\"/)[1];
-                switch (result.type) {
-                    case "SPFieldNote":
-                        result.value = tr.find("td[id^='SPField']").find("div")
-                            .html().trim();
-                        break;
-                    case "SPFieldURL":
-                        result.value = tr.find("td[id^='SPField']").find("img")
-                            .attr("src");
-                        break;
-                    default:
-                        result.value = tr.find("td[id^='SPField']").text().trim();
-                        break;
+                if(tr.html().indexOf("idAttachmentsRow") >= 0) {
+                    result.internalName = "Attachments";
+                    result.displayName = "Attachments";
+                    result.type = "SPFieldAttachments";
+                }
+                else {
+                    result.internalName = src.match(/FieldInternalName=\"([^\"]*)\"/)[1];
+                    result.displayName = src.match(/FieldName=\"([^\"]*)\"/)[1];
+                    result.type = src.match(/FieldType=\"([^\"]*)\"/)[1];
+                    switch (result.type) {
+                        default:
+                            result.value = tr.find("td[id^='SPField']").text().trim();
+                            break;
+                    }
                 }
                 if (typeof (result.value) == 'undefined') result.value = '';
             } catch (e) {
