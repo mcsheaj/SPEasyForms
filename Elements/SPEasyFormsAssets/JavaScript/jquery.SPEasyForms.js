@@ -2255,13 +2255,13 @@ $("table.ms-formtable ").hide();
         processTr: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var current = opt.tr;
+            var result = {};
             // attachments is a special case because there is no comment to parse in SP 2010
             if (current.html().indexOf("idAttachmentsRow") >= 0) {
                 result.row = current;
                 result.internalName = "Attachments";
                 result.displayName = "Attachments";
                 result.type = "SPFieldAttachments";
-                result.value = "";
             }
             else {
                 var internal = this.capture({
