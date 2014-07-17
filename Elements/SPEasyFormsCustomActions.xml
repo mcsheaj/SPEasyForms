@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/"> 
 
-    <CustomAction
-        Id="List.Settings.SPEasyForms"
-        Location="Microsoft.SharePoint.StandardMenu"
-        GroupId="ActionsMenu"
-        RegistrationType="ContentType"
-        RegistrationId="0x01"
-        Sequence="10256"
-        Rights="ManageLists"
-    >
-        <UrlAction Url="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.05/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}"/>
-    </CustomAction>
-
     <CustomAction 
         Location="CommandUI.Ribbon"
         Id="Ribbon.List.Settings.Controls.SPEasyForms.Action" 
@@ -75,7 +63,7 @@
             <CommandUIHandlers>
                 <CommandUIHandler 
                     Command="Ribbon.List.Settings.Controls.SPEasyForms.Command" 
-                    CommandAction="javascript:window.location=(_spPageContextInfo.siteServerRelativeUrl != '/' ? _spPageContextInfo.siteServerRelativeUrl : '') + '/Style Library/SPEasyFormsAssets/2014.00.05/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}'" 
+                    CommandAction="javascript:window.location=(_spPageContextInfo.siteServerRelativeUrl != '/' ? _spPageContextInfo.siteServerRelativeUrl : '') + '/Style Library/SPEasyFormsAssets/2014.00.06/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}&amp;Source=window.location.href'" 
                  />
             </CommandUIHandlers>
 

@@ -4,14 +4,9 @@
 	<SharePoint:ProjectProperty Property="Title" runat="server"/> - SharePoint Easy Forms Configuration
 </asp:Content>
 <asp:Content ContentPlaceHolderId="PlaceHolderPageTitleInTitleArea" runat="server">
-	<span>
-		<SharePoint:DocumentFolderName runat="server" id="PageFolderName" AppendSeparatorArrow = "true" />
+	<span class="ms-WikiPageNameEditor-Display" id='listBreadCrumb'>
 	</span>
-	<span class="ms-WikiPageNameEditor-Display" id="wikiPageNameDisplay" runat="server">
-		SharePoint Easy Forms Configuration
-	</span>
-	<span class="ms-WikiPageNameEditor-Edit" style="display:none;" id="wikiPageNameEdit" runat="server">
-		<asp:TextBox id="wikiPageNameEditTextBox" runat="server" />
+	<span class="ms-WikiPageNameEditor-Display" id='wikiPageNameDisplay'>
 	</span>
 </asp:Content>
 <asp:Content ContentPlaceHolderId="PlaceHolderAdditionalPageHead" runat="server">
@@ -111,7 +106,7 @@
             background: #eee;
         }
 
-        .spEasyFormsOuterDiv {
+        #spEasyFormsOuterDiv {
             display: none;
         }
 
