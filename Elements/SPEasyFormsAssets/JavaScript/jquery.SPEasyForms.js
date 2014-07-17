@@ -2,7 +2,7 @@
  * SPEasyForms - modify SharePoint forms using jQuery (i.e. put fields on 
  * tabs, show/hide fields, validate field values, etc.)
  *
- * @version 2014.00.05
+ * @version 2014.00.06
  * @requires jQuery v1.11.1 (I intend to test it with 1.8.3 versions
  *     or better but have not done so yet)
  * @requires jQuery-ui v1.9.2 (I intend to test it with later 1.x 
@@ -94,9 +94,51 @@ $("table.ms-formtable ").hide();
                 opt.rows = spRows.init(opt);
                 if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0 || 
                     window.location.href.indexOf('fiddle') >= 0) {
+                    var source = utils.getRequestParameters(opt).Source;
+                    var listctx = spContext.getListContext(opt);
+                    $('#listBreadCrumb').html("<a href='" + source + "'>" + listctx.title + "</a>");
+                    $('#wikiPageNameDisplay').html(" -&gt; SPEasyForms Configuration");
                     master.toEditor(opt);
+                } else if (opt.currentContext.listId && window.location.href.indexOf("listedit.aspx") >=0) {
+                    var generalSettings = $("td.ms-descriptiontext:contains('description and navigation')").closest("table");
+                    if (generalSettings.length > 0) {
+                        var source = window.location.href;
+                        if(source.indexOf("start.aspx#") >= 0) {
+                            source = spContext.getCurrentSiteUrl() + source.substring(source.indexOf('#') + 1);
+                        }
+                        var settings = opt.currentContext.siteRelativeUrl + 
+                            "/Style Library/SPEasyFormsAssets/2014.00.06/Pages/SPEasyFormsSettings.aspx?" +
+                            "ListId=" + spContext.getCurrentListId(opt) + 
+                            "&SiteUrl=" + spContext.getCurrentSiteUrl(opt) + 
+                            "&Source=" + encodeURIComponent(source);
+                        var newRow = "<tr>"+
+                            "<td style='padding-top: 5px;' "+
+                            "class='ms-descriptiontext ms-linksectionitembullet' "+
+                            "vAlign='top' width='8' noWrap='nowrap'>" +
+                            "<img alt='' src='/_layouts/images/setrect.gif?rev=37' width='5' height='5' />" +
+                            "&nbsp;</td>" +
+                            "<td class='ms-descriptiontext ms-linksectionitemdescription' vAlign='top'> " +
+                            "<a href='" + settings + "'>SPEasyForms Configuration</a>" +
+                            "</td>" +
+                            "</tr>";
+                        generalSettings.append(newRow);
+                    }
                 } else if (opt.currentContext.listId && visibilityManager.getFormType(opt).length > 0) {
                     master.transform(opt);
+                    /*
+                     * Override the core.js PreSaveItem function, to allow containers to react
+                     * to validation errors.
+                     */
+                    if (typeof (PreSaveItem) !== 'undefined') {
+                        var originalPreSaveItem = PreSaveItem;
+                        PreSaveItem = function () {
+                            var result = master.preSaveItem();
+                                            if (result && "function" === typeof (originalPreSaveItem)) {
+                                return originalPreSaveItem();
+                            }
+                            return result;
+                        };
+                    }
                     $("input[value='Save']").each(function () {
                         var onSave = this.getAttributeNode("onclick").nodeValue;
                         onSave = onSave.replace("if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
@@ -144,14 +186,14 @@ $("table.ms-formtable ").hide();
         loadDynamicStyles: function (options) {
             if (options.jQueryUITheme === undefined) {
                 options.jQueryUITheme = (_spPageContextInfo.siteServerRelativeUrl != "/" ? _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.05/Css/jquery-ui-redmond/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.06/Css/jquery-ui/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
                 options.css = (_spPageContextInfo.siteServerRelativeUrl != "/" ? _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.05/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.06/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -622,8 +664,8 @@ $("table.ms-formtable ").hide();
                 this.wireButtonEvents(opt);
                 this.wireDialogEvents(opt);
             }
-            this.transform(opt);
             $("#spEasyFormsOuterDiv").show();
+            this.transform(opt);
 
             // hide any objects that were hidden when we started
             var i;
@@ -1497,13 +1539,13 @@ $("table.ms-formtable ").hide();
                
         for(var i=0; i<rowCount; i++)
         {
-            var rowId = "spEasyFormsColumnRow" + i;
+            var rowId = "spEasyFormsColumnRow" + opt.index + "" + i;
             $("#" + outerTableId).append("<tr id='"+rowId+"' class='speasyforms-columnrow'></tr>");     
             for(var idx=0; idx<opt.layout.fieldGroups.length; idx++)
             {
                 var fieldGroup = opt.layout.fieldGroups[idx];
-                var tdId = "spEasyFormsColumnCell" + i + "" + idx;
-                var innerTableId = "spEasyFormsInnerTable" + i + "" + idx;
+                var tdId = "spEasyFormsColumnCell" + opt.index + "" + i + "" + idx;
+                var innerTableId = "spEasyFormsInnerTable" + opt.index + "" + i + "" + idx;
                 if(fieldGroup.fields.length > i) {
                     var field = fieldGroup.fields[i];
                     var currentRow = opt.rows[field.fieldInternalName];
@@ -1569,12 +1611,13 @@ $("table.ms-formtable ").hide();
         $.each(opt.layout.fieldGroups, function (idx, fieldGroup) {
             var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.index + "" + idx;
             var tableClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" + opt.index + "" + idx;
+            var innerDivId = "spEasyFormsTabsDiv" + opt.index + "" + idx;
             var tableId = "spEasyFormsTabsTable" + opt.index + "" + idx;
             $("#" + listId).append("<li class='" + itemClass +
-                "'><a href='#" + tableId + "'>" + fieldGroup.name + "</a></li>");
+                "'><a href='#" + innerDivId + "'>" + fieldGroup.name + "</a></li>");
             $("#" + divId).append(
-                "<table class='" + tableClass + "' id='" + tableId +
-                "'></table>");
+                "<div id='" + innerDivId + "'><table class='" + tableClass + "' id='" + tableId +
+                "'></table></div>");
             $.each(fieldGroup.fields, function (fieldIdx, field) {
                 var currentRow = opt.rows[field.fieldInternalName];
                 result.push(field.fieldInternalName);
@@ -1587,8 +1630,24 @@ $("table.ms-formtable ").hide();
             }
         });
         $("#" + divId).tabs({
-            heightStyle: "auto"
+            heightStyle: "auto",
+            select: function(event, ui) {
+                // this is a hack to get tabs working with O365 'Minimal Download Strategy' (MDS)
+                // I'm not 100% sure why it is needed, but I think it has to do with MDS using
+                // a hash tag for it's own purposes, which conflicts with tabs trying to use a
+                // hash tag for it's own purposes
+                if(window.location.href.indexOf("start.aspx") >= 0) {
+                    var hash = ui.tab.hash;
+                    $("#" + divId).find("table.speasyforms-tabs").parent().hide();
+                    $(hash).show();
+                }
+            }
         });
+        // initialization hack for MDS
+        if(window.location.href.indexOf("start.aspx") >= 0) {
+            $("#" + divId).find("table.speasyforms-tabs").parent().hide();
+            $("#spEasyFormsTabsDiv" + opt.index + "0").show();
+        }
         return result;
     };
 
@@ -2150,6 +2209,10 @@ $("table.ms-formtable ").hide();
             var result = "";
             var page = window.location.pathname;
             page = page.substring(page.lastIndexOf("/") + 1).toLowerCase();
+            if (page == "start.aspx") {
+                page = window.location.href.substring(window.location.href.indexOf("#") + 1);
+                page = page.substring(page.lastIndexOf("/") + 1, page.indexOf("?")).toLowerCase();
+            }
             if (page.indexOf("new") >= 0) {
                 result = "new";
             } else if (page.indexOf("edit") >= 0) {
@@ -2629,12 +2692,17 @@ $("table.ms-formtable ").hide();
                 return currentContext.listContexts[opt.listId];
             } else {
                 result = {};
+                result.title = "Unknow List Title";
                 result.fields = {};
                 $.ajax({
                     async: false,
                     url: currentContext.webAppUrl + currentContext.webRelativeUrl +
                         "/_layouts/listform.aspx?PageType=6&ListId=" + opt.listId + "&RootFolder=",
                     complete: function (xData) {
+                        try {
+                            result.title = xData.responseText.match(/<title>([^<]*)<\/title>/i)[1].trim();
+                            result.title = result.title.substring(0, result.title.indexOf('-')).trim();
+                        } catch(e) {}
                         $(xData.responseText).find("table.ms-formtable td.ms-formbody").each(function () {
                             var tr = $(this).closest("tr");
                             var fieldRef = utils.row2FieldRef(tr);
@@ -3007,19 +3075,4 @@ $("table.ms-formtable ").hide();
         }
     };
     var utils = $.spEasyForms.utilities;
-
-    /*
-     * Override the core.js PreSaveItem function, to allow containers to react
-     * to validation errors.
-     */
-    if (typeof (PreSaveItem) !== 'undefined') {
-        var originalPreSaveItem = PreSaveItem;
-        PreSaveItem = function () {
-            var result = master.preSaveItem();
-            if (result && "function" === typeof (originalPreSaveItem)) {
-                return originalPreSaveItem();
-            }
-            return result;
-        };
-    }
 })(jQuery);
