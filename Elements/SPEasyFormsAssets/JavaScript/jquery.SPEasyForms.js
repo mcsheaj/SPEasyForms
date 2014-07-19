@@ -87,9 +87,15 @@ $("table.ms-formtable ").hide();
          ********************************************************************/
         init: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
+            this.initCacheLibrary(opt);
+            this.loadDynamicStyles(opt);
+            opt.callback = spEasyForms.contextReady;
+            spContext.initAsync(opt);
+        },
+
+        contextReady: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
             try {
-                this.initCacheLibrary(opt);
-                this.loadDynamicStyles(opt);
                 opt.currentContext = spContext.get(opt);
                 opt.rows = spRows.init(opt);
                 if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0 || 
@@ -147,7 +153,7 @@ $("table.ms-formtable ").hide();
                         this.setAttributeNode(newOnSave);
                     });
                 }
-                this.appendContext(opt);
+                spEasyForms.appendContext(opt);
                 $("#s4-bodyContainer").scrollTop();
             }
             finally {
@@ -2561,6 +2567,102 @@ $("table.ms-formtable ").hide();
             }
             this.ctx = result;
             return result;
+        },
+
+        initAsync: function (options) {
+            var currentContext = this.get(options);
+            var promises = [];
+
+            promises.push($.ajax({
+                async: true,
+                url: currentContext.webAppUrl + currentContext.webRelativeUrl +
+                    "/_layouts/userdisp.aspx?Force=True&" + new Date().getTime()
+            }));
+
+            promises.push($().SPServices({
+                operation: "GetGroupCollectionFromSite",
+                async: true
+            }));
+
+            var listId = this.getCurrentListId(options);
+            if (listId !== undefined) {
+                promises.push($.ajax({
+                    async: true,
+                    url: currentContext.webAppUrl + currentContext.webRelativeUrl +
+                        "/_layouts/listform.aspx?PageType=6&ListId=" + listId + "&RootFolder="
+                }));
+
+                var configFileName = currentContext.webAppUrl + currentContext.webRelativeUrl +
+                    "/SiteAssets/spef-layout-" + listId.replace("{", "").replace("}", "") + ".txt";
+
+                promises.push($.ajax({
+                    type: "GET",
+                    url: configFileName,
+                    headers: {
+                        "Content-Type": "text/plain"
+                    },
+                    async: true,
+                    cache: false
+                }));
+            }
+
+            $.when.apply($, promises).done(function () {
+                var opt = $.extend({}, $.spEasyForms.defaults, options);
+                $(promises).each(function () {
+                    if (this.status == 200) {
+                            // config file
+                        if (this.responseText.trim()[0] == '{' &&
+                            this.responseText.trim()[this.responseText.length - 1] == '}' &&
+                            this.responseText.indexOf('"layout":') >= 0 &&
+                            this.responseText.indexOf('"visibility":') >= 0) {
+                            spContext.config = utils.parseJSON(this.responseText);
+                        }
+                            // userdisp.aspx
+                        else if (this.responseText.indexOf("Personal Settings") > 0) {
+                            currentContext.userInformation = {};
+                            $(this.responseText).find("table.ms-formtable td[id^='SPField']").each(function () {
+                                var tr = $(this).closest("tr");
+                                var nv = utils.row2FieldRef(tr);
+                                if (nv.internalName.length > 0) {
+                                    var prop = nv.internalName[0].toLowerCase() +
+                                        nv.internalName.substring(1);
+                                    currentContext.userInformation[prop] = nv.value;
+                                }
+                            });
+                        }
+                            // edit form aspx for list context
+                        else if ($(this.responseText).find("table.ms-formtable td.ms-formbody").length > 0) {
+                            var result = {};
+                            result.title = "Unknow List Title";
+                            result.fields = {};
+                            try {
+                                result.title = this.responseText.match(/<title>([^<]*)<\/title>/i)[1].trim();
+                                if (result.title.indexOf("=") > 0) {
+                                    result.title = result.title.substring(0, result.title.indexOf('-')).trim();
+                                }
+                            } catch (e) { }
+                            $(this.responseText).find("table.ms-formtable td.ms-formbody").each(function () {
+                                var tr = $(this).closest("tr");
+                                var fieldRef = utils.row2FieldRef(tr);
+                                result.fields[fieldRef.internalName] = fieldRef;
+                            });
+                            currentContext.listContexts[spContext.getCurrentListId(options)] = result;
+                        }
+                            // GetGroupCollectionFromSite
+                        else if ($(this.responseText).find("Group").length > 0) {
+                            spContext.siteGroups = {};
+                            $(this.responseText).find("Group").each(function () {
+                                group = {};
+                                group.name = $(this).attr("Name");
+                                group.id = $(this).attr("ID");
+                                spContext.siteGroups[group.id] = group;
+                                spContext.siteGroups[group.name] = group;
+                            });
+                        }
+                    }
+                });
+                opt.callback(options);
+            });
         },
 
         /*********************************************************************
