@@ -629,23 +629,32 @@ $("table.ms-formtable ").hide();
             if (opt.rows === undefined || Object.keys(opt.rows).length === 0) {
                 if (currentListId !== undefined && currentListId.length > 0) {
                     var context = spContext.get();
-                    $.ajax({
-                        async: false,
-                        cache: false,
-                        url: context.webAppUrl + context.webRelativeUrl +
-                            "/_layouts/listform.aspx?PageType=6&ListId=" + 
-                            encodeURIComponent(currentListId).replace('-', '%2D') + "&RootFolder=",
-                        complete: function (xData) {
-                            opt.input = $(xData.responseText);
-                            opt.rows = spRows.init(opt);
-                            $.each(opt.rows, function (fieldIdx, row) {
-                                var td = row.row.find("td.ms-formbody");
-                                td.html("");
-                                $('.ms-formtable').append(row.row);
-                            });
-                            delete opt.input;
-                        }
+
+                    var formText = "";
+                    if (spContext.formCache !== undefined) {
+                        formText = spContext.formCache;
+                    }
+                    else {
+                        $.ajax({
+                            async: false,
+                            cache: false,
+                            url: context.webAppUrl + context.webRelativeUrl +
+                                "/_layouts/listform.aspx?PageType=6&ListId=" +
+                                encodeURIComponent(currentListId).replace('-', '%2D') + "&RootFolder=",
+                            complete: function (xData) {
+                                formText = xData.responseText;
+                            }
+                        });
+                    }
+
+                    opt.input = $(formText);
+                    opt.rows = spRows.init(opt);
+                    $.each(opt.rows, function (fieldIdx, row) {
+                        var td = row.row.find("td.ms-formbody");
+                        td.html("");
+                        $('.ms-formtable').append(row.row);
                     });
+                    delete opt.input;
                 }
             }
 
@@ -2632,6 +2641,7 @@ $("table.ms-formtable ").hide();
                         }
                             // edit form aspx for list context
                         else if ($(this.responseText).find("table.ms-formtable td.ms-formbody").length > 0) {
+                            spContext.formCache = this.responseText;
                             var result = {};
                             result.title = "Unknow List Title";
                             result.fields = {};
