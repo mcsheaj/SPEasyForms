@@ -1,8 +1,14 @@
 ﻿.speasyforms-container {
-    margin-top: 10px;
-    margin-bottom: 20px;
     margin-right: 3px;
     width: 99%;
+}
+div.speasyforms-tabs, div.speasyforms-accordion {
+    margin-top: 10px;
+    margin-bottom: 20px;    
+}
+table.speasyforms-columns, table.speasyforms-columns h3.ms-standardheader, table.speasyforms-columns td.ms-formbody {
+    margin: 0px;
+    padding: 0px;
 }
 h3.ms-standardheader {
     margin-bottom: 0px;
@@ -18,4 +24,10 @@ table.speasyforms-columns td {
 }
 .speasyforms-accordionvalidationerror {
     border: 1px solid red;
+}
+.ms-formlabel {
+    padding: 0;
+}
+.ms-formbody {
+    padding: .1em;
 }

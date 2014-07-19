@@ -2595,11 +2595,13 @@ $("table.ms-formtable ").hide();
 
             var listId = this.getCurrentListId(options);
             if (listId !== undefined) {
-                promises.push($.ajax({
-                    async: true,
-                    url: currentContext.webAppUrl + currentContext.webRelativeUrl +
-                        "/_layouts/listform.aspx?PageType=6&ListId=" + listId + "&RootFolder="
-                }));
+                if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0) {
+                    promises.push($.ajax({
+                        async: true,
+                        url: currentContext.webAppUrl + currentContext.webRelativeUrl +
+                            "/_layouts/listform.aspx?PageType=6&ListId=" + listId + "&RootFolder="
+                    }));
+                }
 
                 var configFileName = currentContext.webAppUrl + currentContext.webRelativeUrl +
                     "/SiteAssets/spef-layout-" + listId.replace("{", "").replace("}", "") + ".txt";
