@@ -1611,9 +1611,11 @@ $("table.ms-formtable ").hide();
         var opt = $.extend({}, spEasyForms.defaults, options);
         var result = [];
         var divId = "spEasyFormsTabDiv" + opt.index;
-        var divClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" + opt.index;
+        var divClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" + opt.index +
+            " ui-tabs ui-widget ui-widget-content ui-corner-all";
         var listId = "spEasyFormsTabsList" + opt.index;
-        var listClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" + opt.index;
+        var listClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" + opt.index +
+            " ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
         var containerDiv = $("#" + opt.containerId);
         containerDiv.append("<div id='" + divId + "' class='" + divClass +
             "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
@@ -1624,15 +1626,16 @@ $("table.ms-formtable ").hide();
             }
         });
         $.each(opt.layout.fieldGroups, function (idx, fieldGroup) {
-            var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.index + "" + idx;
+            var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.index + "" + idx +
+                " ui-state-default ui-corner-top";
             var tableClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" + opt.index + "" + idx;
             var innerDivId = "spEasyFormsTabsDiv" + opt.index + "" + idx;
             var tableId = "spEasyFormsTabsTable" + opt.index + "" + idx;
             $("#" + listId).append("<li class='" + itemClass +
                 "'><a href='#" + innerDivId + "'>" + fieldGroup.name + "</a></li>");
             $("#" + divId).append(
-                "<div id='" + innerDivId + "'><table class='" + tableClass + "' id='" + tableId +
-                "'></table></div>");
+                "<div id='" + innerDivId + "' class='ui-tabs-panel ui-widget-content ui-corner-bottom'>" +
+                "<table class='" + tableClass + "' id='" + tableId + "'></table></div>");
             $.each(fieldGroup.fields, function (fieldIdx, field) {
                 var currentRow = opt.rows[field.fieldInternalName];
                 result.push(field.fieldInternalName);
@@ -1644,25 +1647,16 @@ $("table.ms-formtable ").hide();
                 $("<tr><td><br /><br /></td></tr>").appendTo("#" + tableId);
             }
         });
-        $("#" + divId).tabs({
-            heightStyle: "auto",
-            select: function(event, ui) {
-                // this is a hack to get tabs working with O365 'Minimal Download Strategy' (MDS)
-                // I'm not 100% sure why it is needed, but I think it has to do with MDS using
-                // a hash tag for it's own purposes, which conflicts with tabs trying to use a
-                // hash tag for it's own purposes
-                if(window.location.href.indexOf("start.aspx") >= 0) {
-                    var hash = ui.tab.hash;
-                    $("#" + divId).find("table.speasyforms-tabs").parent().hide();
-                    $(hash).show();
-                }
-            }
+        $("#" + listId).find("li:first").addClass("ui-tabs-active").addClass("ui-state-active");
+        $("#" + divId).find("div.ui-tabs-panel").hide();
+        $("#" + divId).find("div.ui-tabs-panel:first").show();
+        $("#" + listId).find("a").click(function () {
+            $("#" + listId).find("li").removeClass("ui-tabs-active").removeClass("ui-state-active");
+            $(this).closest("li").addClass("ui-tabs-active").addClass("ui-state-active");
+            $("#" + divId).find("div.ui-tabs-panel").hide();
+            $($(this).attr("href")).show();
+            return false;
         });
-        // initialization hack for MDS
-        if(window.location.href.indexOf("start.aspx") >= 0) {
-            $("#" + divId).find("table.speasyforms-tabs").parent().hide();
-            $("#spEasyFormsTabsDiv" + opt.index + "0").show();
-        }
         return result;
     };
 
