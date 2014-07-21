@@ -1666,14 +1666,18 @@ $("table.ms-formtable ").hide();
         var selected = false;
         $("#" + divId).find("table.speasyforms-tabs").each(function (idx, tab) {
             if ($(tab).find(".ms-formbody span.ms-formvalidation").length > 0) {
-                $("a[href$='#spEasyFormsTabsTable" + opt.index + "" + idx + "']").
+                $("a[href$='#spEasyFormsTabsDiv" + opt.index + "" + idx + "']").
                     addClass("speasyforms-tabvalidationerror");
                 if (!selected) {
-                    $("#" + divId).tabs('select', idx);
+                    $("#" + divId).find("div.ui-tabs-panel").hide();
+                    $(tab).closest("div").show();
+                    $("#" + divId).find("li").removeClass("ui-tabs-active").removeClass("ui-state-active");
+                    $("#" + divId).find("a[href='#" + $(tab).closest("div")[0].id + "']").closest("li").
+                        addClass("ui-tabs-active").addClass("ui-state-active");
                     selected = true;
                 }
             } else {
-                $("a[href$='#spEasyFormsTabsTable" + opt.index + "" + idx + "']").
+                $("a[href$='#spEasyFormsTabsDiv" + opt.index + "" + idx + "']").
                     removeClass("speasyforms-tabvalidationerror");
             }
         });
