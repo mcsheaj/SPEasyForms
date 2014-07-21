@@ -93,6 +93,14 @@ $("table.ms-formtable ").hide();
             spContext.initAsync(opt);
         },
 
+        /********************************************************************
+         * Callback to complete initialization after all asynchronous calls
+         * are complete.
+         *
+         * @param {object} options - {
+         *     // see the definition of defaults for options
+         * }
+         ********************************************************************/
         contextReady: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             try {
@@ -2576,6 +2584,17 @@ $("table.ms-formtable ").hide();
             return result;
         },
 
+        /*********************************************************************
+         * Initialize as much of spContext through asynchronous SPServices and
+         * ajax calls as we can.
+         *
+         * @param {object} options - {
+         *     // see the definition for $.spEasyForms.defaults for 
+         *     // additional globally applicable options
+         *     callback {function} - a function taking an options argument to
+         *         be called when all asynchronous calls are complete.
+         * }
+         *********************************************************************/
         initAsync: function (options) {
             var currentContext = this.get(options);
             var promises = [];
