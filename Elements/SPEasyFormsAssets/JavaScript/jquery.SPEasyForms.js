@@ -1569,7 +1569,7 @@ $("table.ms-formtable ").hide();
                         if (currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").length === 0) {
                             var tdh = currentRow.row.find("td.ms-formlabel");
                             currentRow.row.find("td.ms-formbody").prepend(
-                            tdh.html() + "<br data-transformAdded='true'/>");
+                            tdh.html());
                             currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").
                                 attr("data-transformAdded", "true");
                             tdh.hide();
@@ -2580,25 +2580,38 @@ $("table.ms-formtable ").hide();
             var currentContext = this.get(options);
             var promises = [];
 
-            promises.push($.ajax({
-                async: true,
-                url: currentContext.webAppUrl + currentContext.webRelativeUrl +
-                    "/_layouts/userdisp.aspx?Force=True&" + new Date().getTime()
-            }));
+            if ($.isEmptyObject(currentContext.userInformation)) {
+                promises.push($.ajax({
+                    async: true,
+                    url: currentContext.webAppUrl + currentContext.webRelativeUrl +
+                        "/_layouts/userdisp.aspx?Force=True&" + new Date().getTime()
+                }));
+            }
 
             promises.push($().SPServices({
                 operation: "GetGroupCollectionFromSite",
                 async: true
             }));
 
+
+            if (!$.isEmptyObject(currentContext.userInformation) && spContext.groups === undefined) {
+                promises.push($().SPServices({
+                    operation: "GetGroupCollectionFromUser",
+                    userLoginName: currentContext.userInformation.name,
+                    async: true
+                }));
+            }
+
             var listId = this.getCurrentListId(options);
             if (listId !== undefined) {
-                if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0) {
-                    promises.push($.ajax({
-                        async: true,
-                        url: currentContext.webAppUrl + currentContext.webRelativeUrl +
-                            "/_layouts/listform.aspx?PageType=6&ListId=" + listId + "&RootFolder="
-                    }));
+                if (!(listId in currentContext.listContexts)) {
+                    if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0) {
+                        promises.push($.ajax({
+                            async: true,
+                            url: currentContext.webAppUrl + currentContext.webRelativeUrl +
+                                "/_layouts/listform.aspx?PageType=6&ListId=" + listId + "&RootFolder="
+                        }));
+                    }
                 }
 
                 var configFileName = currentContext.webAppUrl + currentContext.webRelativeUrl +
@@ -2615,64 +2628,80 @@ $("table.ms-formtable ").hide();
                 }));
             }
 
-            $.when.apply($, promises).done(function () {
-                var opt = $.extend({}, $.spEasyForms.defaults, options);
-                $(promises).each(function () {
-                    if (this.status == 200) {
+            if (promises.length > 0) {
+                $.when.apply($, promises).done(function () {
+                    var opt = $.extend({}, $.spEasyForms.defaults, options);
+                    $(promises).each(function () {
+                        if (this.status == 200) {
                             // config file
-                        if (this.responseText.trim()[0] == '{' &&
-                            this.responseText.trim()[this.responseText.length - 1] == '}' &&
-                            this.responseText.indexOf('"layout":') >= 0 &&
-                            this.responseText.indexOf('"visibility":') >= 0) {
-                            spContext.config = utils.parseJSON(this.responseText);
+                            if (this.responseText.trim()[0] == '{' &&
+                                this.responseText.trim()[this.responseText.length - 1] == '}' &&
+                                this.responseText.indexOf('"layout":') >= 0 &&
+                                this.responseText.indexOf('"visibility":') >= 0) {
+                                spContext.config = utils.parseJSON(this.responseText);
+                            }
+                                // userdisp.aspx
+                            else if (this.responseText.indexOf("Personal Settings") > 0) {
+                                currentContext.userInformation = {};
+                                $(this.responseText).find("table.ms-formtable td[id^='SPField']").each(function () {
+                                    var tr = $(this).closest("tr");
+                                    var nv = utils.row2FieldRef(tr);
+                                    if (nv.internalName.length > 0) {
+                                        var prop = nv.internalName[0].toLowerCase() +
+                                            nv.internalName.substring(1);
+                                        currentContext.userInformation[prop] = nv.value;
+                                    }
+                                });
+                            }
+                                // edit form aspx for list context
+                            else if ($(this.responseText).find("table.ms-formtable td.ms-formbody").length > 0) {
+                                spContext.formCache = this.responseText;
+                                var result = {};
+                                result.title = "Unknow List Title";
+                                result.fields = {};
+                                try {
+                                    result.title = this.responseText.match(/<title>([^<]*)<\/title>/i)[1].trim();
+                                    if (result.title.indexOf("=") > 0) {
+                                        result.title = result.title.substring(0, result.title.indexOf('-')).trim();
+                                    }
+                                } catch (e) { }
+                                $(this.responseText).find("table.ms-formtable td.ms-formbody").each(function () {
+                                    var tr = $(this).closest("tr");
+                                    var fieldRef = utils.row2FieldRef(tr);
+                                    result.fields[fieldRef.internalName] = fieldRef;
+                                });
+                                currentContext.listContexts[listId] = result;
+                            }
+                                // GetGroupCollectionFromUser
+                            else if ($(this.responseText).find("GetGroupCollectionFromUserResponse").length > 0) {
+                                spContext.groups = {};
+                                $(this.responseText).find("Group").each(function () {
+                                    var group = {};
+                                    group.name = $(this).attr("Name");
+                                    group.id = $(this).attr("ID");
+                                    spContext.groups[group.id] = group;
+                                    spContext.groups[group.name] = group;
+                                });
+                            }
+                                // GetGroupCollectionFromSite
+                            else if ($(this.responseText).find("GetGroupCollectionFromSiteResponse").length > 0) {
+                                spContext.siteGroups = {};
+                                $(this.responseText).find("Group").each(function () {
+                                    var group = {};
+                                    group.name = $(this).attr("Name");
+                                    group.id = $(this).attr("ID");
+                                    spContext.siteGroups[group.id] = group;
+                                    spContext.siteGroups[group.name] = group;
+                                });
+                            }
                         }
-                            // userdisp.aspx
-                        else if (this.responseText.indexOf("Personal Settings") > 0) {
-                            currentContext.userInformation = {};
-                            $(this.responseText).find("table.ms-formtable td[id^='SPField']").each(function () {
-                                var tr = $(this).closest("tr");
-                                var nv = utils.row2FieldRef(tr);
-                                if (nv.internalName.length > 0) {
-                                    var prop = nv.internalName[0].toLowerCase() +
-                                        nv.internalName.substring(1);
-                                    currentContext.userInformation[prop] = nv.value;
-                                }
-                            });
-                        }
-                            // edit form aspx for list context
-                        else if ($(this.responseText).find("table.ms-formtable td.ms-formbody").length > 0) {
-                            spContext.formCache = this.responseText;
-                            var result = {};
-                            result.title = "Unknow List Title";
-                            result.fields = {};
-                            try {
-                                result.title = this.responseText.match(/<title>([^<]*)<\/title>/i)[1].trim();
-                                if (result.title.indexOf("=") > 0) {
-                                    result.title = result.title.substring(0, result.title.indexOf('-')).trim();
-                                }
-                            } catch (e) { }
-                            $(this.responseText).find("table.ms-formtable td.ms-formbody").each(function () {
-                                var tr = $(this).closest("tr");
-                                var fieldRef = utils.row2FieldRef(tr);
-                                result.fields[fieldRef.internalName] = fieldRef;
-                            });
-                            currentContext.listContexts[spContext.getCurrentListId(options)] = result;
-                        }
-                            // GetGroupCollectionFromSite
-                        else if ($(this.responseText).find("Group").length > 0) {
-                            spContext.siteGroups = {};
-                            $(this.responseText).find("Group").each(function () {
-                                group = {};
-                                group.name = $(this).attr("Name");
-                                group.id = $(this).attr("ID");
-                                spContext.siteGroups[group.id] = group;
-                                spContext.siteGroups[group.name] = group;
-                            });
-                        }
-                    }
+                    });
+                    opt.callback(options);
                 });
+            }
+            else {
                 opt.callback(options);
-            });
+            }
         },
 
         /*********************************************************************
