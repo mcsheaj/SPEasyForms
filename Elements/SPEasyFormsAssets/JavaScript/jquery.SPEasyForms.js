@@ -113,7 +113,12 @@ $("table.ms-formtable ").hide();
                     $('#listBreadCrumb').html("<a href='" + source + "'>" + listctx.title + "</a>");
                     $('#wikiPageNameDisplay').html(" -&gt; SPEasyForms Configuration");
                     master.toEditor(opt);
-                } else if (opt.currentContext.listId && window.location.href.indexOf("listedit.aspx") >=0) {
+                    $(window).on("beforeunload", function () {
+                        if ($("#spEasyFormsSaveBtn").hasClass("ui-state-disabled")) {
+                            return "You have unsaved changes, are you sure you want to leave the page?";
+                        }
+                    });
+                } else if (opt.currentContext.listId && window.location.href.indexOf("listedit.aspx") >= 0) {
                     var generalSettings = $("td.ms-descriptiontext:contains('description and navigation')").closest("table");
                     if (generalSettings.length > 0) {
                         var source = window.location.href;
