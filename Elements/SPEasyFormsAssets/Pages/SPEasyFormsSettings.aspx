@@ -409,6 +409,45 @@
                                             <label for='addVisibilityRuleDisplayForm'>Display</label>
                                     </td>
                                 </tr>
+<tr>
+    <td>And When</td>
+    <td class='speasyforms-input'>
+        <div id='condition1' class='speasyforms-condition'>
+            <select id='conditionalField1' class='speasyforms-conditionalfield'>
+                <option></option>
+            </select>
+            <select id='conditionalType1' class='speasyforms-conditionaltype'>
+                <option>Matches</option>
+                <option value='NotMatches'>Does Not Match</option>
+                <option>Equals</option>
+            </select>
+            <input id='conditionalValue1' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue'></input>
+            <button id="spEasyFormsAddConditionalBtn" class="speasyforms-addconditional speasyforms-containerbtn" style='width:25px;height:25px;'></button>
+        </div>
+        <div id='condition2' class='speasyforms-condition'>
+            <select id='conditionalField2' class='speasyforms-conditionalfield'>
+                <option></option>
+            </select>
+            <select id='conditionalType2' class='speasyforms-conditionaltype'>
+                <option>Matches</option>
+                <option value='NotMatches'>Does Not Match</option>
+                <option>Equals</option>
+            </select>
+            <input id='conditionalValue2' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue'></input>
+        </div>
+        <div id='condition3' class='speasyforms-condition'>
+            <select id='conditionalField3' class='speasyforms-conditionalfield'>
+                <option></option>
+            </select>
+            <select id='conditionalType3' class='speasyforms-conditionaltype'>
+                <option>Matches</option>
+                <option value='NotMatches'>Does Not Match</option>
+                <option>Equals</option>
+            </select>
+            <input id='conditionalValue3' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue'></input>
+        </div>
+    </td>
+</tr>
                             </table>
                         </div>
                     </div>

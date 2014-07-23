@@ -13,6 +13,8 @@ table.speasyforms-columns, table.speasyforms-columns h3.ms-standardheader, table
 h3.ms-standardheader {
     margin-bottom: 0px;
     padding-bottom: 0px;
+    font-weight: bold !important;
+    color: #666666;
 }
 table.speasyforms-columns td {
     vertical-align: top;
