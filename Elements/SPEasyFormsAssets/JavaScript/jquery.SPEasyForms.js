@@ -1711,7 +1711,6 @@ $("table.ms-formtable ").hide();
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.config = spContext.getConfig(opt);
             if (opt.config && opt.config.visibility && opt.config.visibility.def && Object.keys(opt.config.visibility.def).length > 0) {
-                var userGroups = spContext.getUserGroups(opt);
                 $.each(opt.rows, function (idx, row) {
                     if (row.internalName in opt.config.visibility.def) {
                         var ruleHandled = false;
@@ -1746,24 +1745,26 @@ $("table.ms-formtable ").hide();
                                     }
                                 }
                             }
-                            $.each(rule.conditions, function(idx, condition) {
-                                var tr = opt.rows[condition.name];
-                                if (tr.row.attr("data-visibilitychangelistener") != "true") {
-                                    var input = tr.row.find("input");
-                                    if(input.length === 0) {
-                                        input = tr.row.find("select");
+                            if (rule.conditions) {
+                                $.each(rule.conditions, function (idx, condition) {
+                                    var tr = opt.rows[condition.name];
+                                    if (tr.row.attr("data-visibilitychangelistener") != "true") {
+                                        var input = tr.row.find("input");
+                                        if (input.length === 0) {
+                                            input = tr.row.find("select");
+                                        }
+                                        if (input.length === 0) {
+                                            input = tr.row.find("textarea");
+                                        }
+                                        if (input.length > 0) {
+                                            input.change(function (e) {
+                                                visibilityManager.transform(opt);
+                                            });
+                                        }
+                                        tr.row.attr("data-visibilitychangelistener", "true");
                                     }
-                                    if(input.length === 0) {
-                                        input = tr.row.find("textarea");
-                                    }
-                                    if(input.length > 0) {
-                                        input.change(function(e) {
-                                            visibilityManager.transform(opt);
-                                        });
-                                    }
-                                    tr.row.attr("data-visibilitychangelistener", "true");
-                                }
-                            });
+                                });
+                            }
                         });
                         if (!ruleHandled) {
                             row.row.attr("data-visibilityhidden", "false").show();
@@ -1853,10 +1854,15 @@ $("table.ms-formtable ").hide();
                     "<th class='" + klass + "'>And When</th>";
                 $.each(opt.config.visibility.def[opt.fieldName], function (idx, rule) {
                     var conditions = "";
-                    $.each(rule.conditions, function (i, condition) {
-                        conditions += "<div class='speasyforms-conditiondisplay'>" + condition.name + ";" + condition.type + ";" + condition.value +
-                            "</div>";
-                    });
+                    if (rule.conditions) {
+                        $.each(rule.conditions, function (i, condition) {
+                            conditions += "<div class='speasyforms-conditiondisplay'>" + condition.name + ";" + condition.type + ";" + condition.value +
+                                "</div>";
+                        });
+                    }
+                    else {
+                        conditions = "&nbsp;";
+                    }
                     table += "<tr class='" + klass + "'>" +
                         "<td class='" + klass + "'>" + rule.state +
                         "</td>" +
@@ -1952,15 +1958,17 @@ $("table.ms-formtable ").hide();
                 if (rule.forms.indexOf('New') >= 0) $("#addVisibilityRuleNewForm")[0].checked = true;
                 if (rule.forms.indexOf('Edit') >= 0) $("#addVisibilityRuleEditForm")[0].checked = true;
                 if (rule.forms.indexOf('Display') >= 0) $("#addVisibilityRuleDisplayForm")[0].checked = true;
-                $.each(rule.conditions, function (index, condition) {
-                    $("#conditionalField" + (index + 1)).val(condition.name);
-                    $("#conditionalType" + (index + 1)).val(condition.type);
-                    $("#conditionalValue" + (index + 1)).val(condition.value);
-                    $("#condition" + (index + 1)).show();
-                    if ($(".speasyforms-condition:hidden").length === 0) {
-                        $("#spEasyFormsAddConditionalBtn").hide();
-                    }
-                });
+                if (rule.conditions) {
+                    $.each(rule.conditions, function (index, condition) {
+                        $("#conditionalField" + (index + 1)).val(condition.name);
+                        $("#conditionalType" + (index + 1)).val(condition.type);
+                        $("#conditionalValue" + (index + 1)).val(condition.value);
+                        $("#condition" + (index + 1)).show();
+                        if ($(".speasyforms-condition:hidden").length === 0) {
+                            $("#spEasyFormsAddConditionalBtn").hide();
+                        }
+                    });
+                }
                 $('#addVisibilityRuleDialog').dialog("open");
                 return false;
             });
@@ -2310,6 +2318,7 @@ $("table.ms-formtable ").hide();
                         }
                     }
                     if (!appliesMatch) {
+                        var userGroups = spContext.getUserGroups(opt);
                         $.each(userGroups, function (i, group) {
                             if ($.inArray(group.name, appliesToGroups) >= 0) {
                                 appliesMatch = true;
