@@ -1716,32 +1716,38 @@ $("table.ms-formtable ").hide();
                         var ruleHandled = false;
                         $.each(opt.config.visibility.def[row.internalName], function (index, rule) {
                             opt.rule = rule;
-                            var result = true;
-                            var formMatch = visibilityManager.checkForm(opt);
-                            var appliesMatch = visibilityManager.checkAppliesTo(opt);
-                            var conditionalMatch = visibilityManager.checkConditionals(opt);
-                            if (formMatch && appliesMatch && conditionalMatch) {
-                                if (rule.state == "Hidden") {
-                                    if(row.row.attr("data-visibilityhidden") !== "true") {
-                                        row.row.attr("data-visibilityhidden", "true").hide();
-                                    }
-                                    if (row.row.next().attr("data-visibilityadded") === "true") {
-                                        row.row.next().remove();
-                                    }
-                                    ruleHandled = true;
-                                } else if (rule.state === "ReadOnly") {
-                                    var formType = visibilityManager.getFormType(opt);
-                                    if (formType !== "display") {
-                                        var html = '<tr data-visibilityadded="true">' +
-                                            '<td valign="top" width="350px" class="ms-formbody"><h3 class="ms-standardheader"><nobr>' +
-                                            row.displayName + '</nobr></h3>' + row.value + '</td></tr>';
+                            if(!ruleHandled) {
+                                var formMatch = visibilityManager.checkForm(opt);
+                                var appliesMatch = visibilityManager.checkAppliesTo(opt);
+                                var conditionalMatch = visibilityManager.checkConditionals(opt);
+                                if (formMatch && appliesMatch && conditionalMatch) {
+                                    if (rule.state == "Hidden") {
                                         if(row.row.attr("data-visibilityhidden") !== "true") {
                                             row.row.attr("data-visibilityhidden", "true").hide();
                                         }
-                                        if(row.row.next().attr("data-visibilityadded") !== "true") {
-                                            row.row.after(html);
+                                        if (row.row.next().attr("data-visibilityadded") === "true") {
+                                            row.row.next().remove();
                                         }
                                         ruleHandled = true;
+                                    } else if (rule.state === "ReadOnly") {
+                                        var formType = visibilityManager.getFormType(opt);
+                                        if (formType !== "display") {
+                                            var html = '<tr data-visibilityadded="true">' +
+                                                    '<td valign="top" width="350px" class="ms-formlabel"><h3 class="ms-standardheader"><nobr>' +
+                                                    row.displayName + '</nobr></h3></td><td class="ms-formbody">' + row.value + '</td></tr>';
+                                            if(row.row.find("td.ms-formbody h3.ms-standardheader").length > 0) {
+                                                html = '<tr data-visibilityadded="true">' +
+                                                    '<td valign="top" width="350px" class="ms-formbody"><h3 class="ms-standardheader"><nobr>' +
+                                                    row.displayName + '</nobr></h3>' + row.value + '</td></tr>';
+                                            }
+                                            if(row.row.attr("data-visibilityhidden") !== "true") {
+                                                row.row.attr("data-visibilityhidden", "true").hide();
+                                            }
+                                            if(row.row.next().attr("data-visibilityadded") !== "true") {
+                                                row.row.after(html);
+                                            }
+                                            ruleHandled = true;
+                                        }
                                     }
                                 }
                             }
@@ -1890,7 +1896,7 @@ $("table.ms-formtable ").hide();
             }
             if (!opt.static) {
                 $("#tabs-min-visibility").html("");
-                $.each(Object.keys(opt.config.visibility.def), function (idx, key) {
+                $.each(Object.keys(opt.config.visibility.def).sort(), function (idx, key) {
                     opt.fieldName = key;
                     opt.displayName = spContext.getListContext().fields[key].displayName;
                     opt.static = true;
@@ -2126,7 +2132,7 @@ $("table.ms-formtable ").hide();
             $("tr.speasyforms-sortablefields").each(function (idx, tr) {
                 var tds = $(this).find("td");
                 if (tds.length > 0) {
-                    var internalName = $(this).find("td")[1].innerText;
+                    var internalName = $(this).find("td")[1].innerHTML;
                     $(this).append(
                         "<td class='speasyforms-conditionalvisibility'><button id='" + internalName +
                         "ConditionalVisibility' class='speasyforms-containerbtn " +
@@ -3131,17 +3137,6 @@ $("table.ms-formtable ").hide();
                         alert("Error getting configuration.\nStatus: " + xhr.status +
                             "\nStatus Text: " + thrownError);
                     }
-                    // added to get old filenames and save in new filename format, 
-                    // required because {} are verboten in 2010 fielnames
-                    if (opt.configFileName.indexOf("{") < 0) {
-                        opt.configFileName = opt.currentContext.webAppUrl + opt.currentContext.webRelativeUrl +
-                            "/SiteAssets/spef-layout-" + opt.listId + ".txt";
-                        opt.config = spContext.getConfig(opt);
-                        if ($("#spEasyFormsJson pre").length > 0) {
-                            $("#spEasyFormsJson pre").text(JSON.stringify(opt.config, null, 4));
-                            configManager.save(opt);
-                        }
-                    }
                 }
             });
 
@@ -3212,7 +3207,10 @@ $("table.ms-formtable ").hide();
             } else {
                 var a = document.createElement("a");
                 a.href = opt.siteUrl;
-                opt.siteUrl = '/' + a.pathname;
+                opt.siteUrl = a.pathname;
+                if (opt.siteUrl[0] !== '/') {
+                    opt.siteUrl = '/' + opt.siteUrl;
+                }
             }
             return opt.siteUrl;
         },
