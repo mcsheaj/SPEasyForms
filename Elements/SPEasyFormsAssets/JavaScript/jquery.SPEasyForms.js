@@ -2715,38 +2715,36 @@ $("table.ms-formtable ").hide();
             var currentContext = this.get(options);
             var promises = [];
 
-            if ($.isEmptyObject(currentContext.userInformation)) {
-                promises.push($.ajax({
-                    async: true,
-                    url: spContext.getCurrentSiteUrl(options) +
-                        "/_layouts/userdisp.aspx?Force=True&" + new Date().getTime()
-                }));
-            }
+
+            promises.push($.ajax({
+                async: true,
+                url: spContext.getCurrentSiteUrl(options) +
+                    "/_layouts/userdisp.aspx?Force=True&" + new Date().getTime()
+            }));
+
 
             promises.push($().SPServices({
+                webURL: spContext.getCurrentSiteUrl(),
                 operation: "GetGroupCollectionFromSite",
                 async: true
             }));
 
 
-            if (!$.isEmptyObject(currentContext.userInformation) && spContext.groups === undefined) {
-                promises.push($().SPServices({
-                    operation: "GetGroupCollectionFromUser",
-                    userLoginName: currentContext.userInformation.name,
-                    async: true
-                }));
-            }
+            promises.push($().SPServices({
+                webURL: spContext.getCurrentSiteUrl(),
+                operation: "GetGroupCollectionFromUser",
+                userLoginName: currentContext.userInformation.name,
+                async: true
+            }));
 
             var listId = this.getCurrentListId(options);
             if (listId !== undefined) {
-                if (!(listId in currentContext.listContexts)) {
-                    if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0) {
-                        promises.push($.ajax({
-                            async: true,
-                            url: spContext.getCurrentSiteUrl(options) +
-                                "/_layouts/listform.aspx?PageType=6&ListId=" + listId + "&RootFolder="
-                        }));
-                    }
+                if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0) {
+                    promises.push($.ajax({
+                        async: true,
+                        url: spContext.getCurrentSiteUrl(options) +
+                            "/_layouts/listform.aspx?PageType=6&ListId=" + listId + "&RootFolder="
+                    }));
                 }
 
                 var configFileName = spContext.getCurrentSiteUrl(options) +
@@ -2912,6 +2910,7 @@ $("table.ms-formtable ").hide();
             var user = ("userProfile" in currentContext ? currentContext.userProfile : {});
             if (!opt.useCache || "accountName" in opt || $.isEmptyObject(user)) {
                 var params = {
+                    webURL: spContext.getCurrentSiteUrl(),
                     operation: 'GetUserProfileByName',
                     async: false,
                     completefunc: function (xData, Status) {
@@ -3018,6 +3017,7 @@ $("table.ms-formtable ").hide();
             }
             if (!opt.useCache || "accountName" in opt || this.groups === undefined || $.isEmptyObject(this.groups)) {
                 $().SPServices({
+                    webURL: spContext.getCurrentSiteUrl(),
                     operation: "GetGroupCollectionFromUser",
                     userLoginName: (("accountName" in opt && opt.accountName.length > 0) ? opt.accountName : this.getUserInformation(opt).name),
                     async: false,
@@ -3066,6 +3066,7 @@ $("table.ms-formtable ").hide();
             }
 
             $().SPServices({
+                webURL: spContext.getCurrentSiteUrl(),
                 operation: "GetGroupCollectionFromSite",
                 async: false,
                 completefunc: function (xData, Status) {
