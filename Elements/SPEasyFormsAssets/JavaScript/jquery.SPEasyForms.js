@@ -61,7 +61,7 @@
             css: undefined,
             // selector for an element in a form table row from which row 
             // will be obtained via .closest("tr")
-            formBodySelector: "table.ms-formtable td.ms-formbody",
+            formBodySelector: "table td.ms-formbody",
             // regex for capturing field internal name, expects 
             // .match(tr.html(fieldInternalNameRegex)) result in match[1]
             fieldInternalNameRegex: /FieldInternalName=\"([^\"]*)\"/i,
@@ -2739,6 +2739,20 @@
             
             var listId = this.getCurrentListId(options);
             if (listId !== undefined) {
+                promises.push($().SPServices({
+                    webURL: spContext.getCurrentSiteUrl(),
+                    operation: "GetList",
+                    listName: listId,
+                    async: true
+                }));
+
+                promises.push($().SPServices({
+                    webURL: spContext.getCurrentSiteUrl(),
+                    operation: "GetListContentTypes",
+                    listName: listId,
+                    async: true
+                }));
+
                 if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0) {
                     promises.push($.ajax({
                         async: true,
@@ -2749,7 +2763,6 @@
 
                 var configFileName = spContext.getCurrentSiteUrl(options) +
                     "/SiteAssets/spef-layout-" + listId.replace("{", "").replace("}", "") + ".txt";
-
                 promises.push($.ajax({
                     type: "GET",
                     url: configFileName,
@@ -2765,8 +2778,9 @@
                 $.when.apply($, promises).done(function (data) {
                     $(promises).each(function () {
                         if (this.status == 200) {
-                            // config file
-                            if (this.responseText.trim()[0] == '{' && this.responseText.trim()[this.responseText.length - 1] == '}' && this.responseText.indexOf('"layout":') >= 0 && this.responseText.indexOf('"visibility":') >= 0) {
+                                // config file
+                            if (this.responseText.trim()[0] == '{' && this.responseText.trim()[this.responseText.length - 1] == '}' &&
+                               this.responseText.indexOf('"layout":') >= 0 && this.responseText.indexOf('"visibility":') >= 0) {
                                 spContext.config = utils.parseJSON(this.responseText);
                             }
                                 // userdisp.aspx
@@ -2779,18 +2793,16 @@
                                     currentContext.userInformation[prop] = row.row.find("td[id^='SPField']").text().trim();
                                 });
                             }
-                                // edit form aspx for list context
-                            else if ($(this.responseText).find("table.ms-formtable td.ms-formbody").length > 0) {
-                                spContext.formCache = this.responseText;
-                                opt.input = $(this.repsonseText);
-                                var rows = spRows.init(opt);
-                                var result = {};
-                                result.title = "Unknown List";
-                                result.fields = {};
-                                $.each(rows, function (idx, row) {
-                                    result.fields[row.internalName] = row;
+                                // GetGroupCollectionFromSite
+                            else if ($(this.responseText).find("GetGroupCollectionFromWebResponse").length > 0) {
+                                spContext.siteGroups = {};
+                                $(this.responseText).find("Group").each(function () {
+                                    var group = {};
+                                    group.name = $(this).attr("Name");
+                                    group.id = $(this).attr("ID");
+                                    spContext.siteGroups[group.id] = group;
+                                    spContext.siteGroups[group.name] = group;
                                 });
-                                currentContext.listContexts[listId] = result;
                             }
                                 // GetGroupCollectionFromUser
                             else if ($(this.responseText).find("GetGroupCollectionFromUserResponse").length > 0) {
@@ -2803,16 +2815,62 @@
                                     spContext.groups[group.name] = group;
                                 });
                             }
-                                // GetGroupCollectionFromSite
-                            else if ($(this.responseText).find("GetGroupCollectionFromWebResponse").length > 0) {
-                                spContext.siteGroups = {};
-                                $(this.responseText).find("Group").each(function () {
-                                    var group = {};
-                                    group.name = $(this).attr("Name");
-                                    group.id = $(this).attr("ID");
-                                    spContext.siteGroups[group.id] = group;
-                                    spContext.siteGroups[group.name] = group;
+                                // GetList
+                            else if ($(this.responseText).find("GetListResponse").length > 0) {
+                                var result = {};
+                                result.title = $(this.responseText).find("List").attr("Title");
+                                result.template = $(this.responseText).find("List").attr("ServerTemplate");
+                                result.feature = $(this.responseText).find("List").attr("FeatureId");
+                                result.baseType = $(this.responseText).find("List").attr("BaseType");
+                                result.defaultUrl = $(this.responseText).find("List").attr("DefaultViewUrl");
+                                spContext.fields = {};
+                                $.each($(this.responseText).find("Field"), function (idx, field) {
+                                    if ($(field).attr("Hidden") !== "hidden" && $(field).attr("ReadOnly") !== "readonly") {
+                                        var newField = {};
+                                        newField.name = $(field).attr("Name");
+                                        newField.staticName = $(field).attr("StaticName");
+                                        newField.id = $(field).attr("ID");
+                                        newField.displayName = $(field).attr("DisplayName");
+                                        newField.type = $(field).attr("Type");
+                                        newField.required = $(field).attr("Required");
+                                        spContext.fields[newField.displayName] = newField;
+                                        spContext.fields[newField.name] = newField;
+                                    }
                                 });
+                                currentContext.listContexts[listId] = result;
+                            }
+                                // GetListContentTypes
+                            else if ($(this.responseText).find("GetListContentTypesResponse").length > 0) {
+                                var result = {};
+                                if (currentContext.listContexts && currentContext.listContexts[listId]) {
+                                    result = currentContext.listContexts[listId];
+                                }
+                                var contentTypes = {};
+                                contentTypes.order = $(this.responseText).find("ContentTypes").attr("ContentTypeOrder").split(",");
+                                $.each($(this.responseText).find("ContentType"), function (idx, ct) {
+                                    var newCt = {};
+                                    newCt.name = $(ct).attr("Name");
+                                    newCt.id = $(ct).attr("ID");
+                                    newCt.description = $(ct).attr("Description");
+                                    contentTypes[newCt.id] = newCt;
+                                });
+                                spContext.contentTypes = contentTypes;
+                                currentContext.listContexts[listId] = result;
+                            }
+                                // edit form aspx for list context
+                            else if ($(this.responseText).find("table.ms-formtable td.ms-formbody").length > 0) {
+                                spContext.formCache = this.responseText;
+                                opt.input = $(this.responseText);
+                                var rows = spRows.init(opt);
+                                var result = {};
+                                if (currentContext.listContexts && currentContext.listContexts[listId]) {
+                                    result = currentContext.listContexts[listId];
+                                }
+                                result.fields = {};
+                                $.each(rows, function (idx, row) {
+                                    result.fields[row.internalName] = row;
+                                });
+                                currentContext.listContexts[listId] = result;
                             }
                         }
                     });
@@ -3225,47 +3283,6 @@
     var spContext = $.spEasyForms.sharePointContext;
 
     $.spEasyForms.utilities = {
-        /*********************************************************************
-         * Get value from a display form row.
-         *
-         * @param {object} tr - the jQuery obect representing a row in the 
-         * form table.
-         *
-         * @returns {object} - {
-         *     internalName: <string>, // the field internal name
-         *     displayName: <string>, // the display name of the field
-         *     type: <string>, // the SPField type
-         *     value: <string> // the current value of the field
-         * }
-         *********************************************************************/
-        row2FieldRef: function (tr) {
-            var result = {
-                internalName: "",
-                displayName: "",
-                type: ""
-            };
-            var src = tr.html();
-            try {
-                if (tr.html().indexOf("idAttachmentsRow") >= 0) {
-                    result.internalName = "Attachments";
-                    result.displayName = "Attachments";
-                    result.type = "SPFieldAttachments";
-                } else {
-                    result.internalName = src.match(/FieldInternalName=\"([^\"]*)\"/)[1];
-                    result.displayName = src.match(/FieldName=\"([^\"]*)\"/)[1];
-                    result.type = src.match(/FieldType=\"([^\"]*)\"/)[1];
-                    switch (result.type) {
-                        default: result.value = tr.find("td[id^='SPField']").text().trim();
-                        break;
-                    }
-                }
-                if (typeof (result.value) == 'undefined') result.value = '';
-            } catch (e) {
-                console.log(e);
-            }
-            return result;
-        },
-
         /*********************************************************************
          * Wrapper for jQuery.parseJSON; I really don't want to check for null
          * or undefined everywhere to avoid exceptions. I'd rather just get 
