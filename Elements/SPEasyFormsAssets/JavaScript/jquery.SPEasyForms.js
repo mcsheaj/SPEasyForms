@@ -18,8 +18,6 @@
  * TBD - make localizable?
  */
 
-$("table.ms-formtable ").hide();
-
 (function ($, undefined) {
 
     // save a reference to our instance of jQuery just in case
@@ -1898,10 +1896,12 @@ $("table.ms-formtable ").hide();
                 $("#tabs-min-visibility").html("");
                 $.each(Object.keys(opt.config.visibility.def).sort(), function (idx, key) {
                     opt.fieldName = key;
-                    opt.displayName = spContext.getListContext().fields[key].displayName;
-                    opt.static = true;
-                    opt.index = idx;
-                    visibilityManager.drawRuleTable(opt);
+                    if (spContext.getListContext().fields[key]) {
+                        opt.displayName = spContext.getListContext().fields[key].displayName;
+                        opt.static = true;
+                        opt.index = idx;
+                        visibilityManager.drawRuleTable(opt);
+                    }
                 });
             }
         },
@@ -2713,8 +2713,8 @@ $("table.ms-formtable ").hide();
          *********************************************************************/
         initAsync: function (options) {
             var currentContext = this.get(options);
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
             var promises = [];
-
 
             promises.push($.ajax({
                 async: true,
@@ -2722,21 +2722,21 @@ $("table.ms-formtable ").hide();
                     "/_layouts/userdisp.aspx?Force=True&" + new Date().getTime()
             }));
 
-
             promises.push($().SPServices({
                 webURL: spContext.getCurrentSiteUrl(),
-                operation: "GetGroupCollectionFromSite",
+                operation: "GetGroupCollectionFromWeb",
                 async: true
             }));
 
-
-            promises.push($().SPServices({
-                webURL: spContext.getCurrentSiteUrl(),
-                operation: "GetGroupCollectionFromUser",
-                userLoginName: currentContext.userInformation.name,
-                async: true
-            }));
-
+            if (currentContext.userInformation && currentContext.userInformation.name) {
+                promises.push($().SPServices({
+                    webURL: spContext.getCurrentSiteUrl(),
+                    operation: "GetGroupCollectionFromUser",
+                    userLoginName: currentContext.userInformation.name,
+                    async: true
+                }));
+            }
+            
             var listId = this.getCurrentListId(options);
             if (listId !== undefined) {
                 if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0) {
@@ -2762,46 +2762,37 @@ $("table.ms-formtable ").hide();
             }
 
             if (promises.length > 0) {
-                $.when.apply($, promises).always(function () {
-                    var opt = $.extend({}, $.spEasyForms.defaults, options);
+                $.when.apply($, promises).done(function (data) {
                     $(promises).each(function () {
                         if (this.status == 200) {
                             // config file
                             if (this.responseText.trim()[0] == '{' && this.responseText.trim()[this.responseText.length - 1] == '}' && this.responseText.indexOf('"layout":') >= 0 && this.responseText.indexOf('"visibility":') >= 0) {
                                 spContext.config = utils.parseJSON(this.responseText);
                             }
-                            // userdisp.aspx
+                                // userdisp.aspx
                             else if (this.responseText.indexOf("Personal Settings") > 0) {
                                 currentContext.userInformation = {};
-                                $(this.responseText).find("table.ms-formtable td[id^='SPField']").each(function () {
-                                    var tr = $(this).closest("tr");
-                                    var nv = utils.row2FieldRef(tr);
-                                    if (nv.internalName.length > 0) {
-                                        var prop = nv.internalName[0].toLowerCase() + nv.internalName.substring(1);
-                                        currentContext.userInformation[prop] = nv.value;
-                                    }
+                                opt.input = $(this.responseText);
+                                var rows = spRows.init(opt);
+                                $.each(rows, function (idx, row) {
+                                    var prop = row.internalName[0].toLowerCase() + row.internalName.substring(1);
+                                    currentContext.userInformation[prop] = row.row.find("td[id^='SPField']").text().trim();
                                 });
                             }
-                            // edit form aspx for list context
+                                // edit form aspx for list context
                             else if ($(this.responseText).find("table.ms-formtable td.ms-formbody").length > 0) {
                                 spContext.formCache = this.responseText;
+                                opt.input = $(this.repsonseText);
+                                var rows = spRows.init(opt);
                                 var result = {};
-                                result.title = "Unknow List Title";
+                                result.title = "Unknown List";
                                 result.fields = {};
-                                try {
-                                    result.title = this.responseText.match(/<title>([^<]*)<\/title>/i)[1].trim();
-                                    if (result.title.indexOf('-') > 0) {
-                                        result.title = result.title.substring(0, result.title.indexOf('-')).trim();
-                                    }
-                                } catch (e) {}
-                                $(this.responseText).find("table.ms-formtable td.ms-formbody").each(function () {
-                                    var tr = $(this).closest("tr");
-                                    var fieldRef = utils.row2FieldRef(tr);
-                                    result.fields[fieldRef.internalName] = fieldRef;
+                                $.each(rows, function (idx, row) {
+                                    result.fields[row.internalName] = row;
                                 });
                                 currentContext.listContexts[listId] = result;
                             }
-                            // GetGroupCollectionFromUser
+                                // GetGroupCollectionFromUser
                             else if ($(this.responseText).find("GetGroupCollectionFromUserResponse").length > 0) {
                                 spContext.groups = {};
                                 $(this.responseText).find("Group").each(function () {
@@ -2812,8 +2803,8 @@ $("table.ms-formtable ").hide();
                                     spContext.groups[group.name] = group;
                                 });
                             }
-                            // GetGroupCollectionFromSite
-                            else if ($(this.responseText).find("GetGroupCollectionFromSiteResponse").length > 0) {
+                                // GetGroupCollectionFromSite
+                            else if ($(this.responseText).find("GetGroupCollectionFromWebResponse").length > 0) {
                                 spContext.siteGroups = {};
                                 $(this.responseText).find("Group").each(function () {
                                     var group = {};
@@ -2825,6 +2816,12 @@ $("table.ms-formtable ").hide();
                             }
                         }
                     });
+                    if (opt.useCache) {
+                        opt.currentContext = currentContext;
+                        spEasyForms.writeCachedContext(opt);
+                    }
+                    opt.callback(options);
+                }).fail(function (data) {
                     opt.callback(options);
                 });
             } else {
@@ -2861,16 +2858,11 @@ $("table.ms-formtable ").hide();
                     url: spContext.getCurrentSiteUrl(options) +
                         "/_layouts/userdisp.aspx?Force=True&" + id + "&" + new Date().getTime(),
                     complete: function (xData) {
-                        $(xData.responseText).find(
-                            "table.ms-formtable td[id^='SPField']").each(
-
-                        function () {
-                            var tr = $(this).closest("tr");
-                            var nv = utils.row2FieldRef(tr);
-                            if (nv.internalName.length > 0) {
-                                var prop = nv.internalName[0].toLowerCase() + nv.internalName.substring(1);
-                                user[prop] = nv.value;
-                            }
+                        opt.input = $(xData.responseText);
+                        var rows = spRows.init(opt);
+                        $.each(rows, function (idx, row) {
+                            var prop = row.internalName[0].toLowerCase() + row.internalName.substring(1);
+                            currentContext.userInformation[prop] = row.row.find("td[id^='SPField']").text().trim();
                         });
                     }
                 });
@@ -2968,14 +2960,10 @@ $("table.ms-formtable ").hide();
                     url: spContext.getCurrentSiteUrl(opt) +
                         "/_layouts/listform.aspx?PageType=6&ListId=" + opt.listId + "&RootFolder=",
                     complete: function (xData) {
-                        try {
-                            result.title = xData.responseText.match(/<title>([^<]*)<\/title>/i)[1].trim();
-                            result.title = result.title.substring(0, result.title.indexOf('-')).trim();
-                        } catch (e) {}
-                        $(xData.responseText).find("table.ms-formtable td.ms-formbody").each(function () {
-                            var tr = $(this).closest("tr");
-                            var fieldRef = utils.row2FieldRef(tr);
-                            result.fields[fieldRef.internalName] = fieldRef;
+                        opt.input = $(xData.repsonseText);
+                        var rows = spRows.init(opt);
+                        $.each(rows, function (idx, row) {
+                            result.fields[row.internalName] = row;
                         });
                     }
                 });
