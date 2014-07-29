@@ -18,10 +18,10 @@
  * TBD - make localizable?
  */
 
-(function ($, undefined) {
+// save a reference to our instance of jQuery just in case
+spefjQuery = jQuery.noConflict(true);
 
-    // save a reference to our instance of jQuery just in case
-    spefjQuery = $;
+(function ($, undefined) {
 
     // cross-page caching object
     var cache = (typeof (ssw) != 'undefined' ? ssw.get() : undefined);
@@ -71,6 +71,9 @@
             // regex for capturing field type, expects tr.html().match() 
             // result in match[1]
             fieldTypeRegex: /FieldType=\"([^\"]*)\"/i,
+            // if the above expressions do not work, this selector will be used to find
+            // the field display name, pulling it's text and stripping any * or leading/trailing white space
+            fieldDisplayNameAltSelector: 'h3.ms-standardheader',
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0
         },
@@ -140,6 +143,21 @@
                         generalSettings.append(newRow);
                     }
                 } else if (opt.currentContext.listId && visibilityManager.getFormType(opt).length > 0) {
+                    /*
+                     * convert all lookups to simple selects, only for 2010 and earlier, from Mark Anderson's 
+                     * SPServices documentation and attributed to Dan Kline
+                     */
+                    $('.ms-lookuptypeintextbox').each(function() {
+                         $().SPServices.SPComplexToSimpleDropdown({
+                           columnName: $(this).attr('title') 
+                        }); 
+                    });
+                    /*
+                     * add ms-formtable to the...um, form table. For some reason designer does not put this in custom forms.
+                     */
+                    if ($("table.ms-formtable").length === 0) {
+                        $("td.ms-formlabel h3.ms-standardheader").closest("table").addClass("ms-formtable");
+                    }
                     master.transform(opt);
                     /*
                      * Override the core.js PreSaveItem function, to allow containers to react
@@ -1753,18 +1771,15 @@
                                 $.each(rule.conditions, function (idx, condition) {
                                     var tr = opt.rows[condition.name];
                                     if (tr.row.attr("data-visibilitychangelistener") != "true") {
-                                        var input = tr.row.find("input");
-                                        if (input.length === 0) {
-                                            input = tr.row.find("select");
-                                        }
-                                        if (input.length === 0) {
-                                            input = tr.row.find("textarea");
-                                        }
-                                        if (input.length > 0) {
-                                            input.change(function (e) {
-                                                visibilityManager.transform(opt);
-                                            });
-                                        }
+                                        tr.row.find("input").change(function(e) {
+                                            visibilityManager.transform(opt);
+                                        });
+                                        tr.row.find("select").change(function(e) {
+                                            visibilityManager.transform(opt);
+                                        });
+                                        tr.row.find("textarea").change(function (e) {
+                                            visibilityManager.transform(opt);
+                                        });
                                         tr.row.attr("data-visibilitychangelistener", "true");
                                     }
                                 });
@@ -2493,11 +2508,27 @@
                     spFieldType: fieldType
                 };
                 if (result.internalName !== undefined) {
-                    if (result.displayName === undefined) {
+                    if (spContext.fields && result.displayName === undefined) {
                         result.displayName = result.internalName;
+                        if (result.internalName in spContext.fields) {
+                            result.displayName = spContext.fields[result.internalName].displayName;
+                        }
                     }
-                    if (result.spFieldType === undefined) {
+                    if (spContext.fields && result.spFieldType === undefined) {
                         result.spFieldType = "SPFieldText";
+                        if (result.internalName in spContext.fields) {
+                            result.spFieldType = "SPField" + spContext.fields[result.internalName].type;
+                        }
+                    }
+                    result.value = this.value({
+                        row: result
+                    });
+                }
+                else if ($(opt.fieldDisplayNameAltSelector).length > 0) {
+                    result.displayName = current.find(opt.fieldDisplayNameAltSelector).text().replace('*', '').trim();
+                    if (spContext.fields && result.displayName in spContext.fields) {
+                        result.internalName = spContext.fields[result.displayName].name;
+                        result.spFieldType = "SPField" + spContext.fields[result.displayName].type;
                     }
                     result.value = this.value({
                         row: result
@@ -2548,7 +2579,13 @@
                         if (select.length > 0) {
                             tr.value = tr.row.find("td.ms-formbody select").val();
                         } else {
-                            tr.value = tr.row.find("input[checked='checked']").val();
+                            tr.value = "";
+                            tr.row.find("input:checked").each(function() {
+                                if(tr.value) {
+                                    tr.value += ";";
+                                }
+                                tr.value += $(this).val();
+                            });
                         }
                         break;
                     case "SPFieldNote":
@@ -2568,7 +2605,7 @@
                         break;
                     case "SPFieldMultiChoice":
                         tr.value = "";
-                        tr.row.find("input[checked='checked']").each(function () {
+                        tr.row.find("input:checked").each(function () {
                             if (tr.value.length > 0) tr.value += "; ";
                             tr.value += $(this).next().text();
                         });
@@ -2604,8 +2641,8 @@
                         }
                         break;
                     case "SPFieldBoolean":
-                        tr.value = tr.row.find("td.ms-formbody input").val().trim();
-                        if (tr.value === "on") {
+                        tr.value = tr.row.find("td.ms-formbody input").is(":checked");
+                        if (tr.value) {
                             tr.value = "Yes";
                         } else {
                             tr.value = "No";
@@ -3324,4 +3361,4 @@
         }
     };
     var utils = $.spEasyForms.utilities;
-})(jQuery);
+})(spefjQuery);

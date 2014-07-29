@@ -27,7 +27,7 @@
     />
     <CustomAction
          Location="ScriptLink"
-         ScriptBlock="$(window).bind('load', function() { spefjQuery.spEasyForms.init(); });"
+         ScriptBlock="spefjQuery(window).bind('load', function() { spefjQuery.spEasyForms.init(); });"
          Sequence="11501"
      />
 </Elements>
