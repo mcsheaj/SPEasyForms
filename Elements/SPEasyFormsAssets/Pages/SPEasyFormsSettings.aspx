@@ -279,7 +279,7 @@
         }
 
         table.speasyforms-staticrules {
-            width: 80%;
+            width: 100%;
         }
     </style>
 </asp:Content>

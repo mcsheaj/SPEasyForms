@@ -498,6 +498,9 @@ spefjQuery = jQuery.noConflict(true);
                     },
                     visibility: {
                         def: {}
+                    },
+                    adapters: {
+                        def: {}
                     }
                 };
                 $("#spEasyFormsJson pre").text(JSON.stringify(currentConfig, null, 4));
@@ -627,6 +630,7 @@ spefjQuery = jQuery.noConflict(true);
             }
 
             visibilityManager.transform(opt);
+            adapterManager.transform(opt);
 
             return fieldsInUse;
         },
@@ -672,7 +676,7 @@ spefjQuery = jQuery.noConflict(true);
                             async: false,
                             cache: false,
                             url: context.webAppUrl + context.webRelativeUrl +
-                                "/_layouts/listform.aspx?PageType=6&ListId=" + encodeURIComponent(currentListId).replace('-', '%2D') + "&RootFolder=",
+                                "/_layouts/listform.aspx?PageType=4&ListId=" + encodeURIComponent(currentListId).replace('-', '%2D') + "&RootFolder=",
                             complete: function (xData) {
                                 formText = xData.responseText;
                             }
@@ -730,6 +734,8 @@ spefjQuery = jQuery.noConflict(true);
 
             visibilityManager.toEditor(opt);
             $("#tabs-min").tabs();
+
+            adapterManager.toEditor(opt);
 
             this.initialized = true;
         },
@@ -2524,7 +2530,7 @@ spefjQuery = jQuery.noConflict(true);
                         row: result
                     });
                 }
-                else if ($(opt.fieldDisplayNameAltSelector).length > 0) {
+                else if (current.find(opt.fieldDisplayNameAltSelector).length > 0) {
                     result.displayName = current.find(opt.fieldDisplayNameAltSelector).text().replace('*', '').trim();
                     if (spContext.fields && result.displayName in spContext.fields) {
                         result.internalName = spContext.fields[result.displayName].name;
@@ -2794,7 +2800,7 @@ spefjQuery = jQuery.noConflict(true);
                     promises.push($.ajax({
                         async: true,
                         url: spContext.getCurrentSiteUrl(options) +
-                            "/_layouts/listform.aspx?PageType=6&ListId=" + listId + "&RootFolder="
+                            "/_layouts/listform.aspx?PageType=4&ListId=" + listId + "&RootFolder="
                     }));
                 }
 
@@ -2895,7 +2901,7 @@ spefjQuery = jQuery.noConflict(true);
                                 currentContext.listContexts[listId] = result;
                             }
                                 // edit form aspx for list context
-                            else if ($(this.responseText).find("table.ms-formtable td.ms-formbody").length > 0) {
+                            else if ($(this.responseText).find("td.ms-formbody").length > 0) {
                                 spContext.formCache = this.responseText;
                                 opt.input = $(this.responseText);
                                 var rows = spRows.init(opt);
@@ -3053,7 +3059,7 @@ spefjQuery = jQuery.noConflict(true);
                 $.ajax({
                     async: false,
                     url: spContext.getCurrentSiteUrl(opt) +
-                        "/_layouts/listform.aspx?PageType=6&ListId=" + opt.listId + "&RootFolder=",
+                        "/_layouts/listform.aspx?PageType=4&ListId=" + opt.listId + "&RootFolder=",
                     complete: function (xData) {
                         opt.input = $(xData.repsonseText);
                         var rows = spRows.init(opt);
@@ -3361,4 +3367,34 @@ spefjQuery = jQuery.noConflict(true);
         }
     };
     var utils = $.spEasyForms.utilities;
+    
+    $.spEasyForms.adapterManager = {
+        transform: function(options) {
+            if(window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
+                var opt = $.extend({}, spEasyForms.defaults, options);
+                opt.config = spContext.getConfig(opt);
+                if(opt.config.adapters && opt.config.adapters.def) {
+                    opt.adapters = opt.config.adapters.def;
+                    opt.fields = spContext.fields;
+                    $.each(opt.adapters, function(idx, adapter) {
+                        adapter.parentColumn = opt.fields[adapter.parentColumnInternal].displayName;
+                        adapter.childColumn = opt.fields[adapter.childColumnInternal].displayName;
+                        adapter.debug = true;
+                        $().SPServices.SPCascadeDropdowns(adapter);
+                    });
+                }
+            }
+        },
+        
+        toEditor: function(options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+        },
+        
+        toConfig: function(options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            return spContext.getConfig(opt);
+        }
+    };
+    var adapterManager = $.spEasyForms.adapterManager;
+    
 })(spefjQuery);
