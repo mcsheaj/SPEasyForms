@@ -226,7 +226,7 @@
             width: 90%;
         }
 
-        td.speasyforms-conditionalvisibility {
+        td.speasyforms-conditionalvisibility, td.speasyforms-adapter {
             background: #ddd;
         }
 
@@ -281,6 +281,28 @@
         table.speasyforms-staticrules {
             width: 100%;
         }
+        table.speasyforms-sortablecontainers {
+            padding-top: 10px;
+        }
+        td.speasyforms-blank {
+            width: 47px;
+            background-color: #ddd;
+        }
+        table.speasyforms-adapter {
+            border: 1px solid darkgrey;
+            width: 600px;
+            margin-top: 15px;
+        }
+        td.speasyforms-adapterlabel {
+            font-weight: bold;
+            width: 150px;
+        }
+        table.speasyforms-adapterdetails {
+            border: 1px solid darkgrey;
+            width: 500px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
     </style>
 </asp:Content>
 <asp:Content ContentPlaceHolderId="PlaceHolderMiniConsole" runat="server">
@@ -290,191 +312,292 @@
 	<SharePoint:RecentChangesMenu runat="server" id="RecentChanges"/>
 </asp:Content>
 <asp:Content ContentPlaceHolderId="PlaceHolderMain" runat="server">
-    <div id="spEasyFormsOuterDiv">
-        <table id='spEasyFormsEditor' class='speasyforms-editor'>
-            <tr class='speasyforms-editor'>
-                <td class='speasyforms-editor speasyforms-panel'>
-                    <div id="spEasyFormsButtons" class='speasyforms-buttons'>
-                        <button id="spEasyFormsAddBtn" class="speasyforms-add"></button>
-                        <button id="spEasyFormsExpandBtn" class="speasyforms-expand"></button>
-                        <button id="spEasyFormsCollapseBtn" class="speasyforms-collapse"></button>
-                        <button id="spEasyFormsSaveBtn" class="speasyforms-save"></button>
+<div id="spEasyFormsOuterDiv">
+    <table id='spEasyFormsEditor' class='speasyforms-editor'>
+        <tr class='speasyforms-editor'>
+            <td class='speasyforms-editor speasyforms-panel'>
+                <div id="spEasyFormsButtons" class='speasyforms-buttons'>
+                    <button id="spEasyFormsAddBtn" class="speasyforms-add"></button>
+                    <button id="spEasyFormsExpandBtn" class="speasyforms-expand"></button>
+                    <button id="spEasyFormsCollapseBtn" class="speasyforms-collapse"></button>
+                    <button id="spEasyFormsSaveBtn" class="speasyforms-save"></button>
+                </div>
+                <table id='spEasyFormsContainerTable' class='speasyforms-sortablecontainers'>
+                    <tbody class='speasyforms-sortablecontainers'></tbody>
+                </table>
+                <div id="spEasyFormsButtons1" class='speasyforms-buttons'>
+                    <button id="spEasyFormsAddBtn1" class="speasyforms-add"></button>
+                    <button id="spEasyFormsExpandBtn1" class="speasyforms-expand"></button>
+                    <button id="spEasyFormsCollapseBtn1" class="speasyforms-collapse"></button>
+                    <button id="spEasyFormsSaveBtn1" class="speasyforms-save"></button>
+                </div>
+                <div id='spEasyFormsContainerDialogs'>
+                    <div id="chooseContainerDialog" class="speasyforms-dialogdiv" title="Select the Container Type">
+                        <label for="containerType">Container Type:</label>
+                        <select id="containerType">
+                            <option></option>
+                        </select>
+                        <div id='chooseContainerError' class='speasyforms-error'>&nbsp;</div>
                     </div>
-                    <table id='spEasyFormsContainerTable' class='speasyforms-sortablecontainers'>
-                        <tbody class='speasyforms-sortablecontainers'></tbody>
-                    </table>
-                    <div id="spEasyFormsButtons1" class='speasyforms-buttons'>
-                        <button id="spEasyFormsAddBtn1" class="speasyforms-add"></button>
-                        <button id="spEasyFormsExpandBtn1" class="speasyforms-expand"></button>
-                        <button id="spEasyFormsCollapseBtn1" class="speasyforms-collapse"></button>
-                        <button id="spEasyFormsSaveBtn1" class="speasyforms-save"></button>
+                    <div id="editFieldGroupDialog" class="speasyforms-dialogdiv" title="Edit the Name of the Field Group">
+                        <label for="fieldGroupName">Name</label>
+                        <input type="text" id="fieldGroupName" name="fieldGroupNames" />
+                        <input type='hidden' id='editFieldGroupContainerId' value='' />
                     </div>
-                    <div id='spEasyFormsContainerDialogs'>
-                        <div id="chooseContainerDialog" class="speasyforms-dialogdiv" title="Select the Container Type">
-                            <label for="containerType">Container Type:</label>
-                            <select id="containerType">
-                                <option></option>
-                            </select>
-                            <div id='chooseContainerError' class='speasyforms-error'>&nbsp;</div>
-                        </div>
-                        <div id="editFieldGroupDialog" class="speasyforms-dialogdiv" title="Edit the Name of the Field Group">
-                            <label for="fieldGroupName">Name</label>
-                            <input type="text" id="fieldGroupName" name="fieldGroupNames" />
-                            <input type='hidden' id='editFieldGroupContainerId' value='' />
-                        </div>
-                        <div id='addMultiGroupContainerDialog' class='speasyforms-dialogdiv' title='Add Container'>
-                            <label for='addFieldGroupNames'>Field Group Names (one per line):</label>
-                            <textarea id='addFieldGroupNames' rows='5' cols='50'></textarea>
-                            <input type='hidden' id='addMultiGroupContainerType' value='' />
-                            <div id='addMultiGroupContainerError' class='speasyforms-error'></div>
-                        </div>
-                        <div id='addFieldGroupsToContainerDialog' class='speasyforms-dialogdiv' title='Add Field Groups'>
-                            <label for='addFieldGroupNames2'>Field Group Names (one per line):</label>
-                            <textarea id='addFieldGroupNames2' rows='5' cols='50'></textarea>
-                            <input type='hidden' id='addFieldGroupsContainerId' value='' />
-                            <div id='addFieldGroupsToContainerDialogError' class='speasyforms-error'></div>
-                        </div>
-                        <div id='layoutSavedDialog' class='speasyforms-dialogdiv' title='Configuration Saved'> <span>Your configuration was successfully saved.</span>
+                    <div id='addMultiGroupContainerDialog' class='speasyforms-dialogdiv' title='Add Container'>
+                        <label for='addFieldGroupNames'>Field Group Names (one per line):</label>
+                        <textarea id='addFieldGroupNames' rows='5' cols='50'></textarea>
+                        <input type='hidden' id='addMultiGroupContainerType' value='' />
+                        <div id='addMultiGroupContainerError' class='speasyforms-error'></div>
+                    </div>
+                    <div id='addFieldGroupsToContainerDialog' class='speasyforms-dialogdiv' title='Add Field Groups'>
+                        <label for='addFieldGroupNames2'>Field Group Names (one per line):</label>
+                        <textarea id='addFieldGroupNames2' rows='5' cols='50'></textarea>
+                        <input type='hidden' id='addFieldGroupsContainerId' value='' />
+                        <div id='addFieldGroupsToContainerDialogError' class='speasyforms-error'></div>
+                    </div>
+                    <div id='conditonalVisibilityRulesDialog' class='speasyforms-dialogdiv' title='Conditional Visibility'>
+                        <input type='hidden' id='conditionalVisibilityField' name='conditionalVisibilityField' value='' />
+                        <table>
+                            <tr>
+                                <td>
+                                     <h3 id='conditionalVisibilityDialogHeader'>Visibility Rules for</h3>
 
-                        </div>
-                        <div id='conditonalVisibilityRulesDialog' class='speasyforms-dialogdiv' title='Conditional Visibility'>
-                            <input type='hidden' id='conditionalVisibilityField' name='conditionalVisibilityField' value='' />
-                            <table>
-                                <tr>
-                                    <td>
-                                         <h3 id='conditionalVisibilityDialogHeader'>Visibility Rules for</h3>
+                                </td>
+                                <td>
+                                    <button id='addVisibilityRule'>Add Visibility Rule</button>
+                                </td>
+                            </tr>
+                        </table> <span id='conditionalVisibilityRules' class='speasyforms-condi"tionalvisibility'></span>
 
-                                    </td>
-                                    <td>
-                                        <button id='addVisibilityRule'>Add Visibility Rule</button>
-                                    </td>
-                                </tr>
-                            </table> <span id='conditionalVisibilityRules' class='speasyforms-condi"tionalvisibility'></span>
+                        <p />
+                    </div>
+                    <div id='addVisibilityRuleDialog' class='speasyforms-dialogdiv' title='Add/Edit Visibility Rule'>
+                        <input type='hidden' id='visibilityRuleIndex' value='' />
+                        <table>
+                            <tr>
+                                <td>
+                                    <label for='addVisibilityRuleField'>Field Name <span class="ms-formvalidation" title="This is a required field"> *</span>
 
-                            <p />
-                        </div>
-                        <div id='addVisibilityRuleDialog' class='speasyforms-dialogdiv' title='Add/Edit Visibility Rule'>
-                            <input type='hidden' id='visibilityRuleIndex' value='' />
-                            <table>
-                                <tr>
-                                    <td>
-                                        <label for='addVisibilityRuleField'>
-                                            Field Name <span class="ms-formvalidation" title="This is a required field"> *</span>
-                                        </label>
-                                    </td>
-                                    <td class='speasyforms-input'>
-                                        <input type='text' id='addVisibilityRuleField' name='addVisibilityRuleField' value='' disabled="disabled" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                            <label for='addVisibilityRuleState'>State <span class="ms-formvalidation" title="This is a required field"> *</span>
+                                    </label>
+                                </td>
+                                <td class='speasyforms-input'>
+                                    <input type='text' id='addVisibilityRuleField' name='addVisibilityRuleField' value='' disabled="disabled" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for='addVisibilityRuleState'>State <span class="ms-formvalidation" title="This is a required field"> *</span>
 
-                                            </label>
-                                    </td>
-                                    <td class='speasyforms-input'>
-                                        <select id='addVisibilityRuleState'>
+                                    </label>
+                                </td>
+                                <td class='speasyforms-input'>
+                                    <select id='addVisibilityRuleState'>
+                                        <option></option>
+                                        <option>Hidden</option>
+                                        <option>ReadOnly</option>
+                                        <option>Editable</option>
+                                    </select>
+                                    <br /> <span id='addVisibilityRuleStateError' class='speasyforms-error'></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for='spEasyFormsEntityPicker'>Applies To</label>
+                                </td>
+                                <td class='speasyforms-input'>
+                                    <input type='checkbox' id='addVisibilityRuleApplyToAuthor' name='addVisibilityRuleApplyToAuthor' />
+                                    <label for='addVisibilityRuleApplyToAuthor'>Author</label>
+                                    <br />
+                                    <div id="spEasyFormsEntityPicker" class="ui-helper-clearfix speasyforms-entitypicker">
+                                        <input type='text' id='addVisibilityRuleApplyTo' name='addVisibilityRuleApplyTo' value='' class='speasyforms-entitypicker' />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Forms</td>
+                                <td class='speasyforms-input'>
+                                    <input type='checkbox' id='addVisibilityRuleNewForm' name='addVisibilityRuleNewForm' class='speasyforms-formcb' value='' checked='checked' />
+                                    <label for='addVisibilityRuleNewForm'>New</label>
+                                    <input type='checkbox' id='addVisibilityRuleEditForm' name='addVisibilityRuleEditForm' class='speasyforms-formcb' value='' checked='checked' />
+                                    <label for='addVisibilityRuleEditForm'>Edit</label>
+                                    <input type='checkbox' id='addVisibilityRuleDisplayForm' name='addVisibilityRuleDisplayForm' class='speasyforms-formcb' value='' checked='checked' />
+                                    <label for='addVisibilityRuleDisplayForm'>Display</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>And When</td>
+                                <td class='speasyforms-input'>
+                                    <div id='condition1' class='speasyforms-condition'>
+                                        <select id='conditionalField1' class='speasyforms-conditionalfield'>
                                             <option></option>
-                                            <option>Hidden</option>
-                                            <option>ReadOnly</option>
-                                            <option>Editable</option>
                                         </select>
-                                        <br /> <span id='addVisibilityRuleStateError' class='speasyforms-error'></span>
+                                        <select id='conditionalType1' class='speasyforms-conditionaltype'>
+                                            <option>Matches</option>
+                                            <option value='NotMatches'>Does Not Match</option>
+                                            <option>Equals</option>
+                                        </select>
+                                        <input id='conditionalValue1' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue' />
+                                        <button id="spEasyFormsAddConditionalBtn" class="speasyforms-addconditional speasyforms-containerbtn" style='width:25px;height:25px;'></button>
+                                    </div>
+                                    <div id='condition2' class='speasyforms-condition'>
+                                        <select id='conditionalField2' class='speasyforms-conditionalfield'>
+                                            <option></option>
+                                        </select>
+                                        <select id='conditionalType2' class='speasyforms-conditionaltype'>
+                                            <option>Matches</option>
+                                            <option value='NotMatches'>Does Not Match</option>
+                                            <option>Equals</option>
+                                        </select>
+                                        <input id='conditionalValue2' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue' />
+                                    </div>
+                                    <div id='condition3' class='speasyforms-condition'>
+                                        <select id='conditionalField3' class='speasyforms-conditionalfield'>
+                                            <option></option>
+                                        </select>
+                                        <select id='conditionalType3' class='speasyforms-conditionaltype'>
+                                            <option>Matches</option>
+                                            <option value='NotMatches'>Does Not Match</option>
+                                            <option>Equals</option>
+                                        </select>
+                                        <input id='conditionalValue3' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue' />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id='cascadingLookupAdapterDialog' class='speasyforms-dialogdiv' title='Cascading Lookup'>
+                        <table>
+                            <tr>
+                                <td>
+                                    Relationship List
+                                </td>
+                                <td class='speasyforms-input'>
+                                    <select id="cascadingRelationshipListSelect" title="Choose the list that contains the parent/child relationship.">
+                                    </select>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                    Parent Column
+                                </td>
+                                <td class='speasyforms-input'>
+                                    <select id="cascadingLookupRelationshipParentSelect" title="Choose parent column from the relationship list.">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                    Child Column
+                                </td>
+                                <td class='speasyforms-input'>
+                                    <select id="cascadingLookupRelationshipChildSelect" title="Choose child column from the relationship list.">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    This List
+                                </td>
+                                <td>
+                                    <input type='text' id='cascadingLookupList' name='cascadingLookupList' value='' disabled='disabled' />
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                    Form Parent Column
+                                </td>
+                                <td class='speasyforms-input'>
+                                    <select id="cascadingLookupParentSelect" title="Choose the field in this list that is the parent column of the relationship.">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                    Form Child Column
+                                </td>
+                                <td class='speasyforms-input'>
+                                    <select id="cascadingLookupChildSelect" title="Choose the field in this list that is the child column of the relationship.">
+                                    </select>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </table>
+                        <p />
+                    </div>
+                </div>
+            </td>
+            <td class='speasyforms-editor speasyforms-form'>
+                <div id="tabs-min" class="tabs-min">
+                    <ul class="tabs-min">
+                        <li><a href="#tabs-min-form" class="tabs-min">Form</a>
+                        </li>
+                        <li><a href="#tabs-min-visibility" class="tabs-min">Conditional Visibility</a>
+                        </li>
+                         <li><a href="#tabs-min-adapters" class="tabs-min">Field Adapters</a>
+                        </li>
+                         <li><a href="#tabs-min-about" class="tabs-min">About</a>
+                        </li>
+                    </ul>
+                    <div id="tabs-min-form" class="tabs-min">
+                        <table class="ms-formtable" style="margin-top: 8px;" border="0"></table>
+                    </div>
+                    <div id="tabs-min-visibility" class="tabs-min"></div>
+                    <div id="tabs-min-adapters" class="tabs-min"></div>
+                    <div id="tabs-min-about" class="tabs-min">
+<p><b>Verstion: 2014.00.07.a Alpha</b></p>
+<h2>The MIT License (MIT)</h2>
 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                            <label for='spEasyFormsEntityPicker'>Applies To</label>
-                                    </td>
-                                    <td class='speasyforms-input'>
-                                        <input type='checkbox' id='addVisibilityRuleApplyToAuthor' name='addVisibilityRuleApplyToAuthor' />
-                                        <label for='addVisibilityRuleApplyToAuthor'>Author</label>
-                                        <br />
-                                        <div id="spEasyFormsEntityPicker" class="ui-helper-clearfix speasyforms-entitypicker">
-                                            <input type='text' id='addVisibilityRuleApplyTo' name='addVisibilityRuleApplyTo' value='' class='speasyforms-entitypicker' />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Forms
-                                    </td>
-                                    <td class='speasyforms-input'>
-                                            <input type='checkbox' id='addVisibilityRuleNewForm' name='addVisibilityRuleNewForm' class='speasyforms-formcb' value='' checked='checked' />
-                                            <label for='addVisibilityRuleNewForm'>New</label>
-                                            <input type='checkbox' id='addVisibilityRuleEditForm' name='addVisibilityRuleEditForm' class='speasyforms-formcb' value='' checked='checked' />
-                                            <label for='addVisibilityRuleEditForm'>Edit</label>
-                                            <input type='checkbox' id='addVisibilityRuleDisplayForm' name='addVisibilityRuleDisplayForm' class='speasyforms-formcb' value='' checked='checked' />
-                                            <label for='addVisibilityRuleDisplayForm'>Display</label>
-                                    </td>
-                                </tr>
-<tr>
-    <td>And When</td>
-    <td class='speasyforms-input'>
-        <div id='condition1' class='speasyforms-condition'>
-            <select id='conditionalField1' class='speasyforms-conditionalfield'>
-                <option></option>
-            </select>
-            <select id='conditionalType1' class='speasyforms-conditionaltype'>
-                <option>Matches</option>
-                <option value='NotMatches'>Does Not Match</option>
-                <option>Equals</option>
-            </select>
-            <input id='conditionalValue1' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue'></input>
-            <button id="spEasyFormsAddConditionalBtn" class="speasyforms-addconditional speasyforms-containerbtn" style='width:25px;height:25px;'></button>
-        </div>
-        <div id='condition2' class='speasyforms-condition'>
-            <select id='conditionalField2' class='speasyforms-conditionalfield'>
-                <option></option>
-            </select>
-            <select id='conditionalType2' class='speasyforms-conditionaltype'>
-                <option>Matches</option>
-                <option value='NotMatches'>Does Not Match</option>
-                <option>Equals</option>
-            </select>
-            <input id='conditionalValue2' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue'></input>
-        </div>
-        <div id='condition3' class='speasyforms-condition'>
-            <select id='conditionalField3' class='speasyforms-conditionalfield'>
-                <option></option>
-            </select>
-            <select id='conditionalType3' class='speasyforms-conditionaltype'>
-                <option>Matches</option>
-                <option value='NotMatches'>Does Not Match</option>
-                <option>Equals</option>
-            </select>
-            <input id='conditionalValue3' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue'></input>
-        </div>
-    </td>
-</tr>
-                            </table>
-                        </div>
+<p>Copyright (c) 2014 Joe McShea</p>
+<p>
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+</p><p>
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+</p><p>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</p>
+<h2>Developer Functions</h2>
+<div>
+    <button id="spEasyFormsClearCacheBtn" class="speasyforms-clearcache"
+        title="Clear the cross-page cache object. The page will be reloaded and all context information will be refreshed, which could take some time.">
+    </button>
+    <button id="spEasyFormsVerboseBtn" class="speasyforms-clearcache"
+        title="Reload the page in verbose mode. This just adds an HTTP GET parameter, outputs a bunch of context junk at the bottom of the page, and runs SPServices functions with debug equal to true.">
+    </button>
+    <button id="spEasyFormsInitAsyncBtn" class="speasyforms-clearcache"
+        title="Initialize the context using asnchronous Ajax calls and promises.  This is experimental and may actually cause performance problems at the moment.  Like verbose, it just adds an HTTP GET argument and reloads the page.">
+    </button>
+</div>
                     </div>
-                </td>
-                <td class='speasyforms-editor speasyforms-form'>
-                    <div id="tabs-min" class="tabs-min">
-	                    <ul class="tabs-min">
-		                    <li><a href="#tabs-min-form" class="tabs-min">Form</a></li>
-		                    <li><a href="#tabs-min-visibility" class="tabs-min">Conditional Visibility</a></li>
-	                    </ul>
-	                    <div id="tabs-min-form" class="tabs-min">
-                                    <table class="ms-formtable" style="margin-top: 8px;" border="0">
-                                    </table>
-                         </div>
-                        <div id="tabs-min-visibility" class="tabs-min">                    
-                        </div>
-                    </div>
-                </td>
-                <td></td>
-            </tr>
-        </table>
-        <div id="spEasyFormsTextareaDiv">
-            <div>
-                <a href="#" onclick="javascript:$.spEasyForms.clearCachedContext();">Clear Cache</a>
-            </div>
-            <h3>JSON:</h3>
-            <div id="spEasyFormsJson" class="speasyforms-json"><pre></pre></div>
+                </div>
+            </td>
+            <td></td>
+        </tr>
+    </table>
+    <div id="spEasyFormsTextareaDiv">
+         <h3>JSON Configuration:</h3>
+
+        <div id="spEasyFormsJson" class="speasyforms-json"><pre></pre>
         </div>
     </div>
+</div>
 </asp:Content>
