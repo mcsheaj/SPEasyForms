@@ -161,7 +161,11 @@
             font-weight: normal;
         }
 
-        table.speasyforms-fieldstitle, table.speasyforms-editor, table.speasyforms-sortablefields {
+        table.speasyforms-editor {
+            width: 1250px;
+        }
+        
+        table.speasyforms-fieldstitle, table.speasyforms-sortablefields {
             width: 100%;
         }
 
@@ -332,6 +336,9 @@
                     <button id="spEasyFormsSaveBtn1" class="speasyforms-save"></button>
                 </div>
                 <div id='spEasyFormsContainerDialogs'>
+                    <div id="errorDialog" class="speasyforms-dialogdiv" title="">
+                      
+                    </div>
                     <div id="chooseContainerDialog" class="speasyforms-dialogdiv" title="Select the Container Type">
                         <label for="containerType">Container Type:</label>
                         <select id="containerType">
@@ -564,7 +571,7 @@
                     <div id="tabs-min-visibility" class="tabs-min"></div>
                     <div id="tabs-min-adapters" class="tabs-min"></div>
                     <div id="tabs-min-about" class="tabs-min">
-<p><b>Verstion: 2014.00.07.a Alpha</b></p>
+<p><b>Verstion: 2014.00.07.b Alpha</b></p>
 <h2>The MIT License (MIT)</h2>
 
 <p>Copyright (c) 2014 Joe McShea</p>

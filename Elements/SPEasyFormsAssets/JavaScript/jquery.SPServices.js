@@ -1,4 +1,4 @@
-ï»¿/*
+/*
  * SPServices - Work with SharePoint's Web Services using jQuery
  * Version 2014.01
  * @requires jQuery v1.8 or greater - jQuery 1.10.x recommended
@@ -1393,7 +1393,7 @@
             // otherwise the options are sorted by relationshipListChildColumn
             parentColumn: "", // The display name of the parent column in the form
             childColumn: "", // The display name of the child column in the form
-            listName: $().SPServices.SPListNameFromUrl(), // The list the form is working with. This is useful if the form is not in the list context.
+            listName: $().SPServices.SPListNameFromUrl(options), // The list the form is working with. This is useful if the form is not in the list context.
             CAMLQuery: "", // [Optional] For power users, this CAML fragment will be Anded with the default query on the relationshipList
             CAMLQueryOptions: "<QueryOptions><IncludeMandatoryColumns>FALSE</IncludeMandatoryColumns></QueryOptions>", // [Optional] For power users, ability to specify Query Options
             promptText: "", // [DEPRECATED] Text to use as prompt. If included, {0} will be replaced with the value of childColumn. IOrignal value "Choose {0}..."
@@ -3989,7 +3989,7 @@
             // Multi-select: This will find the multi-select column control on a Russian site (and perhaps others) where the Title looks like '????????? ????????: Column Name'
         } else if ((columnObj.Obj = $("select[ID$='SelectCandidate'][Title$=': " + opt.displayName + "']")).length === 1) {
             columnObj.Type = dropdownType.multiSelect;
-            // Multi-select: This will find the multi-select column control on a German site (and perhaps others) where the Title looks like 'MÃ¶gliche Werte fÃ¼r &quot;Column name&quot;.'
+            // Multi-select: This will find the multi-select column control on a German site (and perhaps others) where the Title looks like 'Mögliche Werte für &quot;Column name&quot;.'
         } else if ((columnObj.Obj = $("select[ID$='SelectCandidate'][Title$='\"" + opt.displayName + "\".']")).length === 1) {
             columnObj.Type = dropdownType.multiSelect;
             // Multi-select: This will find the multi-select column control on a Italian site (and perhaps others) where the Title looks like "Valori possibili Column name"
