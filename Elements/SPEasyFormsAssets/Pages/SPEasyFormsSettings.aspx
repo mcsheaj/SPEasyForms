@@ -18,8 +18,9 @@
         }
 
         table.speasyforms-columns {
-            width: 95%;
+            width: 100%;
         }
+        
         table.ms-formtable {
             padding: 5px;
             background: white;
@@ -27,7 +28,6 @@
         }
 
         tabel.ms-formtable tr {
-            border: 1px solid red;
             padding: 10px !important;
         }
 
@@ -162,7 +162,7 @@
         }
 
         table.speasyforms-editor {
-            width: 1250px;
+            width: 1024px;
         }
         
         table.speasyforms-fieldstitle, table.speasyforms-sortablefields {
@@ -294,7 +294,7 @@
         }
         table.speasyforms-adapter {
             border: 1px solid darkgrey;
-            width: 600px;
+            width: 100%;
             margin-top: 15px;
         }
         td.speasyforms-adapterlabel {
@@ -303,7 +303,7 @@
         }
         table.speasyforms-adapterdetails {
             border: 1px solid darkgrey;
-            width: 500px;
+            width: 90%;
             margin-top: 10px;
             margin-bottom: 10px;
         }

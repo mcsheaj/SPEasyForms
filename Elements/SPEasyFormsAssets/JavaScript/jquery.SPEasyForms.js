@@ -3700,6 +3700,20 @@ spefjQuery = jQuery.noConflict(true);
     var utils = $.spEasyForms.utilities;
 
     $.spEasyForms.adapterManager = {
+        adapterImplementations: {},
+
+        supportedTypes: function(options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            var result = [];
+            if (opt.config.adapters && opt.config.adapters.def) {
+                $.each(Object.keys(adapterManager.adapterImplementations), function (idx, impl) {
+                    result = result.concat(adapterManager.adapterImplementations[impl].supportedTypes(opt));
+                });
+                result = result.filter(function (item, pos) { return result.indexOf(item) == pos });
+            }
+            return result;
+        },
+
         transform: function(options) {
             if (window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
                 var opt = $.extend({}, spEasyForms.defaults, options);
@@ -3707,51 +3721,35 @@ spefjQuery = jQuery.noConflict(true);
                 if (opt.config.adapters && opt.config.adapters.def) {
                     opt.adapters = opt.config.adapters.def;
                     opt.fields = spContext.getListContext(opt).schema;
-                    $.each(opt.adapters, function(idx, adapter) {
-                        adapter.parentColumn =
-                            opt.fields[adapter.parentColumnInternal].displayName;
-                        adapter.childColumn =
-                            opt.fields[adapter.childColumnInternal].displayName;
-                        adapter.listName = spContext.getCurrentListId(options);
-                        adapter.debug = spEasyForms.defaults.verbose;
-                        $().SPServices.SPCascadeDropdowns(adapter);
+                    $.each(opt.adapters, function (idx, adapter) {
+                        opt.adapter = adapter;
+                        cascadingDropdownAdapter.transform(opt);
                     });
                 }
             }
         },
 
-        toEditor: function(options) {
+        toEditor: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.adapters = opt.config.adapters.def;
-            opt.fields = spContext.getListContext(opt).schema;
-            $("table.speasyforms-adapter").remove();
-            $.each(opt.adapters, function (idx, adapter) {
-                var table = "<table class='speasyforms-adapter'>" +
-                    "<tr><td class='speasyforms-adapterlabel'>Adapter Column</td><td>" + adapter.childColumnInternal + "</td></tr>" +
-                    "<tr><td class='speasyforms-adapterlabel'>Adapter Type</td><td>" + adapter.type + "</td></tr>" +
-                    "<tr><td colspan='2' align='center' class='speasyforms-adapterdetails'>" +
-                    "<table class='speasyforms-adapterdetails'>" +
-                    "<tr><td class='speasyforms-adapterlabel'>Relationship List</td><td>" + adapter.relationshipList + "</td></tr>" +
-                    "<tr><td class='speasyforms-adapterlabel'>Parent Column</td><td>" + adapter.relationshipListParentColumn + "</td></tr>" +
-                    "<tr><td class='speasyforms-adapterlabel'>Child Column</td><td>" + adapter.relationshipListChildColumn + "</td></tr>" +
-                    "</table>" +
-                    "<table class='speasyforms-adapterdetails'>" +
-                    "<tr><td class='speasyforms-adapterlabel'>This List:</td><td>&nbsp</td></tr>" +
-                    "<tr><td class='speasyforms-adapterlabel'>Parent Column</td><td>" + adapter.parentColumnInternal + "</td></tr>" +
-                    "<tr><td class='speasyforms-adapterlabel'>Child Column</td><td>" + adapter.childColumnInternal + "</td></tr>" +
-                    "</table>" +
-                    "</td></tr>" +
-                    "</table>";
-                $("#tabs-min-adapters").append(table);
+
+            $.each(Object.keys(adapterManager.adapterImplementations), function (idx, impl) {
+                adapterManager.adapterImplementations[impl].toEditor(opt);
             });
 
+            $("table.speasyforms-adapter").remove();
+            $.each(opt.adapters, function (idx, adapter) {
+                opt.adapter = adapter;
+                cascadingDropdownAdapter.drawAdapter(opt);
+            });
 
-            $("tr.speasyforms-sortablefields").each(function(idx, tr) {
+            $("tr.speasyforms-sortablefields").each(function (idx, tr) {
                 var tds = $(this).find("td");
                 if (tds.length > 2) {
                     var internalName = $(this).find("td")[1].innerHTML;
                     var type = $(this).find("td")[2].innerHTML;
-                    if ($.inArray(type, adapterManager.supportedTypes(opt)) >= 0) {
+                    opt.supportedTypes = adapterManager.supportedTypes(opt);
+                    if ($.inArray(type, opt.supportedTypes) >= 0) {
                         $(this).append(
                             "<td class='speasyforms-adapter'><button id='" +
                             internalName +
@@ -3771,125 +3769,21 @@ spefjQuery = jQuery.noConflict(true);
                     primary: "ui-icon-wrench"
                 },
                 text: false
-            }).click(function() {
-                var internalName = this.id.replace("Adapter", "");
-                var type = $(this).attr("data-spfieldtype");
-                // clear dialog
-                adapterManager.clearDialog(opt);
-                // init dialog
-                var listCollection = spContext.getListCollection(opt);
-                $.each(listCollection, function(idx, list) {
-                    $("#cascadingRelationshipListSelect").append(
-                        "<option value='" + list.id + "'>" + list.title +
-                        "</option>");
-                });
-                $("#cascadingLookupList").val(spContext.getListContext(opt).title);
-                if ($("#cascadingRelationshipListSelect").attr("data-change") !== "true") {
-                    $("#cascadingRelationshipListSelect").attr("data-change", "true");
-                    $("#cascadingRelationshipListSelect").change(function(e) {
-                        adapterManager.initRelationshipFields({
-                            listId: $("#cascadingRelationshipListSelect").val().toLowerCase()
-                        });
-                    });
-                    $("#cascadingLookupRelationshipParentSelect").change(function(e) {
-                        if ($("#cascadingLookupParentSelect").find("option[value='" + 
-                            $("#cascadingLookupRelationshipParentSelect").val() + "']").length > 0) {
-                                $("#cascadingLookupParentSelect").find("option[text='" + 
-                                $("#cascadingLookupRelationshipParentSelect").text() + "']");
-                        }
-                    });
-                }
-                $("#cascadingLookupChildSelect").val(internalName);
-                opt.config = spContext.getConfig(opt);
+            }).click(function () {
+                opt.button = this;
+                var internalName = opt.button.id.replace("Adapter", "");
                 opt.adapters = opt.config.adapters.def;
-                if(internalName in opt.adapters) {
+                if (internalName in opt.adapters) {
                     var a = opt.adapters[internalName];
-                    $("#cascadingRelationshipListSelect").val(
-                        a.relationshipList);
-                    adapterManager.initRelationshipFields({listId: a.relationshipList});
-                    $("#cascadingLookupRelationshipParentSelect").val(
-                        a.relationshipListParentColumn);
-                    $("#cascadingLookupRelationshipChildSelect").val(
-                        a.relationshipListChildColumn);
-                    $("#cascadingLookupParentSelect").val(
-                        a.parentColumnInternal);
+                    if (a.type in adapterManager.adapterImplementations) {
+                        adapterManager.adapterImplementations[a.type].launchDialog(opt);
+                    }
                 }
-                // launch dialog
-                $('#cascadingLookupAdapterDialog').dialog("open");
+                else {
+                    cascadingDropdownAdapter.launchDialog(opt);
+                }
                 return false;
             });
-
-            var adapterOpts = {
-                modal: true,
-                buttons: {
-                    "Ok": function() {
-                        opt.config = spContext.getConfig();
-                        if (!opt.config.adapters) {
-                            opt.config.adapters = {};
-                        }
-                        if (!opt.config.adapters.def) {
-                            opt.config.adapters.def = {};
-                        }
-                        opt.adapters = opt.config.adapters.def;
-                        opt.adapterField = $("#cascadingLookupChildSelect").val();
-                        if ($("#cascadingRelationshipListSelect").val().length === 0) {
-                            if (opt.adapterField && opt.adapterField in opt.adapters) {
-                                delete opt.adapters[opt.adapterField];
-                                configManager.set(opt);
-                            }
-                            $('#cascadingLookupAdapterDialog').dialog("close");
-                            master.toEditor(opt);
-                        } else {
-                            adapterManager.validateRequired({
-                                id: "cascadingLookupRelationshipParentSelect",
-                                displayName: "Parent Column"
-                            });
-                            adapterManager.validateRequired({
-                                id: "cascadingLookupRelationshipChildSelect",
-                                displayName: "Child Column"
-                            });
-                            adapterManager.validateRequired({
-                                id: "cascadingLookupParentSelect",
-                                displayName: "Form Parent Column"
-                            });
-                            adapterManager.validateRequired({
-                                id: "cascadingLookupChildSelect",
-                                displayName: "Form Child Column"
-                            });
-                            if ($("#cascadingLookupAdapterDialog").find(".speasyforms-error").length === 0) {
-                                var adapter = {};
-                                if (opt.adapterField && opt.adapterField in opt.adapters) {
-                                    adapter = opt.adapters[opt.adapterField];
-                                } else {
-                                    opt.adapters[opt.adapterField] = adapter;
-                                }
-                                adapter.type = "CascadingLookup";
-                                adapter.relationshipList = 
-                                    $("#cascadingRelationshipListSelect").val();
-                                adapter.relationshipListParentColumn = 
-                                    $("#cascadingLookupRelationshipParentSelect").val();
-                                adapter.relationshipListChildColumn =
-                                    $("#cascadingLookupRelationshipChildSelect").val();
-                                adapter.parentColumnInternal = 
-                                    $("#cascadingLookupParentSelect").val();
-                                adapter.childColumnInternal = 
-                                    $("#cascadingLookupChildSelect").val();
-                                configManager.set(opt);
-                                $('#cascadingLookupAdapterDialog').dialog("close");
-                                master.toEditor(opt);
-                            }
-                        }
-                        return false;
-                    },
-                    "Cancel": function() {
-                        $('#cascadingLookupAdapterDialog').dialog("close");
-                        return false;
-                    }
-                },
-                autoOpen: false,
-                width: 700
-            };
-            $('#cascadingLookupAdapterDialog').dialog(adapterOpts);
         },
 
         validateRequired: function(options) {
@@ -3900,9 +3794,173 @@ spefjQuery = jQuery.noConflict(true);
                     "<div class='speasyforms-error'>'" + options.displayName + 
                     "' is a required field!</div>");
             }
+        }
+    };
+    var adapterManager = $.spEasyForms.adapterManager;
+
+    $.spEasyForms.cascadingDropdownAdapter = {
+        supportedTypes: function (options) {
+            return ["SPFieldLookup"];
         },
 
-        initRelationshipFields: function(options) {
+        transform: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            opt.adapter.parentColumn =
+                opt.fields[opt.adapter.parentColumnInternal].displayName;
+            opt.adapter.childColumn =
+                opt.fields[opt.adapter.childColumnInternal].displayName;
+            opt.adapter.listName = spContext.getCurrentListId(options);
+            opt.adapter.debug = spEasyForms.defaults.verbose;
+            $().SPServices.SPCascadeDropdowns(opt.adapter);
+        },
+
+        toEditor: function (options) {
+            if (!this.initialized) {
+                var opt = $.extend({}, spEasyForms.defaults, options);
+                var adapterOpts = {
+                    modal: true,
+                    buttons: {
+                        "Ok": function () {
+                            opt.config = spContext.getConfig();
+                            if (!opt.config.adapters) {
+                                opt.config.adapters = {};
+                            }
+                            if (!opt.config.adapters.def) {
+                                opt.config.adapters.def = {};
+                            }
+                            opt.adapters = opt.config.adapters.def;
+                            opt.adapterField = $("#cascadingLookupChildSelect").val();
+                            if ($("#cascadingRelationshipListSelect").val().length === 0) {
+                                if (opt.adapterField && opt.adapterField in opt.adapters) {
+                                    delete opt.adapters[opt.adapterField];
+                                    configManager.set(opt);
+                                }
+                                $('#cascadingLookupAdapterDialog').dialog("close");
+                                master.toEditor(opt);
+                            } else {
+                                adapterManager.validateRequired({
+                                    id: "cascadingLookupRelationshipParentSelect",
+                                    displayName: "Parent Column"
+                                });
+                                adapterManager.validateRequired({
+                                    id: "cascadingLookupRelationshipChildSelect",
+                                    displayName: "Child Column"
+                                });
+                                adapterManager.validateRequired({
+                                    id: "cascadingLookupParentSelect",
+                                    displayName: "Form Parent Column"
+                                });
+                                adapterManager.validateRequired({
+                                    id: "cascadingLookupChildSelect",
+                                    displayName: "Form Child Column"
+                                });
+                                if ($("#cascadingLookupAdapterDialog").find(".speasyforms-error").length === 0) {
+                                    var adapter = {};
+                                    if (opt.adapterField && opt.adapterField in opt.adapters) {
+                                        adapter = opt.adapters[opt.adapterField];
+                                    } else {
+                                        opt.adapters[opt.adapterField] = adapter;
+                                    }
+                                    adapter.type = "CascadingLookup";
+                                    adapter.relationshipList =
+                                        $("#cascadingRelationshipListSelect").val();
+                                    adapter.relationshipListParentColumn =
+                                        $("#cascadingLookupRelationshipParentSelect").val();
+                                    adapter.relationshipListChildColumn =
+                                        $("#cascadingLookupRelationshipChildSelect").val();
+                                    adapter.parentColumnInternal =
+                                        $("#cascadingLookupParentSelect").val();
+                                    adapter.childColumnInternal =
+                                        $("#cascadingLookupChildSelect").val();
+                                    configManager.set(opt);
+                                    $('#cascadingLookupAdapterDialog').dialog("close");
+                                    master.toEditor(opt);
+                                }
+                            }
+                            return false;
+                        },
+                        "Cancel": function () {
+                            $('#cascadingLookupAdapterDialog').dialog("close");
+                            return false;
+                        }
+                    },
+                    autoOpen: false,
+                    width: 700
+                };
+                $('#cascadingLookupAdapterDialog').dialog(adapterOpts);
+            }
+        },
+
+        launchDialog: function(options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            var internalName = opt.button.id.replace("Adapter", "");
+            var type = $(opt.button).attr("data-spfieldtype");
+            // clear dialog
+            cascadingDropdownAdapter.clearDialog(opt);
+            // init dialog
+            var listCollection = spContext.getListCollection(opt);
+            $.each(listCollection, function (idx, list) {
+                $("#cascadingRelationshipListSelect").append(
+                    "<option value='" + list.id + "'>" + list.title +
+                    "</option>");
+            });
+            $("#cascadingLookupList").val(spContext.getListContext(opt).title);
+            if ($("#cascadingRelationshipListSelect").attr("data-change") !== "true") {
+                $("#cascadingRelationshipListSelect").attr("data-change", "true");
+                $("#cascadingRelationshipListSelect").change(function (e) {
+                    cascadingDropdownAdapter.initRelationshipFields({
+                        listId: $("#cascadingRelationshipListSelect").val().toLowerCase()
+                    });
+                });
+                $("#cascadingLookupRelationshipParentSelect").change(function (e) {
+                    if ($("#cascadingLookupParentSelect").find("option[value='" +
+                        $("#cascadingLookupRelationshipParentSelect").val() + "']").length > 0) {
+                        $("#cascadingLookupParentSelect").find("option[text='" +
+                        $("#cascadingLookupRelationshipParentSelect").text() + "']");
+                    }
+                });
+            }
+            $("#cascadingLookupChildSelect").val(internalName);
+            opt.config = spContext.getConfig(opt);
+            opt.adapters = opt.config.adapters.def;
+            if (internalName in opt.adapters) {
+                var a = opt.adapters[internalName];
+                $("#cascadingRelationshipListSelect").val(
+                    a.relationshipList);
+                cascadingDropdownAdapter.initRelationshipFields({ listId: a.relationshipList });
+                $("#cascadingLookupRelationshipParentSelect").val(
+                    a.relationshipListParentColumn);
+                $("#cascadingLookupRelationshipChildSelect").val(
+                    a.relationshipListChildColumn);
+                $("#cascadingLookupParentSelect").val(
+                    a.parentColumnInternal);
+            }
+            // launch dialog
+            $('#cascadingLookupAdapterDialog').dialog("open");
+        },
+
+        drawAdapter: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            var table = "<table class='speasyforms-adapter'>" +
+                "<tr><td class='speasyforms-adapterlabel'>Adapter Column</td><td>" + opt.adapter.childColumnInternal + "</td></tr>" +
+                "<tr><td class='speasyforms-adapterlabel'>Adapter Type</td><td>" + opt.adapter.type + "</td></tr>" +
+                "<tr><td colspan='2' align='center' class='speasyforms-adapterdetails'>" +
+                "<table class='speasyforms-adapterdetails'>" +
+                "<tr><td class='speasyforms-adapterlabel'>Relationship List</td><td>" + opt.adapter.relationshipList + "</td></tr>" +
+                "<tr><td class='speasyforms-adapterlabel'>Parent Column</td><td>" + opt.adapter.relationshipListParentColumn + "</td></tr>" +
+                "<tr><td class='speasyforms-adapterlabel'>Child Column</td><td>" + opt.adapter.relationshipListChildColumn + "</td></tr>" +
+                "</table>" +
+                "<table class='speasyforms-adapterdetails'>" +
+                "<tr><td class='speasyforms-adapterlabel'>This List:</td><td>&nbsp</td></tr>" +
+                "<tr><td class='speasyforms-adapterlabel'>Parent Column</td><td>" + opt.adapter.parentColumnInternal + "</td></tr>" +
+                "<tr><td class='speasyforms-adapterlabel'>Child Column</td><td>" + opt.adapter.childColumnInternal + "</td></tr>" +
+                "</table>" +
+                "</td></tr>" +
+                "</table>";
+            $("#tabs-min-adapters").append(table);
+        },
+
+        initRelationshipFields: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
 
             $("#cascadingLookupRelationshipParentSelect").find("option").remove();
@@ -3917,16 +3975,16 @@ spefjQuery = jQuery.noConflict(true);
 
             if (opt.listId) {
                 var listctx = spContext.getListContext(opt);
-                $.each(Object.keys(listctx.fields), function(idx, field) {
+                $.each(Object.keys(listctx.fields), function (idx, field) {
                     if (listctx.fields[field].spFieldType == "SPFieldLookup") {
                         $("#cascadingLookupRelationshipParentSelect").append(
-                            "<option value='" + 
-                            listctx.fields[field].internalName + "'>" + 
+                            "<option value='" +
+                            listctx.fields[field].internalName + "'>" +
                             listctx.fields[field].displayName + "</option>");
                     }
                     $("#cascadingLookupRelationshipChildSelect").append(
-                        "<option value='" + 
-                        listctx.fields[field].internalName + "'>" + 
+                        "<option value='" +
+                        listctx.fields[field].internalName + "'>" +
                         listctx.fields[field].displayName + "</option>");
                 });
                 $("#cascadingLookupRelationshipParentSelect").removeAttr("disabled");
@@ -3935,16 +3993,16 @@ spefjQuery = jQuery.noConflict(true);
                 if (choices.length === 2) {
                     $("#cascadingLookupRelationshipParentSelect").val(
                         $(choices[1]).attr("value"));
-                    var relationshipParentText = 
+                    var relationshipParentText =
                         $("#cascadingLookupRelationshipParentSelect option:selected").text();
                     var thisParentOption =
                         $("#cascadingLookupParentSelect").find(
                             "option:contains('" + relationshipParentText + "')");
                     $("#cascadingLookupParentSelect").val(thisParentOption.val());
                 }
-                var thisChildText = 
+                var thisChildText =
                     $("#cascadingLookupChildSelect option:selected").text();
-                var relationshipChildOption = 
+                var relationshipChildOption =
                     $("#cascadingLookupRelationshipChildSelect").find(
                         "option:contains('" + thisChildText + "')");
                 $("#cascadingLookupRelationshipChildSelect").val(
@@ -3952,12 +4010,7 @@ spefjQuery = jQuery.noConflict(true);
             }
         },
 
-        toConfig: function(options) {
-            var opt = $.extend({}, spEasyForms.defaults, options);
-            return spContext.getConfig(opt);
-        },
-
-        clearDialog: function(options) {
+        clearDialog: function (options) {
             $("#cascadingLookupAdapterDialog").find(
                 ".speasyforms-error").remove();
 
@@ -3984,22 +4037,19 @@ spefjQuery = jQuery.noConflict(true);
             $("#cascadingLookupChildSelect").val("");
 
             var fields = spContext.getListContext(options).fields;
-            $.each(Object.keys(fields).sort(spRows.compareField), function(idx, field) {
+            $.each(Object.keys(fields).sort(spRows.compareField), function (idx, field) {
                 if (fields[field].spFieldType == "SPFieldLookup") {
-                    $("#cascadingLookupParentSelect").append("<option value='" +  
-                        fields[field].internalName + "'>" + 
+                    $("#cascadingLookupParentSelect").append("<option value='" +
+                        fields[field].internalName + "'>" +
                         fields[field].displayName + "</option>");
-                    $("#cascadingLookupChildSelect").append("<option value='" + 
-                        fields[field].internalName + "'>" + 
+                    $("#cascadingLookupChildSelect").append("<option value='" +
+                        fields[field].internalName + "'>" +
                         fields[field].displayName + "</option>");
                 }
             });
-        },
-
-        supportedTypes: function(options) {
-            return ["SPFieldLookup"];
         }
-    };
-    var adapterManager = $.spEasyForms.adapterManager;
+    }
+    var cascadingDropdownAdapter = $.spEasyForms.cascadingDropdownAdapter;
+    adapterManager.adapterImplementations["CascadingLookup"] = cascadingDropdownAdapter;
 
 })(spefjQuery);
