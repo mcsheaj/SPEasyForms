@@ -169,6 +169,10 @@
             width: 100%;
         }
 
+        table.speasyforms-sortablerules {
+            width: 80%;
+        }
+        
         tr.speasyforms-sortablefields, tr.speasyforms-sortablerules {
             border: 1px solid lightblue !important;
             cursor: move !important;
@@ -200,9 +204,10 @@
         }
 
         button.ui-button-icon-only {
-            font-size: 8px;
+            font-size: .8em;
             margin: 0px;
             padding: 0px;
+            min-width: 0px;
         }
 
         td.speasyforms-conditionalvisibility, td.speasyforms-visibilityrulebutton {
@@ -292,20 +297,24 @@
             width: 47px;
             background-color: #ddd;
         }
-        table.speasyforms-adapter {
+        table.speasyforms-adapter, table.speasyforms-visiblity {
+            background-color: #ffe;
             border: 1px solid darkgrey;
             width: 100%;
             margin-top: 15px;
+            padding: 10px;
         }
         td.speasyforms-adapterlabel {
             font-weight: bold;
             width: 150px;
         }
-        table.speasyforms-adapterdetails {
+        .speasyforms-adapterdetails {
             border: 1px solid darkgrey;
             width: 90%;
             margin-top: 10px;
             margin-bottom: 10px;
+            margin-right: auto;
+            margin-left: auto;
         }
     </style>
 </asp:Content>
@@ -337,7 +346,6 @@
                 </div>
                 <div id='spEasyFormsContainerDialogs'>
                     <div id="errorDialog" class="speasyforms-dialogdiv" title="">
-                      
                     </div>
                     <div id="chooseContainerDialog" class="speasyforms-dialogdiv" title="Select the Container Type">
                         <label for="containerType">Container Type:</label>
@@ -474,6 +482,16 @@
                             </tr>
                         </table>
                     </div>
+                    <div id='adapterTypeDialog' class="speasyforms-dialogdiv" title='Adapter Type Dialog'>
+                        There are multiple adapters for the type <span id='adapterFieldType'></span>.  Choose
+                        which adapter type you want to apply to the field <span id='adapterInternalColumnName'></span>.
+                        <p>
+                            <label for='adapterType'>Adapter Type:</label>
+                            <select id='adapterType'>
+                                <option><option>
+                            </select>
+                        </p>
+                    </div>
                     <div id='cascadingLookupAdapterDialog' class='speasyforms-dialogdiv' title='Cascading Lookup'>
                         <table>
                             <tr>
@@ -550,6 +568,37 @@
                             </tr>
                         </table>
                         <p />
+                    </div>
+                    <div id='autocompleteAdapterDialog' class='speasyforms-dialogdiv' title='Autocomplete'>
+                        <table>
+                            <tr>
+                                <td>
+                                    Lookup List
+                                </td>
+                                <td class='speasyforms-input'>
+                                    <select id="autocompleteListSelect" title="Choose the list that data for the autocomplete field.">
+                                    </select>
+                                </td>
+                            </tr>
+                           <tr>
+                               <td>
+                                   Lookup Column
+                               </td>
+                               <td class='speasyforms-input'>
+                                   <select id="autocompleteFieldSelect" title="Choose the field in the lookup list from which autocomplete data will be read.">
+                                   </select>
+                               </td>
+                            </tr>
+                           <tr>
+                               <td>
+                                   Form Column
+                               </td>
+                               <td class='speasyforms-input'>
+                                   <select id="autocompleteChildSelect" title="Choose the field in this list that is to be converted to a autocomplete.">
+                                   </select>
+                               </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </td>

@@ -114,6 +114,7 @@ spefjQuery = jQuery.noConflict(true);
             var opt = $.extend({}, spEasyForms.defaults, options);
             try {
                 opt.currentContext = spContext.get(opt);
+                opt.currentListContext = spContext.getListContext(opt);
                 opt.rows = spRows.init(opt);
                 var source = utils.getRequestParameters(opt).Source;
                 if (window.location.href.indexOf('SPEasyFormsSettings.aspx') >= 0 || window.location.href.indexOf('fiddle') >= 0) {
@@ -313,27 +314,27 @@ spefjQuery = jQuery.noConflict(true);
          *     // see the definition of defaults for options
          * }
          *********************************************************************/
-        appendContext: function() {
+        appendContext: function(options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
             if (spEasyForms.defaults.verbose) {
                 $('#outputTable').remove();
-                var context = spContext.get();
                 var output = "<table id='outputTable'><tr><td><pre>";
                 output += "_spPageContextInfo = {\r\n" +
-                    "    siteServerRelativeUrl: '" + context.siteRelativeUrl + "',\r\n" +
-                    "    webServerRelativeUrl: '" + context.webRelativeUrl + "',\r\n" +
+                    "    siteServerRelativeUrl: '" + opt.currentContext.siteRelativeUrl + "',\r\n" +
+                    "    webServerRelativeUrl: '" + opt.currentContext.webRelativeUrl + "',\r\n" +
                     "    webUIVersion: 15,\r\n" +
                     "    pageListId: '" + spContext.getCurrentListId() + "',\r\n" +
-                    "    userId: " + context.userId + "\r\n" +
+                    "    userId: " + opt.currentContext.userId + "\r\n" +
                     "};\r\n";
                 output += "var cache = " + JSON.stringify(cache, null, 4) + ";\r\n";
                 output += "cache['spEasyForms_spContext_" + 
-                    context.webRelativeUrl + "'].groups = " + 
+                    opt.currentContext.webRelativeUrl + "'].groups = " + 
                     JSON.stringify(spContext.getUserGroups(), null, 4) + ";\r\n";
                 output += "cache['spEasyForms_spContext_" + 
-                context.webRelativeUrl + "'].siteGroups = " + 
+                opt.currentContext.webRelativeUrl + "'].siteGroups = " + 
                 JSON.stringify(spContext.getSiteGroups(), null, 4) + ";\r\n";
-                output += "cache['spEasyForms_spContext_" + context.webRelativeUrl + "']." +
-                    "listContexts['" + context.listId + "'].config = " + 
+                output += "cache['spEasyForms_spContext_" + opt.currentContext.webRelativeUrl + "']." +
+                    "listContexts['" + opt.currentContext.listId + "'].config = " + 
                     JSON.stringify(spContext.getConfig(), null, 4) + ";\r\n";
                 output += "$().ready(function () {\r\n" +
                     "    $.spEasyForms.defaults = $.extend({}, $.spEasyForms.defaults, {\r\n" +
@@ -560,10 +561,9 @@ spefjQuery = jQuery.noConflict(true);
          *********************************************************************/
         save: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            var ctx = spContext.get();
             var listId = spContext.getCurrentListId(opt);
             $.ajax({
-                url: ctx.webAppUrl + ctx.webRelativeUrl + 
+                url: opt.currentContext.webAppUrl + opt.currentContext.webRelativeUrl + 
                     "/SiteAssets/spef-layout-" + 
                     listId.replace("{", "").replace("}", "") + ".txt",
                 type: "PUT",
@@ -573,7 +573,6 @@ spefjQuery = jQuery.noConflict(true);
                 },
                 data: $("#spEasyFormsJson pre").text(),
                 success: function(data) {
-                    opt.currentContext = ctx;
                     opt.listId = listId;
                     opt.config = utils.parseJSON($("#spEasyFormsJson pre").text());
                     opt.layout = opt.config.layout.def;
@@ -695,8 +694,6 @@ spefjQuery = jQuery.noConflict(true);
             var currentListId = spContext.getCurrentListId(opt);
             if (opt.rows === undefined || Object.keys(opt.rows).length === 0) {
                 if (currentListId !== undefined && currentListId.length > 0) {
-                    var context = spContext.get();
-
                     var formText = "";
                     if (spContext.formCache !== undefined) {
                         formText = spContext.formCache;
@@ -704,7 +701,7 @@ spefjQuery = jQuery.noConflict(true);
                         $.ajax({
                             async: false,
                             cache: false,
-                            url: context.webAppUrl + context.webRelativeUrl +
+                            url: opt.currentContext.webAppUrl + opt.currentContext.webRelativeUrl +
                                 "/_layouts/listform.aspx?PageType=4&ListId=" + 
                                 encodeURIComponent(currentListId).replace('-', '%2D') + 
                                 "&RootFolder=",
@@ -2334,8 +2331,7 @@ spefjQuery = jQuery.noConflict(true);
                 $("#conditionalVisibilityField").val(internalName);
                 opt.config = configManager.get(opt);
                 $('#conditionalVisibilityDialogHeader').text(
-                    "Rules for Field '" + spContext.get(opt).listContexts[
-                        spContext.getCurrentListId(opt)].fields[internalName].displayName +
+                    "Rules for Field '" + opt.currentListContext.fields[internalName].displayName +
                     "'");
                 opt.fieldName = internalName;
                 opt.config.visibility = visibilityManager.getVisibility(opt);
@@ -2505,7 +2501,7 @@ spefjQuery = jQuery.noConflict(true);
                         if (authorHref) {
                             var authorId = parseInt(
                                 authorHref.substring(authorHref.indexOf("ID=") + 3), 10);
-                            if (authorId === spContext.get(opt).userId) {
+                            if (authorId === opt.currentContext.userId) {
                                 appliesMatch = true;
                             }
                         }
