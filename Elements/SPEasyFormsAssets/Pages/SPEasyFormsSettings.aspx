@@ -297,7 +297,7 @@
             width: 47px;
             background-color: #ddd;
         }
-        table.speasyforms-adapter, table.speasyforms-visiblity {
+        table.speasyforms-adapter, table.speasyforms-visibility {
             background-color: #ffe;
             border: 1px solid darkgrey;
             width: 100%;
@@ -639,9 +639,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     <button id="spEasyFormsVerboseBtn" class="speasyforms-clearcache"
         title="Reload the page in verbose mode. This just adds an HTTP GET parameter, outputs a bunch of context junk at the bottom of the page, and runs SPServices functions with debug equal to true.">
     </button>
-    <button id="spEasyFormsInitAsyncBtn" class="speasyforms-clearcache"
+    <!--button id="spEasyFormsInitAsyncBtn" class="speasyforms-clearcache"
         title="Initialize the context using asnchronous Ajax calls and promises.  This is experimental and may actually cause performance problems at the moment.  Like verbose, it just adds an HTTP GET argument and reloads the page.">
-    </button>
+    </button-->
 </div>
                     </div>
                 </div>
