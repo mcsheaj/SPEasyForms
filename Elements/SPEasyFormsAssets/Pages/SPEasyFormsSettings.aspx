@@ -316,6 +316,27 @@
             margin-right: auto;
             margin-left: auto;
         }
+        table.speasyforms-credits {
+            border: 1px solid darkgrey;
+            margin: 20px;
+            padding: 0px;
+        }
+        td.speasyforms-credit {
+            white-space: nowrap;
+            font-weight: bold;
+            vertical-align: top;
+            padding: 5px;
+        }
+        td.speasyforms-creditdescription {
+            vertical-align: top;
+            padding: 5px;
+        }
+        span.speasyforms-credits {
+            font-weight: bold;
+        }
+        a.speasyforms-credits {
+            color: blue !important;
+        }
     </style>
 </asp:Content>
 <asp:Content ContentPlaceHolderId="PlaceHolderMiniConsole" runat="server">
@@ -620,7 +641,7 @@
                     <div id="tabs-min-visibility" class="tabs-min"></div>
                     <div id="tabs-min-adapters" class="tabs-min"></div>
                     <div id="tabs-min-about" class="tabs-min">
-<p><b>Verstion: 2014.00.07.b Alpha</b></p>
+<p><b>Version: 2014.00.07.c Alpha</b></p>
 <h2>The MIT License (MIT)</h2>
 
 <p>Copyright (c) 2014 Joe McShea</p>
@@ -631,6 +652,66 @@ The above copyright notice and this permission notice shall be included in all c
 </p><p>
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </p>
+<h2>Team</h2>
+<table class='speasyforms-credits'>
+    <tr>
+        <td class='speasyforms-credit'>Joe McShea</td>
+        <td class='speasyforms-creditdescription'>Developer (and/or development team if you prefer).</td>
+    </tr>
+    <tr>
+        <td class='speasyforms-credit'>Scott Shearer</td>
+        <td class='speasyforms-creditdescription'>SharePoint Concierge (I don't 
+        know what it means either, but he's basically chief bottle washer and cook, 
+        i.e. evangelist, requirements, tester, documenter, videographer...).</td>
+    </tr>
+</table>
+<h2>Credits</h2>
+<p class='speasyforms-credits'>
+    I'm a developer, and I believe that if the American Indians had a name for
+    developer it would be something like 'steals lots of code'.  But stealing code 
+    is one thing, taking credit for it is another, thus these credits.  
+</p>
+<p class='speasyforms-credits'><span class='speasyforms-credits'>Please Note:</span> 
+    the following people/organizations are in no way associated with the 
+    SPEasyForms project, and have probably never heard of it.  So anything you 
+    don't like about SPEasyForms is our fault, anything you do like is partially 
+    due to their independent efforts.
+</p>
+<table class='speasyforms-credits'>
+    <tr>
+        <td class='speasyforms-credit'><a class='speasyforms-credits' href='http://sympmarc.com/' target='_blank'>Marc Anderson</a></td>
+        <td class='speasyforms-creditdescription'>This project relies pretty 
+            heavily on <a class='speasyforms-credits' href='http://spservices.codeplex.com/' target='_blank'>SPServices</a>. 
+            Someday I might refactor it to use SharePoint's RESTful web 
+            services, but I only know enough to consider that due to
+            countless hours of pouring over Marc's code over the years.
+        </td>
+    </tr>
+    <tr>
+        <td class='speasyforms-credit'><a class='speasyforms-credits' href='http://www.sharepointhillbilly.com' target='_blank'>Mark Rackley</a></td>
+        <td class='speasyforms-creditdescription'> We haven't actually used any of his code,
+            but we have liberally borrowed without asking from his blog over the years and gained tidbits
+            that made this easier by attending his presentations.  For a more flexible custom form
+            solution that requires a bit more work on your part, check out his
+            <a class='speasyforms-credits' href='http://forms7.codeplex.com/' target='_blank'>Forms 7</a> project. 
+        </td>
+    </tr>
+    <tr>
+        <td class='speasyforms-credit'>Mathias Schaefer</td>
+        <td class='speasyforms-creditdescription'> All the web service calls made 
+        this project way too slow to be useful until I started using (and quite 
+        possibly abusing) his cross-page JavaScript caching library called
+        <a class='speasyforms-credits' href='https://github.com/molily/javascript-client-side-session-storage' target='_blank'>Session Storage Wrapper</a>. 
+        </td>
+    </tr>
+    <tr>
+        <td class='speasyforms-credit'>The jQuery Foundation</td>
+        <td class='speasyforms-creditdescription'> This project obviously makes heavy use of
+        <a href='http://jquery.com/' class='speasyforms-credits' target='_blank'>jQuery</a>
+        and <a href='http://jqueryui.com/' class='speasyforms-credits' target='_blank'>jQuery UI</a>. 
+        </td>
+    </tr>
+</table>
 <h2>Developer Functions</h2>
 <div>
     <button id="spEasyFormsClearCacheBtn" class="speasyforms-clearcache"
