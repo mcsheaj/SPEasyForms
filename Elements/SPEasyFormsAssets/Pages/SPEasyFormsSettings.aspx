@@ -1,3 +1,4 @@
+
 <%@ Assembly Name="Microsoft.SharePoint, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"%> <%@ Page Language="C#" Inherits="Microsoft.SharePoint.WebPartPages.WikiEditPage" MasterPageFile="~masterurl/default.master"       %> <%@ Import Namespace="Microsoft.SharePoint.WebPartPages" %> <%@ Register Tagprefix="SharePoint" Namespace="Microsoft.SharePoint.WebControls" Assembly="Microsoft.SharePoint, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %> <%@ Register Tagprefix="Utilities" Namespace="Microsoft.SharePoint.Utilities" Assembly="Microsoft.SharePoint, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %> <%@ Import Namespace="Microsoft.SharePoint" %> <%@ Assembly Name="Microsoft.Web.CommandUI, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
 <%@ Register Tagprefix="WebPartPages" Namespace="Microsoft.SharePoint.WebPartPages" Assembly="Microsoft.SharePoint, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
 <asp:Content ContentPlaceHolderId="PlaceHolderPageTitle" runat="server">
@@ -298,7 +299,7 @@
             background-color: #ddd;
         }
         table.speasyforms-adapter, table.speasyforms-visibility {
-            background-color: #ffe;
+            background-color: #eaf4fd;
             border: 1px solid darkgrey;
             width: 100%;
             margin-top: 15px;
@@ -337,6 +338,9 @@
         a.speasyforms-credits {
             color: blue !important;
         }
+        table.speasyforms-fieldmissing, td.speasyforms-fieldmissing {
+            background-color: lightpink !important;
+        }
     </style>
 </asp:Content>
 <asp:Content ContentPlaceHolderId="PlaceHolderMiniConsole" runat="server">
@@ -346,6 +350,13 @@
 	<SharePoint:RecentChangesMenu runat="server" id="RecentChanges"/>
 </asp:Content>
 <asp:Content ContentPlaceHolderId="PlaceHolderMain" runat="server">
+<div id='spEasyFormsInitializationError' style='display:none'>
+    <h3>SPEasyForms Initialization Error</h3>
+    <p>
+    We're not sure how you got here, but the current list context is of a type that
+    is not supported by SPEasyForms.
+    </p>
+</div>
 <div id="spEasyFormsOuterDiv">
     <table id='spEasyFormsEditor' class='speasyforms-editor'>
         <tr class='speasyforms-editor'>
@@ -375,22 +386,22 @@
                         </select>
                         <div id='chooseContainerError' class='speasyforms-error'>&nbsp;</div>
                     </div>
-                    <div id="editFieldGroupDialog" class="speasyforms-dialogdiv" title="Edit the Name of the Field Group">
-                        <label for="fieldGroupName">Name</label>
-                        <input type="text" id="fieldGroupName" name="fieldGroupNames" />
-                        <input type='hidden' id='editFieldGroupContainerId' value='' />
+                    <div id="editFieldCollectionDialog" class="speasyforms-dialogdiv" title="Edit the Name of the Field Group">
+                        <label for="fieldCollectionName">Name</label>
+                        <input type="text" id="fieldCollectionName" name="fieldCollectionNames" />
+                        <input type='hidden' id='editFieldCollectionContainerId' value='' />
                     </div>
                     <div id='addMultiGroupContainerDialog' class='speasyforms-dialogdiv' title='Add Container'>
-                        <label for='addFieldGroupNames'>Field Group Names (one per line):</label>
-                        <textarea id='addFieldGroupNames' rows='5' cols='50'></textarea>
+                        <label for='addFieldCollectionNames'>Field Group Names (one per line):</label>
+                        <textarea id='addFieldCollectionNames' rows='5' cols='50'></textarea>
                         <input type='hidden' id='addMultiGroupContainerType' value='' />
                         <div id='addMultiGroupContainerError' class='speasyforms-error'></div>
                     </div>
-                    <div id='addFieldGroupsToContainerDialog' class='speasyforms-dialogdiv' title='Add Field Groups'>
-                        <label for='addFieldGroupNames2'>Field Group Names (one per line):</label>
-                        <textarea id='addFieldGroupNames2' rows='5' cols='50'></textarea>
-                        <input type='hidden' id='addFieldGroupsContainerId' value='' />
-                        <div id='addFieldGroupsToContainerDialogError' class='speasyforms-error'></div>
+                    <div id='addFieldCollectionsToContainerDialog' class='speasyforms-dialogdiv' title='Add Field Groups'>
+                        <label for='addFieldCollectionNames2'>Field Group Names (one per line):</label>
+                        <textarea id='addFieldCollectionNames2' rows='5' cols='50'></textarea>
+                        <input type='hidden' id='addFieldCollectionsContainerId' value='' />
+                        <div id='addFieldCollectionsToContainerDialogError' class='speasyforms-error'></div>
                     </div>
                     <div id='conditonalVisibilityRulesDialog' class='speasyforms-dialogdiv' title='Conditional Visibility'>
                         <input type='hidden' id='conditionalVisibilityField' name='conditionalVisibilityField' value='' />
@@ -641,7 +652,7 @@
                     <div id="tabs-min-visibility" class="tabs-min"></div>
                     <div id="tabs-min-adapters" class="tabs-min"></div>
                     <div id="tabs-min-about" class="tabs-min">
-<p><b>Version: 2014.00.07.c Alpha</b></p>
+<p><b>Version: 2014.00.07.e Alpha</b></p>
 <h2>The MIT License (MIT)</h2>
 
 <p>Copyright (c) 2014 Joe McShea</p>
@@ -662,7 +673,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         <td class='speasyforms-credit'>Scott Shearer</td>
         <td class='speasyforms-creditdescription'>SharePoint Concierge (I don't 
         know what it means either, but he's basically chief bottle washer and cook, 
-        i.e. evangelist, requirements, tester, documenter, videographer...).</td>
+        i.e. evangelist, requirements, tester, documenter, videographer...maybe even sometimes
+            developer, no code solutions aside).</td>
     </tr>
 </table>
 <h2>Credits</h2>
@@ -724,6 +736,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         title="Initialize the context using asnchronous Ajax calls and promises.  This is experimental and may actually cause performance problems at the moment.  Like verbose, it just adds an HTTP GET argument and reloads the page.">
     </button-->
 </div>
+                <br />
+                <br />
                     </div>
                 </div>
             </td>
