@@ -271,39 +271,36 @@
             color: #459e00;
         }
 
-        td.speasyforms-staticrules {
-            text-align: left;
-            border: 1px solid gray;
-        }
-
         #spEasyFormsTextareaDiv {
             display: none;
-        }
-
-        h3.speasyforms-staticrules {
-            margin-top: 20px;
-        }
-
-        td.speasyforms-staticrules {
-            padding: 5px 10px;
         }
 
         table.speasyforms-staticrules {
             width: 100%;
         }
+        
         table.speasyforms-sortablecontainers {
             padding-top: 10px;
         }
+        
         td.speasyforms-blank {
             width: 47px;
             background-color: #ddd;
         }
-        table.speasyforms-adapter, table.speasyforms-visibility {
+        table.speasyforms-adapter, td.speasyforms-visibility {
             background-color: #eaf4fd;
             border: 1px solid darkgrey;
             width: 100%;
             margin-top: 15px;
             padding: 10px;
+        }
+        td.speasyforms-staticrules, td.speasyforms-adapter-static {
+            background-color: #eaf4fd;
+            border: 1px solid darkgrey;
+            text-align: left;
+        }
+        table.speasyforms-adapters {
+            width: 100%;
         }
         td.speasyforms-adapterlabel {
             font-weight: bold;
@@ -339,7 +336,10 @@
             color: blue !important;
         }
         table.speasyforms-fieldmissing, td.speasyforms-fieldmissing {
-            background-color: lightpink !important;
+            background-color: #E28DA9 !important;
+        }
+        li.speasyforms-fieldmissing {
+            border: 1px solid #E28DA9 !important;
         }
     </style>
 </asp:Content>
@@ -594,6 +594,7 @@
                                 <td class='speasyforms-input'>
                                     <select id="cascadingLookupChildSelect" title="Choose the field in this list that is the child column of the relationship.">
                                     </select>
+                                    <input type="hidden" id="cascadingLookupHiddenFieldName" name="cascadingLookupHiddenFieldName" value="" />
                                 </td>
                                 <td>
                                 </td>
@@ -628,6 +629,7 @@
                                <td class='speasyforms-input'>
                                    <select id="autocompleteChildSelect" title="Choose the field in this list that is to be converted to a autocomplete.">
                                    </select>
+                                   <input type="hidden" id="autoCompleteHiddenFieldName" name="autoCompleteHiddenFieldName" value="" />
                                </td>
                             </tr>
                         </table>
@@ -639,9 +641,9 @@
                     <ul class="tabs-min">
                         <li><a href="#tabs-min-form" class="tabs-min">Form</a>
                         </li>
-                        <li><a href="#tabs-min-visibility" class="tabs-min">Conditional Visibility</a>
+                        <li id='visibilityTab'><a href="#tabs-min-visibility" class="tabs-min">Conditional Visibility</a>
                         </li>
-                         <li><a href="#tabs-min-adapters" class="tabs-min">Field Adapters</a>
+                         <li id='adapterTab'><a href="#tabs-min-adapters" class="tabs-min">Field Adapters</a>
                         </li>
                          <li><a href="#tabs-min-about" class="tabs-min">About</a>
                         </li>
@@ -650,7 +652,15 @@
                         <table class="ms-formtable" style="margin-top: 8px;" border="0"></table>
                     </div>
                     <div id="tabs-min-visibility" class="tabs-min"></div>
-                    <div id="tabs-min-adapters" class="tabs-min"></div>
+                    <div id="tabs-min-adapters" class="tabs-min">
+                        <table id="spEasyFormsAdapterTable" class="speasyforms-adapters">
+                            <tr>
+                                <th>Display Name</th>
+                                <th>Internal Name</th>
+                                <th>AdapterType</th>
+                            </tr>
+                        </table>
+                    </div>
                     <div id="tabs-min-about" class="tabs-min">
 <p><b>Version: 2014.00.07.e Alpha</b></p>
 <h2>The MIT License (MIT)</h2>
