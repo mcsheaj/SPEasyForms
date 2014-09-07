@@ -2,7 +2,7 @@
  * SPEasyForms - modify SharePoint forms using jQuery (i.e. put fields on
  * tabs, show/hide fields, validate field values, etc.)
  *
- * @version 2014.00.07.e
+ * @version 2014.00.07.f
  * @requires jQuery v1.11.1 (I intend to test it with 1.8.3 versions
  *     or better but have not done so yet)
  * @requires jQuery-ui v1.9.2 (I intend to test it with later 1.x
@@ -304,7 +304,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     source = spContext.getCurrentSiteUrl() + source.substring(source.indexOf('#') + 1);
                 }
                 var settings = opt.currentContext.siteRelativeUrl +
-                    "/Style Library/SPEasyFormsAssets/2014.00.07.e/Pages/SPEasyFormsSettings.aspx?" +
+                    "/Style Library/SPEasyFormsAssets/2014.00.07.f/Pages/SPEasyFormsSettings.aspx?" +
                     "ListId=" + spContext.getCurrentListId(opt) +
                     "&SiteUrl=" + spContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -354,7 +354,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.jQueryUITheme =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.07.e/Css/jquery-ui/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.07.f/Css/jquery-ui/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
@@ -363,7 +363,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.css =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.07.e/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.07.f/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -1276,10 +1276,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $(".ms-formtable tr").remove();
             $.each(opt.rows, function(fieldIdx, row) {
                 if ($.inArray(fieldIdx, opt.fieldsInUse) < 0) {
-                    table += containerCollection.createFieldRow({
+                    var tmp = containerCollection.createFieldRow({
                         row: row
                     });
-                    $(".ms-formtable").append(row.row);
+                    if (tmp.indexOf("speasyforms-fieldmissing") < 0) {
+                        table += tmp;
+                        $(".ms-formtable").append(row.row);
+                    }
                 }
             });
             $("#" + opt.id).append(containerCollection.createFieldCollection({
@@ -1828,7 +1831,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                                     o.row = row;
                                                     var v = spRows.value(o);
                                                     $("#readOnly" + row.internalName).html(v);
-                                                }, 2000);                                                
+                                                    visibilityRuleCollection.transform(opt);
+                                                }, 1000);                                                
                                                 value = "&nbsp;";
                                             }
                                             var html = '<tr data-visibilityadded="true">' +
@@ -3502,7 +3506,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.00.07.e";
+            opt.currentConfig.version = "2014.00.07.f";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig != oldConfig) {
