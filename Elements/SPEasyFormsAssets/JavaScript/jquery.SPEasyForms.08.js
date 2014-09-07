@@ -1918,12 +1918,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                         var formType = visibilityRuleCollection.getFormType(opt);
                                         if (formType !== "display") {
                                             var value = spRows.value(opt);
-                                            if (!value) {
+                                            if (!value && !opt.noRecurse) {
                                                 setTimeout(function () {
                                                     var o = $.extend({}, spEasyForms.defauts, opt);
                                                     o.row = row;
                                                     var v = spRows.value(o);
                                                     $("#readOnly" + row.internalName).html(v);
+                                                    opt.noRecurse = true;
                                                     visibilityRuleCollection.transform(opt);
                                                 }, 1000);
                                                 value = "&nbsp;";
