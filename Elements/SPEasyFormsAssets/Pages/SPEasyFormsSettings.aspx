@@ -662,7 +662,7 @@
                         </table>
                     </div>
                     <div id="tabs-min-about" class="tabs-min">
-<p><b>Version: 2014.00.07.beta Alpha</b></p>
+<p><b>Version: 2014.00.07 Beta</b></p>
 <h2>The MIT License (MIT)</h2>
 
 <p>Copyright (c) 2014 Joe McShea</p>
