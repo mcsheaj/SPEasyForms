@@ -2,7 +2,7 @@
  * SPEasyForms - modify SharePoint forms using jQuery (i.e. put fields on
  * tabs, show/hide fields, validate field values, etc.)
  *
- * @version 2014.00.07.f
+ * @version 2014.00.07.beta
  * @requires jQuery v1.11.1 (I intend to test it with 1.8.3 versions
  *     or better but have not done so yet)
  * @requires jQuery-ui v1.9.2 (I intend to test it with later 1.x
@@ -304,7 +304,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     source = spContext.getCurrentSiteUrl() + source.substring(source.indexOf('#') + 1);
                 }
                 var settings = opt.currentContext.siteRelativeUrl +
-                    "/Style Library/SPEasyFormsAssets/2014.00.07.f/Pages/SPEasyFormsSettings.aspx?" +
+                    "/Style Library/SPEasyFormsAssets/2014.00.07.beta/Pages/SPEasyFormsSettings.aspx?" +
                     "ListId=" + spContext.getCurrentListId(opt) +
                     "&SiteUrl=" + spContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -354,7 +354,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.jQueryUITheme =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.07.f/Css/jquery-ui/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.07.beta/Css/jquery-ui/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
@@ -363,7 +363,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.css =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.07.f/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.07.beta/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -3507,7 +3507,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.00.07.f";
+            opt.currentConfig.version = "2014.00.07.beta";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig != oldConfig) {
@@ -3769,11 +3769,11 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             }
                         } else {
                             tr.value = "";
-                            tr.row.find("input:checked").each(function () {
+                            tr.row.find("input[checked='checked']").each(function () {
                                 if (tr.value) { tr.value += ";"; }
                                 var re = new RegExp(/FillInRadio$/i);
-                                if ($(this).length > 0 && !re.test($(this)[0].id)) {
-                                    tr.value += $(this).val();
+                                if ($(this).length > 0 && $(this).next().text().trim() != "Specify your own value:") {
+                                    tr.value += $(this).next().text();
                                 }
                                 else {
                                     tr.value += tr.row.find("input[type='text']").val();
@@ -3796,12 +3796,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         if (textarea.length > 0) {
                             tr.value = textarea.val().replace("\n", "<br />\n");
                         }
-                        var appendedText =
-                            tr.row.find(".ms-imnSpan").parent().parent();
+                        var appendedText = tr.row.find(".ms-imnSpan").parent().parent();
+                        if (appendedText.length === 0) {
+                            appendedText = tr.row.find("td.ms-formbody").find("nobr").parent();
+                        }
                         if (appendedText.length > 0) {
-                            $.each(appendedText, function (i, t) {
-                                tr.value += t.outerHTML;
-                            });
+                            var tmp = appendedText.first().parent();
+                            tmp.find("textarea").remove();
+                            tmp.find("script").remove();
+                            tmp.find("table.ms-rtetoolbarmenu").remove();
+                            tmp.find("iframe").remove();
+                            tr.value += tmp.html();
                         }
                         break;
                     case "SPFieldMultiChoice":
@@ -3876,19 +3881,46 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     case "SPFieldUser":
                     case "SPFieldUserMulti":
                         var tmp3 = tr.row.find("input[type='hidden']").val();
-                        if (typeof (tmp3) != 'undefined') {
-                            var hiddenInput = utils.parseJSON(tmp3);
-                            $.each(hiddenInput, function (idx, entity) {
-                                if (tr.value.length > 0) {
-                                    tr.value += "; ";
+                        tr.value = "";
+                        if(tmp3.length > 0 && tmp3.indexOf(";#") < 0) {
+                            if (typeof (tmp3) != 'undefined') {
+                                var hiddenInput = utils.parseJSON(tmp3);
+                                $.each(hiddenInput, function (idx, entity) {
+                                    if (tr.value.length > 0) {
+                                        tr.value += "; ";
+                                    }
+                                    tr.value += "<a href='" +
+                                        opt.currentContext.webRelativeUrl +
+                                        "/_layouts/userdisp.aspx?ID=" +
+                                        entity.EntityData.SPUserID +
+                                        "' target='_blank'>" +
+                                        entity.DisplayText + "</a>";
+                                });
+                                if(typeof(tr.value) === 'undefined') {
+                                    var textarea = tr.find("td.msformbody textarea");
+                                    if(textarea.length > 0) {
+                                        tr.value = textarea.val();
+                                    }
+                                    if(typeof(tr.value) === 'undefined') {
+                                        tr.value = tr.find("options:selected").text();
+                                    }
                                 }
-                                tr.value += "<a href='" +
-                                    opt.currentContext.webRelativeUrl +
-                                    "/_layouts/userdisp.aspx?ID=" +
-                                    entity.EntityData.SPUserID +
-                                    "' target='_blank'>" +
-                                    entity.DisplayText + "</a>";
-                            });
+                            }
+                        }
+                        else {
+                            if(tmp3.length > 0) {
+                                var entities = tmp3.split(";#");
+                                for(var i=0; i<entities.length; i+=2) {
+                                    tr.value += "<a href='" + opt.currentContext.webRelativeUrl + 
+                                        "/_layouts/userdisp.aspx?ID=" +
+                                        entities[i] + "&Source=" +
+                                        encodeURIComponent(window.location.href) +
+                                        "' target='_blank'>" + entities[i + 1] + "</a>";
+                                    if((i + 2) < entities.length) {
+                                        tr.value += ";";
+                                    } 
+                                }
+                            }
                         }
                         break;
                     default:
