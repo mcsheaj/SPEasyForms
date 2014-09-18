@@ -548,19 +548,19 @@
             </select>
             <div id='chooseContainerError' class='speasyforms-error'>&nbsp;</div>
         </div>
-        <div id="editFieldCollectionDialog" class="speasyforms-dialogdiv" title="Edit the Name of the Field Group">
+        <div id="editFieldCollectionDialog" class="speasyforms-dialogdiv" title="Edit the Name of the Field Collection">
             <label for="fieldCollectionName">Name</label>
             <input type="text" id="fieldCollectionName" name="fieldCollectionNames" />
             <input type='hidden' id='editFieldCollectionContainerId' value='' />
         </div>
         <div id='addMultiGroupContainerDialog' class='speasyforms-dialogdiv' title='Add Container'>
-            <label for='addFieldCollectionNames'>Field Group Names (one per line):</label>
+            <label for='addFieldCollectionNames'>Field Collection Names (one per line):</label>
             <textarea id='addFieldCollectionNames' rows='5' cols='50'></textarea>
             <input type='hidden' id='addMultiGroupContainerType' value='' />
             <div id='addMultiGroupContainerError' class='speasyforms-error'></div>
         </div>
-        <div id='addFieldCollectionsToContainerDialog' class='speasyforms-dialogdiv' title='Add Field Groups'>
-            <label for='addFieldCollectionNames2'>Field Group Names (one per line):</label>
+        <div id='addFieldCollectionsToContainerDialog' class='speasyforms-dialogdiv' title='Add Field Collections'>
+            <label for='addFieldCollectionNames2'>Field Collection Names (one per line):</label>
             <textarea id='addFieldCollectionNames2' rows='5' cols='50'></textarea>
             <input type='hidden' id='addFieldCollectionsContainerId' value='' />
             <div id='addFieldCollectionsToContainerDialogError' class='speasyforms-error'></div>
