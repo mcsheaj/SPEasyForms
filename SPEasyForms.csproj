@@ -53,17 +53,12 @@
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_f9bd01_256x240.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\jquery-ui.css" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\jquery.ui.theme.css" />
-    <Content Include="Elements\SPEasyFormsAssets\Css\speasyforms.08.css" />
     <Content Include="Elements\SPEasyFormsAssets\Css\speasyforms.css" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.08.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPServices.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\ssw.js" />
-    <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.08.aspx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
