@@ -283,11 +283,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if(ctid.indexOf("0x0120") !== 0) {
                     $("#spEasyFormsContentTypeSelect").append("<option value='" +
                         opt.currentListContext.contentTypes[ctid].id + "'>" + 
-                        opt.currentListContext.contentTypes[ctid].name + "</option>")
+                        opt.currentListContext.contentTypes[ctid].name + "</option>");
                 }
             });
             $("#spEasyFormsContentTypeSelect").change(function() {
                 delete containerCollection.rows;
+                delete spContext.formCache;
                 opt.contentTypeChanged = true;
                 containerCollection.toEditor(opt);
             });
@@ -452,8 +453,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, spEasyForms.defaults, options);
             if (spEasyForms.defaults.verbose) {
                 $('#outputTable').remove();
-                var output = "<table id='outputTable'><tr><td></td>" +
-                    "<a href='javascript:void(0)' class='nobr' id='toggleContext'>Toggle Context</a>" + 
+                var output = "<table id='outputTable' style='padding-left:305px'><tr><td></td>" +
+                    "<a href='javascript:void(0)' class='nobr' id='toggleContext' style='padding-left:305px'>Toggle Context</a>" + 
                     "</tr><tr id='contextRow' style='display:none'><td><pre>";
                 output += "_spPageContextInfo = {\r\n" +
                     "    siteServerRelativeUrl: '" + opt.currentContext.siteRelativeUrl + "',\r\n" +
@@ -480,10 +481,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "    $.spEasyForms.init();\r\n" +
                     "});\r\n";
                 output += "</pre></td></tr></table>";
-                if (window.location.href.toLowerCase().indexOf('fiddle') <= 0) {
+                if (window.location.href.toLowerCase().indexOf('speasyformssettings.aspx') < 0) {
                     $("#s4-bodyContainer").append(output);
                 } else {
-                    $("body").append(output);
+                    $("#spEasyFormsOuterDiv").append(output);
                 }
                 $("#toggleContext").click(function() {
                     $("#contextRow").toggle();
@@ -929,7 +930,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // make the containers individually collapsible
             $("td.speasyforms-sortablecontainers").dblclick(function(e) {
                 if (e.handled !== true) {
-                    $('#' + this.id + ' .speasyforms-sortablefields:not(.speasyforms-fieldmissing)').toggle();
+                    $('#' + this.id + ' .speasyforms-sortablefields:not(.speasyforms-hidden):not(.speasyforms-fieldmissing)').toggle();
                     var k = $('#' + this.id).attr("data-containerIndex");
                     if ($('#' + this.id + ' .speasyforms-sortablefields')
                         .css("display") == "none") {
@@ -1015,10 +1016,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if (!event.handled) {
                     containerCollection.hiddenObjects = [];
                     if(opt.verbose) {
-                        $('.speasyforms-sortablefields').show();
+                        $('.speasyforms-sortablefields:not(.speasyforms-hidden)').show();
                     }
                     else {
-                        $('.speasyforms-sortablefields:not(.speasyforms-fieldmissing)').show();
+                        $('.speasyforms-sortablefields:not(.speasyforms-hidden):not(.speasyforms-fieldmissing)').show();
                     }
                     event.handled = true;
                 }
@@ -1068,36 +1069,27 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 return false;
             });
 
-            // wire the about button
-            $("#spEasyFormsAboutButton").click(function(event) {
-                if (!event.handled) {
-                    $(".tabs-min").hide();
-                    $("#tabs-min-about").show();
-                }
+            // wire the clear cache button
+            $("#spEasyFormsClearCacheButton").click(function (event) {
+                spEasyForms.clearCachedContext(opt);
                 return false;
             });
 
-            // wire the clear cache button
-            $("#spEasyFormsClearCacheBtn").button({
-                icons: {
-                    primary: "ui-icon-trash"
-                },
-                label: 'Clear Cache'
-            }).click(function(event) {
-                spEasyForms.clearCachedContext(opt);
-            });
-
             // wire the verbose button
-            $("#spEasyFormsVerboseBtn").button({
-                icons: {
-                    primary: "ui-icon-circle-plus"
-                },
-                label: (opt.verbose ? 'Not Verbose' : 'Verbose')
-            }).click(function(event) {
+            $("#spEasyFormsVerboseButton").click(function (event) {
                 if (opt.verbose) {
                     window.location.href = window.location.href.replace("&spEasyFormsVerbose=true", "");
                 } else {
                     window.location.href = window.location.href + "&spEasyFormsVerbose=true";
+                }
+                return false;
+            });
+
+            // wire the about button
+            $("#spEasyFormsAboutButton").click(function (event) {
+                if (!event.handled) {
+                    $(".tabs-min").hide();
+                    $("#tabs-min-about").show();
                 }
                 return false;
             });
@@ -1275,7 +1267,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var tr = "<tr class='" + klass + "'" +
                 "title='"+(r.fieldMissing ? "This field was not found in the form and may have been deleted." : "")+"'>" +
                 "<td class='" + klass + "'>" + r.displayName + "</td>" +
-                "<td class='" + klass + "'>" + r.internalName + "</td>" +
+                "<td class='" + klass + " speasyforms-hidden' style='display:none'>" + r.internalName + "</td>" +
                 "<td class='" + klass + "'>" + r.spFieldType + "</td>" +
                 "</tr>";
             return tr;
@@ -1324,7 +1316,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.tableIndex + "'>" +
                 "<tbody class='speasyforms-sortablefields'><tr>" +
                 "<th class='speasyforms-name'>Display Name</th>" +
-                "<th class='speasyforms-name'>Internal Name</th>" +
+                "<th class='speasyforms-name speasyforms-hidden' style='display:none'>Internal Name</th>" +
                 "<th class='speasyforms-name'>Field Type</th></tr>" + opt.trs +
                 "</tbody></table>";
 
@@ -1853,7 +1845,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if($(this).parent().css("display") !== "none") {
                     var nextIndex = -1;
                     if($(this).parent().next().length > 0) {
-                        var nextIndex = $(this).parent().next()[0].id.replace("spEasyFormsTabsDiv", "");
+                        nextIndex = $(this).parent().next()[0].id.replace("spEasyFormsTabsDiv", "");
                         $(this).parent().next().show();
                         $("li.speasyforms-tabs" + nextIndex).addClass("ui-tabs-active").addClass("ui-state-active");
                     }
@@ -2180,7 +2172,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var table = "<table id='staticVisibilityRules' " +
                 "class='" + klass + "'><tbody class='" + klass + "'><tr>" +
                 "<th class='" + klass + "'>Display Name</th>" +
-                "<th class='" + klass + "'>Internal Name</th>" +
+                "<th class='" + klass + " speasyforms-hidden' style='display:none'>Internal Name</th>" +
                 "<th class='" + klass + "'>State</th>" +
                 "<th class='" + klass + "'>Applies To</th></tr>";
             $.each(Object.keys(opt.currentConfig.visibility.def).sort(), function(idx, key) {
@@ -2243,7 +2235,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         "' class='" + klass + "' data-dialogtype='visibility'" +
                         " data-fieldname='" + opt.fieldName + "'>";
                     table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>"+opt.displayName+"</td>";
-                    table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>"+opt.fieldName+"</td>";
+                    table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog speasyforms-hidden' style='display:none'>"+opt.fieldName+"</td>";
                     table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>"+rule.state+"</td>";
                     table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>"+
                         (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone")+"</td>";
@@ -2919,7 +2911,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
                     "data-dialogtype='adapter' title='"+title+"'>" +
                     "<td class='"+klass+"'>"+displayName+"</td>" +
-                    "<td class='"+klass+"'>"+opt.adapter.columnNameInternal+"</td>"+
+                    "<td class='"+klass+" speasyforms-hidden' style='display:none'>"+opt.adapter.columnNameInternal+"</td>"+
                     "<td class='"+klass+"'>"+opt.adapter.type+"</td>"+
                     "</tr>");
             }
@@ -2928,7 +2920,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
                     "data-dialogtype='adapter' title='"+title+"'>" +
                     "<td class='"+klass+"'>"+displayName+"</td>" +
-                    "<td class='"+klass+"'>"+opt.adapter.columnNameInternal+"</td>"+
+                    "<td class='"+klass+" speasyforms-hidden' style='display:none'>"+opt.adapter.columnNameInternal+"</td>"+
                     "<td class='"+klass+"'>"+opt.adapter.type+"</td>"+
                     "</tr>");
             }
@@ -2937,7 +2929,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
                     "data-dialogtype='adapter' title='"+title+"' style='display:none'>" +
                     "<td class='"+klass+"'>"+displayName+"</td>" +
-                    "<td class='"+klass+"'>"+opt.adapter.columnNameInternal+"</td>"+
+                    "<td class='"+klass+" speasyforms-hidden' style='display:none'>"+opt.adapter.columnNameInternal+"</td>"+
                     "<td class='"+klass+"'>"+opt.adapter.type+"</td>"+
                     "</tr>");
             }
@@ -3066,7 +3058,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         }
                     },
                     autoOpen: false,
-                    width: 700
+                    width: 500
                 };
                 $('#cascadingLookupAdapterDialog').dialog(adapterOpts);
             }
@@ -4476,24 +4468,22 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if(opt.listId in opt.currentContext.listContexts) {
                     result = opt.currentContext.listContexts[opt.listId];
                 }
-                else {
-                    $.ajax({
-                        async: false,
-                        url: spContext.getCurrentSiteUrl(opt) +
-                            "/_layouts/listform.aspx?PageType=84&ListId=" +
-                            opt.listId + 
-                            ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") + 
-                            "&RootFolder=",
-                        complete: function (xData) {
-                            spContext.formCache = xData.responseText;
-                            opt.input = $(xData.responseText);
-                            var rows = spRows.init(opt);
-                            $.each(rows, function(idx, row) {
-                                result.fields[row.internalName] = row;
-                            });
-                        }
-                    });
-                }
+                $.ajax({
+                    async: false,
+                    url: spContext.getCurrentSiteUrl(opt) +
+                        "/_layouts/listform.aspx?PageType=8&ListId=" +
+                        opt.listId + 
+                        ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") + 
+                        "&RootFolder=",
+                    complete: function (xData) {
+                        spContext.formCache = xData.responseText;
+                        opt.input = $(xData.responseText);
+                        var rows = spRows.init(opt);
+                        $.each(rows, function(idx, row) {
+                            result.fields[row.internalName] = row;
+                        });
+                    }
+                });
                 $().SPServices({
                     async: false,
                     webURL: spContext.getCurrentSiteUrl(opt),

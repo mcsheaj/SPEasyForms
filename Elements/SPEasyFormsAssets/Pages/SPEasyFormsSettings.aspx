@@ -56,7 +56,7 @@
             vertical-align: top;
         }
         div.speasyforms-panel {
-            width: 410px;
+            width: 290px;
             height: 700px;
             overflow-x: hidden;
             overflow-y: scroll;
@@ -65,7 +65,7 @@
             float: left;
         }
         td.speasyforms-form {
-            padding-left: 430px;
+            padding-left: 305px;
         }
         #contentRow {
             padding-top: 0px;
@@ -77,6 +77,7 @@
             vertical-align: top;
             padding: 0px 20px;
             width: 100%;
+            min-width: 480px;
         }
         .speasyforms-entity {
             display: block;
@@ -153,12 +154,13 @@
             font-weight: normal;
         }
         table.speasyforms-editor {
-            width: 1280px;
+            max-width:1280px;
         }
         table.speasyforms-fieldstitle,
         table.speasyforms-sortablefields {
-            width: 100%;
-            position: relative;
+            width: 270px;
+            margin-left: auto;
+            margin-right: auto;
         }
         table.speasyforms-sortablerules {
             width: 80%;
@@ -175,7 +177,7 @@
             background: lightyellow !important;
         }
         table.speasyforms-sortablecontainers {
-            width: 400px;
+            width: 280px;
         }
         td.speasyforms-sortablecontainers {
             border: 1px solid lightblue !important;
@@ -348,14 +350,24 @@
             padding: 3px;
             margin: 5px;
         }
+        .speasyforms-buttonouterdiv-smallimg {
+            border: 1px solid #fcfcfc;
+            margin: 5px;
+            padding: 2px;
+        }
+        .speasyforms-buttonouterdiv-smallimg:hover,
         .speasyforms-buttonouterdiv:hover {
             border: 1px dotted darkblue !important;
             cursor: pointer !important;
         }
         .speasyforms-buttonimg {
-            border: none;
             display: block;
             margin: auto;
+        }
+        .speasyforms-buttonsmallimg {
+            border: none;
+            position: relative;
+            top: 3px;
         }
         .speasyforms-buttonimgdisabled {
             opacity: 0.3;
@@ -388,13 +400,16 @@
         }
         h2.speasyforms-breadcrumbs {
             float: left;
-            padding: 5px; 
+            padding: 3px; 
             color: #333;
         }
         h2.speasyforms-breadcrumbs a,
         h2.speasyforms-breadcrumbs a:visited {
             color: #333;
             text-decoration: underline;
+        }
+        .speasyforms-hidden {
+            display: none;
         }
     </style>
 </asp:Content>
@@ -431,7 +446,7 @@
                             <table id="spEasyFormsAdapterTable" class="speasyforms-adapters">
                                 <tr>
                                     <th>Display Name</th>
-                                    <th>Internal Name</th>
+                                    <th class="speasyforms-hidden" style="display:none">Internal Name</th>
                                     <th>AdapterType</th>
                                 </tr>
                             </table>
@@ -525,8 +540,19 @@
                 View
             </div>
         </div>
+        <div class="speasyforms-buttongroup" width='100px'>
+            <div id="spEasyFormsClearCacheButton" class="speasyforms-buttonouterdiv-smallimg">
+                <img width="16px" height="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/comdel.gif" /> Clear Cache
+            </div>
+            <div id="spEasyFormsVerboseButton" class="speasyforms-buttonouterdiv-smallimg">
+                <img height="16px" width="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/css16.gif" /> Verbose
+            </div>
+            <div class="speasyforms-buttongrptext" style='width:100px; margin-top:18px'>
+                Tools
+            </div>
+        </div>
         <div class="speasyforms-buttongroup">
-            <div id="spEasyFormsAboutButton" class="speasyforms-buttonouterdiv" style='width:65px'>
+            <div id="spEasyFormsAboutButton" class="speasyforms-buttonouterdiv" style='width:45px'>
                 <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/mewa_info.gif" />
                 <div class="speasyforms-buttontext">About</div>
             </div>
