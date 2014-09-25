@@ -1,10 +1,10 @@
-﻿.speasyforms-container {
+.speasyforms-container {
     margin-right: 3px;
     width: 100%;
 }
 div.speasyforms-tabs, div.speasyforms-accordion {
     margin-top: 10px;
-    margin-bottom: 20px;    
+    margin-bottom: 20px;   
 }
 .ui-tabs-nav {
     width: 99% !important;
@@ -35,4 +35,10 @@ table.speasyforms-columns td {
 }
 .ms-formbody {
     padding: .1em;
+}
+#spEasyFormsContainersPre,
+#spEasyFormsContainersPost {
+    width: 100%;
+    min-width: 800px;
+    max-width: 1024px;
 }

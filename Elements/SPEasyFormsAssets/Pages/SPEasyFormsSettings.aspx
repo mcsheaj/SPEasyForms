@@ -1,7 +1,7 @@
-<%@ Assembly Name="Microsoft.SharePoint, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"%> 
-<%@ Page Language="C#" Inherits="Microsoft.SharePoint.WebPartPages.WikiEditPage" MasterPageFile="~masterurl/default.master" %> 
-<%@ Register Tagprefix="SharePoint" Namespace="Microsoft.SharePoint.WebControls" Assembly="Microsoft.SharePoint, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %> 
-<%@ Import Namespace="Microsoft.SharePoint" %> 
+<%@ Assembly Name="Microsoft.SharePoint, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
+<%@ Page Language="C#" Inherits="Microsoft.SharePoint.WebPartPages.WikiEditPage" MasterPageFile="~masterurl/default.master" %>
+<%@ Register Tagprefix="SharePoint" Namespace="Microsoft.SharePoint.WebControls" Assembly="Microsoft.SharePoint, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
+<%@ Import Namespace="Microsoft.SharePoint" %>
 <asp:Content ContentPlaceHolderId="PlaceHolderPageTitle" runat="server">
     <SharePoint:ProjectProperty Property="Title" runat="server">- SharePoint Easy Forms Configuration</SharePoint:ProjectProperty>
 </asp:Content>
@@ -55,6 +55,9 @@
         .speasyforms-panel {
             vertical-align: top;
         }
+        #s4-bodyContainer {
+            overflow-x: hidden;
+        }
         div.speasyforms-panel {
             width: 290px;
             height: 700px;
@@ -64,13 +67,15 @@
             position: fixed;
             float: left;
         }
-        td.speasyforms-form {
+        td.speasyforms-form,
+        #toggleContext,
+        #outputTable {
             padding-left: 305px;
         }
         #contentRow {
             padding-top: 0px;
         }
-        #contentBox { 
+        #contentBox {
             margin-left: 0px;
         }
         .speasyforms-form {
@@ -154,7 +159,7 @@
             font-weight: normal;
         }
         table.speasyforms-editor {
-            max-width:1280px;
+            max-width: 1280px;
         }
         table.speasyforms-fieldstitle,
         table.speasyforms-sortablefields {
@@ -343,20 +348,20 @@
             padding: 3px;
             margin: 5px;
         }
-        .speasyforms-buttonouterdiv {
+        .speasyforms-buttonouterdiv,
+        .speasyforms-buttoncontainer {
             float: left;
             border: 1px solid #fcfcfc;
             height: 60px;
             padding: 3px;
-            margin: 5px;
+            margin: 1px 1px 1px 5px;
         }
         .speasyforms-buttonouterdiv-smallimg {
             border: 1px solid #fcfcfc;
-            margin: 5px;
+            margin: 3px;
             padding: 2px;
         }
-        .speasyforms-buttonouterdiv-smallimg:hover,
-        .speasyforms-buttonouterdiv:hover {
+        .speasyforms-buttonouterdiv-smallimg:hover, .speasyforms-buttonouterdiv:hover {
             border: 1px dotted darkblue !important;
             cursor: pointer !important;
         }
@@ -377,6 +382,7 @@
             font-size: 1em;
             font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
             text-align: center;
+            color: rgb(68, 68, 68);
         }
         .speasyforms-buttontextdisabled {
             color: gray;
@@ -384,7 +390,7 @@
         .speasyforms-buttongroup {
             font-size: .9em;
             border-right: 1px dotted gray;
-            height: 88px;
+            height: 84px;
             float: left;
         }
         .speasyforms-buttongrptext {
@@ -393,25 +399,35 @@
             clear: both;
         }
         .speasyforms-contenttype {
-            margin-top: 5px;
+            margin-top: 3px;
         }
         #RibbonContainer-TabRowRight {
             display: none !important;
         }
         h2.speasyforms-breadcrumbs {
             float: left;
-            padding: 3px; 
+            padding: 3px;
             color: #333;
         }
         h2.speasyforms-breadcrumbs a,
-        h2.speasyforms-breadcrumbs a:visited {
+        h2.speasyforms-breadcrumbs a: visited {
             color: #333;
             text-decoration: underline;
         }
         .speasyforms-hidden {
             display: none;
         }
-    </style>
+        #spEasyFormsBusyScreen {    
+            background: url(/_layouts/images/loading16.gif) no-repeat;    
+            padding-left: 25px;
+        }
+        .speasyforms-busyscreen .ui-dialog-titlebar {
+            display: none;
+        }
+        .speasyforms-busyscreen .ui-dialog-titlebar-close {    
+            display: none;
+        }
+</style>
 </asp:Content>
 <asp:Content ContentPlaceHolderId="PlaceHolderMiniConsole" runat="server">
     <SharePoint:FormComponent TemplateName="WikiMiniConsole" ControlMode="Display" runat="server" id="WikiMiniConsole"></SharePoint:FormComponent>
@@ -426,6 +442,7 @@
             We're not sure how you got here, but the current list context is of a type that is not supported by SPEasyForms.
         </p>
     </div>
+    <div id="spEasyFormsBusyScreen"></div>
     <div id="spEasyFormsOuterDiv">
         <table id='spEasyFormsEditor' class='speasyforms-editor'>
             <tr class='speasyforms-editor'>
@@ -447,12 +464,13 @@
                                 <tr>
                                     <th>Display Name</th>
                                     <th class="speasyforms-hidden" style="display:none">Internal Name</th>
-                                    <th>AdapterType</th>
+                                    <th>Adapter Type</th>
+                                    <th>Additional Settings</th>
                                 </tr>
                             </table>
                         </div>
                         <div id="tabs-min-about" class="tabs-min" style="display:none">
-                            <p><b>Version: 2014.00.08.a</b>
+                            <p><b>Version: 2014.00.08.c</b>
                             </p>
                             <h2>The MIT License (MIT)</h2>
 
@@ -473,7 +491,6 @@
                 </td>
             </tr>
         </table>
-        <br />
         <br />
     </div>
     <div id="spEasyFormsTextareaDiv">
@@ -503,7 +520,7 @@
                 </select>
             </div>
             <div id="spEasyFormsAddButton" class="speasyforms-buttonouterdiv">
-                <img width="24px" height="24px" class="speasyforms-buttonimg" src="/_layouts/images/advadd.png" style="margin-bottom:2px; margin-top:7px;" />
+                <img width="24px" height="24px" class="speasyforms-buttonimg" src="/_layouts/images/caladd.gif" style="margin-bottom:2px; margin-top:7px;" />
                 <div class="speasyforms-buttontext">Add
                     <br />Container</div>
             </div>
@@ -512,16 +529,6 @@
             </div>
         </div>
         <div class="speasyforms-buttongroup" width='260px'>
-            <div id="spEasyFormsExpandButton" class="speasyforms-buttonouterdiv">
-                <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/ApOpenThisLocation.gif" />
-                <div class="speasyforms-buttontext">Expand
-                    <br />All</div>
-            </div>
-            <div id="spEasyFormsCollapseButton" class="speasyforms-buttonouterdiv">
-                <img height="32px" width="32px" class="speasyforms-buttonimg" src="/_layouts/images/FLDRNEW.GIF" />
-                <div class="speasyforms-buttontext">Collapse
-                    <br />All</div>
-            </div>
             <div id="spEasyFormsFormButton" class="speasyforms-buttonouterdiv">
                 <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/create.gif" />
                 <div class="speasyforms-buttontext">Form</div>
@@ -536,18 +543,38 @@
                 <div class="speasyforms-buttontext">Field
                     <br />Adapters</div>
             </div>
+            <div class="speasyforms-buttoncontainer">
+                <div id="spEasyFormsExpandButton" class="speasyforms-buttonouterdiv-smallimg">
+                    <img width="16px" height="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/ApOpenThisLocation.gif" />Expand
+                </div>
+                <div id="spEasyFormsCollapseButton" class="speasyforms-buttonouterdiv-smallimg">
+                    <img height="16px" width="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/FLDRNEW.GIF" />Collapse
+                </div>
+            </div>
             <div class="speasyforms-buttongrptext" style='width:260px'>
                 View
             </div>
         </div>
         <div class="speasyforms-buttongroup" width='100px'>
-            <div id="spEasyFormsClearCacheButton" class="speasyforms-buttonouterdiv-smallimg">
-                <img width="16px" height="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/comdel.gif" /> Clear Cache
+            <a href="javascript:void(0)" id="spEasyFormsExportLink">
+                <div id="spEasyFormsExportButton" class="speasyforms-buttonouterdiv">
+                    <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/icongo01.gif" />
+                    <div class="speasyforms-buttontext">Export</div>
+                </div>
+            </a>
+            <div id="spEasyFormsImportButton" class="speasyforms-buttonouterdiv">
+                <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/icongo01rtl.gif" />
+                <div class="speasyforms-buttontext">Import</div>
             </div>
-            <div id="spEasyFormsVerboseButton" class="speasyforms-buttonouterdiv-smallimg">
-                <img height="16px" width="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/css16.gif" /> Verbose
+            <div class="speasyforms-buttoncontainer">
+                <div id="spEasyFormsClearCacheButton" class="speasyforms-buttonouterdiv-smallimg">
+                    <img width="16px" height="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/comdel.gif" />Clear Cache
+                </div>
+                <div id="spEasyFormsVerboseButton" class="speasyforms-buttonouterdiv-smallimg">
+                    <img height="16px" width="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/css16.gif" />Verbose
+                </div>
             </div>
-            <div class="speasyforms-buttongrptext" style='width:100px; margin-top:18px'>
+            <div class="speasyforms-buttongrptext" style='width:100px; margin-top:14px'>
                 Tools
             </div>
         </div>
@@ -574,7 +601,7 @@
             </select>
             <div id='chooseContainerError' class='speasyforms-error'>&nbsp;</div>
         </div>
-        <div id="editFieldCollectionDialog" class="speasyforms-dialogdiv" title="Edit the Name of the Field Collection">
+        <div id="editFieldCollectionDialog" class="speasyforms-dialogdiv" title="Edit Field Collection Name">
             <label for="fieldCollectionName">Name</label>
             <input type="text" id="fieldCollectionName" name="fieldCollectionNames" />
             <input type='hidden' id='editFieldCollectionContainerId' value='' />
@@ -818,6 +845,14 @@
                     </td>
                 </tr>
             </table>
+        </div>
+        <div id='importConfigurationDialog' class='speasyforms-dialogdiv' title='Import JSON'>
+            <span>
+                Type or paste JSON configuration into the following textbox, and hit OK.  Note that this 
+                will replace any existing configuration and that no changes are committed until you hit
+                the save button.
+            </span>
+            <textarea id='importedJson' rows='25' cols='80'></textarea>
         </div>
     </div>
 </asp:Content>

@@ -1,12 +1,11 @@
 /*
  * SPEasyForms - modify SharePoint forms using jQuery (i.e. put fields on
- * tabs, show/hide fields, validate field values, etc.)
+ * tabs, show/hide fields, validate field values, modify the controls used
+ * to enter field values etc.)
  *
- * @version 2014.00.08.a
- * @requires jQuery v1.11.1 (I intend to test it with 1.8.3 versions
- *     or better but have not done so yet)
- * @requires jQuery-ui v1.9.2 (I intend to test it with later 1.x
- *     versions but have not done so yet)
+ * @version 2014.00.08.c
+ * @requires jQuery v1.11.1 
+ * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
  * @optional ssw Session Storage Wrapper - Cross Document Transport of
  *    JavaScript Data; used to cache the context across pages if available
@@ -14,8 +13,6 @@
  * @copyright 2014 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
- *
- * TBD - make localizable?
  */
 
 // save a reference to our instance of jQuery just in case
@@ -84,7 +81,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             fieldDisplayNameAltSelector: 'h3.ms-standardheader',
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
-            initAsync: window.location.href.indexOf('spEasyFormsAsync=true') >= 0
+            initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0
         },
 
         /********************************************************************
@@ -124,6 +121,18 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             this.loadDynamicStyles(opt);
             opt.callback = spEasyForms.contextReady;
             this.options = opt;
+            $("#spEasyFormsBusyScreen").dialog({
+                autoOpen: false,
+                dialogClass: "speasyforms-busyscreen",
+                closeOnEscape: false,
+                draggable: false,
+                width: 250,
+                minHeight: 25,
+                modal: true,
+                buttons: {},
+                resizable: false
+            });
+            $("#spEasyFormsBusyScreen").html("Initializing Form...").dialog('open');
             if (opt.initAsync) {
                 spContext.initAsync(opt);
             } else {
@@ -141,11 +150,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         contextReady: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            var getListOpt = $.extend({}, spEasyForms.defaults, { useCache: false });
             try {
                 opt.currentContext = spContext.get(opt);
                 opt.source = utils.getRequestParameters(opt).Source;
-                opt.currentListContext = spContext.getListContext(getListOpt);
+                opt.currentListContext = spContext.getListContext(opt);
 
                 /***
                  * Produce the editor on the SPEasyForms settings page.
@@ -167,6 +175,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
             } finally {
                 $("table.ms-formtable ").show();
+                $("#spEasyFormsBusyScreen").dialog('close');
             }
             return this;
         },
@@ -286,6 +295,11 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         opt.currentListContext.contentTypes[ctid].name + "</option>");
                 }
             });
+            var ctWidth = $("#spEasyFormsContentTypeSelect").width();
+            if(ctWidth > 54) {
+                $("#spEasyFormsContentType").width(ctWidth + 10);
+                $("#spEasyFormsContentType").parent().find(".speasyforms-buttongrptext").width(ctWidth + 60);
+            }
             $("#spEasyFormsContentTypeSelect").change(function() {
                 delete containerCollection.rows;
                 delete spContext.formCache;
@@ -317,7 +331,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     source = spContext.getCurrentSiteUrl() + source.substring(source.indexOf('#') + 1);
                 }
                 var settings = opt.currentContext.siteRelativeUrl +
-                    "/Style Library/SPEasyFormsAssets/2014.00.08.a/Pages/SPEasyFormsSettings.aspx?" +
+                    "/Style Library/SPEasyFormsAssets/2014.00.08.c/Pages/SPEasyFormsSettings.aspx?" +
                     "ListId=" + spContext.getCurrentListId(opt) +
                     "&SiteUrl=" + spContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -367,7 +381,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.jQueryUITheme =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.a/Css/jquery-ui/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.c/Css/jquery-ui/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
@@ -376,7 +390,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.css =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.a/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.c/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -453,8 +467,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, spEasyForms.defaults, options);
             if (spEasyForms.defaults.verbose) {
                 $('#outputTable').remove();
-                var output = "<table id='outputTable' style='padding-left:305px'><tr><td></td>" +
-                    "<a href='javascript:void(0)' class='nobr' id='toggleContext' style='padding-left:305px'>Toggle Context</a>" + 
+                var output = "<table id='outputTable'><tr><td></td>" +
+                    "<a href='javascript:void(0)' class='nobr' id='toggleContext'>Toggle Context</a>" + 
                     "</tr><tr id='contextRow' style='display:none'><td><pre>";
                 output += "_spPageContextInfo = {\r\n" +
                     "    siteServerRelativeUrl: '" + opt.currentContext.siteRelativeUrl + "',\r\n" +
@@ -481,10 +495,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "    $.spEasyForms.init();\r\n" +
                     "});\r\n";
                 output += "</pre></td></tr></table>";
-                if (window.location.href.toLowerCase().indexOf('speasyformssettings.aspx') < 0) {
+                if (window.location.href.toLowerCase().indexOf('fiddle') <= 0) {
                     $("#s4-bodyContainer").append(output);
                 } else {
-                    $("#spEasyFormsOuterDiv").append(output);
+                    $("body").append(output);
                 }
                 $("#toggleContext").click(function() {
                     $("#contextRow").toggle();
@@ -537,11 +551,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     var implementation = layout.containerType[0].toLowerCase() +
                         layout.containerType.substring(1);
                     if (implementation in containerCollection.containerImplementations) {
-                        opt.index = index;
-                        opt.currentContainerLayout = layout;
-                        opt.containerId = "spEasyFormsContainers" + (opt.prepend ? "Pre" : "Post");                            
-                        $.merge(fieldsInUse,
-                            containerCollection.containerImplementations[implementation].transform(opt));
+                        var impl = containerCollection.containerImplementations[implementation];
+                        if(typeof(impl.transform) === 'function') {
+                            opt.index = index;
+                            opt.currentContainerLayout = layout;
+                            opt.containerId = "spEasyFormsContainers" + (opt.prepend ? "Pre" : "Post");                            
+                            $.merge(fieldsInUse, impl.transform(opt));
+                        }
                     }
                     if (layout.containerType != defaultFormContainer.containerType) {
                         if ($("#" + opt.containerId).children().last().find("td.ms-formbody").length === 0) {
@@ -663,9 +679,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 typeof(SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
                 hasValidationErrors = SPClientForms.ClientFormManager.SubmitClientForm('WPQ2');
             }
-
+            
+            result = result && adapterCollection.preSaveItem(opt);
             if (hasValidationErrors) {
-                result = this.highlightValidationErrors(opt);
+                result = result && this.highlightValidationErrors(opt);
             }
 
             return result && !hasValidationErrors;
@@ -680,8 +697,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     current.containerType.substring(1);
                 if (containerType in containerCollection.containerImplementations) {
                     var impl = containerCollection.containerImplementations[containerType];
-                    opt.index = index;
-                    result = result && impl.preSaveItem(opt);
+                    if(typeof(impl.preSaveItem) === 'function') {
+                        opt.index = index;
+                        result = result && impl.preSaveItem(opt);
+                    }
                 }
             });
             return result;
@@ -707,10 +726,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     var implementation = layout.containerType[0].toLowerCase() +
                         layout.containerType.substring(1);
                     if (implementation in containerCollection.containerImplementations) {
-                        opt.index = index;
-                        opt.currentContainerLayout = layout;
-                        var tmp = containerCollection.containerImplementations[implementation].toEditor(opt);
-                        $.merge(fieldsInUse, tmp);
+                        var impl = containerCollection.containerImplementations[implementation];
+                        if(typeof(impl.toEditor) === 'function') {
+                            opt.index = index;
+                            opt.currentContainerLayout = layout;
+                            var tmp = impl.toEditor(opt);
+                            $.merge(fieldsInUse, tmp);
+                        }
                     }
                 }
                 else {
@@ -747,49 +769,47 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         initializeRows: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var currentContentType = $("#spEasyFormsContentTypeSelect").val();
-            if (!containerCollection.rows || Object.keys(containerCollection.rows).length === 0) {
-                if(window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
-                    containerCollection.rows = spRows.init(opt);
+            if(window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
+                containerCollection.rows = spRows.init(opt);
+            }
+            else if (!containerCollection.rows || Object.keys(containerCollection.rows).length === 0) {
+                if (!containerCollection.currentCt || containerCollection.currentCt !== currentContentType) {
+                    containerCollection.currentCt = currentContentType;
+                    if(containerCollection.currentCt in containerCollection.rowCache) {
+                        containerCollection.rows = containerCollection.rowCache[containerCollection.currentCt];
+                    }
                 }
                 else {
-                    if (!containerCollection.currentCt || containerCollection.currentCt !== currentContentType) {
-                        containerCollection.currentCt = currentContentType;
-                        if(containerCollection.currentCt in containerCollection.rowCache) {
-                            containerCollection.rows = containerCollection.rowCache[containerCollection.currentCt];
-                        }
-                    }
-                    else {
-                        containerCollection.rows = spRows.init(opt);
-                    }
-                    if (!containerCollection.rows || Object.keys(containerCollection.rows).length === 0) {
-                        var currentListId = spContext.getCurrentListId(opt);
-                        if (currentListId !== undefined && currentListId.length > 0) {
-                            var formText = "";
-                            if (spContext.formCache !== undefined) {
-                                formText = spContext.formCache;
-                            } else {
-                                $.ajax({
-                                    async: false,
-                                    cache: false,
-                                    url: spContext.getCurrentSiteUrl(opt) +
-                                        "/_layouts/listform.aspx?PageType=8&ListId=" +
-                                        currentListId + 
-                                        ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") + 
-                                        "&RootFolder=",
-                                    complete: function(xData) {
-                                        formText = xData.responseText;
-                                    }
-                                });
-                            }
-        
-                            opt.input = $(formText);
-                            containerCollection.rows = spRows.init(opt);
-                            $.each(containerCollection.rows, function(fieldIdx, row) {
-                                var td = row.row.find("td.ms-formbody");
-                                td.html("");
-                                $('.ms-formtable').append(row.row);
+                    containerCollection.rows = spRows.init(opt);
+                }
+                if (!containerCollection.rows || Object.keys(containerCollection.rows).length === 0) {
+                    var currentListId = spContext.getCurrentListId(opt);
+                    if (currentListId !== undefined && currentListId.length > 0) {
+                        var formText = "";
+                        if (spContext.formCache !== undefined) {
+                            formText = spContext.formCache;
+                        } else {
+                            $.ajax({
+                                async: false,
+                                cache: false,
+                                url: spContext.getCurrentSiteUrl(opt) +
+                                    "/_layouts/listform.aspx?PageType=8&ListId=" +
+                                    currentListId + 
+                                    ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") + 
+                                    "&RootFolder=",
+                                complete: function(xData) {
+                                    formText = xData.responseText;
+                                }
                             });
                         }
+        
+                        opt.input = $(formText);
+                        containerCollection.rows = spRows.init(opt);
+                        $.each(containerCollection.rows, function(fieldIdx, row) {
+                            var td = row.row.find("td.ms-formbody");
+                            td.html("");
+                            $('.ms-formtable').append(row.row);
+                        });
                     }
                 }
             }
@@ -985,6 +1005,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             // wire the save button
             $("#spEasyFormsSaveButton").click(function(event) {
+                if($("#spEasyFormsSaveButton img").hasClass("speasyforms-buttonimgdisabled"))
+                    return;
+                    
                 if (!event.handled) {
                     configManager.save(opt);
                     event.handled = true;
@@ -1072,6 +1095,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // wire the clear cache button
             $("#spEasyFormsClearCacheButton").click(function (event) {
                 spEasyForms.clearCachedContext(opt);
+                window.location.reload();
                 return false;
             });
 
@@ -1092,6 +1116,26 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $("#tabs-min-about").show();
                 }
                 return false;
+            });
+            
+            // wire the export button
+            $("#spEasyFormsExportLink").click(function(event) {
+                if($("#spEasyFormsExportButton img").hasClass("speasyforms-buttonimgdisabled"))
+                    return;
+
+                var configFileName = spContext.getCurrentSiteUrl(opt) +
+                    "/SiteAssets/spef-layout-" + spContext.getCurrentListId(opt).replace("{", "")
+                    .replace("}", "") + ".txt";
+                window.open(configFileName);
+            });
+            
+            // wire the import button
+            $("#spEasyFormsImportButton").click(function(event) {
+                if($("#spEasyFormsImportButton img").hasClass("speasyforms-buttonimgdisabled"))
+                    return;
+                    
+                $("#importedJson").val("");
+                $("#importConfigurationDialog").dialog('open');
             });
 
             // wire the async button
@@ -1179,16 +1223,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $('#editFieldCollectionDialog').dialog(editFieldsTableOpts);
 
             // save confirmation dialog
-            var layoutSavedOpts = {
+            var importOpts = {
                 modal: true,
+                width: 630,
                 buttons: {
                     "Ok": function() {
-                        $("#layoutSavedDialog").dialog("close");
+                        opt.currentConfig = utils.parseJSON($("#importedJson").val());
+                        configManager.set(opt);
+                        containerCollection.toEditor(opt);
+                        $("#importConfigurationDialog").dialog("close");
                     }
                 },
                 autoOpen: false
             };
-            $('#layoutSavedDialog').dialog(layoutSavedOpts);
+            $('#importConfigurationDialog').dialog(importOpts);
         },
 
         /*********************************************************************
@@ -1220,7 +1268,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 "<td class='speasyforms-headercell'><h1>" + opt.title +
                 "</h1></td><td class='speasyforms-buttoncell' align='right'>";
 
-            if (opt.title !== 'Default Form') {
+            if (opt.title !== defaultFormContainer.containerType) {
                 tr += "<button id='" + opt.id +
                     "Delete' class='speasyforms-containerbtn'>Delete</button></td>";
             }
@@ -1231,7 +1279,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             var result = $("#spEasyFormsContainerTable").append(tr);
 
-            if (opt.title !== 'Default Form') {
+            if (opt.title !== defaultFormContainer.containerType) {
                 $("#" + opt.id + "Delete").button({
                     icons: {
                         primary: "ui-icon-closethick"
@@ -1365,10 +1413,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 containerType: this.containerType,
                 index: $(opt.container).attr("data-containerIndex")
             };
-        },
-        
-        preSaveItem: function(options) {
-            return true;
         }
     };
     var defaultFormContainer = $.spEasyForms.defaultFormContainer;
@@ -1509,7 +1553,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, spEasyForms.defaults, options);
 
             var configureTabsOpts = {
-                width: 400,
+                width: 450,
                 modal: true,
                 buttons: {
                     "Ok": function() {
@@ -1549,7 +1593,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $("#addMultiGroupContainerDialog").dialog(configureTabsOpts);
 
             var addTabsOpts = {
-                width: 400,
+                width: 450,
                 modal: true,
                 buttons: {
                     "Ok": function() {
@@ -1766,10 +1810,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         return result;
     };
 
-    $.spEasyForms.columns.preSaveItem = function(options) {
-        return true;
-    };
-
     containerCollection.containerImplementations.columns = $.spEasyForms.columns;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1792,7 +1832,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             " ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
         var containerDiv = $("#" + opt.containerId);
         containerDiv.append("<div id='" + opt.divId + "' class='" + divClass +
-            "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
+            "' style='width: 99%;'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
         var mostFields = 0;
         $.each(opt.currentContainerLayout.fieldCollections, function(idx, fieldCollection) {
             if (fieldCollection.fields.length > mostFields) {
@@ -2174,7 +2214,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 "<th class='" + klass + "'>Display Name</th>" +
                 "<th class='" + klass + " speasyforms-hidden' style='display:none'>Internal Name</th>" +
                 "<th class='" + klass + "'>State</th>" +
-                "<th class='" + klass + "'>Applies To</th></tr>";
+                "<th class='" + klass + "'>Applies To</th>" +
+                "<th class='" + klass + "'>On Forms</th>" +
+                "<th class='" + klass + "'>And When</th></tr>";
             $.each(Object.keys(opt.currentConfig.visibility.def).sort(), function(idx, key) {
                 $.each(opt.currentConfig.visibility.def[key], function(i, rule) {
                     title = "";
@@ -2239,6 +2281,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>"+rule.state+"</td>";
                     table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>"+
                         (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone")+"</td>";
+                    table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>"+rule.forms+"</td>";
+                    table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>"+conditions+"</td>";
                     table += "</tr>";
                 });
             });
@@ -2367,7 +2411,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 },
                 autoOpen: false,
-                width: "750px"
+                width: 750
             };
             $('#conditonalVisibilityRulesDialog').dialog(conditionalVisibilityOpts);
 
@@ -2407,7 +2451,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 },
                 autoOpen: false,
-                width: "750px"
+                width: 750
             };
             $('#addVisibilityRuleDialog').dialog(addVisibilityRuleOpts);
 
@@ -2697,23 +2741,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     opt.row = containerCollection.rows[condition.name];
                     if (opt.row) {
                         var currentValue = spRows.value(opt);
-                        if (condition.type === "Equals") {
-                            if (condition.name in containerCollection.rows &&
-                                currentValue != condition.value) {
-                                result = false;
-                                return false;
-                            }
-                        } else {
-                            var regex = new RegExp(condition.value, "i");
-                            if (condition.type === "Matches" && !regex.test(currentValue)) {
-                                result = false;
-                                return false;
-                            } else if (condition.type === "NotMatches" &&
-                                regex.test(currentValue)) {
-                                result = false;
-                                return false;
-                            }
-                        }
+                        var type = utils.jsCase(condition.type);
+                        var comparer = visibilityRuleCollection.comparers[type];
+                        result = comparer(currentValue, condition.value);
                     }
                     else {
                         result = false;
@@ -2722,6 +2752,32 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 });
             }
             return result;
+        },
+        
+        comparers: {
+            equals: function(value, test) {
+                var result = true;
+                if(value != test) {
+                    result = false;
+                }
+                return result;
+            },
+            matches: function(value, test) {
+                var result = true;
+                var regex = new RegExp(test, "i");
+                if(!regex.test(value)) {
+                    result = false;
+                }
+                return result;
+            },
+            notMatches: function(value, test) {
+                var result = true;
+                var regex = new RegExp(test, "i");
+                if(regex.test(value)) {
+                    result = false;
+                }
+                return result;
+            }
         }
     };
     var visibilityRuleCollection = $.spEasyForms.visibilityRuleCollection;
@@ -2890,12 +2946,34 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
             }
         },
+        
+        preSaveItem: function(options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            result = true;
+            $.each(adapterCollection.adapterImplementations, function(idx, impl) {
+                if(typeof(impl.preSaveItem) === "function") {
+                    result = result && impl.preSaveItem(opt);
+                }
+            });
+            return result;
+        },
 
         drawAdapter: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var displayName = opt.fieldName;
             var klass = "speasyforms-adapter-static speasyforms-dblclickdialog";
             var title = JSON.stringify(opt.adapter);
+            var config = "";
+            
+            $.each(Object.keys(opt.adapter).sort(), function(idx, key) {
+                if(key != "type" && key != "columnNameInternal") {
+                    if(config.length > 0)
+                    {
+                        config += "<br />";
+                    }
+                    config += "<b>" + key + "</b> = " + opt.adapter[key];
+                }
+            });
             
             if (containerCollection.rows[opt.adapter.columnNameInternal]  &&
                 !containerCollection.rows[opt.adapter.columnNameInternal].fieldMissing) {
@@ -2913,6 +2991,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "<td class='"+klass+"'>"+displayName+"</td>" +
                     "<td class='"+klass+" speasyforms-hidden' style='display:none'>"+opt.adapter.columnNameInternal+"</td>"+
                     "<td class='"+klass+"'>"+opt.adapter.type+"</td>"+
+                    "<td class='"+klass+"'>"+config+"</td>"+
                     "</tr>");
             }
             else if (klass.indexOf("speasyforms-fieldmissing") < 0) {
@@ -2922,6 +3001,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "<td class='"+klass+"'>"+displayName+"</td>" +
                     "<td class='"+klass+" speasyforms-hidden' style='display:none'>"+opt.adapter.columnNameInternal+"</td>"+
                     "<td class='"+klass+"'>"+opt.adapter.type+"</td>"+
+                    "<td class='"+klass+"'>"+config+"</td>"+
                     "</tr>");
             }
             else {
@@ -2931,6 +3011,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "<td class='"+klass+"'>"+displayName+"</td>" +
                     "<td class='"+klass+" speasyforms-hidden' style='display:none'>"+opt.adapter.columnNameInternal+"</td>"+
                     "<td class='"+klass+"'>"+opt.adapter.type+"</td>"+
+                    "<td class='"+klass+"'>"+config+"</td>"+
                     "</tr>");
             }
         },
@@ -3454,7 +3535,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         }
     };
     var redAdapter = $.spEasyForms.redAdapter;
-    adapterCollection.adapterImplementations[redAdapter.type] = redAdapter;
+    //adapterCollection.adapterImplementations[redAdapter.type] = redAdapter;
 
     ////////////////////////////////////////////////////////////////////////////
     // Class that encapsulates getting, setting, and saving the SPEasyForms
@@ -3614,6 +3695,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $("#spEasyFormsJson pre").text(JSON.stringify(currentConfig, null, 4));
             }
             if (currentConfig === undefined) {
+                $("#spEasyFormsExportButton img").addClass("speasyforms-buttonimgdisabled");
+                $("#spEasyFormsExportButton div").addClass("speasyforms-buttontextdisabled");
                 currentConfig = {
                     layout: {
                         def: [{
@@ -3650,13 +3733,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.00.08.a";
+            opt.currentConfig.version = "2014.00.08.c";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig != oldConfig) {
                 $("#spEasyFormsJson pre").text(newConfig);
                 $("#spEasyFormsSaveButton img").removeClass("speasyforms-buttonimgdisabled");
                 $("#spEasyFormsSaveButton div").removeClass("speasyforms-buttontextdisabled");
+                $("#spEasyFormsExportButton img").addClass("speasyforms-buttonimgdisabled");
+                $("#spEasyFormsExportButton div").addClass("speasyforms-buttontextdisabled");
+                $("#spEasyFormsImportButton img").addClass("speasyforms-buttonimgdisabled");
+                $("#spEasyFormsImportButton div").addClass("speasyforms-buttontextdisabled");
             }
         },
 
@@ -3688,6 +3775,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     spContext.setConfig(opt);
                     $("#spEasyFormsSaveButton img").addClass("speasyforms-buttonimgdisabled");
                     $("#spEasyFormsSaveButton div").addClass("speasyforms-buttontextdisabled");
+                    $("#spEasyFormsExportButton img").removeClass("speasyforms-buttonimgdisabled");
+                    $("#spEasyFormsExportButton div").removeClass("speasyforms-buttontextdisabled");
+                    $("#spEasyFormsImportButton img").removeClass("speasyforms-buttonimgdisabled");
+                    $("#spEasyFormsImportButton div").removeClass("speasyforms-buttontextdisabled");
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     if (xhr.status === 409) {
@@ -4167,69 +4258,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
             }
 
-            var listId = this.getCurrentListId(options);
-            if (listId !== undefined) {
-                if (!opt.useCache || !(listId in currentContext.listContexts)) {
-                    promises.push($().SPServices({
-                        webURL: spContext.getCurrentSiteUrl(opt),
-                        operation: "GetList",
-                        listName: listId,
-                        async: true,
-                        debug: opt.verbose
-                    }));
-
-                    if (window.location.href.toLowerCase().indexOf('speasyformssettings.aspx') >= 0) {
-                        promises.push($.ajax({
-                            async: true,
-                            url: spContext.getCurrentSiteUrl(opt) +
-                                "/_layouts/listform.aspx?PageType=8&ListId=" +
-                                listId + 
-                                ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") + 
-                                "&RootFolder="
-                        }));
-                    }
-                }
-
-                promises.push($().SPServices({
-                    webURL: spContext.getCurrentSiteUrl(opt),
-                    operation: "GetListContentTypes",
-                    listName: listId,
-                    async: true,
-                    debug: opt.verbose
-                }));
-
-                if (window.location.href.toLowerCase().indexOf('speasyformssettings.aspx') >= 0 ||
-                    visibilityRuleCollection.getFormType(opt).length > 0) {
-                    var configFileName = spContext.getCurrentSiteUrl(opt) +
-                        "/SiteAssets/spef-layout-" + listId.replace("{", "")
-                        .replace("}", "") + ".txt";
-                    promises.push($.ajax({
-                        type: "GET",
-                        url: configFileName,
-                        headers: {
-                            "Content-Type": "text/plain"
-                        },
-                        async: true,
-                        cache: false
-                    }));
-                }
-            }
-
             if (promises.length > 0) {
                 $.when.apply($, promises).done(function(data) {
                     $(promises).each(function() {
                         var result = {};
                         if (this.status == 200) {
-                            // config file
-                            if (this.responseText.trim()[0] == '{' &&
-                                this.responseText.trim()[this.responseText.length - 1] == '}' &&
-                                this.responseText.indexOf('"layout":') >= 0 &&
-                                this.responseText.indexOf('"visibility":') >= 0) {
-                                var txt = this.responseText.replace("fieldGroup", "fieldCollection");
-                                spContext.config = utils.parseJSON(txt);
-                            }
                             // userdisp.aspx
-                            else if (this.responseText.indexOf("Personal Settings") > 0) {
+                            if (this.responseText.indexOf("Personal Settings") > 0) {
                                 currentContext.userInformation = {};
                                 opt.input = $(this.responseText);
                                 var rows = spRows.init(opt);
@@ -4259,62 +4294,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                     spContext.groups[group.id] = group;
                                     spContext.groups[group.name] = group;
                                 });
-                            }
-                            // GetList
-                            else if ($(this.responseText).find("GetListResponse").length > 0) {
-                                result.title = $(this.responseText).find("List").attr("Title");
-                                result.template = $(this.responseText).find("List").attr("ServerTemplate");
-                                result.feature = $(this.responseText).find("List").attr("FeatureId");
-                                result.baseType = $(this.responseText).find("List").attr("BaseType");
-                                result.defaultUrl = $(this.responseText).find("List").attr("DefaultViewUrl");
-                                result.schema = {};
-                                $.each($(this.responseText).find("Field"), function(idx, field) {
-                                    if ($(field).attr("Hidden") !== "hidden" && $(field).attr("ReadOnly") !== "readonly") {
-                                        var newField = {};
-                                        newField.name = $(field).attr("Name");
-                                        newField.staticName = $(field).attr("StaticName");
-                                        newField.id = $(field).attr("ID");
-                                        newField.displayName = $(field).attr("DisplayName");
-                                        newField.type = $(field).attr("Type");
-                                        newField.required = $(field).attr("Required");
-                                        result.schema[newField.displayName] = newField;
-                                        result.schema[newField.name] = newField;
-                                    }
-                                });
-                                currentContext.listContexts[listId] = result;
-                            }
-                            // GetListContentTypes
-                            else if ($(this.responseText).find("GetListContentTypesResponse").length > 0) {
-                                if (currentContext.listContexts && currentContext.listContexts[listId]) {
-                                    result = currentContext.listContexts[listId];
-                                }
-                                var contentTypes = {};
-                                contentTypes.order = $(this.responseText).find(
-                                    "ContentTypes").attr("ContentTypeOrder").split(",");
-                                $.each($(this.responseText).find("ContentType"), function(idx, ct) {
-                                    var newCt = {};
-                                    newCt.name = $(ct).attr("Name");
-                                    newCt.id = $(ct).attr("ID");
-                                    newCt.description = $(ct).attr("Description");
-                                    contentTypes[newCt.id] = newCt;
-                                });
-                                spContext.contentTypes = contentTypes;
-                                currentContext.listContexts[listId] = result;
-                            }
-                            // edit form aspx for list context
-                            else if ($(this.responseText).find("td.ms-formbody").length > 0) {
-                                spContext.formCache = this.responseText;
-                                opt.input = $(this.responseText);
-                                var sprows = spRows.init(opt);
-                                if (currentContext.listContexts &&
-                                    currentContext.listContexts[listId]) {
-                                    result = currentContext.listContexts[listId];
-                                }
-                                result.fields = {};
-                                $.each(sprows, function(idx, row) {
-                                    result.fields[row.internalName] = row;
-                                });
-                                currentContext.listContexts[listId] = result;
                             }
                         }
                     });
@@ -4476,7 +4455,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") + 
                         "&RootFolder=",
                     complete: function (xData) {
-                        spContext.formCache = xData.responseText;
+                        if(opt.listId === spContext.getCurrentListId(opt)) {
+                            spContext.formCache = xData.responseText;
+                        }
                         opt.input = $(xData.responseText);
                         var rows = spRows.init(opt);
                         $.each(rows, function(idx, row) {
@@ -4518,34 +4499,30 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         });
                     }
                 });
-                if(!result.contentTypes)
-                {
-                    $().SPServices({
-                        webURL: spContext.getCurrentSiteUrl(opt),
-                        operation: "GetListContentTypes",
-                        listName: opt.listId,
-                        async: false,
-                        debug: opt.verbose,
-                        completefunc: function(xData) {
-                            var contentTypes = {};
-                            contentTypes.order = $(xData.responseText).find(
-                                "ContentTypes").attr("ContentTypeOrder").split(",");
-                            $.each($(xData.responseText).find("ContentType"), function(idx, ct) {
-                                var newCt = {};
-                                newCt.name = $(ct).attr("Name");
-                                newCt.id = $(ct).attr("ID");
-                                newCt.description = $(ct).attr("Description");
-                                contentTypes[newCt.id] = newCt;
-                            });
-                            result.contentTypes = contentTypes;
-                        }
-                    });
-                }
+                $().SPServices({
+                    webURL: spContext.getCurrentSiteUrl(opt),
+                    operation: "GetListContentTypes",
+                    listName: opt.listId,
+                    async: false,
+                    debug: opt.verbose,
+                    completefunc: function(xData) {
+                        var contentTypes = {};
+                        contentTypes.order = $(xData.responseText).find(
+                            "ContentTypes").attr("ContentTypeOrder").split(",");
+                        $.each($(xData.responseText).find("ContentType"), function(idx, ct) {
+                            var newCt = {};
+                            newCt.name = $(ct).attr("Name");
+                            newCt.id = $(ct).attr("ID");
+                            newCt.description = $(ct).attr("Description");
+                            contentTypes[newCt.id] = newCt;
+                        });
+                        result.contentTypes = contentTypes;
+                    }
+                });
                 var listCount = Object.keys(opt.currentContext.listContexts).length;
                 if (!(opt.listId in opt.currentContext.listContexts) &&
                     listCount >= opt.maxListCache) {
-                    delete opt.currentContext.listContexts[
-                        Object.keys(opt.currentContext.listContexts)[0]];
+                    delete opt.currentContext.listContexts[Object.keys(opt.currentContext.listContexts)[0]];
                 }
                 opt.currentContext.listContexts[opt.listId] = result;
                 spEasyForms.writeCachedContext(opt);
@@ -4846,13 +4823,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     // Helper functions.
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.utilities = {
+        jsCase: function(str) {
+            return str[0].toLowerCase() + str.substring(1);
+        },
+        
+        titleCase: function(str) {
+            return str[0].toUpperCase() + str.substring(1);
+        },
+        
         /*********************************************************************
          * Wrapper for jQuery.parseJSON; I really don't want to check for null
          * or undefined everywhere to avoid exceptions. I'd rather just get
          * null or undefined out for null or undefined in with no exception,
          * and jQuery used to work this way but doesn't any more
          * thus the wrapper.
-         *
          * @param {string} json - a string representation of a json object
          * @returns {object} - the deserialized object
          *********************************************************************/
