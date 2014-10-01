@@ -3,7 +3,7 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2014.00.08.c
+ * @version 2014.00.08.d
  * @requires jQuery v1.11.1 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
@@ -295,11 +295,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         opt.currentListContext.contentTypes[ctid].name + "</option>");
                 }
             });
+            /*
             var ctWidth = $("#spEasyFormsContentTypeSelect").width();
             if(ctWidth > 54) {
                 $("#spEasyFormsContentType").width(ctWidth + 10);
                 $("#spEasyFormsContentType").parent().find(".speasyforms-buttongrptext").width(ctWidth + 60);
             }
+            */
             $("#spEasyFormsContentTypeSelect").change(function() {
                 delete containerCollection.rows;
                 delete spContext.formCache;
@@ -331,7 +333,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     source = spContext.getCurrentSiteUrl() + source.substring(source.indexOf('#') + 1);
                 }
                 var settings = opt.currentContext.siteRelativeUrl +
-                    "/Style Library/SPEasyFormsAssets/2014.00.08.c/Pages/SPEasyFormsSettings.aspx?" +
+                    "/Style Library/SPEasyFormsAssets/2014.00.08.d/Pages/SPEasyFormsSettings.aspx?" +
                     "ListId=" + spContext.getCurrentListId(opt) +
                     "&SiteUrl=" + spContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -381,7 +383,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.jQueryUITheme =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.c/Css/jquery-ui/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.d/Css/jquery-ui/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
@@ -390,7 +392,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.css =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.c/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.d/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -594,7 +596,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, spEasyForms.defaults, options);
 
             this.initializeRows(opt);
-            this.initConditionalFieldChoice(opt);
 
             // draw the editor properties panel
             opt.currentConfig = configManager.get(opt);
@@ -606,6 +607,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (!this.initialized) {
                 this.wireButtonEvents(opt);
                 this.wireDialogEvents(opt);
+                this.initConditionalFieldChoices(opt);
             }
             $("#spEasyFormsOuterDiv").show();
             this.transform(opt);
@@ -748,13 +750,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             return fieldsInUse;
         },
         
-        initConditionalFieldChoice: function(options) {
+        initConditionalFieldChoices: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            $(".speasyforms-conditionalfield").find("option").remove();
-            $(".speasyforms-conditionalfield").append('<option></option>');
+            
             var fields = {};
-            $.each(Object.keys(opt.currentListContext.fields), function(idx, name) {
-                fields[opt.currentListContext.fields[name].displayName] = opt.currentListContext.fields[name];
+            $.each(Object.keys(containerCollection.rows), function(idx, name) {
+                fields[containerCollection.rows[name].displayName] = containerCollection.rows[name];
             });
             $.each(Object.keys(fields).sort(), function(idx, displayName) {
                 var name = fields[displayName].internalName;
@@ -763,6 +764,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         '<option value="' + name + '">' + displayName + '</option>');
                 }
             });
+            
+            $.each(Object.keys(visibilityRuleCollection.stateHandlers), function(idx, name) {
+                $("#addVisibilityRuleState").append("<option>" + utils.titleCase(name) + "</option>");
+            });
+            
+            $.each(Object.keys(visibilityRuleCollection.comparisonOperators), function(idx, name) {
+                $(".speasyforms-conditionaltype").append("<option>" + utils.titleCase(name) + "</option>");
+            });
+            
             $(".speasyforms-conditionalvalue[value='']").not(":first").parent().hide();
         },
         
@@ -1033,6 +1043,50 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
                 return false;
             });
+            
+            // wire the undo button
+            $("#spEasyFormsUndoButton").click(function(event) {
+                if($("#spEasyFormsUndoButton img").hasClass("speasyforms-buttonimgdisabled"))
+                    return;
+                    
+                if(!event.handled) {
+                    var oldConfig = JSON.stringify(configManager.get(opt), null, 4);
+                    var newConfig = configManager.undoBuffer.pop();
+                    configManager.redoBuffer.push(oldConfig);
+                    $("#spEasyFormsRedoButton img").removeClass("speasyforms-buttonimgdisabled");
+                    $("#spEasyFormsRedoButton").removeClass("speasyforms-buttontextdisabled");
+                    
+                    opt.currentConfig = utils.parseJSON(newConfig);
+                    configManager.set(opt);
+                    newConfig = configManager.undoBuffer.pop();
+                    if(configManager.undoBuffer.length === 0) {
+                        $("#spEasyFormsUndoButton img").addClass("speasyforms-buttonimgdisabled");
+                        $("#spEasyFormsUndoButton").addClass("speasyforms-buttontextdisabled");
+                    }
+                    
+                    containerCollection.toEditor(opt);
+                    event.handled = true;
+                }                
+            });
+            
+            // wire the redo button
+            $("#spEasyFormsRedoButton").click(function(event) {
+                if($("#spEasyFormsRedoButton img").hasClass("speasyforms-buttonimgdisabled"))
+                    return;
+                    
+                if(!event.handled) {
+                    opt.currentConfig = utils.parseJSON(configManager.redoBuffer.pop());
+                    configManager.set(opt);
+            
+                    if(configManager.redoBuffer.length === 0) {
+                        $("#spEasyFormsRedoButton img").addClass("speasyforms-buttonimgdisabled");
+                        $("#spEasyFormsRedoButton").addClass("speasyforms-buttontextdisabled");
+                    }
+                    
+                    containerCollection.toEditor(opt);
+                    event.handled = true;
+                }
+            });            
 
             // wire the expand buttons
             $("#spEasyFormsExpandButton").click(function(event) {
@@ -1121,7 +1175,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // wire the export button
             $("#spEasyFormsExportLink").click(function(event) {
                 if($("#spEasyFormsExportButton img").hasClass("speasyforms-buttonimgdisabled"))
-                    return;
+                    return false;
 
                 var configFileName = spContext.getCurrentSiteUrl(opt) +
                     "/SiteAssets/spef-layout-" + spContext.getCurrentListId(opt).replace("{", "")
@@ -1942,7 +1996,109 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     $.spEasyForms.visibilityRuleCollection = {
         initialized: false,
 
+        comparisonOperators: {
+            equals: function(value, test) {
+                var result = true;
+                if(value != test) {
+                    result = false;
+                }
+                return result;
+            },
+            matches: function(value, test) {
+                var result = true;
+                var regex = new RegExp(test);
+                if(!regex.test(value)) {
+                    result = false;
+                }
+                return result;
+            },
+            notMatches: function(value, test) {
+                var result = true;
+                var regex = new RegExp(test);
+                if(regex.test(value)) {
+                    result = false;
+                }
+                return result;
+            }
+        },
+        
+        stateHandlers: {
+            hidden: function(options) {
+                var opt = $.extend({}, spEasyForms.defaults, options);
+                var row = opt.row;
+                if (row.row.attr("data-visibilityhidden") !== "true") {
+                    row.row.attr("data-visibilityhidden", "true").hide();
+                }
+            },
+            readOnly: function(options) {
+                var opt = $.extend({}, spEasyForms.defaults, options);
+                var row = opt.row;
+                var formType = visibilityRuleCollection.getFormType(opt);
+                if (formType !== "display") {
+                    var value = spRows.value(opt);
+                    if (!value) {
+                        setTimeout(function() {
+                            var o = $.extend({}, spEasyForms.defauts, opt);
+                            o.row = row;
+                            var v = spRows.value(o);
+                            $("#readOnly" + row.internalName).html(v);
+                            visibilityRuleCollection.transform(opt);
+                        }, 1000);                                                
+                        value = "&nbsp;";
+                    }
+                    var html = '<tr data-visibilityadded="true">' +
+                        '<td valign="top" width="350px" ' +
+                        'class="ms-formlabel">' +
+                        '<h3 class="ms-standardheader"><nobr>' +
+                        row.displayName +
+                        '</nobr></h3></td><td class="ms-formbody">' +
+                        '<span id="readOnly'+row.internalName+'" ">' + value + '</td></tr>';
+                    if (row.row.find("td.ms-formbody h3.ms-standardheader").length > 0) {
+                        html = '<tr data-visibilityadded="true">' +
+                            '<td valign="top" ' +
+                            'width="350px" class="ms-formbody">' +
+                            '<h3 class="ms-standardheader"><nobr>' +
+                            row.displayName + '</nobr></h3>' +
+                            value + '</td></tr>';
+                    }
+                    if (row.row.attr("data-visibilityhidden") !== "true") {
+                        row.row.attr("data-visibilityhidden", "true").hide();
+                    }
+                    if (row.row.next().attr("data-visibilityadded") !== "true") {
+                        row.row.after(html);
+                    }
+                }
+            },
+            editable: function(options) { /*do nothing*/ }
+        },
+
         siteGroups: [],
+
+        scrubCollection: function (collection) {
+            collection.each(function (idx, current) {
+                if ($(current).attr("data-visibilityadded") === "true") {
+                    $(current).remove();
+                }
+                else {
+                    if($(current).next().attr("data-visibilityadded") === "true") {
+                        $(current).next().remove();
+                    }
+                    if ($(current).attr("data-visibilityhidden") === "true") {
+                        $(current).attr("data-visibilityhidden", "false").show();
+                    }
+                    if ($(current).attr("data-visibilityclassadded")) {
+                        $(current).removeClass($(current).attr("data-visibilityclassadded"));
+                        $(current).attr("data-visibilityclassadded", "");
+                    }
+                    $(current).find("[data-visibilityadded='true']").remove();
+                    $(current).find("[data-visibilityhidden='true']").attr("data-visibilityhidden", "false").show();
+                    $(current).find("[data-visibilityclassadded!=''][data-visibilityclassadded]").each(function () {
+                        var klass = $(this).attr("data-visibilityclassadded");
+                        $(this).removeClass(klass).attr("data-visibilityclassadded", "");
+                    });
+                }
+            });
+        },
 
         /*********************************************************************
          * Transform the current form by hiding fields or makin them read-only
@@ -1968,51 +2124,11 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 var appliesMatch = visibilityRuleCollection.checkAppliesTo(opt);
                                 var conditionalMatch = visibilityRuleCollection.checkConditionals(opt);
                                 if (formMatch && appliesMatch && conditionalMatch) {
-                                    if (rule.state == "Hidden") {
-                                        if (row.row.attr("data-visibilityhidden") !== "true") {
-                                            row.row.attr("data-visibilityhidden", "true").hide();
-                                        }
-                                        if (row.row.next().attr("data-visibilityadded") === "true") {
-                                            row.row.next().remove();
-                                        }
+                                    var stateHandler = utils.jsCase(rule.state);
+                                    if(stateHandler in visibilityRuleCollection.stateHandlers) {
+                                        visibilityRuleCollection.scrubCollection(opt.row.row);
+                                        visibilityRuleCollection.stateHandlers[stateHandler](opt);
                                         ruleHandled = true;
-                                    } else if (rule.state === "ReadOnly") {
-                                        var formType = visibilityRuleCollection.getFormType(opt);
-                                        if (formType !== "display") {
-                                            var value = spRows.value(opt);
-                                            if (!value) {
-                                                setTimeout(function() {
-                                                    var o = $.extend({}, spEasyForms.defauts, opt);
-                                                    o.row = row;
-                                                    var v = spRows.value(o);
-                                                    $("#readOnly" + row.internalName).html(v);
-                                                    visibilityRuleCollection.transform(opt);
-                                                }, 1000);                                                
-                                                value = "&nbsp;";
-                                            }
-                                            var html = '<tr data-visibilityadded="true">' +
-                                                '<td valign="top" width="350px" ' +
-                                                'class="ms-formlabel">' +
-                                                '<h3 class="ms-standardheader"><nobr>' +
-                                                row.displayName +
-                                                '</nobr></h3></td><td class="ms-formbody">' +
-                                                '<span id="readOnly'+row.internalName+'" ">' + value + '</td></tr>';
-                                            if (row.row.find("td.ms-formbody h3.ms-standardheader").length > 0) {
-                                                html = '<tr data-visibilityadded="true">' +
-                                                    '<td valign="top" ' +
-                                                    'width="350px" class="ms-formbody">' +
-                                                    '<h3 class="ms-standardheader"><nobr>' +
-                                                    row.displayName + '</nobr></h3>' +
-                                                    value + '</td></tr>';
-                                            }
-                                            if (row.row.attr("data-visibilityhidden") !== "true") {
-                                                row.row.attr("data-visibilityhidden", "true").hide();
-                                            }
-                                            if (row.row.next().attr("data-visibilityadded") !== "true") {
-                                                row.row.after(html);
-                                            }
-                                            ruleHandled = true;
-                                        }
                                     }
                                 }
                             }
@@ -2048,10 +2164,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             }
                         });
                         if (!ruleHandled) {
-                            row.row.attr("data-visibilityhidden", "false").show();
-                            if (row.row.next().attr("data-visibilityadded") === 'true') {
-                                row.row.next().remove();
-                            }
+                            visibilityRuleCollection.scrubCollection(opt.row.row);
                         }
                     }
                 });
@@ -2547,6 +2660,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.currentConfig = configManager.get(opt);
                 opt.fieldName = this.id.replace("ConditionalVisibility", "");
                 visibilityRuleCollection.launchDialog(opt);
+                $(".tabs-min").hide();
+                $("#tabs-min-visibility").show();
                 return false;
             });
         },
@@ -2644,7 +2759,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $('#addVisibilityRuleDisplayForm').attr('checked', true);
             $(".speasyforms-conditionalvalue").val("").not(":first").parent().hide();
             $(".speasyforms-conditionalfield").val("");
-            $(".speasyforms-conditionaltype").val("Matches");
             $("#spEasyFormsAddConditionalBtn").show();
             var siteGroups = spContext.getSiteGroups(opt);
             $.each(siteGroups, function(idx, group) {
@@ -2742,8 +2856,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (opt.row) {
                         var currentValue = spRows.value(opt);
                         var type = utils.jsCase(condition.type);
-                        var comparer = visibilityRuleCollection.comparers[type];
-                        result = comparer(currentValue, condition.value);
+                        var comparisonOperator = visibilityRuleCollection.comparisonOperators[type];
+                        result = comparisonOperator(currentValue, condition.value);
                     }
                     else {
                         result = false;
@@ -2752,36 +2866,36 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 });
             }
             return result;
-        },
-        
-        comparers: {
-            equals: function(value, test) {
-                var result = true;
-                if(value != test) {
-                    result = false;
-                }
-                return result;
-            },
-            matches: function(value, test) {
-                var result = true;
-                var regex = new RegExp(test, "i");
-                if(!regex.test(value)) {
-                    result = false;
-                }
-                return result;
-            },
-            notMatches: function(value, test) {
-                var result = true;
-                var regex = new RegExp(test, "i");
-                if(regex.test(value)) {
-                    result = false;
-                }
-                return result;
-            }
         }
     };
     var visibilityRuleCollection = $.spEasyForms.visibilityRuleCollection;
 
+    visibilityRuleCollection.comparisonOperators.greaterThan = function(value, test) {
+        var result = true;
+        if(!(value > test)) {
+            result = false;
+        }
+        return result;
+    }
+    
+    visibilityRuleCollection.comparisonOperators.lessThan = function(value, test) {
+        var result = true;
+        if(!(value < test)) {
+            result = false;
+        }
+        return result;
+    }
+
+    visibilityRuleCollection.stateHandlers.yellow =function(options) {
+        var opt = $.extend({}, spEasyForms.defaults, options);
+        var row = opt.row;
+        if ($("table.ms-formtable").attr("data-visibilityyellow") !== "true") {
+            $("head").append("<style>.speasyforms-yellow { background-color: yellow; }</style>");
+            $("table.ms-formtable").attr("data-visibilityyellow", "true");
+        }
+        row.row.find("td").addClass("speasyforms-yellow").attr("data-visibilityclassadded", "speasyforms-yellow");
+    }
+    
     ////////////////////////////////////////////////////////////////////////////
     // Collection of field control adapters.
     ////////////////////////////////////////////////////////////////////////////
@@ -2945,6 +3059,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $("#adapterTypeDialog").dialog("open");
                 }
             }
+            $(".tabs-min").hide();
+            $("#tabs-min-adapters").show();
         },
         
         preSaveItem: function(options) {
@@ -3542,6 +3658,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     // configuration file for the current list.
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.configManager = {
+        undoBuffer: [],
+        
+        redoBuffer: [],
+        
         /*********************************************************************
          * Get the configuration file for the current list.
          *
@@ -3733,7 +3853,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.00.08.c";
+            opt.currentConfig.version = "2014.00.08.d";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig != oldConfig) {
@@ -3744,6 +3864,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $("#spEasyFormsExportButton div").addClass("speasyforms-buttontextdisabled");
                 $("#spEasyFormsImportButton img").addClass("speasyforms-buttonimgdisabled");
                 $("#spEasyFormsImportButton div").addClass("speasyforms-buttontextdisabled");
+                this.undoBuffer.push(oldConfig);
+                $("#spEasyFormsUndoButton img").removeClass("speasyforms-buttonimgdisabled");
+                $("#spEasyFormsUndoButton").removeClass("speasyforms-buttontextdisabled");
             }
         },
 
@@ -4447,24 +4570,36 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if(opt.listId in opt.currentContext.listContexts) {
                     result = opt.currentContext.listContexts[opt.listId];
                 }
-                $.ajax({
-                    async: false,
-                    url: spContext.getCurrentSiteUrl(opt) +
-                        "/_layouts/listform.aspx?PageType=8&ListId=" +
-                        opt.listId + 
-                        ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") + 
-                        "&RootFolder=",
-                    complete: function (xData) {
-                        if(opt.listId === spContext.getCurrentListId(opt)) {
-                            spContext.formCache = xData.responseText;
+                var rows = {};
+                if(opt.listId === spContext.getCurrentListId(spEasyForms.defaults)) {
+                    rows = spRows.init(opt);
+                }
+                if(Object.keys(rows).length === 0) {
+                    $.ajax({
+                        async: false,
+                        url: spContext.getCurrentSiteUrl(opt) +
+                            "/_layouts/listform.aspx?PageType=8&ListId=" +
+                            opt.listId +
+                            ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") +
+                            "&RootFolder=",
+                        complete: function (xData) {
+                            if (opt.listId === spContext.getCurrentListId(opt)) {
+                                spContext.formCache = xData.responseText;
+                            }
+                            opt.input = $(xData.responseText);
+                            rows = spRows.init(opt);
+                            $.each(rows, function (idx, row) {
+                                result.fields[row.internalName] = row;
+                            });
                         }
-                        opt.input = $(xData.responseText);
-                        var rows = spRows.init(opt);
-                        $.each(rows, function(idx, row) {
-                            result.fields[row.internalName] = row;
-                        });
-                    }
-                });
+                    });
+                }
+                else
+                {
+                    $.each(rows, function (idx, row) {
+                        result.fields[row.internalName] = row;
+                    });
+                }
                 $().SPServices({
                     async: false,
                     webURL: spContext.getCurrentSiteUrl(opt),

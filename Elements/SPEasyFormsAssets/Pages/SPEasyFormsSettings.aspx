@@ -82,7 +82,7 @@
             vertical-align: top;
             padding: 0px 20px;
             width: 100%;
-            min-width: 480px;
+            min-width: 360px;
         }
         .speasyforms-entity {
             display: block;
@@ -346,7 +346,6 @@
             border: 1px solid #fcfcfc;
             height: 53px;
             padding: 3px;
-            margin: 5px;
         }
         .speasyforms-buttonouterdiv,
         .speasyforms-buttoncontainer {
@@ -354,12 +353,10 @@
             border: 1px solid #fcfcfc;
             height: 60px;
             padding: 3px;
-            margin: 1px 1px 1px 5px;
         }
         .speasyforms-buttonouterdiv-smallimg {
             border: 1px solid #fcfcfc;
-            margin: 3px;
-            padding: 2px;
+            padding: 0px 2px;
         }
         .speasyforms-buttonouterdiv-smallimg:hover, .speasyforms-buttonouterdiv:hover {
             border: 1px dotted darkblue !important;
@@ -373,6 +370,7 @@
             border: none;
             position: relative;
             top: 3px;
+            padding-right: 2px;
         }
         .speasyforms-buttonimgdisabled {
             opacity: 0.3;
@@ -470,7 +468,7 @@
                             </table>
                         </div>
                         <div id="tabs-min-about" class="tabs-min" style="display:none">
-                            <p><b>Version: 2014.00.08.c</b>
+                            <p><b>Version: 2014.00.08.d</b>
                             </p>
                             <h2>The MIT License (MIT)</h2>
 
@@ -499,7 +497,7 @@
         </div>
     </div>
     <div id='spEasyFormsRibbon' class='speasyforms-ribbon'>
-        <div class="speasyforms-buttongroup" style='width:105px'>
+        <div class="speasyforms-buttongroup">
             <div id="spEasyFormsSaveButton" class="speasyforms-buttonouterdiv">
                 <img class="speasyforms-buttonimg speasyforms-buttonimgdisabled" src="/_layouts/images/save32x32.png" />
                 <div class="speasyforms-buttontext speasyforms-buttontextdisabled">Save</div>
@@ -508,27 +506,33 @@
                 <img class="speasyforms-buttonimg" src="/_layouts/images/erroricon.png" />
                 <div class="speasyforms-buttontext">Cancel</div>
             </div>
-            <div class="speasyforms-buttongrptext" style='width:105px'>
+            <div class="speasyforms-buttongrptext">
                 Commit
             </div>
         </div>
-        <div class="speasyforms-buttongroup" width='165px'>
-            <div style="width:64px" id="spEasyFormsContentType" class='speasyforms-contenttype speasyforms-controlouterdiv'>
+        <div class="speasyforms-buttongroup">
+            <div id="spEasyFormsContentType" class='speasyforms-contenttype speasyforms-controlouterdiv'>
                 <label for="spEasyFormsContentTypeSelect" class="nobr">Content Type:</label>
                 <br />
                 <select id="spEasyFormsContentTypeSelect" class='speasyforms-contenttype'>
                 </select>
             </div>
-            <div id="spEasyFormsAddButton" class="speasyforms-buttonouterdiv">
-                <img width="24px" height="24px" class="speasyforms-buttonimg" src="/_layouts/images/caladd.gif" style="margin-bottom:2px; margin-top:7px;" />
-                <div class="speasyforms-buttontext">Add
-                    <br />Container</div>
+            <div class="speasyforms-buttoncontainer">
+                <div id="spEasyFormsAddButton" class="speasyforms-buttonouterdiv-smallimg">
+                    <img width="16px" height="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/caladd.gif" />Add Container
+                </div>
+                <div id="spEasyFormsUndoButton" class="speasyforms-buttonouterdiv-smallimg speasyforms-buttontextdisabled">
+                    <img width="16px" height="16px" class="speasyforms-buttonsmallimg  speasyforms-buttonimgdisabled" src="/_layouts/images/undohs.png" />Undo
+                </div>
+                <div id="spEasyFormsRedoButton" class="speasyforms-buttonouterdiv-smallimg speasyforms-buttontextdisabled">
+                    <img width="16px" height="16px" class="speasyforms-buttonsmallimg  speasyforms-buttonimgdisabled" src="/_layouts/images/redohs.png" />Redo
+                </div>
             </div>
-            <div class="speasyforms-buttongrptext" style='width:165px'>
+            <div class="speasyforms-buttongrptext">
                 Edit
             </div>
         </div>
-        <div class="speasyforms-buttongroup" width='260px'>
+        <div class="speasyforms-buttongroup">
             <div id="spEasyFormsFormButton" class="speasyforms-buttonouterdiv">
                 <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/create.gif" />
                 <div class="speasyforms-buttontext">Form</div>
@@ -551,11 +555,11 @@
                     <img height="16px" width="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/FLDRNEW.GIF" />Collapse
                 </div>
             </div>
-            <div class="speasyforms-buttongrptext" style='width:260px'>
+            <div class="speasyforms-buttongrptext">
                 View
             </div>
         </div>
-        <div class="speasyforms-buttongroup" width='100px'>
+        <div class="speasyforms-buttongroup">
             <a href="javascript:void(0)" id="spEasyFormsExportLink">
                 <div id="spEasyFormsExportButton" class="speasyforms-buttonouterdiv">
                     <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/icongo01.gif" />
@@ -574,16 +578,16 @@
                     <img height="16px" width="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/css16.gif" />Verbose
                 </div>
             </div>
-            <div class="speasyforms-buttongrptext" style='width:100px; margin-top:14px'>
+            <div class="speasyforms-buttongrptext">
                 Tools
             </div>
         </div>
         <div class="speasyforms-buttongroup">
-            <div id="spEasyFormsAboutButton" class="speasyforms-buttonouterdiv" style='width:45px'>
+            <div id="spEasyFormsAboutButton" class="speasyforms-buttonouterdiv">
                 <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/mewa_info.gif" />
                 <div class="speasyforms-buttontext">About</div>
             </div>
-            <div class="speasyforms-buttongrptext" style='width:65px'>
+            <div class="speasyforms-buttongrptext">
                 Info
             </div>
         </div>
@@ -648,18 +652,13 @@
                 <tr>
                     <td>
                         <label for='addVisibilityRuleState'>State <span class="ms-formvalidation" title="This is a required field"> *</span>
-
                         </label>
                     </td>
                     <td class='speasyforms-input'>
                         <select id='addVisibilityRuleState'>
                             <option></option>
-                            <option>Hidden</option>
-                            <option>ReadOnly</option>
-                            <option>Editable</option>
                         </select>
                         <br /> <span id='addVisibilityRuleStateError' class='speasyforms-error'></span>
-
                     </td>
                 </tr>
                 <tr>
@@ -694,9 +693,6 @@
                                 <option></option>
                             </select>
                             <select id='conditionalType1' class='speasyforms-conditionaltype'>
-                                <option>Matches</option>
-                                <option value='NotMatches'>Does Not Match</option>
-                                <option>Equals</option>
                             </select>
                             <input id='conditionalValue1' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue' />
                             <button id="spEasyFormsAddConditionalBtn" class="speasyforms-addconditional speasyforms-containerbtn" style='width:25px;height:25px;'></button>
@@ -706,9 +702,6 @@
                                 <option></option>
                             </select>
                             <select id='conditionalType2' class='speasyforms-conditionaltype'>
-                                <option>Matches</option>
-                                <option value='NotMatches'>Does Not Match</option>
-                                <option>Equals</option>
                             </select>
                             <input id='conditionalValue2' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue' />
                         </div>
@@ -717,9 +710,6 @@
                                 <option></option>
                             </select>
                             <select id='conditionalType3' class='speasyforms-conditionaltype'>
-                                <option>Matches</option>
-                                <option value='NotMatches'>Does Not Match</option>
-                                <option>Equals</option>
                             </select>
                             <input id='conditionalValue3' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue' />
                         </div>

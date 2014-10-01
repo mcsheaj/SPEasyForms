@@ -39,6 +39,6 @@ table.speasyforms-columns td {
 #spEasyFormsContainersPre,
 #spEasyFormsContainersPost {
     width: 100%;
-    min-width: 800px;
+    min-width: 500px;
     max-width: 1024px;
 }
