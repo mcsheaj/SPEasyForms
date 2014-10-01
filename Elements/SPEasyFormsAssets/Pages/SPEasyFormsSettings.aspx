@@ -468,7 +468,7 @@
                             </table>
                         </div>
                         <div id="tabs-min-about" class="tabs-min" style="display:none">
-                            <p><b>Version: 2014.00.08.d</b>
+                            <p><b>Version: 2014.00.08.e</b>
                             </p>
                             <h2>The MIT License (MIT)</h2>
 

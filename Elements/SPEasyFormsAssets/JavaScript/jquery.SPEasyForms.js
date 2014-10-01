@@ -3,7 +3,7 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2014.00.08.d
+ * @version 2014.00.08.e
  * @requires jQuery v1.11.1 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
@@ -333,7 +333,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     source = spContext.getCurrentSiteUrl() + source.substring(source.indexOf('#') + 1);
                 }
                 var settings = opt.currentContext.siteRelativeUrl +
-                    "/Style Library/SPEasyFormsAssets/2014.00.08.d/Pages/SPEasyFormsSettings.aspx?" +
+                    "/Style Library/SPEasyFormsAssets/2014.00.08.e/Pages/SPEasyFormsSettings.aspx?" +
                     "ListId=" + spContext.getCurrentListId(opt) +
                     "&SiteUrl=" + spContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -383,7 +383,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.jQueryUITheme =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.d/Css/jquery-ui/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.e/Css/jquery-ui/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
@@ -392,7 +392,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.css =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.d/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.e/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -1998,27 +1998,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
         comparisonOperators: {
             equals: function(value, test) {
-                var result = true;
-                if(value != test) {
-                    result = false;
-                }
-                return result;
+                return (value == test);
             },
             matches: function(value, test) {
-                var result = true;
                 var regex = new RegExp(test);
-                if(!regex.test(value)) {
-                    result = false;
-                }
-                return result;
+                return regex.test(value);
             },
             notMatches: function(value, test) {
-                var result = true;
                 var regex = new RegExp(test);
-                if(regex.test(value)) {
-                    result = false;
-                }
-                return result;
+                return !regex.test(value);
             }
         },
         
@@ -2870,32 +2858,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     };
     var visibilityRuleCollection = $.spEasyForms.visibilityRuleCollection;
 
-    visibilityRuleCollection.comparisonOperators.greaterThan = function(value, test) {
-        var result = true;
-        if(!(value > test)) {
-            result = false;
-        }
-        return result;
-    }
-    
-    visibilityRuleCollection.comparisonOperators.lessThan = function(value, test) {
-        var result = true;
-        if(!(value < test)) {
-            result = false;
-        }
-        return result;
-    }
-
-    visibilityRuleCollection.stateHandlers.yellow =function(options) {
-        var opt = $.extend({}, spEasyForms.defaults, options);
-        var row = opt.row;
-        if ($("table.ms-formtable").attr("data-visibilityyellow") !== "true") {
-            $("head").append("<style>.speasyforms-yellow { background-color: yellow; }</style>");
-            $("table.ms-formtable").attr("data-visibilityyellow", "true");
-        }
-        row.row.find("td").addClass("speasyforms-yellow").attr("data-visibilityclassadded", "speasyforms-yellow");
-    }
-    
     ////////////////////////////////////////////////////////////////////////////
     // Collection of field control adapters.
     ////////////////////////////////////////////////////////////////////////////
@@ -3853,7 +3815,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.00.08.d";
+            opt.currentConfig.version = "2014.00.08.e";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig != oldConfig) {
@@ -5011,4 +4973,24 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         }
     };
     var utils = $.spEasyForms.utilities;
+
+    /*
+    visibilityRuleCollection.comparisonOperators.greaterThen = function (value, test) {
+        return (value > test);
+    }
+
+    visibilityRuleCollection.comparisonOperators.lessThen = function (value, test) {
+        return (value < test);
+    }
+
+    visibilityRuleCollection.stateHandlers.yellow = function (options) {
+        var opt = $.extend({}, spEasyForms.defaults, options);
+        var row = opt.row.row;
+        if ($("table.ms-formtable").attr("data-visibilityyellow") !== "true") {
+            $("head").append("<style>.speasyforms-yellow { background-color: yellow; }</style>");
+            $("table.ms-formtable").attr("data-visibilityyellow", "true");
+        }
+        row.find("td").addClass("speasyforms-yellow").attr("data-visibilityclassadded", "speasyforms-yellow");
+    }
+    */
 })(spefjQuery);
