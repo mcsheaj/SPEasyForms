@@ -3,7 +3,7 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2014.00.08.e
+ * @version 2014.00.08.g
  * @requires jQuery v1.11.1 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
@@ -295,13 +295,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         opt.currentListContext.contentTypes[ctid].name + "</option>");
                 }
             });
-            /*
-            var ctWidth = $("#spEasyFormsContentTypeSelect").width();
-            if(ctWidth > 54) {
-                $("#spEasyFormsContentType").width(ctWidth + 10);
-                $("#spEasyFormsContentType").parent().find(".speasyforms-buttongrptext").width(ctWidth + 60);
-            }
-            */
             $("#spEasyFormsContentTypeSelect").change(function() {
                 delete containerCollection.rows;
                 delete spContext.formCache;
@@ -316,9 +309,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
             spEasyForms.appendContext(opt);
             $("div.speasyforms-panel").height($(window).height()-180);
+            $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-325);
             $(window).resize(function() {
                 $("div.speasyforms-panel").height($(window).height()-180);
+                $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-325);
             });
+            $('#spEasyFormsRibbon').show;
         },
 
         /********************************************************************
@@ -333,7 +329,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     source = spContext.getCurrentSiteUrl() + source.substring(source.indexOf('#') + 1);
                 }
                 var settings = opt.currentContext.siteRelativeUrl +
-                    "/Style Library/SPEasyFormsAssets/2014.00.08.e/Pages/SPEasyFormsSettings.aspx?" +
+                    "/Style Library/SPEasyFormsAssets/2014.00.08.g/Pages/SPEasyFormsSettings.aspx?" +
                     "ListId=" + spContext.getCurrentListId(opt) +
                     "&SiteUrl=" + spContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -383,7 +379,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.jQueryUITheme =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.e/Css/jquery-ui/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.g/Css/jquery-ui/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
@@ -392,7 +388,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.css =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.e/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.g/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -467,6 +463,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         appendContext: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
+            /*
             if (spEasyForms.defaults.verbose) {
                 $('#outputTable').remove();
                 var output = "<table id='outputTable'><tr><td></td>" +
@@ -506,6 +503,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $("#contextRow").toggle();
                 });
             }
+            */
         }
     };
     var spEasyForms = $.spEasyForms;
@@ -550,8 +548,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.currentConfig = configManager.get(opt);
                 opt.prepend = true;
                 $.each(opt.currentConfig.layout.def, function(index, layout) {
-                    var implementation = layout.containerType[0].toLowerCase() +
-                        layout.containerType.substring(1);
+                    var implementation = utils.jsCase(layout.containerType);
                     if (implementation in containerCollection.containerImplementations) {
                         var impl = containerCollection.containerImplementations[implementation];
                         if(typeof(impl.transform) === 'function') {
@@ -571,12 +568,26 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 });
 
-                this.highlightValidationErrors(opt);
-
                 if (window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
                     visibilityRuleCollection.transform(opt);
                     adapterCollection.transform(opt);
                 }
+
+                $.each(opt.currentConfig.layout.def, function (index, layout) {
+                    var implementation = utils.jsCase(layout.containerType);
+                    if (implementation in containerCollection.containerImplementations) {
+                        var impl = containerCollection.containerImplementations[implementation];
+                        if (typeof (impl.postTransform) === 'function') {
+                            opt.index = index;
+                            opt.currentContainerLayout = layout;
+                            opt.containerId = "spEasyFormsContainers" + (opt.prepend ? "Pre" : "Post");
+                            impl.postTransform(opt);
+                        }
+                    }
+                });
+
+                this.highlightValidationErrors(opt);
+
             }
 
             return fieldsInUse;
@@ -803,7 +814,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 async: false,
                                 cache: false,
                                 url: spContext.getCurrentSiteUrl(opt) +
-                                    "/_layouts/listform.aspx?PageType=8&ListId=" +
+                                    "/_layouts/listform.aspx?PageType=6&ListId=" +
                                     currentListId + 
                                     ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") + 
                                     "&RootFolder=",
@@ -1166,8 +1177,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // wire the about button
             $("#spEasyFormsAboutButton").click(function (event) {
                 if (!event.handled) {
-                    $(".tabs-min").hide();
-                    $("#tabs-min-about").show();
+                    $("#spEasyFormsAboutDialog").dialog("open");
                 }
                 return false;
             });
@@ -1213,6 +1223,18 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         wireDialogEvents: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
+            
+            var aboutOpts = {
+                modal: true,
+                buttons: {
+                    "OK": function() {
+                        $("#spEasyFormsAboutDialog").dialog("close");
+                    }
+                },
+                autoOpen: false,
+                width: 800
+            };
+            $("#spEasyFormsAboutDialog").dialog(aboutOpts);
 
             // dialog for adding a new container
             var chooseContainerOpts = {
@@ -1734,17 +1756,21 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             collapsible: true
         });
 
-        $("#" + divId + " table.speasyforms-accordion").each(function() {
-            if($(this).find("td.ms-formbody").length === 0) {
+        return result;
+    };
+
+    $.spEasyForms.accordion.postTransform = function (options) {
+        var opt = $.extend({}, spEasyForms.defaults, options);
+        var divId = "spEasyFormsAccordionDiv" + opt.index;
+        $("#" + divId + " table.speasyforms-accordion").each(function () {
+            if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
                 var index = $(this)[0].id.replace("spEasyFormsAccordionTable", "");
                 $("#spEasyFormsAccordionHeader" + index).hide();
             }
         });
-        
-        return result;
     };
 
-    $.spEasyForms.accordion.preSaveItem = function(options) {
+    $.spEasyForms.accordion.preSaveItem = function (options) {
         var opt = $.extend({}, spEasyForms.defaults, options);
         var divId = "spEasyFormsAccordionDiv" + opt.index;
         var selected = false;
@@ -1855,13 +1881,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
         }
 
-        $("#" + outerTableId + " tr.speasyforms-columnrow").each(function() {
-            if($(this).find("td.ms-formbody").length === 0) {
+        return result;
+    };
+
+    $.spEasyForms.columns.postTransform = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
+        $("#" + outerTableId + " tr.speasyforms-columnrow").each(function () {
+            if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
                 $(this).hide();
             }
         });
-        
-        return result;
     };
 
     containerCollection.containerImplementations.columns = $.spEasyForms.columns;
@@ -1917,11 +1947,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 }
             });
+            /*
             for (var i = fieldCollection.fields.length; i < mostFields; i++) {
                 $("<tr><td><br /><br /></td></tr>").appendTo("#" + tableId);
             }
+            */
         });
-        this.setHeight(opt);
         $("#" + listId).find("li:first").addClass("ui-tabs-active").addClass("ui-state-active");
         $("#" + opt.divId).find("div.ui-tabs-panel").hide();
         $("#" + opt.divId).find("div.ui-tabs-panel:first").show();
@@ -1933,12 +1964,19 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             return false;
         });
 
-        $("#" + opt.divId + " table.speasyforms-tabs").each(function() {
-            if($(this).find("td.ms-formbody").length === 0) {
+        return result;
+    };
+
+    $.spEasyForms.tabs.postTransform = function (options) {
+        var opt = $.extend({}, spEasyForms.defaults, options);
+        opt.divId = "spEasyFormsTabDiv" + opt.index;
+        //this.setHeight(opt);
+        $("#" + opt.divId + " table.speasyforms-tabs").each(function () {
+            if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
                 var index = $(this)[0].id.replace("spEasyFormsTabsTable", "");
-                if($(this).parent().css("display") !== "none") {
+                if ($(this).parent().css("display") !== "none") {
                     var nextIndex = -1;
-                    if($(this).parent().next().length > 0) {
+                    if ($(this).parent().next().length > 0) {
                         nextIndex = $(this).parent().next()[0].id.replace("spEasyFormsTabsDiv", "");
                         $(this).parent().next().show();
                         $("li.speasyforms-tabs" + nextIndex).addClass("ui-tabs-active").addClass("ui-state-active");
@@ -1948,19 +1986,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $(".speasyforms-tabs" + index).hide();
             }
         });
-        
-        return result;
     };
 
     $.spEasyForms.tabs.setHeight = function(options) {
         var opt = $.extend({}, spEasyForms.defaults, options);
         var height = 0;
         $("#" + opt.divId).find("table.speasyforms-container").each(function(idx, table) {
-            if ($(table).height() > height) {
-                height = $(table).height();
+            if ($(table).parent().height() > height && $(table).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length > 0) {
+                height = $(table).parent().height();
             }
         });
-        $("div.ui-tabs-panel").each(function(idx, div) {
+        $("#" + opt.divId).find("div.ui-tabs-panel").each(function(idx, div) {
             $(div).css("height", height + "px");
         });
     };
@@ -1998,15 +2034,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
         comparisonOperators: {
             equals: function(value, test) {
-                return (value == test);
+                return (value.toLowerCase() == test.toLowerCase());
             },
             matches: function(value, test) {
                 var regex = new RegExp(test);
-                return regex.test(value);
+                return regex.test(value, "i");
             },
             notMatches: function(value, test) {
                 var regex = new RegExp(test);
-                return !regex.test(value);
+                return !regex.test(value, "i");
             }
         },
         
@@ -2025,13 +2061,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if (formType !== "display") {
                     var value = spRows.value(opt);
                     if (!value) {
-                        setTimeout(function() {
-                            var o = $.extend({}, spEasyForms.defauts, opt);
-                            o.row = row;
-                            var v = spRows.value(o);
-                            $("#readOnly" + row.internalName).html(v);
-                            visibilityRuleCollection.transform(opt);
-                        }, 1000);                                                
+                        if(!opt.noRecurse) {
+                            setTimeout(function() {
+                                var o = $.extend({}, spEasyForms.defauts, opt);
+                                o.row = row;
+                                var v = spRows.value(o);
+                                $("#readOnly" + row.internalName).html(v);
+                                opt.noRecurse = true;
+                                visibilityRuleCollection.transform(opt);
+                            }, 1000);           
+                        }
                         value = "&nbsp;";
                     }
                     var html = '<tr data-visibilityadded="true">' +
@@ -2201,11 +2240,11 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var fieldName = $("#conditionalVisibilityField").val();
             $("#conditionalVisibilityRules tr:not(:first)").each(function(idx, tr) {
                 var tds = $(tr).find("td");
-                var appliesTo = tds[1].innerText != "Everyone" ? tds[1].innerText : "";
+                var appliesTo = tds[1].innerHTML != "Everyone" ? tds[1].innerHTML : "";
                 var rule = {
-                    state: tds[0].innerText,
+                    state: tds[0].innerHTML,
                     appliesTo: appliesTo,
-                    forms: tds[2].innerText,
+                    forms: tds[2].innerHTML,
                     conditions: []
                 };
                 $.each($(tds[3]).find("div.speasyforms-conditiondisplay"), function(idx, div) {
@@ -2371,12 +2410,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if(containerCollection.rows[opt.fieldName].fieldMissing) {
                         title = 'This field was not found in the form and may have been deleted. ';
                     }
-                    if(title.length === 0) {
-                        title = "Forms = " + rule.forms + ", Conditions = " + conditions;
-                    }
-                    table += "<tr id='visibilityRule" + opt.index + " title='" + title + "'" +
-                        "' class='" + klass + "' data-dialogtype='visibility'" +
-                        " data-fieldname='" + opt.fieldName + "'>";
+                    table += "<tr id='visibilityRule" + opt.index + "' title='" + title + "'" +
+                        "class='" + klass + "' data-dialogtype='visibility' " +
+                        "data-fieldname='" + opt.fieldName + "'>";
                     table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>"+opt.displayName+"</td>";
                     table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog speasyforms-hidden' style='display:none'>"+opt.fieldName+"</td>";
                     table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>"+rule.state+"</td>";
@@ -2392,7 +2428,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if($("tr.speasyforms-staticrules").length === 0) {
                 $("#staticVisibilityRules").append("<td class='"+
                     klass +
-                    "' colspan='4'>There are no conditional visibility rules for this form.</td>");
+                    "' colspan='5'>There are no conditional visibility rules for the current form.</td>");
             }
         },
 
@@ -2778,7 +2814,11 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
             if (page.indexOf("new") >= 0) {
                 result = "new";
-            } else if (page.indexOf("edit") >= 0 && page.toLocaleLowerCase().indexOf("listedit.aspx") && page.toLocaleLowerCase().indexOf("fldedit.aspx")) {
+            } else if (page.indexOf("edit") >= 0 && 
+                page.toLocaleLowerCase().indexOf("listedit.aspx") && 
+                page.toLocaleLowerCase().indexOf("fldnew.aspx") &&
+                page.toLocaleLowerCase().indexOf("fldedit.aspx")
+                ) {
                 result = "edit";
             } else if (page.indexOf("disp") >= 0 || page.indexOf("display") >= 0) {
                 result = "display";
@@ -2906,11 +2946,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
 
             $("tr.speasyforms-adapter-static").remove();
-            if(Object.keys(opt.adapters).length === 0) {
-                $("#spEasyFormsAdapterTable").append("<tr class='speasyforms-adapter-static'>"+
-                    "<td class='speasyforms-adapter-static' colspan='3'>"+
-                    "There are no adpaters configured for the current form.</td></tr>");
-            }
             $.each(Object.keys(opt.adapters).sort(this.compareAdapters), function(idx, adapterField) {
                 opt.adapter = opt.adapters[adapterField];
                 opt.fieldName = adapterField;
@@ -2918,6 +2953,11 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     adapterCollection.drawAdapter(opt);
                 }
             });
+            if($("tr.speasyforms-adapter-static").length === 0) {
+                $("#spEasyFormsAdapterTable").append("<tr class='speasyforms-adapter-static'>"+
+                    "<td class='speasyforms-adapter-static' colspan='5'>"+
+                    "There are no adpaters configured for the current form.</td></tr>");
+            }
             $("#tabs-min-adapters").append("<br /><br />");
 
             $("tr.speasyforms-sortablefields").each(function(idx, tr) {
@@ -2965,7 +3005,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             $("button.speasyforms-adapter").button({
                 icons: {
-                    primary: "ui-icon-wrench"
+                    primary: "ui-icon-shuffle"
                 },
                 text: false
             }).click(function() {
@@ -3049,7 +3089,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     {
                         config += "<br />";
                     }
-                    config += "<b>" + key + "</b> = " + opt.adapter[key];
+                    config += "<b>" + utils.titleCase(key) + "</b> = " + opt.adapter[key];
                 }
             });
             
@@ -3421,11 +3461,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                     type: "Autocomplete",
                                     sourceList: $("#autocompleteListSelect").val(),
                                     sourceField: $("#autocompleteFieldSelect").val(),
-                                    columnNameInternal: $("#autocompleteChildSelect").val(),
-                                    ignoreCase: true,
-                                    uniqueVals: true,
-                                    filterType: "Contains",
-                                    debug: opt.verbose
+                                    columnNameInternal: $("#autocompleteChildSelect").val()
                                 };
                                 opt.adapters[result.columnNameInternal] = result;
                                 configManager.set(opt);
@@ -3815,7 +3851,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.00.08.e";
+            opt.currentConfig.version = "2014.00.08.g";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig != oldConfig) {
@@ -3866,15 +3902,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $("#spEasyFormsImportButton div").removeClass("speasyforms-buttontextdisabled");
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    if (xhr.status === 409) {
-                        alert("The web service returned 409 - CONFLICT. " +
-                            "This most likely means you do not have a 'Site Assets' " +
-                            "library in the current site with a URL of SiteAssets. " +
-                            "This is required before you can load and save " +
-                            "SPEasyForms configuration files.");
-                    } else {
-                        alert("Error uploading configuration.\nStatus: " + xhr.status +
-                            "\nStatus Text: " + thrownError);
+                    if(opt.verbose) {
+                        if (xhr.status === 409) {
+                            alert("The web service returned 409 - CONFLICT. " +
+                                "This most likely means you do not have a 'Site Assets' " +
+                                "library in the current site with a URL of SiteAssets. " +
+                                "This is required before you can load and save " +
+                                "SPEasyForms configuration files.");
+                        } else {
+                            alert("Error uploading configuration.\nStatus: " + xhr.status +
+                                "\nStatus Text: " + thrownError);
+                        }
                     }
                 }
             });
@@ -3981,8 +4019,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 result.row = current;
                 result.internalName = "Attachments";
                 result.displayName = "Attachments";
-                result.type = "SPFieldAttachments";
-            } else {
+                result.spFieldType = "SPFieldAttachments";
+            } else if(current.find("h3").text() === "Content Type") {
+                result.row = current;
+                result.internalName = "ContentType";
+                result.displayName = "Content Type";
+                result.spFieldType = "SPFieldContentType";
+            } else{
                 var internal = this.capture({
                     row: current,
                     regex: opt.fieldInternalNameRegex
@@ -4079,6 +4122,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     return tr.row.find("td.ms-formbody").text().trim();
                 }
                 switch (tr.spFieldType) {
+                    case "SPFieldContentType":
+                        tr.value = tr.row.find("td.ms-formbody select option:selected").text();
+                        break;
                     case "SPFieldChoice":
                         var select = tr.row.find("td.ms-formbody select");
                         if (select.length > 0) {
@@ -4540,7 +4586,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $.ajax({
                         async: false,
                         url: spContext.getCurrentSiteUrl(opt) +
-                            "/_layouts/listform.aspx?PageType=8&ListId=" +
+                            "/_layouts/listform.aspx?PageType=6&ListId=" +
                             opt.listId +
                             ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") +
                             "&RootFolder=",
@@ -4805,16 +4851,18 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     opt.currentConfig = spContext.layout2Config(opt);
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    if (xhr.status === 409) {
-                        alert("The web service returned 409 - CONFLICT. This " +
-                            "most likely means you do not have a 'Site Assets' " +
-                            "library in the current site with a URL of " +
-                            "SiteAssets. This is required before you can " +
-                            "load and save SPEasyForms configuration files.");
-                    } else if (xhr.status !== 404 &&
-                        opt.configFileName.indexOf("{") < 0) {
-                        alert("Error getting configuration.\nStatus: " +
-                            xhr.status + "\nStatus Text: " + thrownError);
+                    if(opt.verbose) {
+                        if (xhr.status === 409) {
+                            alert("The web service returned 409 - CONFLICT. This " +
+                                "most likely means you do not have a 'Site Assets' " +
+                                "library in the current site with a URL of " +
+                                "SiteAssets. This is required before you can " +
+                                "load and save SPEasyForms configuration files.");
+                        } else if (xhr.status !== 404 &&
+                            opt.configFileName.indexOf("{") < 0) {
+                            alert("Error getting configuration.\nStatus: " +
+                                xhr.status + "\nStatus Text: " + thrownError);
+                        }
                     }
                 }
             });
@@ -4974,7 +5022,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     };
     var utils = $.spEasyForms.utilities;
 
-    /*
+/*
     visibilityRuleCollection.comparisonOperators.greaterThen = function (value, test) {
         return (value > test);
     }

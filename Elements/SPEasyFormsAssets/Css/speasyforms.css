@@ -9,6 +9,12 @@ div.speasyforms-tabs, div.speasyforms-accordion {
 .ui-tabs-nav {
     width: 99% !important;
 }
+.ui-tabs .ui-tabs-panel {
+    padding: .7em .7em;
+}
+.speasyforms-columncell .ms-long {
+    width: 225px;
+}
 table.speasyforms-columns, table.speasyforms-columns h3.ms-standardheader, table.speasyforms-columns td.ms-formbody {
     margin: 0px;
     padding: 0px;

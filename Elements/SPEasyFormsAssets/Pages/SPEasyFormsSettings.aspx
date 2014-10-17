@@ -2,17 +2,17 @@
 <%@ Page Language="C#" Inherits="Microsoft.SharePoint.WebPartPages.WikiEditPage" MasterPageFile="~masterurl/default.master" %>
 <%@ Register Tagprefix="SharePoint" Namespace="Microsoft.SharePoint.WebControls" Assembly="Microsoft.SharePoint, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
 <%@ Import Namespace="Microsoft.SharePoint" %>
-<asp:Content ContentPlaceHolderId="PlaceHolderPageTitle" runat="server">
-    <SharePoint:ProjectProperty Property="Title" runat="server">- SharePoint Easy Forms Configuration</SharePoint:ProjectProperty>
+<asp:Content ContentPlaceHolderId='PlaceHolderPageTitle' runat='server'>
+    <SharePoint:ProjectProperty Property='Title' runat='server'>- SharePoint Easy Forms Configuration</SharePoint:ProjectProperty>
 </asp:Content>
-<asp:Content ContentPlaceHolderId="PlaceHolderPageTitleInTitleArea" runat="server">
-    <span class="ms-WikiPageNameEditor-Display" id='listBreadCrumb'>
+<asp:Content ContentPlaceHolderId='PlaceHolderPageTitleInTitleArea' runat='server'>
+    <span class='ms-WikiPageNameEditor-Display' id='listBreadCrumb'>
 	</span>
-    <span class="ms-WikiPageNameEditor-Display" id='wikiPageNameDisplay'>
+    <span class='ms-WikiPageNameEditor-Display' id='wikiPageNameDisplay'>
 	</span>
 </asp:Content>
-<asp:Content ContentPlaceHolderId="PlaceHolderAdditionalPageHead" runat="server">
-    <meta name="CollaborationServer" content="SharePoint Team Web Site" />
+<asp:Content ContentPlaceHolderId='PlaceHolderAdditionalPageHead' runat='server'>
+    <meta name='CollaborationServer' content='SharePoint Team Web Site' />
     <style>
         body {
             font-family: Verdana, Arial, sans-serif;
@@ -126,7 +126,6 @@
             margin-bottom: 20px;
         }
         .speasyforms-json {
-            /*width: "100%";*/
             border: 1px solid lightblue;
         }
         .formTabsDiv {
@@ -334,7 +333,7 @@
         .speasyforms-ribbon {
             width: 100%;
             height: 91px;
-            font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
             overflow: hidden;
             z-index: 110;
             position: relative;
@@ -378,7 +377,7 @@
         }
         .speasyforms-buttontext {
             font-size: 1em;
-            font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
             text-align: center;
             color: rgb(68, 68, 68);
         }
@@ -425,65 +424,58 @@
         .speasyforms-busyscreen .ui-dialog-titlebar-close {    
             display: none;
         }
-</style>
+        .speasyforms-aboutlink, .speasyforms-aboutlink:visited {
+            color: darkblue !important;
+            text-decoration: underline;
+        }
+        .speasyforms-helptext {
+            background-color: white;
+            padding: 10px;
+            border: 1px solid gray;
+        }
+        #spEasyFormsContent {
+            position: fixed;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            padding-right: 15px;
+        }
+    </style>
 </asp:Content>
-<asp:Content ContentPlaceHolderId="PlaceHolderMiniConsole" runat="server">
-    <SharePoint:FormComponent TemplateName="WikiMiniConsole" ControlMode="Display" runat="server" id="WikiMiniConsole"></SharePoint:FormComponent>
+<asp:Content ContentPlaceHolderId='PlaceHolderMiniConsole' runat='server'>
+    <SharePoint:FormComponent TemplateName='WikiMiniConsole' ControlMode='Display' runat='server' id='WikiMiniConsole'></SharePoint:FormComponent>
 </asp:Content>
-<asp:Content ContentPlaceHolderId="PlaceHolderLeftActions" runat="server">
-    <SharePoint:RecentChangesMenu runat="server" id="RecentChanges"></SharePoint:RecentChangesMenu>
+<asp:Content ContentPlaceHolderId='PlaceHolderLeftActions' runat='server'>
+    <SharePoint:RecentChangesMenu runat='server' id='RecentChanges'></SharePoint:RecentChangesMenu>
 </asp:Content>
-<asp:Content ContentPlaceHolderId="PlaceHolderMain" runat="server">
-    <div id='spEasyFormsInitializationError' style='display:none'>
-        <h3>SPEasyForms Initialization Error</h3>
-        <p>
-            We're not sure how you got here, but the current list context is of a type that is not supported by SPEasyForms.
-        </p>
-    </div>
-    <div id="spEasyFormsBusyScreen"></div>
-    <div id="spEasyFormsOuterDiv">
+<asp:Content ContentPlaceHolderId='PlaceHolderMain' runat='server'>
+    <div id='spEasyFormsBusyScreen'></div>
+    <div id='spEasyFormsOuterDiv'>
         <table id='spEasyFormsEditor' class='speasyforms-editor'>
             <tr class='speasyforms-editor'>
                 <td class='speasyforms-editor speasyforms-panel'>
-                    <div class="speasyforms-panel">
+                    <div class='speasyforms-panel'>
                         <table id='spEasyFormsContainerTable' class='speasyforms-sortablecontainers'>
                             <tbody class='speasyforms-sortablecontainers'></tbody>
                         </table>
                     </div>
                 </td>
                 <td class='speasyforms-editor speasyforms-form'>
-                    <div id="tabs-min">
-                        <div id="tabs-min-form" class="tabs-min">
-                            <table class="ms-formtable" style="margin-top: 8px;" border="0"></table>
-                        </div>
-                        <div id="tabs-min-visibility" class="tabs-min" style="display:none"></div>
-                        <div id="tabs-min-adapters" class="tabs-min" style="display:none">
-                            <table id="spEasyFormsAdapterTable" class="speasyforms-adapters">
-                                <tr>
-                                    <th>Display Name</th>
-                                    <th class="speasyforms-hidden" style="display:none">Internal Name</th>
-                                    <th>Adapter Type</th>
-                                    <th>Additional Settings</th>
-                                </tr>
-                            </table>
-                        </div>
-                        <div id="tabs-min-about" class="tabs-min" style="display:none">
-                            <p><b>Version: 2014.00.08.e</b>
-                            </p>
-                            <h2>The MIT License (MIT)</h2>
-
-                            <p>Copyright (c) 2014 Joe McShea</p>
-                            <p>
-                                Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
-                                merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-                            </p>
-                            <p>
-                                The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-                            </p>
-                            <p>
-                                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-                                BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-                            </p>
+                    <div id='spEasyFormsContent'>
+                        <div id='tabs-min'>
+                            <div id='tabs-min-form' class='tabs-min'>
+                                <table class='ms-formtable' style='margin-top: 8px;' border='0'></table>
+                            </div>
+                            <div id='tabs-min-visibility' class='tabs-min' style='display:none'></div>
+                            <div id='tabs-min-adapters' class='tabs-min' style='display:none'>
+                                <table id='spEasyFormsAdapterTable' class='speasyforms-adapters'>
+                                    <tr>
+                                        <th>Display Name</th>
+                                        <th class='speasyforms-hidden' style='display:none'>Internal Name</th>
+                                        <th>Adapter Type</th>
+                                        <th>Additional Settings</th>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </td>
@@ -491,123 +483,173 @@
         </table>
         <br />
     </div>
-    <div id="spEasyFormsTextareaDiv">
+    <div id='spEasyFormsTextareaDiv'>
         <h3>JSON Configuration:</h3>
-        <div id="spEasyFormsJson" class="speasyforms-json"><pre></pre>
+        <div id='spEasyFormsJson' class='speasyforms-json'><pre></pre>
         </div>
     </div>
     <div id='spEasyFormsRibbon' class='speasyforms-ribbon'>
-        <div class="speasyforms-buttongroup">
-            <div id="spEasyFormsSaveButton" class="speasyforms-buttonouterdiv">
-                <img class="speasyforms-buttonimg speasyforms-buttonimgdisabled" src="/_layouts/images/save32x32.png" />
-                <div class="speasyforms-buttontext speasyforms-buttontextdisabled">Save</div>
+        <div class='speasyforms-buttongroup'>
+            <div id='spEasyFormsSaveButton' class='speasyforms-buttonouterdiv'>
+                <img class='speasyforms-buttonimg speasyforms-buttonimgdisabled' src='/_layouts/images/save32x32.png' />
+                <div class='speasyforms-buttontext speasyforms-buttontextdisabled'>Save</div>
             </div>
-            <div id="spEasyFormsCancelButton" class="speasyforms-buttonouterdiv">
-                <img class="speasyforms-buttonimg" src="/_layouts/images/erroricon.png" />
-                <div class="speasyforms-buttontext">Cancel</div>
+            <div id='spEasyFormsCancelButton' class='speasyforms-buttonouterdiv'>
+                <img class='speasyforms-buttonimg' src='/_layouts/images/erroricon.png' />
+                <div class='speasyforms-buttontext'>Cancel</div>
             </div>
-            <div class="speasyforms-buttongrptext">
+            <div class='speasyforms-buttongrptext'>
                 Commit
             </div>
         </div>
-        <div class="speasyforms-buttongroup">
-            <div id="spEasyFormsContentType" class='speasyforms-contenttype speasyforms-controlouterdiv'>
-                <label for="spEasyFormsContentTypeSelect" class="nobr">Content Type:</label>
+        <div class='speasyforms-buttongroup'>
+            <div id='spEasyFormsContentType' class='speasyforms-contenttype speasyforms-controlouterdiv'>
+                <label for='spEasyFormsContentTypeSelect' class='nobr'>Content Type:</label>
                 <br />
-                <select id="spEasyFormsContentTypeSelect" class='speasyforms-contenttype'>
+                <select id='spEasyFormsContentTypeSelect' class='speasyforms-contenttype'>
                 </select>
             </div>
-            <div class="speasyforms-buttoncontainer">
-                <div id="spEasyFormsAddButton" class="speasyforms-buttonouterdiv-smallimg">
-                    <img width="16px" height="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/caladd.gif" />Add Container
+            <div class='speasyforms-buttoncontainer'>
+                <div id='spEasyFormsAddButton' class='speasyforms-buttonouterdiv-smallimg'>
+                    <img width='16px' height='16px' class='speasyforms-buttonsmallimg' src='/_layouts/images/caladd.gif' />Add Container
                 </div>
-                <div id="spEasyFormsUndoButton" class="speasyforms-buttonouterdiv-smallimg speasyforms-buttontextdisabled">
-                    <img width="16px" height="16px" class="speasyforms-buttonsmallimg  speasyforms-buttonimgdisabled" src="/_layouts/images/undohs.png" />Undo
+                <div id='spEasyFormsUndoButton' class='speasyforms-buttonouterdiv-smallimg speasyforms-buttontextdisabled'>
+                    <img width='16px' height='16px' class='speasyforms-buttonsmallimg  speasyforms-buttonimgdisabled' src='/_layouts/images/undohs.png' />Undo
                 </div>
-                <div id="spEasyFormsRedoButton" class="speasyforms-buttonouterdiv-smallimg speasyforms-buttontextdisabled">
-                    <img width="16px" height="16px" class="speasyforms-buttonsmallimg  speasyforms-buttonimgdisabled" src="/_layouts/images/redohs.png" />Redo
+                <div id='spEasyFormsRedoButton' class='speasyforms-buttonouterdiv-smallimg speasyforms-buttontextdisabled'>
+                    <img width='16px' height='16px' class='speasyforms-buttonsmallimg  speasyforms-buttonimgdisabled' src='/_layouts/images/redohs.png' />Redo
                 </div>
             </div>
-            <div class="speasyforms-buttongrptext">
+            <div class='speasyforms-buttongrptext'>
                 Edit
             </div>
         </div>
-        <div class="speasyforms-buttongroup">
-            <div id="spEasyFormsFormButton" class="speasyforms-buttonouterdiv">
-                <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/create.gif" />
-                <div class="speasyforms-buttontext">Form</div>
+        <div class='speasyforms-buttongroup'>
+            <div id='spEasyFormsFormButton' class='speasyforms-buttonouterdiv'>
+                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/create.gif' />
+                <div class='speasyforms-buttontext'>Form</div>
             </div>
-            <div id="spEasyFormsConditionalVisibilityButton" class="speasyforms-buttonouterdiv">
-                <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/centraladmin_security_generalsecurity_32x32.png" />
-                <div class="speasyforms-buttontext">Conditional
+            <div id='spEasyFormsConditionalVisibilityButton' class='speasyforms-buttonouterdiv'>
+                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/centraladmin_security_generalsecurity_32x32.png' />
+                <div class='speasyforms-buttontext'>Conditional
                     <br />Visibility</div>
             </div>
-            <div id="spEasyFormsFieldAdaptersButton" class="speasyforms-buttonouterdiv">
-                <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/cenadmin.ico" />
-                <div class="speasyforms-buttontext">Field
+            <div id='spEasyFormsFieldAdaptersButton' class='speasyforms-buttonouterdiv'>
+                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/cenadmin.ico' />
+                <div class='speasyforms-buttontext'>Field
                     <br />Adapters</div>
             </div>
-            <div class="speasyforms-buttoncontainer">
-                <div id="spEasyFormsExpandButton" class="speasyforms-buttonouterdiv-smallimg">
-                    <img width="16px" height="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/ApOpenThisLocation.gif" />Expand
+            <div class='speasyforms-buttoncontainer'>
+                <div id='spEasyFormsExpandButton' class='speasyforms-buttonouterdiv-smallimg'>
+                    <img width='16px' height='16px' class='speasyforms-buttonsmallimg' src='/_layouts/images/ApOpenThisLocation.gif' />Expand
                 </div>
-                <div id="spEasyFormsCollapseButton" class="speasyforms-buttonouterdiv-smallimg">
-                    <img height="16px" width="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/FLDRNEW.GIF" />Collapse
+                <div id='spEasyFormsCollapseButton' class='speasyforms-buttonouterdiv-smallimg'>
+                    <img height='16px' width='16px' class='speasyforms-buttonsmallimg' src='/_layouts/images/FLDRNEW.GIF' />Collapse
                 </div>
             </div>
-            <div class="speasyforms-buttongrptext">
+            <div class='speasyforms-buttongrptext'>
                 View
             </div>
         </div>
-        <div class="speasyforms-buttongroup">
-            <a href="javascript:void(0)" id="spEasyFormsExportLink">
-                <div id="spEasyFormsExportButton" class="speasyforms-buttonouterdiv">
-                    <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/icongo01.gif" />
-                    <div class="speasyforms-buttontext">Export</div>
+        <div class='speasyforms-buttongroup'>
+            <a href='javascript:void(0)' id='spEasyFormsExportLink'>
+                <div id='spEasyFormsExportButton' class='speasyforms-buttonouterdiv'>
+                    <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/icongo01.gif' />
+                    <div class='speasyforms-buttontext'>Export</div>
                 </div>
             </a>
-            <div id="spEasyFormsImportButton" class="speasyforms-buttonouterdiv">
-                <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/icongo01rtl.gif" />
-                <div class="speasyforms-buttontext">Import</div>
+            <div id='spEasyFormsImportButton' class='speasyforms-buttonouterdiv'>
+                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/icongo01rtl.gif' />
+                <div class='speasyforms-buttontext'>Import</div>
             </div>
-            <div class="speasyforms-buttoncontainer">
-                <div id="spEasyFormsClearCacheButton" class="speasyforms-buttonouterdiv-smallimg">
-                    <img width="16px" height="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/comdel.gif" />Clear Cache
+            <div class='speasyforms-buttoncontainer'>
+                <div id='spEasyFormsClearCacheButton' class='speasyforms-buttonouterdiv-smallimg'>
+                    <img width='16px' height='16px' class='speasyforms-buttonsmallimg' src='/_layouts/images/comdel.gif' />Clear Cache
                 </div>
-                <div id="spEasyFormsVerboseButton" class="speasyforms-buttonouterdiv-smallimg">
-                    <img height="16px" width="16px" class="speasyforms-buttonsmallimg" src="/_layouts/images/css16.gif" />Verbose
+                <div id='spEasyFormsVerboseButton' class='speasyforms-buttonouterdiv-smallimg'>
+                    <img height='16px' width='16px' class='speasyforms-buttonsmallimg' src='/_layouts/images/css16.gif' />Verbose
                 </div>
             </div>
-            <div class="speasyforms-buttongrptext">
+            <div class='speasyforms-buttongrptext'>
                 Tools
             </div>
         </div>
-        <div class="speasyforms-buttongroup">
-            <div id="spEasyFormsAboutButton" class="speasyforms-buttonouterdiv">
-                <img width="32px" height="32px" class="speasyforms-buttonimg" src="/_layouts/images/mewa_info.gif" />
-                <div class="speasyforms-buttontext">About</div>
+        <div class='speasyforms-buttongroup'>
+            <div id='spEasyFormsAboutButton' class='speasyforms-buttonouterdiv'>
+                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/mewa_infob.gif' />
+                <div class='speasyforms-buttontext'>About</div>
             </div>
-            <div class="speasyforms-buttongrptext">
+            <div id='spEasyFormsHelpButton' class='speasyforms-buttonouterdiv'>
+                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/lg_ichlp.gif' />
+                <div class='speasyforms-buttontext'>Help</div>
+            </div>
+            <div class='speasyforms-buttongrptext'>
                 Info
             </div>
         </div>
     </div>
     <script type='text/javascript'>
-        spefjQuery("#RibbonContainer").append(spefjQuery("#spEasyFormsRibbon"));
+        spefjQuery('#RibbonContainer').append(spefjQuery('#spEasyFormsRibbon'));
     </script>
     <div id='spEasyFormsContainerDialogs'>
-        <div id="errorDialog" class="speasyforms-dialogdiv" title="">
+        <div id='spEasyFormsErrorDialog' class='speasyforms-dialogdiv' title=''>
         </div>
-        <div id="chooseContainerDialog" class="speasyforms-dialogdiv" title="Select the Container Type">
-            <label for="containerType">Container Type:</label>
-            <select id="containerType">
+        <div id='spEasyFormsInitializationError' style='display:none'>
+            <h3>SPEasyForms Initialization Error</h3>
+            <p>
+                We're not sure how you got here, but the current list context is of a type that is not supported by SPEasyForms.
+            </p>
+        </div>
+        <div id='spEasyFormsAboutDialog' class='tabs-min' style='display:none' title='About SPEasyForms'>
+            <div class='speasyforms-helptext ui-corner-all'>
+                <p><b>Version: 2014.00.08.g</b>
+                </p>
+                <h2>The MIT License (MIT)</h2>
+                <p>Copyright (c) 2014 Joe McShea</p>
+                <p>
+                    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
+                    merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+                </p>
+                <p>
+                    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+                </p>
+                <p>
+                    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+                    BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+                </p>
+                <h2>Third Party Software</h2>
+                <p>
+                    This project uses the following third party open source libraries:
+                </p>
+                <p>
+                    <a href='http://jquery.com' target='_blank' class='speasyforms-aboutlink'>jQuery</a><br /> 
+                    Copyright 2005, 2014 <a href='http://jquery.org' target='_blank' class='speasyforms-aboutlink'>jQuery Foundation, Inc.</a> and other contributors, Licensed MIT 
+                </p>
+                <p>
+                    <a href='http://jqueryui.com' target='_blank' class='speasyforms-aboutlink'>jQuery UI</a><br /> 
+                    Copyright 2005, 2014 <a href='http://jquery.org' target='_blank' class='speasyforms-aboutlink'>jQuery Foundation, Inc.</a> and other contributors, Licensed MIT 
+                </p>
+                <p>
+                    <a href='http://spservices.codeplex.com' target='_blank' class='speasyforms-aboutlink'>SPServices</a><br />
+                    Copyright (c) 2009-2013 <a href='http://www.sympraxisconsulting.com' target='_blank' class='speasyforms-aboutlink'>Sympraxis Consulting LLC</a>, written by 
+                    <a href='http://sympmarc.com/' target='_blank' class='speasyforms-aboutlink'>Marc Anderson</a>, Licensed MIT
+                </p>
+                <p>
+                    <a href='https://github.com/molily/javascript-client-side-session-storage' target='_blank' class='speasyforms-aboutlink'>Session Storage Wrapper</a><br />
+                    written by Mathias Schaefer, Licensed Public Domain
+                </p>
+            </div>
+        </div>
+        <div id='chooseContainerDialog' class='speasyforms-dialogdiv' title='Select the Container Type'>
+            <label for='containerType'>Container Type:</label>
+            <select id='containerType'>
                 <option></option>
             </select>
             <div id='chooseContainerError' class='speasyforms-error'>&nbsp;</div>
         </div>
-        <div id="editFieldCollectionDialog" class="speasyforms-dialogdiv" title="Edit Field Collection Name">
-            <label for="fieldCollectionName">Name</label>
-            <input type="text" id="fieldCollectionName" name="fieldCollectionNames" />
+        <div id='editFieldCollectionDialog' class='speasyforms-dialogdiv' title='Edit Field Collection Name'>
+            <label for='fieldCollectionName'>Name</label>
+            <input type='text' id='fieldCollectionName' name='fieldCollectionNames' />
             <input type='hidden' id='editFieldCollectionContainerId' value='' />
         </div>
         <div id='addMultiGroupContainerDialog' class='speasyforms-dialogdiv' title='Add Container'>
@@ -634,24 +676,24 @@
                         <button id='addVisibilityRule'>Add Visibility Rule</button>
                     </td>
                 </tr>
-            </table> <span id='conditionalVisibilityRules' class='speasyforms-condi"tionalvisibility'></span>
+            </table> <span id='conditionalVisibilityRules' class='speasyforms-condiotionalvisibility'></span>
         </div>
         <div id='addVisibilityRuleDialog' class='speasyforms-dialogdiv' title='Add/Edit Visibility Rule'>
             <input type='hidden' id='visibilityRuleIndex' value='' />
             <table>
                 <tr>
                     <td>
-                        <label for='addVisibilityRuleField'>Field Name <span class="ms-formvalidation" title="This is a required field"> *</span>
+                        <label for='addVisibilityRuleField'>Field Name <span class='ms-formvalidation' title='This is a required field'> *</span>
 
                         </label>
                     </td>
                     <td class='speasyforms-input'>
-                        <input type='text' id='addVisibilityRuleField' name='addVisibilityRuleField' value='' disabled="disabled" />
+                        <input type='text' id='addVisibilityRuleField' name='addVisibilityRuleField' value='' disabled='disabled' />
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for='addVisibilityRuleState'>State <span class="ms-formvalidation" title="This is a required field"> *</span>
+                        <label for='addVisibilityRuleState'>State <span class='ms-formvalidation' title='This is a required field'> *</span>
                         </label>
                     </td>
                     <td class='speasyforms-input'>
@@ -669,7 +711,7 @@
                         <input type='checkbox' id='addVisibilityRuleApplyToAuthor' name='addVisibilityRuleApplyToAuthor' />
                         <label for='addVisibilityRuleApplyToAuthor'>Author</label>
                         <br />
-                        <div id="spEasyFormsEntityPicker" class="ui-helper-clearfix speasyforms-entitypicker">
+                        <div id='spEasyFormsEntityPicker' class='ui-helper-clearfix speasyforms-entitypicker'>
                             <input type='text' id='addVisibilityRuleApplyTo' name='addVisibilityRuleApplyTo' value='' class='speasyforms-entitypicker' />
                         </div>
                     </td>
@@ -695,7 +737,7 @@
                             <select id='conditionalType1' class='speasyforms-conditionaltype'>
                             </select>
                             <input id='conditionalValue1' type='text' name='conditionalValue1' value='' class='speasyforms-conditionalvalue' />
-                            <button id="spEasyFormsAddConditionalBtn" class="speasyforms-addconditional speasyforms-containerbtn" style='width:25px;height:25px;'></button>
+                            <button id='spEasyFormsAddConditionalBtn' class='speasyforms-addconditional speasyforms-containerbtn' style='width:25px;height:25px;'></button>
                         </div>
                         <div id='condition2' class='speasyforms-condition'>
                             <select id='conditionalField2' class='speasyforms-conditionalfield'>
@@ -717,7 +759,7 @@
                 </tr>
             </table>
         </div>
-        <div id='adapterTypeDialog' class="speasyforms-dialogdiv" title='Adapter Type Dialog'>
+        <div id='adapterTypeDialog' class='speasyforms-dialogdiv' title='Adapter Type Dialog'>
             There are multiple adapters for the type <span id='adapterFieldType'></span>. Choose which adapter type you want to apply to the field <span id='adapterInternalColumnName'></span>.
             <p>
                 <label for='adapterType'>Adapter Type:</label>
@@ -734,7 +776,7 @@
                         Relationship List
                     </td>
                     <td class='speasyforms-input'>
-                        <select id="cascadingRelationshipListSelect" title="Choose the list that contains the parent/child relationship.">
+                        <select id='cascadingRelationshipListSelect' title='Choose the list that contains the parent/child relationship.'>
                         </select>
                         <input type='hidden' name='cascadingLookupHiddenFieldName' id='cascadingLookupHiddenFieldName' value='' />
                     </td>
@@ -748,7 +790,7 @@
                         Parent Column
                     </td>
                     <td class='speasyforms-input'>
-                        <select id="cascadingLookupRelationshipParentSelect" title="Choose parent column from the relationship list.">
+                        <select id='cascadingLookupRelationshipParentSelect' title='Choose parent column from the relationship list.'>
                         </select>
                     </td>
                 </tr>
@@ -759,7 +801,7 @@
                         Child Column
                     </td>
                     <td class='speasyforms-input'>
-                        <select id="cascadingLookupRelationshipChildSelect" title="Choose child column from the relationship list.">
+                        <select id='cascadingLookupRelationshipChildSelect' title='Choose child column from the relationship list.'>
                         </select>
                     </td>
                 </tr>
@@ -785,7 +827,7 @@
                         Form Parent Column
                     </td>
                     <td class='speasyforms-input'>
-                        <select id="cascadingLookupParentSelect" title="Choose the field in this list that is the parent column of the relationship.">
+                        <select id='cascadingLookupParentSelect' title='Choose the field in this list that is the parent column of the relationship.'>
                         </select>
                     </td>
                 </tr>
@@ -796,7 +838,7 @@
                         Form Child Column
                     </td>
                     <td class='speasyforms-input'>
-                        <select id="cascadingLookupChildSelect" title="Choose the field in this list that is the child column of the relationship.">
+                        <select id='cascadingLookupChildSelect' title='Choose the field in this list that is the child column of the relationship.'>
                         </select>
                     </td>
                     <td>
@@ -811,7 +853,7 @@
                         Lookup List
                     </td>
                     <td class='speasyforms-input'>
-                        <select id="autocompleteListSelect" title="Choose the list that data for the autocomplete field.">
+                        <select id='autocompleteListSelect' title='Choose the list that data for the autocomplete field.'>
                         </select>
                         <input type='hidden' name='autoCompleteHiddenFieldName' id='autoCompleteHiddenFieldName' value='' />
                     </td>
@@ -821,7 +863,7 @@
                         Lookup Column
                     </td>
                     <td class='speasyforms-input'>
-                        <select id="autocompleteFieldSelect" title="Choose the field in the lookup list from which autocomplete data will be read.">
+                        <select id='autocompleteFieldSelect' title='Choose the field in the lookup list from which autocomplete data will be read.'>
                         </select>
                     </td>
                 </tr>
@@ -830,7 +872,7 @@
                         Form Column
                     </td>
                     <td class='speasyforms-input'>
-                        <select id="autocompleteChildSelect" title="Choose the field in this list that is to be converted to a autocomplete.">
+                        <select id='autocompleteChildSelect' title='Choose the field in this list that is to be converted to a autocomplete.'>
                         </select>
                     </td>
                 </tr>
