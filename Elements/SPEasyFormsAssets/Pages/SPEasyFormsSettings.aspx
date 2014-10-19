@@ -603,7 +603,7 @@
         </div>
         <div id='spEasyFormsAboutDialog' class='tabs-min' style='display:none' title='About SPEasyForms'>
             <div class='speasyforms-helptext ui-corner-all'>
-                <p><b>Version: 2014.00.08.i</b>
+                <p><b>Version: 2014.00.08.j</b>
                 </p>
                 <h2>The MIT License (MIT)</h2>
                 <p>Copyright (c) 2014 Joe McShea</p>
