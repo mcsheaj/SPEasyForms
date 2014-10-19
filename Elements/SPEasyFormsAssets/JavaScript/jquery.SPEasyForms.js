@@ -894,7 +894,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 },
                 sort: function(event, ui) {
                 },
-                // added to fix issues with huge placeholder in SP 2010
                 start: function(event, ui) {
                     top = $("div.speasyforms-panel").scrollTop();
                 },
@@ -926,7 +925,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         event.handled = true;
                     }
                 },
-                // added to fix issues with huge placeholder in SP 2010
                 start: function(event, ui) {
                     ui.placeholder.height("100px");
                 }
@@ -2829,7 +2827,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         checkForm: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var formType = visibilityRuleCollection.getFormType(opt);
-            // modified for 2010, not sure why it worked in 2013 as it was
             var ruleForms = $(opt.rule.forms.split(';')).map(function(elem) {
                 return this.toLowerCase();
             });
@@ -4014,7 +4011,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, spEasyForms.defaults, options);
             var current = opt.tr;
             var result = {};
-            // attachments is a special case, there is no comment in SP 2010
             if (current.html().indexOf("idAttachmentsRow") >= 0) {
                 result.row = current;
                 result.internalName = "Attachments";
