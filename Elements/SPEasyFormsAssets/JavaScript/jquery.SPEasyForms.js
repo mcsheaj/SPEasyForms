@@ -3,7 +3,7 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2014.00.08.h
+ * @version 2014.00.08.i
  * @requires jQuery v1.11.1 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
@@ -287,7 +287,27 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         toEditor: function(opt) {
             opt.currentConfig = configManager.get(opt);
-            $(".ms-cui-topBar2").prepend("<h2 class='speasyforms-breadcrumbs'><a href='" + opt.source + "'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h2>");
+            if (_spPageContextInfo.webUIVersion === 4) {
+                $("#spEasyFormsContent").css({
+                    position: "static",
+                    "overflow-y": "visible",
+                    "overflow-x": "visible"
+                });
+                $("div.speasyforms-panel").css({
+                    width: "auto",
+                    height: "auto",
+                    position: "static",
+                    "overflow-y": "visible",
+                    "overflow-x": "visible"
+                });
+                $("td.speasyforms-form").css("padding-left", "0px");
+                $(".s4-title-inner").css("display", "none");
+                $(".speasyforms-ribbon").css("position", "fixed");
+                $("#s4-bodyContainer").css("overflow-x", "visible");
+            }
+            else {
+                $(".ms-cui-topBar2").prepend("<h2 class='speasyforms-breadcrumbs'><a href='" + opt.source + "'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h2>");
+            }
             $.each(opt.currentListContext.contentTypes.order, function(i, ctid) {
                 if(ctid.indexOf("0x0120") !== 0) {
                     $("#spEasyFormsContentTypeSelect").append("<option value='" +
@@ -329,7 +349,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     source = spContext.getCurrentSiteUrl() + source.substring(source.indexOf('#') + 1);
                 }
                 var settings = opt.currentContext.siteRelativeUrl +
-                    "/Style Library/SPEasyFormsAssets/2014.00.08.h/Pages/SPEasyFormsSettings.aspx?" +
+                    "/Style Library/SPEasyFormsAssets/2014.00.08.i/Pages/SPEasyFormsSettings.aspx?" +
                     "ListId=" + spContext.getCurrentListId(opt) +
                     "&SiteUrl=" + spContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -379,7 +399,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.jQueryUITheme =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.h/Css/jquery-ui/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.i/Css/jquery-ui/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
@@ -388,7 +408,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.css =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.h/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.i/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -2035,12 +2055,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 return (value.toLowerCase() == test.toLowerCase());
             },
             matches: function(value, test) {
-                var regex = new RegExp(test);
-                return regex.test(value, "i");
+                var regex = new RegExp(test, "i");
+                return regex.test(value);
             },
             notMatches: function(value, test) {
-                var regex = new RegExp(test);
-                return !regex.test(value, "i");
+                var regex = new RegExp(test, "i");
+                return !regex.test(value);
             }
         },
         
@@ -3848,7 +3868,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.00.08.h";
+            opt.currentConfig.version = "2014.00.08.i";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig != oldConfig) {
