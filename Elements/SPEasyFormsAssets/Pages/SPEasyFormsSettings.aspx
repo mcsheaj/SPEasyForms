@@ -336,7 +336,7 @@
             font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
             overflow: hidden;
             z-index: 110;
-            position: relative;
+            position: absolute;
             border-bottom: 1px solid lightgray;
             background-color: #fcfcfc;
         }
