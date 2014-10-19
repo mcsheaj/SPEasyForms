@@ -2842,11 +2842,11 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (opt.rule.appliesTo.length === 0) {
                 appliesMatch = true;
             } else {
+                var appliesToGroups = opt.rule.appliesTo.split(';');
                 var formType = visibilityRuleCollection.getFormType(opt);
-                if (formType === "new") {
+                if (appliesToGroups[0] === "AUTHOR" && formType === "new") {
                     appliesMatch = true;
                 } else {
-                    var appliesToGroups = opt.rule.appliesTo.split(';');
                     if (appliesToGroups[0] === "AUTHOR") {
                         var authorHref = $("span:contains('Created  at')").
                         find("a.ms-subtleLink").attr("href");
