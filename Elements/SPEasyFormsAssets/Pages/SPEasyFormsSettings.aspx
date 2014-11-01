@@ -580,10 +580,12 @@
                 <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/mewa_infob.gif' />
                 <div class='speasyforms-buttontext'>About</div>
             </div>
-            <div id='spEasyFormsHelpButton' class='speasyforms-buttonouterdiv'>
-                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/lg_ichlp.gif' />
-                <div class='speasyforms-buttontext'>Help</div>
-            </div>
+            <a href='javascript:void(0)' id='spEasyFormsHelpLink'>
+                <div id='spEasyFormsHelpButton' class='speasyforms-buttonouterdiv'>
+                    <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/lg_ichlp.gif' />
+                    <div class='speasyforms-buttontext'>Help</div>
+                </div>
+            </a>
             <div class='speasyforms-buttongrptext'>
                 Info
             </div>
@@ -603,7 +605,7 @@
         </div>
         <div id='spEasyFormsAboutDialog' class='tabs-min' style='display:none' title='About SPEasyForms'>
             <div class='speasyforms-helptext ui-corner-all'>
-                <p><b>Version: 2014.00.08.j</b>
+                <p><b>Version: 2014.00.08.k</b>
                 </p>
                 <h2>The MIT License (MIT)</h2>
                 <p>Copyright (c) 2014 Joe McShea</p>
