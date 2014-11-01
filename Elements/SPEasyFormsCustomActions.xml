@@ -64,7 +64,7 @@
             <CommandUIHandlers>
                 <CommandUIHandler
                     Command="Ribbon.List.Settings.Controls.SPEasyForms.Command"
-                    CommandAction="javascript:window.location=(_spPageContextInfo.siteServerRelativeUrl != '/' ? _spPageContextInfo.siteServerRelativeUrl : '') + '/Style Library/SPEasyFormsAssets/2014.00.08.k/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}&amp;Source=' + encodeURIComponent(window.location.href)"
+                    CommandAction="javascript:window.location=(_spPageContextInfo.siteServerRelativeUrl != '/' ? _spPageContextInfo.siteServerRelativeUrl : '') + '/Style Library/SPEasyFormsAssets/2014.00.08.l/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}&amp;Source=' + encodeURIComponent(window.location.href)"
                     EnabledScript="javascript:shouldSPEasyFormsRibbonButtonBeEnabled();"
                  />
             </CommandUIHandlers>

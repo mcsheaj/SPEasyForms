@@ -274,7 +274,7 @@
                     </ul>
                 </li>
             </ul>
-            <p>The rest of this getting started guide will consist of an Overview section (system requirements, installation, and a laundry list of UI buttons and views), and sections for Containers, Conditional Visibility, and Field Control Adapters. In
+            <p>The rest of this user manual will consist of an Overview section (system requirements, installation, and a laundry list of UI buttons and views), and sections for Containers, Conditional Visibility, and Field Control Adapters. In
                 those last 3 sections, we'll follow a scenario (i.e. state some basic requirements and how those requirements can be satisfied using SPEasyForms). This scenario will be a Contacts list with multiple content types (Contact and Employee).
             </p>
             <h2>1. Overview</h2>
@@ -320,8 +320,7 @@ border-width:0px" border="0" height="526" width="604">
             </p>
             <p>The list settings page is pictured above. It is comprised of four parts:</p>
             <ol>
-                <li>Bread Crumbs – starts with the name of the list, which is a link back to the page that brought you here, followed by the page title, and optionally followed by the current view. Note: the bread crumbs are currently missing in SharePoint
-                    2010. At some point I will figure out where to put them and how to get them there and I'll put them there.
+                <li>Bread Crumbs – starts with the name of the list, which is a link back to the page that brought you here, followed by the page title, and optionally followed by the current view. 
                 </li>
                 <li>The Ribbon – most of the high level functionality is controlled by buttons organized on the ribbon. Each button will be described in the next section.
                 </li>
