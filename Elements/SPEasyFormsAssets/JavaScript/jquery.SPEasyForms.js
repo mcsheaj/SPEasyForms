@@ -3,7 +3,7 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2014.00.08.l
+ * @version 2014.00.08.m
  * @requires jQuery v1.11.1 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
@@ -364,7 +364,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     source = spContext.getCurrentSiteUrl() + source.substring(source.indexOf('#') + 1);
                 }
                 var settings = opt.currentContext.siteRelativeUrl +
-                    "/Style Library/SPEasyFormsAssets/2014.00.08.l/Pages/SPEasyFormsSettings.aspx?" +
+                    "/Style Library/SPEasyFormsAssets/2014.00.08.m/Pages/SPEasyFormsSettings.aspx?" +
                     "ListId=" + spContext.getCurrentListId(opt) +
                     "&SiteUrl=" + spContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -414,7 +414,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.jQueryUITheme =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.l/Css/jquery-ui/jquery-ui.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.m/Css/jquery-ui/jquery-ui.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
@@ -423,7 +423,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.css =
                     (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    '/Style Library/SPEasyFormsAssets/2014.00.08.l/Css/speasyforms.css';
+                    '/Style Library/SPEasyFormsAssets/2014.00.08.m/Css/speasyforms.css';
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -1221,7 +1221,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $("#spEasyFormsHelpLink").click(function (event) {
                 var helpFile = (_spPageContextInfo.siteServerRelativeUrl != "/" ?
                     _spPageContextInfo.siteServerRelativeUrl : "") +
-                    "/Style Library/SPEasyFormsAssets/2014.00.08.l/Help/speasyforms_help.aspx";
+                    "/Style Library/SPEasyFormsAssets/2014.00.08.m/Help/speasyforms_help.aspx";
                 window.open(helpFile);
                 return false;
             });
@@ -1789,7 +1789,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $.each(fieldCollection.fields, function(fieldIdx, field) {
                 var currentRow = containerCollection.rows[field.fieldInternalName];
                 result.push(field.fieldInternalName);
-                if (currentRow !== undefined) {
+                if (currentRow !== undefined  && !currentRow.fieldMissing) {
                     currentRow.row.appendTo("#" + tableId);
                 }
             });
@@ -3507,7 +3507,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             id: "autocompleteFieldSelect",
                             displayName: "Lookup Field"
                         });
-                        if ($("#autocompleteListSelect").val().length > 0) {
+                        if ($("#autocompleteListSelect").val() && $("#autocompleteListSelect").val().length > 0) {
                             if ($("#AutocompleteDialog").find(".speasyforms-error").length === 0) {
                                 var result = {
                                     type: "Autocomplete",
@@ -3903,7 +3903,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.00.08.l";
+            opt.currentConfig.version = "2014.00.08.m";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig != oldConfig) {

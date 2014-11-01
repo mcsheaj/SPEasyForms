@@ -70,29 +70,6 @@
         ul li ul li {
             list-style-type: disc;
         }
-        .outer-menu {
-            list-style: none;
-            margin-left: 0;
-            padding-left: 0;
-        }
-        .outer-menu li {
-            background-image: url(images/bullet_blue.png);
-            background-repeat: no-repeat;
-            background-position: 0em -.2em;
-            padding-left: 1.7em;
-        }
-        .inner-menu {
-            list-style: none;
-            margin-left: 0;
-            padding-left: 0;
-        }
-        .inner-menu li {
-            list-style: none;
-            background-image: url(images/bullet_blue.png);
-            background-size: 16px 16px;
-            padding-left: 1em;
-            background-position: 0em .3em;
-        }
     </style>
     <script type="text/javascript">
         var helpQuery = jQuery.noConflict(true);
