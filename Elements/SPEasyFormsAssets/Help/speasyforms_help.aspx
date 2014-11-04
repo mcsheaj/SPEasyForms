@@ -260,7 +260,7 @@
                 <strong>2. Containers</strong>.If you just need help installing it but then want to jump in, read the next two brief sections and then skip to section
                 <strong>2. Containers</strong>.</p>
             <h3>1.1 System Requirements</h3>
-            <p>SPEasyForms has currently been pretty well tested on Office 365 and moderately tested on SharePoint 2010 and 2013. If you want to try it out now on 2013 or 2010, feel free and post any issues you encounter to the discussion board and we’ll
+            <p>SPEasyForms has currently been pretty well tested on Office 365 and moderately tested on SharePoint 2010 and 2013. If you want to try it out now on 2013 or 2010, feel free and post any issues you encounter to the discussion board and we'll
                 address them when we can. There are no plans to support SharePoint 2007.</p>
             <h3>1.2 Installation</h3>
             <p>In order to install SPEasyForms, you must have sufficient privileges to install a sandbox solution and activate a site collection feature (that means you need to be an SCA).</p>
@@ -275,7 +275,7 @@ https://speasyforms.codeplex.com</a> and follow these steps to install it:</p>
                 <li>When the upload finishes, click the <strong>Activate</strong> button from the ribbon.
                 </li>
             </ol>
-            <p>Now that wasn’t too painful, was it? To confirm that it appears to be working, go to a list in your site collection and look for a button in the
+            <p>Now that wasn't too painful, was it? To confirm that it appears to be working, go to a list in your site collection and look for a button in the
                 <strong>Settings</strong> panel of the <strong>List, Library</strong>or <strong>Calendar</strong> ribbon labeled SPEasyForms:</p>
             <p>
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=921080">
@@ -457,7 +457,7 @@ width:0px" border="0" height="31" width="94">
                                 </a>
                             </p>
                         </td>
-                        <td valign="top" width="376">SPEasyForms uses a cache in the browser to store context information about the current site and it’s lists for the duration of the browser session. This can be confusing because the form will not reflect changes you have made to
+                        <td valign="top" width="376">SPEasyForms uses a cache in the browser to store context information about the current site and it's lists for the duration of the browser session. This can be confusing because the form will not reflect changes you have made to
                             the list settings in another window. To get around this, click this button to clear the browser cache and reload the page. Note that this cache is different than the cache the browser uses to cache pages and images, clearing
                             that cache will have no affect on SPEasyForms.</td>
                     </tr>
@@ -471,7 +471,7 @@ width:0px" border="0" height="32" width="94">
                                 </a>
                             </p>
                         </td>
-                        <td valign="top" width="376">Reload the current form in Verbose mode. This primarily shows fields that don’t exist in the current content type and highlights them in red with a tool tip saying they may have been deleted. Normally, these fields are hidden and
+                        <td valign="top" width="376">Reload the current form in Verbose mode. This primarily shows fields that don't exist in the current content type and highlights them in red with a tool tip saying they may have been deleted. Normally, these fields are hidden and
                             assumed to be valid in another content type. Also, when in verbose mode, SPServices methods that support the debug parameter are run with debug true, so they popup messages on errors (normally they fail quietly).
                         </td>
                     </tr>
@@ -517,9 +517,9 @@ padding-right:0px; border-width:0px" align="left" border="0" height="576" width=
                 fields in each field collection on the appropriate tab. The field collection title is also used as the tab name in the form. The columns container creates a table with X columns where X is the number of field collections, and puts the
                 fields in each field collection on the appropriate column, and the field collection title is not displayed at all in the form, it is only displayed on the settings page. You can also collapse individual field collections by double clicking
                 on the title of the field collection.</p>
-            <p>It may seem like I’m spending a lot of time talking about collapsing, but it is important because you move fields between containers and collections, and reorder fields within a collection by dragging and dropping them. When you have a lot
-                of fields, and containers, and field collections, and you want to move something from the bottom of the form to the top, it is a lot easier if you collapse stuff that is between the two containers you’re currently working with. And if
-                you don’t have a lot of fields, you probably don’t need something like SPEasyForms, although it can still be useful if you have requirements like conditional visibility.
+            <p>It may seem like I'm spending a lot of time talking about collapsing, but it is important because you move fields between containers and collections, and reorder fields within a collection by dragging and dropping them. When you have a lot
+                of fields, and containers, and field collections, and you want to move something from the bottom of the form to the top, it is a lot easier if you collapse stuff that is between the two containers you're currently working with. And if
+                you don't have a lot of fields, you probably don't need something like SPEasyForms, although it can still be useful if you have requirements like conditional visibility.
             </p>
             <p>The containers also have buttons that have specific meanings depending on their context/scope (i.e. the buttons are generally to the right of what they configure or the title of what they configure, and can be for configuring the container
                 itself, a field collection, or an individual field). These buttons are described in the following table:</p>
@@ -613,11 +613,11 @@ width:0px" border="0" height="23" width="26">
                     </tr>
                 </tbody>
             </table>
-            <p>Note to self: must find graphic artist. I’m no artist myself, and it's amazing how quickly you can run out of useful icons when you’re trying to use the built-in jQuery UI icons for anything other than say navigation. I can certainly make
+            <p>Note to self: must find graphic artist. I'm no artist myself, and it's amazing how quickly you can run out of useful icons when you're trying to use the built-in jQuery UI icons for anything other than say navigation. I can certainly make
                 simple icons, but it is time consuming and not high on my priority list, so for now I'll live with using the built-in icons and be content if different buttons have different icons even if the icons don't necessarily convey much about
                 the purpose of the button. The buttons do have hover tool tips, so if you're not sure what they are hover over them.</p>
             <h3>1.6 Limitations</h3>
-            <p>SPEasyForms is intended to work on the OOB new, edit, and display forms for most list types. It does not work on Discussions or Surveys, and there are other list types it hasn’t been adequately tested on. It also does not allow you to configure
+            <p>SPEasyForms is intended to work on the OOB new, edit, and display forms for most list types. It does not work on Discussions or Surveys, and there are other list types it hasn't been adequately tested on. It also does not allow you to configure
                 content types based on folder. Folders rarely have enough metadata to require such a solution, but the bigger issue is that Microsoft subclasses folder for some pretty strange content types (like document set or OneNote document) that
                 are so different from other OOB list types that it would nearly double the code to deal with them.</p>
             <p>The reason for these limitations is fairly obvious, in that SPEasyForms modifies the OOB forms by directly manipulating the Document Object Model (DOM) and/or applying CSS to DOM elements. That means it needs to make some assumptions about
@@ -632,7 +632,7 @@ width:0px" border="0" height="23" width="26">
                 <li>Each row should contain a single field, and be comprised of two table cells with the CSS classes
                     <font face="Courier New"><strong>ms-formheader</strong></font> and <font face="Courier New">
 <strong>ms-formbody</strong></font> in that order.</li>
-                <li>The row should contain somewhere in it’s source the texts [fieldname=”&lt;the field display name&gt;”], [fieldinternalname=”&lt;the field internal name”], and [fieldtype=”&lt;sharepoint field type&gt;”]. The names in these expressions
+                <li>The row should contain somewhere in it's source the texts [fieldname=”&lt;the field display name&gt;”], [fieldinternalname=”&lt;the field internal name”], and [fieldtype=”&lt;sharepoint field type&gt;”]. The names in these expressions
                     are case insensitive, the values are not.</li>
                 <li>The actual name of the ASPX page should contain <strong>new</strong>,
 
@@ -651,7 +651,7 @@ edit</strong>, or <strong>disp, </strong>case insensitive, and it would be helpf
                 <li>Each row should contain a single field, and be comprised of two table cells with the CSS classes
                     <font face="Courier New"><strong>ms-formheader</strong></font> and <font face="Courier New">
 <strong>ms-formbody</strong></font> in that order.</li>
-                <li>The row should contain somewhere in it’s source a NOBR element that contains the display name of the field. We'll look up the internal name and type using the list schema.
+                <li>The row should contain somewhere in it's source a NOBR element that contains the display name of the field. We'll look up the internal name and type using the list schema.
                 </li>
                 <li>The actual name of the ASPX page should contain <strong>new</strong>, <strong>
 edit</strong>, or <strong>disp, </strong>case insensitive, and it would be helpful if it was actually the new form if it contains new, the edit form if it contains edit, etc.
@@ -659,7 +659,7 @@ edit</strong>, or <strong>disp, </strong>case insensitive, and it would be helpf
             </ul>
             <p>OOB designer generated forms meet these constraints. If either of these lists of constraints are met by your forms, they should work with SPEasyForms.
             </p>
-            <p>Anyway, now that you’ve got it installed, and I've finished the overview, it's time to start looking at our scenario and take it for a spin.
+            <p>Anyway, now that you've got it installed, and I've finished the overview, it's time to start looking at our scenario and take it for a spin.
             </p>
             <h2>2. Containers</h2>
             <p>
@@ -708,11 +708,11 @@ border-width:0px" border="0" height="841" width="604">
             <ol>
                 <li>Make the form pretty.</li>
             </ol>
-            <p>Now I’ll be the first to admit this isn’t a very good requirement, but if you’ve been working in this business for a while you probably recognize it as a pretty common one. So you resist the urge to call the customer stupid and start pitching
+            <p>Now I'll be the first to admit this isn't a very good requirement, but if you've been working in this business for a while you probably recognize it as a pretty common one. So you resist the urge to call the customer stupid and start pitching
                 ideas. Maybe we could organize some of the fields into tabs? You start white boarding and come up with a design that the customer seems to like. Maybe pretty is going a bit far but it's hopefully more visually appealing and functional
-                at least. That’s what containers are all about so lets configure one.</p>
+                at least. That's what containers are all about so lets configure one.</p>
             <h3>2.1 Columns</h3>
-            <p>The columns container just lets you organize fields into two or more side by side columns (technically it can be 1 or more, but 1 column doesn’t really gain you much). To add a columns container:</p>
+            <p>The columns container just lets you organize fields into two or more side by side columns (technically it can be 1 or more, but 1 column doesn't really gain you much). To add a columns container:</p>
             <ul>
                 <li>Click the <strong>Add</strong> button.</li>
             </ul>
@@ -742,20 +742,20 @@ border-width:0px" border="0" height="841" width="604">
 border-width:0px" border="0" height="572" width="604">
                 </a>
             </p>
-            <p>The first thing to notice is that nothing really changed on the WYSIWIG side of the form. You might think you just need to scroll down and you’ll see columns, but trust me nothing changed. This is because containers that have no fields are
-                hidden. This is a trick that you can use to your advantage when configuring multiple content types for a single list, but I’ll save that discussion for the end of this section.</p>
-            <p>In the properties pane, however, you’ll now see 2 containers, the second one being a columns container with two empty field collections. Once you have more
+            <p>The first thing to notice is that nothing really changed on the WYSIWIG side of the form. You might think you just need to scroll down and you'll see columns, but trust me nothing changed. This is because containers that have no fields are
+                hidden. This is a trick that you can use to your advantage when configuring multiple content types for a single list, but I'll save that discussion for the end of this section.</p>
+            <p>In the properties pane, however, you'll now see 2 containers, the second one being a columns container with two empty field collections. Once you have more
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=921317">
                     <img title="image" src="images/Download_015.png" alt="image" style="float:right; padding-top:0px; padding-left:0px; margin:10px 0px 10px 8px; display:inline; 
 
 padding-right:0px; border-width:0px" align="right" border="0" height="222" width="244">
                 </a>
-                than one container, you can reorder the containers via drag and drop. In the picture to the right I’ve dragged the columns container above the default form (after collapsing all containers, I might have mentioned how to do that earlier). There’s still
+                than one container, you can reorder the containers via drag and drop. In the picture to the right I've dragged the columns container above the default form (after collapsing all containers, I might have mentioned how to do that earlier). There's still
                 no change to the WYSIWIG, to see it there you have to put some fields in at least one of the two field collections so lets start doing that.
             </p>
             <p>First expand the containers. Now you can drag fields from the default form and drop them on the field collections in the columns container. You can drag fields from any field collection to any other field collection, or even reorder the fields
                 within a field collection via drag and drop. You can only drag fields one at a time, which can be a little tedious but you have to admit it's still easier than coding a custom solution. I may try to implement a multi-select drag and drop
-                in a future version, but for now it's one at a time. I’m going to put 2 or three fields in each column, after which my settings page looks like this:</p>
+                in a future version, but for now it's one at a time. I'm going to put 2 or three fields in each column, after which my settings page looks like this:</p>
             <p>
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=921319">
                     <img title="image" src="images/Download_027.png" alt="image" style="padding-top:0px; padding-left:0px; margin:10px 0px; display:inline; padding-right:0px; 
@@ -763,11 +763,11 @@ padding-right:0px; border-width:0px" align="right" border="0" height="222" width
 border-width:0px" border="0" height="506" width="604">
                 </a>
             </p>
-            <p>Now there are some changes to the form view. I have 5 fields arranged in 2 columns followed by the default form. Of course the form view isn’t really a WYSIWIG, it's just structurally close. It doesn’t draw any input controls, the boxes on
+            <p>Now there are some changes to the form view. I have 5 fields arranged in 2 columns followed by the default form. Of course the form view isn't really a WYSIWIG, it's just structurally close. It doesn't draw any input controls, the boxes on
                 the right-hand side are just the form body table cells with some CSS to give it a border, which becomes apparent when you see the columns container in the form view, because in addition to moving the fields into a multi-column table, the
                 columns container moves to field label into the form body cell placed above the input control to save horizontal space. It also applies some CSS to shorten
-                <font face="Courier New"><strong>ms-long</strong></font> input controls, when and only when they’re on a columns container, again to save on vertical space. To see what it really looks like you need to open up the new form on the list again,
-                but first hit the save button in the editor or you’ll be utterly underwhelmed by the dramatic lack of changes to the form. Once you’ve saved, the new form should look something like:</p>
+                <font face="Courier New"><strong>ms-long</strong></font> input controls, when and only when they're on a columns container, again to save on vertical space. To see what it really looks like you need to open up the new form on the list again,
+                but first hit the save button in the editor or you'll be utterly underwhelmed by the dramatic lack of changes to the form. Once you've saved, the new form should look something like:</p>
             <p>
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=921321">
                     <img title="image" src="images/Download_040.png" alt="image" style="padding-top:0px; padding-left:0px; margin:10px 0px; display:inline; padding-right:0px; 
@@ -775,7 +775,7 @@ border-width:0px" border="0" height="506" width="604">
 border-width:0px" border="0" height="563" width="604">
                 </a>
             </p>
-            <p>I would be lying at this point if I was to say that we’d achieved anything even close to pretty, but we’re making some progress and it took a lot less time to configure it then it took to write this section. But the real power of containers
+            <p>I would be lying at this point if I was to say that we'd achieved anything even close to pretty, but we're making some progress and it took a lot less time to configure it then it took to write this section. But the real power of containers
                 is that you can put as many as you want on a page and mix and match them any way you want. To demonstrate, add another columns container to the form with 4 columns, drag it just below the first columns container, and add the four fields
                 Code, SalesRegion, SalesDivision, and SalesState to it, one per field collection. Save it and refresh the new form and it should look something like:</p>
             <p>
@@ -785,12 +785,12 @@ border-width:0px" border="0" height="563" width="604">
 border-width:0px" border="0" height="492" width="604">
                 </a>
             </p>
-            <p>Again, its not particularly sexy, but it's starting to show some potential. With just the columns container I can create a wide variety of grid view type layouts, limited only by the horizontal size of the controls and how wide I’m willing
-                to let the form get. And let’s face it, everyone knows most user’s have a display with more horizontal real estate than vertical and nobody likes to scroll (at least maybe everybody except the guys at Microsoft who wrote the first SharePoint
-                forms ;). On a side note, I might be giving away my Java background throwing around terms like grid view layout, but I could have just as easily thrown out C/C++, maybe MFC, or even ADA terms. OK, so I’m not so young, but I digress.
+            <p>Again, its not particularly sexy, but it's starting to show some potential. With just the columns container I can create a wide variety of grid view type layouts, limited only by the horizontal size of the controls and how wide I'm willing
+                to let the form get. And let's face it, everyone knows most user's have a display with more horizontal real estate than vertical and nobody likes to scroll (at least maybe everybody except the guys who wrote the first SharePoint
+                forms ;). On a side note, I might be giving away my Java background throwing around terms like grid view layout, but I could have just as easily thrown out C/C++, maybe MFC, or even ADA terms. OK, so I'm not so young, but I digress.
             </p>
             <p>Anyway, the basic idea behind containers is to organize fields in a way that maximizes screen real estate, and the Columns container provides some ability to do just that. But the other containers, tabs and accordion, have even more potential
-                to maximize screen real estate, so lets quickly see how they work. Since we hopefully have the basics down, I’m going to move a little quicker through those sections.</p>
+                to maximize screen real estate, so lets quickly see how they work. Since we hopefully have the basics down, I'm going to move a little quicker through those sections.</p>
             <h3>2.2 Tabs</h3>
             <p>Tabs are configured in the same way as columns, in fact so is accordion, so I'm not going to go into the same step by step description of how to configure them like I did for columns, I'll just give you a table of tab names and the fields
                 to put on each tab and then show what the editor looks like if you configure it correctly. The tabs I'm going to configure look like this:</p>
@@ -908,11 +908,11 @@ border-width:0px" border="0" height="533" width="604">
                 never been configured before, they are added to the default form container. If you don't see them, you might need to expand this container. Once the data has been fetched, it is cached in the browser session so there is no wait switching
                 back and forth between content types, but not in the browsers page cache, so clearing the page cache will have no effect. If you modify the content type in this or another browser after it has been cached, to see your changes in the editor
                 you need to hit the clear cache button in the ribbon, which will reload the page (save any changes first).</p>
-            <p>The configuration JSON structure has room to easily expand to allow the configuration for a given content type to be ‘divorced’ from the list configuration allowing multiple configurations for the same list, one per content type, but I haven’t
+            <p>The configuration JSON structure has room to easily expand to allow the configuration for a given content type to be ‘divorced' from the list configuration allowing multiple configurations for the same list, one per content type, but I haven't
                 decided if that is even desirable yet. If I get requests for it or I decide it would be useful for me, I might add it in some future release. But I decided to implement multiple content types the way I did, not because I‘m lazy, but because
                 of my personal experience with how I use multiple content types in a single list. Usually, I put multiple content types in the same list because they are more the same than different. If two content types are mostly different (i.e. share
-                few or no fields), I generally put them in different lists anyway, it's not like they can usefully share many views. And if they’re mostly the same, I want the forms to be mostly the same.</p>
-            <p>So switch to the Employee content type in the editor now and you should see the Employee specific fields appear in the default form container. If you don’t, try expanding the default form container. Now drag a couple of these fields onto the
+                few or no fields), I generally put them in different lists anyway, it's not like they can usefully share many views. And if they're mostly the same, I want the forms to be mostly the same.</p>
+            <p>So switch to the Employee content type in the editor now and you should see the Employee specific fields appear in the default form container. If you don't, try expanding the default form container. Now drag a couple of these fields onto the
                 HR tab, and the other two onto the HR content area of the accordion. Save your changes and refresh or reopen the new Employee form, and you should now see the HR tab/content area with the employee specific fields on them. Go back to the
                 new Contact form and you should still see the HR tab and content area are hidden. So your new Employee form should look something like this:</p>
             <p>
@@ -938,29 +938,29 @@ even just viewing source in the browser. Even if I could fix that, they
 could write their own JavaScript, call the web
  services, and view the raw data.</strong>
             </p>
-            <p>With that caveat out of the way, I implemented containers first when I started working on SPEasyForms, because it’s the lowest hanging fruit of forms customization. Pretty much every time I’ve worked on a form for a customer, the list of fields
-                quickly got long, the form started looking pretty bad, and somebody threw out the old ‘make the form pretty’ requirement in some guise or another.
+            <p>With that caveat out of the way, I implemented containers first when I started working on SPEasyForms, because it's the lowest hanging fruit of forms customization. Pretty much every time I've worked on a form for a customer, the list of fields
+                quickly got long, the form started looking pretty bad, and somebody threw out the old ‘make the form pretty' requirement in some guise or another.
             </p>
-            <p>Second on the low hanging fruit list in my opinion is conditional visibility. I get a lot of requirements like I don’t want people in group X to see the phone number field. Or I only want people in group Y to see the phone number field. Or
+            <p>Second on the low hanging fruit list in my opinion is conditional visibility. I get a lot of requirements like I don't want people in group X to see the phone number field. Or I only want people in group Y to see the phone number field. Or
                 the address field should be on the edit form but not the new form. Or even I want people to be able to edit the title field if A=B, but it should be read only when A=C, where A is another field in the same form. Conditional visibility
                 in SPEasyForms is intended to satisfy all of these requirements and more.</p>
             <p>And they are all pretty simple. Most of the time you can get away with only a few state handlers, hide the field, make the field read only, or leave the field alone. The dialog to allow the rules to be configured is most of the work. And yet,
-                they are surprisingly difficult to explain in documentation. I’ve done it several times in several different ways and ended up with several different sets of misunderstandings. I’ve come to think that it is so because I usually start right
+                they are surprisingly difficult to explain in documentation. I've done it several times in several different ways and ended up with several different sets of misunderstandings. I've come to think that it is so because I usually start right
                 off trying to satisfy realistic requirements, which usually requires multiple rules for a single field, without first explaining the kind of things you can configure in an individual rule in a vacuum. So I mix in the concepts of individual
                 rules and rule collections, it all runs together a bit, and there are usually too many ambiguities in my description.</p>
             <p>I find the best way is as follows:</p>
             <ol>
-                <li>Explain the kind of rules that can be configured based on the type of condition, more or less in a vacuum, and don’t worry if the rule by itself doesn’t seem that useful.
+                <li>Explain the kind of rules that can be configured based on the type of condition, more or less in a vacuum, and don't worry if the rule by itself doesn't seem that useful.
                 </li>
                 <li>Explain a few rules with multiple conditions.</li>
                 <li>Explain how rules are matched and executed and when processing stops for a given field, when there are multiple rules for a given field (i.e. precedence of operations).
                 </li>
                 <li>Provide step by step instructions for creating a few rules on a given field, and then explain the result of creating those fields in the form (i.e. reinforce precedence of operations).
                 </li>
-                <li>Throw in a few more complex examples. This is where we’ll get back to our scenario.
+                <li>Throw in a few more complex examples. This is where we'll get back to our scenario.
                 </li>
             </ol>
-            <p>So that’s what we’re going to do. But first, here are the step by step instructions to start configuring a field visibility rule for a given field, because I really don’t want to provide these same steps over and over in the examples to come:
+            <p>So that's what we're going to do. But first, here are the step by step instructions to start configuring a field visibility rule for a given field, because I really don't want to provide these same steps over and over in the examples to come:
             </p>
             <ul>
                 <li>On the properties pane, find the field you want to create a rule for and click on the little key icon button to the right of the field. This brings up the
@@ -1099,7 +1099,7 @@ AND</strong> comparison, i.e. 'Code Equals red <strong>AND</strong> State/Provin
             </p>
             <ul>
                 <li>Rules are evaluated in the same order in which the appear in the UI.</li>
-                <li>If a rule is evaluated to be true, it’s state handler is executed.
+                <li>If a rule is evaluated to be true, it's state handler is executed.
 
                 </li>
                 <li>Once a state handler has been executed, all rule processing for the current field is terminated until another event occurs which starts the rule evaluation processing at the beginning.
@@ -1114,13 +1114,13 @@ AND</strong> comparison, i.e. 'Code Equals red <strong>AND</strong> State/Provin
 border:0px" border="0" height="216" width="604">
                 </a>
             </p>
-            <p>That’s better, but understand that these rules must be in this order exactly to be interpreted consistently. You may think that you can reverse the first two rules and the results are the same, but these rules are not mutually exclusive. Somebody
+            <p>That's better, but understand that these rules must be in this order exactly to be interpreted consistently. You may think that you can reverse the first two rules and the results are the same, but these rules are not mutually exclusive. Somebody
                 can be both the author and a member, or a member and a manager, and if you reversed the order of the first two fields these users would always see the field as read only, which is clearly not the desired result but given the precedence
                 of operations it is what you told SPEasyForms you wanted.</p>
             <p>The other thing to note with this set of rules is the state of <strong>Editable</strong>. This really just means don't do anything to the field (so for instance on the view form it will still be read only). Why would we need such a rule? I
-                can easily accomplish nothing without any rules whatsoever; heck, without any code whatsoever too. In this case it is so I don't fall through to the 'hide the field from everyone' rule. This is the reason why ‘hide the field from everyone’
+                can easily accomplish nothing without any rules whatsoever; heck, without any code whatsoever too. In this case it is so I don't fall through to the 'hide the field from everyone' rule. This is the reason why ‘hide the field from everyone'
                 may make sense as part of a set of rules even though it usually does not make sense as a stand alone rule. It's kind of like firewall rules if you are familiar with the concept. You need to put specific rules before general rules, so in order
-                to satisfy requirements like ‘managers can edit, but for everyone else it should be hidden,’ you need some way to specify a rule that permits managers to edit, even though allowing edit is the default if there are no rules whatsoever.</p>
+                to satisfy requirements like ‘managers can edit, but for everyone else it should be hidden,' you need some way to specify a rule that permits managers to edit, even though allowing edit is the default if there are no rules whatsoever.</p>
             <h3>3.6 Putting it all Together (and back to the scenario)</h3>
             <p>For our scenario, we have the following requirements for the given fields:</p>
             <ul>
@@ -1167,8 +1167,8 @@ border:0px" border="0" height="375" width="604">
                 name. There are no buttons, and you cannot drag and drop these rules from here, but you can double click on a rule to bring up the
                 <strong>Conditional Visibility Dialog</strong> for the given field.</p>
             <p>Once you have saved these rules you can check out how they affect the form, but before you do, make sure you know if you are in the
-                <strong>Manager</strong> group or not, or you may once again be utterly unimpressed with the lack of anything new happening in the form (I’ve made this mistake before a few times, generally ending in a humbling debugging exercise). By the
-                way, if you add or remove yourself from the Manager group, you should just have to refresh the form to see the difference. The current user’s group membership is not cached in any way across page loads, so the effects should be immediate.</p>
+                <strong>Manager</strong> group or not, or you may once again be utterly unimpressed with the lack of anything new happening in the form (I've made this mistake before a few times, generally ending in a humbling debugging exercise). By the
+                way, if you add or remove yourself from the Manager group, you should just have to refresh the form to see the difference. The current user's group membership is not cached in any way across page loads, so the effects should be immediate.</p>
             <p>Lets move on to the second set of requirements, starting with the field <strong>
 EmployeeId</strong>. The configuration for this field should look like:</p>
             <p>
@@ -1178,7 +1178,7 @@ EmployeeId</strong>. The configuration for this field should look like:</p>
 border:0px" border="0" height="213" width="604">
                 </a>
             </p>
-            <p>Note that I didn’t say <em>something like</em> this time, the order of these rules is entirely significant. The last rule obviously must be last because it always executes. But you also cannot reverse the order of the first two rules, because
+            <p>Note that I didn't say <em>something like</em> this time, the order of these rules is entirely significant. The last rule obviously must be last because it always executes. But you also cannot reverse the order of the first two rules, because
                 if you did then somebody in both the Manager and HR groups would see the field read only while somebody in just the HR group would see it editable, which I doubt is what you want. Go ahead and configure the other three fields like this
                 and the
                 <strong>Configuration Visibility View</strong> should now look like this:</p>
@@ -1204,17 +1204,17 @@ border:0px" border="0" height="543" width="604">
                 <li>I want this field to be a voting/star system where the user casts their vote by moving a dogs tail up or down.
                 </li>
             </ul>
-            <p>These may be obscure cases, but if you can imagine it, you can probably find someone out there who will say ‘yeah, give me one of those.’
+            <p>These may be obscure cases, but if you can imagine it, you can probably find someone out there who will say ‘yeah, give me one of those.'
             </p>
-            <p>But for version 1 of SPEasyForms I’ve tried to implement just a couple of these that I consider to be low hanging fruit, meaning I’ve been asked for these often or I’ve seen people asking how to implement these in a SharePoint list often.
-                The two I’ve implemented, in perceived order of popularity, are:</p>
+            <p>But for version 1 of SPEasyForms I've tried to implement just a couple of these that I consider to be low hanging fruit, meaning I've been asked for these often or I've seen people asking how to implement these in a SharePoint list often.
+                The two I've implemented, in perceived order of popularity, are:</p>
             <ul>
                 <li>Cascading Look Ups – the ability to trim the options available in one look up field based on the value selected in another look up field.
                 </li>
                 <li>Autocomplete – the ability to provide type ahead functionality for a text field based on the values in a field on a different list in the SharePoint site.
                 </li>
             </ul>
-            <p>I will document these in the reverse order below, just because Autocomplete is the easiest to setup, but before I do I want to document the steps for getting to a control adapter dialog for a given field right now so I don’t have to repeat
+            <p>I will document these in the reverse order below, just because Autocomplete is the easiest to setup, but before I do I want to document the steps for getting to a control adapter dialog for a given field right now so I don't have to repeat
                 it in the implementation specific sections below:</p>
             <ul>
                 <li>Hit the shuffle icon button (looks like 2 intertwined arrows) next to a field in the properties pane. Note that if this icon does not appear next to a particular field, it is because there are no adapters currently available for that field
@@ -1234,12 +1234,12 @@ right:0px; margin-right:auto; border:0px" border="0" height="228" width="414">
                 <li>Once you choose the implementation, an implementation specific adapter dialog will be opened to let you configure the adapter. Note that if there is only one implementation for the given field type, the dialog above is skipped and you
                     jump right to the implementation specific adapter dialog.</li>
             </ul>
-            <p>The adapter specific dialogs will be described below, but one thing I should point out first is that if you have just installed SPEasyForms with no plugins and no custom code of your own, you will never see the above dialog. That’s because
-                there are only two adapters built into the product, one for SPFieldText and one for SPFieldLookup, so there is no way you are every going to choose a field that has two potential implementations. The above dialog was baked into the product
+            <p>The adapter specific dialogs will be described below, but one thing I should point out first is that if you have just installed SPEasyForms with no plugins and no custom code of your own, you will never see the above dialog. That's because
+                there are only two adapters built into the product, one for SPFieldText and one for SPFieldLookup, so there is no way you are ever going to choose a field that has two potential implementations. The above dialog was baked into the product
                 just to allow for the possibility of plugins.</p>
             <p>The second general point I want to make is that even if there were multiple adapter implementations available for a given field type, you will only ever be able to configure a specific field to use one adapter or the other. To change the adapter
                 for a given field, you must first remove the adapter and then add one again choosing a different implementation. How you remove an adapter is entirely up to the adapter specific dialog. The reason you will only ever be able to put one
-                adapter on a specific field is that adapters manipulate the DOM of the OOB controls for a field, and would almost certainly step on each other. Not buying it? Try to imagine merging the functionality of the dog’s tail voter and the thermometer
+                adapter on a specific field is that adapters manipulate the DOM of the OOB controls for a field, and would almost certainly step on each other. Not buying it? Try to imagine merging the functionality of the dog's tail voter and the thermometer
                 slider described at the beginning of this section in any kind of generic way. Think about it?</p>
             <h3>4.1 Autocomplete</h3>
             <p>In order for Autocomplete to be configured, all you need to know is the name of another list in the same site and the display name of the field in that list that you want used for type ahead functionality. For our scenario, my requirement
@@ -1248,7 +1248,7 @@ right:0px; margin-right:auto; border:0px" border="0" height="228" width="414">
                 <li>The <strong>Job Title</strong> field should have type ahead functionality based on the values of the title field in the
                     <strong>JobTitles</strong> list.</li>
             </ul>
-            <p>I’ve already created the <strong>JobTitles</strong> list and populated it, and it looks like this:</p>
+            <p>I've already created the <strong>JobTitles</strong> list and populated it, and it looks like this:</p>
             <p>
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=922597">
                     <img title="image" src="images/Download_038.png" alt="image" style="padding-top:0px; padding-left:0px; margin:10px 0px; display:inline; padding-right:0px; 
@@ -1264,10 +1264,10 @@ border:0px" border="0" height="434" width="596">
 border:0px" border="0" height="203" width="413">
                 </a>
             </p>
-            <p>Of course yours is not all filled in yet like mine is, I just didn’t want to do before and after screen shots. The only configuration is that you need to select the title of the lookup list and the title of the lookup column. The screen may
+            <p>Of course yours is not all filled in yet like mine is, I just didn't want to do before and after screen shots. The only configuration is that you need to select the title of the lookup list and the title of the lookup column. The screen may
                 freeze for a few seconds when you first launch this dialog or when you choose a lookup list. The first case is because I need to get a list of list titles for the site from a web service, and the second is because I need to get list meta
                 data from a web service. In both cases I cache the result so subsequent usage of the same data in the same browser session will be faster.</p>
-            <p>Anyway, once I’ve configured this and saved my configuration, I can go back to the form and I should have Autocomplete functionality on the
+            <p>Anyway, once I've configured this and saved my configuration, I can go back to the form and I should have Autocomplete functionality on the
                 <strong>Job Title</strong> field:</p>
             <p>
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=922601">
@@ -1276,17 +1276,17 @@ border:0px" border="0" height="203" width="413">
 border:0px" border="0" height="229" width="605">
                 </a>
             </p>
-            <p>And that’s all you need to know about Autocomplete…sort of. You didn’t think there wouldn’t be another caveat, did you? If you look back at the screen shot of the
+            <p>And that's all you need to know about Autocomplete…sort of. You didn't think there wouldn't be another caveat, did you? If you look back at the screen shot of the
                 <strong>JobTitles</strong> list, you can see that there is a count in the view, and the view currently has 2499 items in it. If the view has more than the list view threshold for SharePoint (usually 5000 items) you may run into some pretty
                 insurmountable performance issues, especially in Internet Explorer. In fact, sometimes the browser hangs with 4000 items. It may be worse if you are bandwidth or latency challenged or your SharePoint farm is not very speedy.</p>
             <p>This is in part because of the current implementation of the Autocomplete adapter, which fetches the entire list into a big array on form load (well, just the one field, but still it can be a non-trivial amount of data). I could theoretically
                 make some performance gains by not fetching the list until the user typed a few characters and trimming the results on the server side by sending a CAML query. On the other hand, that would mean more web service calls if the user changed
-                the first few characters, which could perform even worse. I may look at a solution for larger lists in the future, but for now I think I’ve satisfied the low hanging fruit of Autocomplete.
+                the first few characters, which could perform even worse. I may look at a solution for larger lists in the future, but for now I think I've satisfied the low hanging fruit of Autocomplete.
             </p>
             <p>If you want to remove an Autocomplete adapter from a field, open the dialog, blank out the lookup list control, and hit Ok.</p>
             <h3>4.2 Cascading Look Ups</h3>
-            <p>Do a search on Bing for ‘sharepoint cascading lookup’ or ‘sharepoint cascading dropdown’ and you’ll see a lot of questions and even a lot of solutions. I chose not to write my own since there is a perfectly good implementation in SPServices,
-                which I’m already using for calling all of the SharePoint web services, so if you have ever used cascading lookups using SPServices you already know how to setup the lookup lists. If not, I’ll show you in a moment, but first lets talk
+            <p>Do a search on Bing for ‘sharepoint cascading lookup' or ‘sharepoint cascading dropdown' and you'll see a lot of questions and even a lot of solutions. I chose not to write my own since there is a perfectly good implementation in SPServices,
+                which I'm already using for calling all of the SharePoint web services, so if you have ever used cascading lookups using SPServices you already know how to setup the lookup lists. If not, I'll show you in a moment, but first lets talk
                 about the requirements for our scenario:</p>
             <ul>
                 <li>The options in the <strong>SalesDivision</strong> drop down should be trimmed based on the value selected in the
@@ -1320,10 +1320,10 @@ border:0px" border="0" height="229" width="605">
                 </li>
             </ul>
             <p align="left">There is a parent field and a child field in both the relationship list and the current form, and that is what you need to pair up to configure cascading drop downs. The relationship list is a lookup list for the child column in the current
-                form. It also has a lookup to the list that the parent column in the current form looks up against. When I say the current form, I’m talking about the form you are currently configuring in SPEasyForms.</p>
+                form. It also has a lookup to the list that the parent column in the current form looks up against. When I say the current form, I'm talking about the form you are currently configuring in SPEasyForms.</p>
             <p align="left">Note that in my case I have also modified the fields in my lookup list so the display names of the parent column and child column match the display names of the lookup fields in the current list. This is not strictly speaking necessary, but
-                it does make the configuration of cascading drop downs much easier as I’ll demonstrate in a moment. I’ve also grouped the views above by the parent lookup field, which isn’t necessary at all to make this work, but doesn't it look nice?</p>
-            <p align="left">To configure cascading drop downs, click the shuffle icon button next to the child lookup field (the one that will be trimmed) in the properties pane (for requirement 1 that’s the SalesDivision field). That brings up the
+                it does make the configuration of cascading drop downs much easier as I'll demonstrate in a moment. I've also grouped the views above by the parent lookup field, which isn't necessary at all to make this work, but doesn't it look nice?</p>
+            <p align="left">To configure cascading drop downs, click the shuffle icon button next to the child lookup field (the one that will be trimmed) in the properties pane (for requirement 1 that's the SalesDivision field). That brings up the
                 <strong>Cascading Lookup Dialog</strong>:</p>
             <p align="left">
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=922609">
@@ -1332,7 +1332,7 @@ border:0px" border="0" height="229" width="605">
 right:0px; border:0px" border="0" height="301" width="511">
                 </a>
             </p>
-            <p align="left">It may take a couple of seconds to launch if I haven’t already cached the list of list titles. The only things filled out on load are the name of this list and the name of the child column. In order to configure the rest, I first need to select
+            <p align="left">It may take a couple of seconds to launch if I haven't already cached the list of list titles. The only things filled out on load are the name of this list and the name of the child column. In order to configure the rest, I first need to select
                 the name of the relationship list, which in this case is SalesDivision, after which the dialog looks like this:</p>
             <p align="left">
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=922611">
@@ -1341,7 +1341,7 @@ right:0px; border:0px" border="0" height="301" width="511">
 right:0px; border:0px" border="0" height="299" width="512">
                 </a>
             </p>
-            <p align="left">And voila, we’re done. I was able to guess the rest of the configuration because there is only one lookup in the relationship list and the display names in the relationship list match the display names in the child form. If that were not true,
+            <p align="left">And voila, we're done. I was able to guess the rest of the configuration because there is only one lookup in the relationship list and the display names in the relationship list match the display names in the child form. If that were not true,
                 I would have had to manually marry up the relationship list fields with the current form fields. So follow the same steps to configure the SalesState cascading look up, and the form fields now look like:
             </p>
             <p align="center">
@@ -1374,13 +1374,13 @@ border:0px" border="0" height="329" width="604">
                 stored as GUIDs. This means that if this configuration is exported and imported into a list in a different site, the adapters will need to be reconfigured. I may try to fix that or at least provide an easy way to reconfigure them prior
                 to the first release, if I get a chance.</p>
             <h2>5. Finee</h2>
-            <p>Well, that’s it. I think I’ve now described all of the functionality that will be included in the first release. This document has gotten a lot bigger than I thought it would. But then, there are a lot of pictures, which is kind of required
+            <p>Well, that's it. I think I've now described all of the functionality that will be included in the first release. This document has gotten a lot bigger than I thought it would. But then, there are a lot of pictures, which is kind of required
                 if you want to describe a user interface. 
             </p>
-            <p>When I set out on this project, my goal was to provide a turn key professional solution that could be installed and used by administrators and power users. I think I’ve achieved that goal somewhat. Agree or disagree, I’d love to hear your
-                feedback on the SPEasyForms CodePlex site. I also wanted to make it extensible with a plugin architecture. I think I’ve achieved that to some degree too, and I will start documenting it as soon as I’ve done the first stable release. I
+            <p>When I set out on this project, my goal was to provide a turn key professional solution that could be installed and used by administrators and power users. I think I've achieved that goal somewhat. Agree or disagree, I'd love to hear your
+                feedback on the SPEasyForms CodePlex site. I also wanted to make it extensible with a plugin architecture. I think I've achieved that to some degree too, and I will start documenting it as soon as I've done the first stable release. I
                 expect that to be in a month or two.</p>
-            <p>The nice thing about the requirements in the scenario used in this document is that they all mapped perfectly to what SPEasyForms already does. You’re mileage may vary.</p>
+            <p>The nice thing about the requirements in the scenario used in this document is that they all mapped perfectly to what SPEasyForms already does. You're mileage may vary.</p>
         </div>
         <div></div>
 
