@@ -1373,7 +1373,7 @@ border:0px" border="0" height="329" width="604">
             <p>The last column in this table shows adapter specific configuration in the raw, because the editor does not know anything about this configuration information other than that it is in the configuration. Also note that the foreign lists are
                 stored as GUIDs. This means that if this configuration is exported and imported into a list in a different site, the adapters will need to be reconfigured. I may try to fix that or at least provide an easy way to reconfigure them prior
                 to the first release, if I get a chance.</p>
-            <h2>5. Finee</h2>
+            <h2>5. Wrap Up</h2>
             <p>Well, that's it. I think I've now described all of the functionality that will be included in the first release. This document has gotten a lot bigger than I thought it would. But then, there are a lot of pictures, which is kind of required
                 if you want to describe a user interface. 
             </p>
