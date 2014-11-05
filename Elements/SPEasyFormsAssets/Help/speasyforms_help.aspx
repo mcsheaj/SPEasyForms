@@ -886,7 +886,7 @@ border-width:0px" border="0" height="533" width="604">
                 list and open the new Employee form, you'll see the Employee specific fields at the bottom of the form drawn just the way SharePoint would usually draw them. That's because they are on the default form, and in our SPEasyForms configuration
                 we put the default form at the bottom of the page. If you drag the default form to the top of the containers in the editor, save your configuration, and reload the page you'll see these fields are at the top of the form. You may want to
                 leave some fields on the default form; you may not. If you don't, read the next section which will tell you how to configure multiple content types.</p>
-            <h3>2.4 Multiple Content Types</h3>
+            <h3>2.5 Multiple Content Types</h3>
             <p>If you skipped the overview and you've just been following along without being particularly inquisitive and clicking on stuff I haven't told you about yet, you may have noticed that at no point in following this scenario did you see the Employee
                 specific fields anywhere in the editor. That's because when the editor loads it brings up the default content type. But given your recent experience with opening the new Employee field, you should understand some things about how SPEasyForms
                 deals with multiple content types:
@@ -927,6 +927,14 @@ border-width:0px" border="0" height="533" width="604">
                 </li>
             </ul>
             <p>You now know everything you need to know about configuring multiple content types in SPEasyForms, we are truly done with modifying the form structure, and thus we are done with containers.</p>
+<h3>2.6&nbsp;Validation</h3>
+<p>So what happens when a required field is on a tab and the user hits submit without providing a value?&nbsp;</p>
+<ul>
+<li>First, any tab that has a validation error is highlighted by giving the tab header a red border.</li>
+<li>Also, the first tab with a validation error is automatically selected.</li>
+<li>The OOB validation messages that are normally displayed with a field are still displayed with the field.</li>
+</ul>
+<p>Accordion works the same way, and Columns does not need any special logic for this because it does not have any hidden content areas.</p>
             <h2>3. Conditional Visibility</h2>
             <p><strong>Note: this is NOT a security mechanism. It is appropriate for
  workflow-type visibility requirements. If disclosure of fields to the 
@@ -1192,6 +1200,12 @@ border:0px" border="0" height="543" width="604">
             <p>Save the configuration, go to the new Employee form, and check out the results. You should now know pretty much everything you need to know about conditional visibility rules. Try adding some of your own. Refresh the form and check out the
                 result.
             </p>
+<h3>3.7 Validation</h3>
+<p>Note that if you use conditional visibility to hide a field or make it read only, and the field has validation errors, the user will be unable to submit the form.&nbsp;The OOB validation message is hidden, because the entire cell is hidden.&nbsp;If the field is on a tab or accordion content area, the header will be highlighted in red and the first one with validation errors will be automatically selected, but again the OOB validation message is hidden.&nbsp;Even if the validation message was displayed, the user would not be able to fix the problem because there are no input controls in which the required field can be entered. So as a general rule of thumb:</p>
+<ul>
+<li>Do not hide required fields or fields with validation from users who have contribute access to your list.</li>
+<li>If you must hide a field that potentially could have validation errors, make sure that it always has a default value that will pass validation.</li>
+</ul>
             <h2>4. Field Control Adapters</h2>
             <p>Field Control Adapters are basically intended to be a replacement for custom fields in SharePoint, or at least to provide custom field like behavior in SharePoint forms using only OOB field types. There are numerous shortcomings of custom
                 field types. For starters they are a farm solution, which is tantamount to being downright evil by modern Microsoft doctrine. But they also suffer some reduced functionality, for instance they cannot be edited in datasheet view. This has
@@ -1373,6 +1387,8 @@ border:0px" border="0" height="329" width="604">
             <p>The last column in this table shows adapter specific configuration in the raw, because the editor does not know anything about this configuration information other than that it is in the configuration. Also note that the foreign lists are
                 stored as GUIDs. This means that if this configuration is exported and imported into a list in a different site, the adapters will need to be reconfigured. I may try to fix that or at least provide an easy way to reconfigure them prior
                 to the first release, if I get a chance.</p>
+<h3>4.4 Validation</h3>
+<p>Neither of the two adapters included in the first release has any validation issues, since they do not hide the field/controls, they just augment the functionality of the field.&nbsp; It is certainly quite possible that a field adapter could hide validation errors from the user, making it difficult or impossible for the user to submit the form, but validation works the same on Autocomplete fields and Cascading Look Up fields as it does on OOB text fields and look up fields.</p>
             <h2>5. Wrap Up</h2>
             <p>Well, that's it. I think I've now described all of the functionality that will be included in the first release. This document has gotten a lot bigger than I thought it would. But then, there are a lot of pictures, which is kind of required
                 if you want to describe a user interface. 

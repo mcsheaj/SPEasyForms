@@ -3,7 +3,7 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2014.00.08.beta2
+ * @version 2014.00.09.beta2
  * @requires jQuery v1.11.1 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
@@ -277,6 +277,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 this.setAttributeNode(newOnSave);
             });
             spEasyForms.appendContext(opt);
+            if (_spPageContextInfo.webUIVersion === 4) {
+                $(".ui-widget input").css("font-size", "8pt");
+            }
         },
 
         /********************************************************************
@@ -363,7 +366,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if (source.indexOf("start.aspx#") >= 0) {
                     source = utils.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                 }
-                var settings = utils.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.00.08.beta2/Pages/SPEasyFormsSettings.aspx") +
+                var settings = utils.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.00.09.beta2/Pages/SPEasyFormsSettings.aspx") +
                     "?ListId=" + spContext.getCurrentListId(opt) +
                     "&SiteUrl=" + spContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -410,13 +413,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         loadDynamicStyles: function(options) {
             if (options.jQueryUITheme === undefined) {
-                options.jQueryUITheme = utils.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.00.08.beta2/Css/jquery-ui/jquery-ui.css');
+                options.jQueryUITheme = utils.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.00.09.beta2/Css/jquery-ui/jquery-ui.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
-                options.css = utils.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.00.08.beta2/Css/speasyforms.css');
+                options.css = utils.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.00.09.beta2/Css/speasyforms.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -1212,7 +1215,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             
             // wire the help button
             $("#spEasyFormsHelpLink").click(function (event) {
-                var helpFile = utils.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.00.08.beta2/Help/speasyforms_help.aspx");
+                var helpFile = utils.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.00.09.beta2/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });
@@ -3894,7 +3897,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.00.08.beta2";
+            opt.currentConfig.version = "2014.00.09.beta2";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig != oldConfig) {
