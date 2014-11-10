@@ -1,11 +1,12 @@
 ﻿/*
- * SPEasyForms.sharePointFieldRows - object representing the collection of field visibility rules.
+ * SPEasyForms.sharePointFieldRows - object to hold and manage all field visibility rules.
  *
  * @requires jQuery v1.11.1 
  * @copyright 2014 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
+/* global spefjQuery */
 (function ($, undefined) {
 
     ////////////////////////////////////////////////////////////////////////////
@@ -16,7 +17,7 @@
 
         comparisonOperators: {
             equals: function (value, test) {
-                return (value.toLowerCase() == test.toLowerCase());
+                return (value.toLowerCase() === test.toLowerCase());
             },
             matches: function (value, test) {
                 var regex = new RegExp(test, "i");
@@ -78,7 +79,7 @@
                     }
                 }
             },
-            editable: function (options) { /*do nothing*/ }
+            editable: function () { /*do nothing*/ }
         },
 
         siteGroups: [],
@@ -154,16 +155,16 @@
                                             fieldMissing: true
                                         };
                                     }
-                                    if (!tr.fieldMissing && tr.row.attr("data-visibilitychangelistener") != "true") {
-                                        tr.row.find("input").change(function (e) {
+                                    if (!tr.fieldMissing && tr.row.attr("data-visibilitychangelistener") !== "true") {
+                                        tr.row.find("input").change(function () {
                                             visibilityRuleCollection.transform(opt);
                                             $.spEasyForms.adapterCollection.transform(opt);
                                         });
-                                        tr.row.find("select").change(function (e) {
+                                        tr.row.find("select").change(function () {
                                             visibilityRuleCollection.transform(opt);
                                             $.spEasyForms.adapterCollection.transform(opt);
                                         });
-                                        tr.row.find("textarea").change(function (e) {
+                                        tr.row.find("textarea").change(function () {
                                             visibilityRuleCollection.transform(opt);
                                             $.spEasyForms.adapterCollection.transform(opt);
                                         });
@@ -222,7 +223,7 @@
             var fieldName = $("#conditionalVisibilityField").val();
             $("#conditionalVisibilityRules tr:not(:first)").each(function (idx, tr) {
                 var tds = $(tr).find("td");
-                var appliesTo = tds[1].innerHTML != "Everyone" ? tds[1].innerHTML : "";
+                var appliesTo = tds[1].innerHTML !== "Everyone" ? tds[1].innerHTML : "";
                 var rule = {
                     state: tds[0].innerHTML,
                     appliesTo: appliesTo,
@@ -341,7 +342,7 @@
                 "<th class='" + klass + "'>And When</th></tr>";
             $.each(Object.keys(opt.currentConfig.visibility.def).sort(), function (idx, key) {
                 $.each(opt.currentConfig.visibility.def[key], function (i, rule) {
-                    title = "";
+                    var title = "";
                     klass = 'speasyforms-staticrules';
                     opt.index = idx;
                     opt.fieldName = key;
@@ -459,7 +460,7 @@
                     } else if (entity.length > 0) {
                         var span = $("<span>").addClass("speasyforms-entity").
                         attr('title', entity).text(entity);
-                        var a = $("<a>").addClass("speasyforms-remove").attr({
+                        $("<a>").addClass("speasyforms-remove").attr({
                             "href": "#",
                             "title": "Remove " + entity
                         }).
@@ -498,7 +499,7 @@
                 items: "> tr:not(:first)",
                 helper: "clone",
                 zIndex: 990,
-                update: function (event, ui) {
+                update: function (event) {
                     if (!event.handled) {
                         opt.currentConfig = visibilityRuleCollection.toConfig(opt);
                         $.spEasyForms.configManager.set(opt);
@@ -609,7 +610,7 @@
                     var group = ui.item.value;
                     var span = $("<span>").addClass("speasyforms-entity").
                     attr('title', group).text(group);
-                    var a = $("<a>").addClass("speasyforms-remove").attr({
+                    $("<a>").addClass("speasyforms-remove").attr({
                         "href": "#",
                         "title": "Remove " + group
                     }).
@@ -644,7 +645,7 @@
          *********************************************************************/
         wireButtonEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            $("tr.speasyforms-sortablefields").each(function (idx, tr) {
+            $("tr.speasyforms-sortablefields").each(function () {
                 var tds = $(this).find("td");
                 if (tds.length > 0) {
                     var internalName = $(this).find("td")[1].innerHTML;
@@ -784,11 +785,11 @@
          *
          * @return {string} - new, edit, display, or "".
          *********************************************************************/
-        getFormType: function (options) {
+        getFormType: function () {
             var result = "";
             var page = window.location.pathname;
             page = page.substring(page.lastIndexOf("/") + 1).toLowerCase();
-            if (page == "start.aspx") {
+            if (page === "start.aspx") {
                 page = window.location.href.substring(
                     window.location.href.indexOf("#") + 1);
                 page = page.substring(page.lastIndexOf("/") + 1,
@@ -811,7 +812,7 @@
         checkForm: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var formType = visibilityRuleCollection.getFormType(opt);
-            var ruleForms = $(opt.rule.forms.split(';')).map(function (elem) {
+            var ruleForms = $(opt.rule.forms.split(';')).map(function () {
                 return this.toLowerCase();
             });
             return $.inArray(formType, ruleForms) >= 0;

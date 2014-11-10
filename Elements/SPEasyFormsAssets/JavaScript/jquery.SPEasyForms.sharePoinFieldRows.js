@@ -6,6 +6,7 @@
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
+/* global spefjQuery */
 (function ($, undefined) {
 
     ////////////////////////////////////////////////////////////////////////////
@@ -240,7 +241,7 @@
                         tr.value = "";
                         var input = tr.row.find("td.ms-formbody input");
                         if (input.length > 0 && !(input.val().search(/^<p>.*<\/p>$/) >= 0 &&
-                            input.val().length == 8)) {
+                            input.val().length === 8)) {
                             tr.value = input.val().trim();
                             if (tr.value.indexOf("<div") === 0) {
                                 tr.value = "<div class='ms-rtestate-field'>" + tr.value + "</div>";
@@ -274,10 +275,10 @@
                     case "SPFieldDateTime":
                         tr.value = tr.row.find("td.ms-formbody input").val().trim();
                         var selects = tr.row.find("select");
-                        if (selects.length == 2) {
+                        if (selects.length === 2) {
                             var tmp2 = $(selects[0]).find(
                                 "option:selected").text().split(' ');
-                            if (tmp2.length == 2) {
+                            if (tmp2.length === 2) {
                                 var hour = tmp2[0];
                                 var ampm = tmp2[1];
                                 var minutes = $(selects[1]).val();
@@ -294,7 +295,7 @@
                         if (tr.value.indexOf("|t") >= 0) {
                             var parts = tr.value.split("|t");
                             tr.value = "";
-                            for (i = 1; i < parts.length; i += 2) {
+                            for (var i = 1; i < parts.length; i += 2) {
                                 if (tr.value.length === 0) {
                                     tr.value += parts[i];
                                 } else {
@@ -330,7 +331,7 @@
                     case "SPFieldUser":
                     case "SPFieldUserMulti":
                         var tmp3 = tr.row.find("input[type='hidden']").val();
-                        if (typeof (tmp3) != 'undefined') {
+                        if (typeof (tmp3) !== 'undefined') {
                             var hiddenInput = $.spEasyForms.utilities.parseJSON(tmp3);
                             $.each(hiddenInput, function (idx, entity) {
                                 if (tr.value.length > 0) {

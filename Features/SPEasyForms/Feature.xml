@@ -41,13 +41,18 @@
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.sharePoinFieldRows.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.configManager.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.defaultContainer.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.baseContainer.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.accordion.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.columns.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.tabs.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.visibilityRuleCollection.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.js" />
-
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" />
+        
         <ElementFile Location="SPEasyFormsAssets\speasyforms_help.aspx" />
+        
         <ElementFile Location="SPEasyFormsAssets\bullet_blue.png" />
         <ElementFile Location="SPEasyFormsAssets\Download.png" />
         <ElementFile Location="SPEasyFormsAssets\Download_002.png" />

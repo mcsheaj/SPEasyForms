@@ -6,6 +6,7 @@
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
+/* global spefjQuery */
 (function ($, undefined) {
 
     var containerCollection = $.spEasyForms.containerCollection;

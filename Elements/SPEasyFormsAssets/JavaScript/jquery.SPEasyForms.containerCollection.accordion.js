@@ -6,6 +6,7 @@
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
+/* global spefjQuery */
 (function ($, undefined) {
 
     var containerCollection = $.spEasyForms.containerCollection;
@@ -29,8 +30,6 @@
             $("#" + opt.containerId).append("<div id='" + divId + "' class='" +
                 divClass + "'></div>");
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                var itemClass = "speasyforms-accordion speasyforms-accordion" +
-                    opt.index + "" + idx;
                 var tableClass = "speasyforms-accordion " +
                     "speasyforms-accordion" + opt.index + "" + idx;
                 var tableId = "spEasyFormsAccordionTable" + opt.index + "" + idx;
@@ -66,7 +65,7 @@
                     $("#spEasyFormsAccordionHeader" + index).hide();
                 }
             });
-        },   
+        },
 
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -90,7 +89,7 @@
             return true;
         }
     };
-
-    containerCollection.containerImplementations.accordion = $.extend({}, baseContainer, accordion)
+    
+    containerCollection.containerImplementations.accordion = $.extend({}, baseContainer, accordion);
 
 })(spefjQuery);

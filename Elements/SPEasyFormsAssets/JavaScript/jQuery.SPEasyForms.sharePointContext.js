@@ -7,6 +7,7 @@
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
+/* global spefjQuery, _spPageContextInfo */
 (function ($, undefined) {
 
     ////////////////////////////////////////////////////////////////////////////
@@ -45,7 +46,7 @@
                     opt.siteUrl = this.getCurrentSiteUrl(opt);
                     result =  $.spEasyForms.readCachedContext(opt);
                 }
-                if (typeof(result) == 'undefined') {
+                if (typeof(result) === 'undefined') {
                     result = {};
                     result.siteRelativeUrl = _spPageContextInfo.siteServerRelativeUrl;
                     result.webAppUrl = window.location.href.substring(0,
@@ -114,10 +115,9 @@
             }
 
             if (promises.length > 0) {
-                $.when.apply($, promises).done(function(data) {
+                $.when.apply($, promises).done(function() {
                     $(promises).each(function() {
-                        var result = {};
-                        if (this.status == 200) {
+                        if (this.status === 200) {
                             // userdisp.aspx
                             if (this.responseText.indexOf("Personal Settings") > 0) {
                                 currentContext.userInformation = {};
@@ -157,7 +157,7 @@
                          $.spEasyForms.writeCachedContext(opt);
                     }
                     opt.callback(options);
-                }).fail(function(data) {
+                }).fail(function() {
                     opt.callback(options);
                 });
             } else {
@@ -189,7 +189,7 @@
             var user = ("userInformation" in currentContext ?
                 currentContext.userInformation : {});
             if (!opt.useCache || 'userId' in opt || $.isEmptyObject(user)) {
-                var id = (typeof(opt.userId) != 'undefined' ?
+                var id = (typeof(opt.userId) !== 'undefined' ?
                     "ID=" + opt.userId + "&" : "");
                 $.ajax({
                     async: false,
@@ -248,7 +248,7 @@
                     operation: 'GetUserProfileByName',
                     async: false,
                     debug: opt.verbose,
-                    completefunc: function(xData, Status) {
+                    completefunc: function(xData) {
                         $(xData.responseXML).SPFilterNode("PropertyData").each(
                             function() {
                                 var name = $(this).find("Name").text().replace(
@@ -467,9 +467,9 @@
                         this.getUserInformation(opt).name),
                     async: false,
                     debug: opt.verbose,
-                    completefunc: function(xData, Status) {
+                    completefunc: function(xData) {
                         $(xData.responseXML).find("Group").each(function() {
-                            group = {};
+                            var group = {};
                             group.name = $(this).attr("Name");
                             group.id = $(this).attr("ID");
                             spContext.groups[group.id] = group;
@@ -516,9 +516,9 @@
                 operation: "GetGroupCollectionFromSite",
                 async: false,
                 debug: opt.verbose,
-                completefunc: function(xData, Status) {
+                completefunc: function(xData) {
                     $(xData.responseXML).find("Group").each(function() {
-                        group = {};
+                        var group = {};
                         group.name = $(this).attr("Name");
                         group.id = $(this).attr("ID");
                         spContext.siteGroups[group.id] = group;

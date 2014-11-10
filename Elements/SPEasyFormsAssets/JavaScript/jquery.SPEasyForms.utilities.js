@@ -6,6 +6,7 @@
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
+/* global spefjQuery, _spPageContextInfo */
 (function ($, undefined) {
 
     ////////////////////////////////////////////////////////////////////////////
@@ -30,7 +31,7 @@
          * @returns {object} - the deserialized object
          *********************************************************************/
         parseJSON: function(json) {
-            if (typeof(json) == 'undefined' ||
+            if (typeof(json) === 'undefined' ||
                 json === null ||
                 json.length === 0) {
                 return undefined;
@@ -56,7 +57,7 @@
                     window.location.search.indexOf('?') + 1).split('&');
                 for (var i = 0; i < nvPairs.length; i++) {
                     var nvPair = nvPairs[i].split('=', 2);
-                    if (nvPair.length == 2) {
+                    if (nvPair.length === 2) {
                         result[nvPair[0]] = decodeURIComponent(nvPair[1]);
                     }
                 }
@@ -86,6 +87,5 @@
             return path;
         }
     };
-    var utils = $.spEasyForms.utilities;
 
 })(spefjQuery);
