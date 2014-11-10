@@ -2,32 +2,82 @@
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.09.beta2/JavaScript/jquery.js"
-       Sequence="11151"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.js"
+       Sequence="57151"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.09.beta2/JavaScript/jquery-ui.js"
-       Sequence="11152"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery-ui.js"
+       Sequence="57156"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.09.beta2/JavaScript/jquery.SPServices.js"
-       Sequence="11153"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPServices.js"
+       Sequence="57161"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.09.beta2/JavaScript/ssw.js"
-       Sequence="11154"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/ssw.js"
+       Sequence="57166"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.00.09.beta2/JavaScript/jquery.SPEasyForms.js"
-       Sequence="11155"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPEasyForms.js"
+       Sequence="57171"
     />
     <CustomAction
-         Location="ScriptLink"
-         ScriptBlock="spefjQuery(window).bind('load', function() { spefjQuery.spEasyForms.init(); });"
-         Sequence="11255"
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPEasyForms.utilities.js"
+       Sequence="57176"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPEasyForms.sharePointContext.js"
+       Sequence="57181"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPEasyForms.sharePoinFieldRows.js"
+       Sequence="57186"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPEasyForms.configManager.js"
+       Sequence="57191"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPEasyForms.containerCollection.js"
+       Sequence="57196"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPEasyForms.containerCollection.accordion.js"
+       Sequence="57201"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPEasyForms.containerCollection.columns.js"
+       Sequence="57206"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPEasyForms.containerCollection.tabs.js"
+       Sequence="57211"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPEasyForms.visibilityRuleCollection.js"
+       Sequence="57216"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.i/JavaScript/jquery.SPEasyForms.adapterCollection.js"
+       Sequence="57222"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptBlock="spefjQuery(window).bind('load', function() { spefjQuery.spEasyForms.init(); });"
+       Sequence="57322"
      />
 </Elements>

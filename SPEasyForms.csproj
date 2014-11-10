@@ -118,9 +118,20 @@
     <Content Include="Elements\SPEasyFormsAssets\Help\speasyforms_help.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.configManager.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.accordion.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.tabs.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.sharePoinFieldRows.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.sharePointContext.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.utilities.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.visibilityRuleCollection.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPServices.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\ssw.js" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx">
@@ -138,6 +149,7 @@
     <Content Include="Package\Manifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.columns.js" />
     <None Include="Package\Build.bat" />
     <None Include="Package\Package.ddf" />
   </ItemGroup>

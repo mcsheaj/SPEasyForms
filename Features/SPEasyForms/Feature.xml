@@ -36,6 +36,16 @@
         <ElementFile Location="SPEasyFormsAssets\jquery.SPServices.js" />
         <ElementFile Location="SPEasyFormsAssets\ssw.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.sharePointContext.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.utilities.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.sharePoinFieldRows.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.configManager.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.accordion.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.columns.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.tabs.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.visibilityRuleCollection.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.js" />
 
         <ElementFile Location="SPEasyFormsAssets\speasyforms_help.aspx" />
         <ElementFile Location="SPEasyFormsAssets\bullet_blue.png" />
