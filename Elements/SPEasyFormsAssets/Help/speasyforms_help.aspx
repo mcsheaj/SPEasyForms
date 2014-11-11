@@ -626,7 +626,7 @@ edit</strong>, or <strong>disp, </strong>case insensitive, and it would be helpf
                 <li>Turn on allow management of content types in the list settings.</li>
                 <li>Create a site content type called <strong>Employee</strong> using
 
-                    <strong>Contact</strong> as the parent content type, and add the following columns to it:
+                    <strong>Contact</strong> as the parent content type, add the following columns to it, and add it to the list content types:
                     <ul>
                         <li><strong>EmployeeId</strong> - single line of text.</li>
                         <li><strong>HireDate</strong> - date.</li>
@@ -711,7 +711,7 @@ edit</strong>, or <strong>disp, </strong>case insensitive, and it would be helpf
             </p>
             <p>Now there are some changes to the form view. I have 5 fields arranged in 2 columns followed by the default form. Of course the form view isn't really a WYSIWIG, it's just structurally close. It doesn't draw any input controls, the boxes on
                 the right-hand side are just the form body table cells with some CSS to give it a border, which becomes apparent when you see the columns container in the form view, because in addition to moving the fields into a multi-column table, the
-                columns container moves to field label into the form body cell placed above the input control to save horizontal space. It also applies some CSS to shorten
+                columns container moves the field label into the form body cell placed above the input control to save horizontal space. It also applies some CSS to shorten
                 <font face="Courier New"><strong>ms-long</strong></font> input controls, when and only when they're on a columns container, again to save on vertical space. To see what it really looks like you need to open up the new form on the list again,
                 but first hit the save button in the editor or you'll be utterly underwhelmed by the dramatic lack of changes to the form. Once you've saved, the new form should look something like:</p>
             <p>
@@ -1010,7 +1010,7 @@ could write their own JavaScript, call the web
                 <strong>Full Name</strong> field should disappear. Change it back to Green and it reappears. But in the interest of full disclosure I should note that I started off this paragraph with a half truth. This only works for some types of 'other fields'
                 right now. I've tested it on check boxes, radio buttons, drop downs, multi-select choices, and even single and multi-line text fields and it works. But I also know it doesn't work on rich text, enhanced rich text, and date fields,
                 and I haven't even bothered to test some field types. I suspect where it doesn't work it is because Microsoft has their own change listeners on the controls and they are swallowing the event, or something like that, but I haven't looked
-                too hard to prove that at this point. What it comes down to is, I satisfied most of the requirements for this type of functionality that I've encountered in the real just making this work with choice fields, so I've moved on for now.</p>
+                too hard to prove that at this point. What it comes down to is, I satisfied most of the requirements for this type of functionality that I've encountered in the real world just making this work with choice fields, so I've moved on for now.</p>
             <p>The final thing of interest for this type of rule as a stand alone rule is that you can have more than one condition in a rule. Up to 3 right now just to simplify the UI, but the back end supports an unlimited number and I may make the UI
                 more flexible later on. You add conditions by clicking the + icon button, and multiple conditions in a rule are
                 <strong>ANDed</strong> together, so:</p>
