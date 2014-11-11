@@ -1,5 +1,5 @@
 ﻿/*
- * SPEasyForms.sharePointFieldRows - Object representing a tabs container.
+ * SPEasyForms.containerCollection.tabs - Object representing a tabs container.
  *
  * @requires jQuery v1.11.1 
  * @copyright 2014 Joe McShea

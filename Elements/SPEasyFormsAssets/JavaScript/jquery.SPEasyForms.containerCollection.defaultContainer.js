@@ -1,5 +1,5 @@
 ﻿/*
- * SPEasyForms.utilites - general helper functions for SPEasyForms
+ * SPEasyForms.containerCollection.defaultFormContainer - object representing the OOB SharePoint form.
  *
  * @requires jQuery v1.11.1 
  * @copyright 2014 Joe McShea

@@ -1,5 +1,5 @@
 ﻿/*
- * SPEasyForms.sharePointFieldRows - Object that encapsulates getting, setting, and saving the SPEasyForms
+ * SPEasyForms.configManager - Object that encapsulates getting, setting, and saving the SPEasyForms
  * configuration file for the current list.
  *
  * @requires jQuery v1.11.1 
@@ -212,7 +212,7 @@
          *********************************************************************/
         set: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.01.o";
+            opt.currentConfig.version = "2014.01.p";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig !== oldConfig) {

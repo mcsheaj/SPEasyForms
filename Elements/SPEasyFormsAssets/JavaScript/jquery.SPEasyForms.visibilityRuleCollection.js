@@ -1,5 +1,5 @@
 ﻿/*
- * SPEasyForms.sharePointFieldRows - object to hold and manage all field visibility rules.
+ * SPEasyForms.visibilityRuleCollection - object to hold and manage all field visibility rules.
  *
  * @requires jQuery v1.11.1 
  * @copyright 2014 Joe McShea

@@ -1,5 +1,5 @@
 ﻿/*
- * SPEasyForms.sharePointFieldRows - collection of field control adapters.
+ * SPEasyForms.adapterCollection - collection of field control adapters.
  *
  * @requires jQuery v1.11.1 
  * @copyright 2014 Joe McShea

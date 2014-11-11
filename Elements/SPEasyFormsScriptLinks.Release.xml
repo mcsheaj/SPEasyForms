@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.p/JavaScript/jquery.SPEasyForms.min.js"
+       Sequence="57151"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptBlock="spefjQuery(window).bind('load', function() { spefjQuery.spEasyForms.init(); });"
+       Sequence="57741"
+     />
+</Elements>

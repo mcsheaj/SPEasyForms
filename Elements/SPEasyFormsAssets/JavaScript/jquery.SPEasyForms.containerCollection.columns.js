@@ -1,5 +1,5 @@
 ﻿/*
- * SPEasyForms.sharePointFieldRows - Object representing a multi-column container.
+ * SPEasyForms.containerCollection.columns - Object representing a multi-column container.
  *
  * @requires jQuery v1.11.1 
  * @copyright 2014 Joe McShea

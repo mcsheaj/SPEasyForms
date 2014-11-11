@@ -135,6 +135,12 @@
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.utilities.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.visibilityRuleCollection.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPServices.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.js">
+      <DependentUpon>jquery_SPEasyForms.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.min.js">
+      <DependentUpon>jquery_SPEasyForms.js</DependentUpon>
+    </Content>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\ssw.js" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx">
       <SubType>ASPXCodeBehind</SubType>
@@ -142,7 +148,10 @@
     <Content Include="Elements\SPEasyFormsCustomActions.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Elements\SPEasyFormsScriptLinks.xml">
+    <Content Include="Elements\SPEasyFormsScriptLinks.Release.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Elements\SPEasyFormsScriptLinks.Debug.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Features\SPEasyForms\Feature.xml">
@@ -152,13 +161,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.columns.js" />
+    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.js.bundle" />
+    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.min.js.map">
+      <DependentUpon>jquery_SPEasyForms.min.js</DependentUpon>
+    </None>
     <None Include="Package\Build.bat" />
     <None Include="Package\Package.ddf" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd ..\..\Package
-Build.bat</PostBuildEvent>
+Build.bat $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -35,6 +35,7 @@
         <ElementFile Location="SPEasyFormsAssets\jquery-ui.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPServices.js" />
         <ElementFile Location="SPEasyFormsAssets\ssw.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery_SPEasyForms.min.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.sharePointContext.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.utilities.js" />

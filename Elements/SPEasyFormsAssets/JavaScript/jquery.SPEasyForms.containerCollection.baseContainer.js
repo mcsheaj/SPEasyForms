@@ -1,5 +1,5 @@
 ﻿/*
- * SPEasyForms.sharePointFieldRows - This abstract container implements all 
+ * SPEasyForms.containerCollection.baseContainer - This abstract container implements all 
  * of the editor functionality for any container type comprised of one or more 
  * groups of fields (which I imagine is all containers).  It implements everything 
  * but the transform function.

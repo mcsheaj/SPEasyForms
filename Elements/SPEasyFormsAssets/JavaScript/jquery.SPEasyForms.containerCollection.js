@@ -1,5 +1,5 @@
 ﻿/*
- * SPEasyForms.sharePointFieldRows - object to hold and manage all containers.
+ * SPEasyForms.containerCollection - object to hold and manage all containers.
  *
  * @requires jQuery v1.11.1 
  * @copyright 2014 Joe McShea
@@ -678,7 +678,7 @@
             
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01.o/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01.p/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });

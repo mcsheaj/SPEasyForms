@@ -1,5 +1,5 @@
 ﻿/*
- * SPEasyForms.sharePointFieldRows - Object representing an accordion container.
+ * SPEasyForms.containerCollection.accordion - Object representing an accordion container.
  *
  * @requires jQuery v1.11.1 
  * @copyright 2014 Joe McShea
