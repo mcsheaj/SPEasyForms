@@ -104,12 +104,16 @@
             var current = opt.tr;
             var result = {};
             if (current.html().indexOf("idAttachmentsRow") >= 0) {
-                result.row = current;
+                if (!opt.dontIncludeNodes) {
+                    result.row = current;
+                }
                 result.internalName = "Attachments";
                 result.displayName = "Attachments";
                 result.spFieldType = "SPFieldAttachments";
             } else if (current.find("h3").text() === "Content Type" || current.children()[0].innerText === "Content Type") {
-                result.row = current;
+                if (!opt.dontIncludeNodes) {
+                    result.row = current;
+                }
                 result.internalName = "ContentType";
                 result.displayName = "Content Type";
                 result.spFieldType = "SPFieldContentType";
@@ -127,11 +131,13 @@
                     regex: opt.fieldTypeRegex
                 });
                 result = {
-                    row: current,
                     internalName: internal,
                     displayName: display,
                     spFieldType: fieldType
                 };
+                if (!opt.dontIncludeNodes) {
+                    result.row = current;
+                }
                 if (!result.internalName || !result.displayName || !result.spFieldType) {
                     if (opt.currentListContext) {
                         var schema = opt.currentListContext.schema;

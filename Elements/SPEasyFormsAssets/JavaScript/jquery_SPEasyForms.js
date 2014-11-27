@@ -31106,6 +31106,23 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (!opt.listId) {
                 return undefined;
             }
+            if (opt.listTitle) {
+                var foundListId = false;
+                var listTitleObject;
+                var listCollection = getListCollection(opt);
+                $.each($(listCollection), function (idx, current) {
+                    if (current.id === opt.listId) {
+                        foundListId = true;
+                        return false;
+                    }
+                    else if (current.title === opt.listTitle) {
+                        listTitleObject = current;
+                    }
+                });
+                if (!foundListId && typeof(listTitleObject) !== 'undefined') {
+                    opt.listId = current.id;
+                }
+            }
             var result = {};
             if (opt.useCache && opt.listId in opt.currentContext.listContexts) {
                 result = opt.currentContext.listContexts[opt.listId];
@@ -31116,7 +31133,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     result = opt.currentContext.listContexts[opt.listId];
                 }
                 var rows = {};
-                if(opt.listId === spContext.getCurrentListId($.spEasyForms.defaults)) {
+                if (opt.listId === spContext.getCurrentListId($.spEasyForms.defaults)) {
+                    opt.dontIncludeNodes = true;
                     rows = $.spEasyForms.sharePointFieldRows.init(opt);
                 }
                 if(Object.keys(rows).length === 0) {
@@ -31392,20 +31410,38 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         replace(/childColumnInternal/g, "columnNameInternal");
                     opt.currentConfig = $.spEasyForms.utilities.parseJSON(txt);
                     opt.currentConfig = spContext.layout2Config(opt);
+                    if (opt.currentConfig.adapters && opt.currentConfig.adapters.def) {
+                        var adapterNames = Object.keys(opt.currentConfig.adapters.def);
+                        $.each($(adapterNames), function (idx, current) {
+                            var adapter = opt.currentConfig.adapters.def[current];
+                            if ("relationshipList" in adapter && !("relationshipListTitle" in adapter)) {
+                                $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
+                                    if (listObj.id === adapter.relationshipList) {
+                                        adapter.relationshipListTitle = listObj.title;
+                                    }
+                                });
+                            }
+                            else if ("sourceList" in adapter && !("sourceListTitle" in adapter)) {
+                                $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
+                                    if (listObj.id === adapter.sourceList) {
+                                        adapter.sourceListTitle = listObj.title;
+                                    }
+                                });
+                            }
+                        });
+                    }
                 },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    if(opt.verbose) {
-                        if (xhr.status === 409) {
-                            alert("The web service returned 409 - CONFLICT. This " +
-                                "most likely means you do not have a 'Site Assets' " +
-                                "library in the current site with a URL of " +
-                                "SiteAssets. This is required before you can " +
-                                "load and save SPEasyForms configuration files.");
-                        } else if (xhr.status !== 404 &&
-                            opt.configFileName.indexOf("{") < 0) {
-                            alert("Error getting configuration.\nStatus: " +
-                                xhr.status + "\nStatus Text: " + thrownError);
-                        }
+                error: function (xhr, ajaxOptions, thrownError) {
+                    if (xhr.status === 409) {
+                        alert("The web service returned 409 - CONFLICT. This " +
+                            "most likely means you do not have a 'Site Assets' " +
+                            "library in the current site with a URL of " +
+                            "SiteAssets. This is required before you can " +
+                            "load and save SPEasyForms configuration files.");
+                    } else if (xhr.status !== 404 &&
+                        opt.configFileName.indexOf("{") < 0) {
+                        alert("Error getting configuration.\nStatus: " +
+                            xhr.status + "\nStatus Text: " + thrownError);
                     }
                 }
             });
@@ -31616,12 +31652,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var current = opt.tr;
             var result = {};
             if (current.html().indexOf("idAttachmentsRow") >= 0) {
-                result.row = current;
+                if (!opt.dontIncludeNodes) {
+                    result.row = current;
+                }
                 result.internalName = "Attachments";
                 result.displayName = "Attachments";
                 result.spFieldType = "SPFieldAttachments";
             } else if (current.find("h3").text() === "Content Type" || current.children()[0].innerText === "Content Type") {
-                result.row = current;
+                if (!opt.dontIncludeNodes) {
+                    result.row = current;
+                }
                 result.internalName = "ContentType";
                 result.displayName = "Content Type";
                 result.spFieldType = "SPFieldContentType";
@@ -31639,11 +31679,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     regex: opt.fieldTypeRegex
                 });
                 result = {
-                    row: current,
                     internalName: internal,
                     displayName: display,
                     spFieldType: fieldType
                 };
+                if (!opt.dontIncludeNodes) {
+                    result.row = current;
+                }
                 if (!result.internalName || !result.displayName || !result.spFieldType) {
                     if (opt.currentListContext) {
                         var schema = opt.currentListContext.schema;
