@@ -67,6 +67,7 @@
                                 var result = {
                                     type: "Autocomplete",
                                     sourceList: $("#autocompleteListSelect").val(),
+                                    sourceListTitle: $("#autocompleteListSelect option:selected").text(),
                                     sourceField: $("#autocompleteFieldSelect").val(),
                                     columnNameInternal: $("#autocompleteChildSelect").val()
                                 };

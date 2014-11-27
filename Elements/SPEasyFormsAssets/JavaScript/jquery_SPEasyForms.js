@@ -31106,23 +31106,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (!opt.listId) {
                 return undefined;
             }
-            if (opt.listTitle) {
-                var foundListId = false;
-                var listTitleObject;
-                var listCollection = getListCollection(opt);
-                $.each($(listCollection), function (idx, current) {
-                    if (current.id === opt.listId) {
-                        foundListId = true;
-                        return false;
-                    }
-                    else if (current.title === opt.listTitle) {
-                        listTitleObject = current;
-                    }
-                });
-                if (!foundListId && typeof(listTitleObject) !== 'undefined') {
-                    opt.listId = current.id;
-                }
-            }
             var result = {};
             if (opt.useCache && opt.listId in opt.currentContext.listContexts) {
                 result = opt.currentContext.listContexts[opt.listId];
@@ -31410,26 +31393,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         replace(/childColumnInternal/g, "columnNameInternal");
                     opt.currentConfig = $.spEasyForms.utilities.parseJSON(txt);
                     opt.currentConfig = spContext.layout2Config(opt);
-                    if (opt.currentConfig.adapters && opt.currentConfig.adapters.def) {
-                        var adapterNames = Object.keys(opt.currentConfig.adapters.def);
-                        $.each($(adapterNames), function (idx, current) {
-                            var adapter = opt.currentConfig.adapters.def[current];
-                            if ("relationshipList" in adapter && !("relationshipListTitle" in adapter)) {
-                                $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
-                                    if (listObj.id === adapter.relationshipList) {
-                                        adapter.relationshipListTitle = listObj.title;
-                                    }
-                                });
-                            }
-                            else if ("sourceList" in adapter && !("sourceListTitle" in adapter)) {
-                                $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
-                                    if (listObj.id === adapter.sourceList) {
-                                        adapter.sourceListTitle = listObj.title;
-                                    }
-                                });
-                            }
-                        });
-                    }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     if (xhr.status === 409) {
@@ -31445,6 +31408,45 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 }
             });
+
+            if (opt.currentConfig && opt.currentConfig.adapters && opt.currentConfig.adapters.def) {
+                var adapterNames = Object.keys(opt.currentConfig.adapters.def);
+                $.each($(adapterNames), function (idx, current) {
+                    var adapter = opt.currentConfig.adapters.def[current];
+                    if ("relationshipList" in adapter) {
+                        if (!("relationshipListTitle" in adapter)) {
+                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
+                                if (listObj.id === adapter.relationshipList) {
+                                    adapter.relationshipListTitle = listObj.title;
+                                }
+                            });
+                        }
+                        else {
+                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
+                                if (listObj.title === adapter.relationshipListTitle) {
+                                    adapter.relationshipList = listObj.id;
+                                }
+                            });
+                        }
+                    }
+                    else if ("sourceList" in adapter) {
+                        if (!("sourceListTitle" in adapter)) {
+                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
+                                if (listObj.id === adapter.sourceList) {
+                                    adapter.sourceListTitle = listObj.title;
+                                }
+                            });
+                        }
+                        else {
+                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
+                                if (listObj.title === adapter.sourceListTitle) {
+                                    adapter.sourceList = listObj.id;
+                                }
+                            });
+                        }
+                    }
+                });
+            }
 
             this.config = opt.currentConfig;
             return opt.currentConfig;
@@ -35048,6 +35050,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 var result = {
                                     type: "Autocomplete",
                                     sourceList: $("#autocompleteListSelect").val(),
+                                    sourceListTitle: $("#autocompleteListSelect option:selected").text(),
                                     sourceField: $("#autocompleteFieldSelect").val(),
                                     columnNameInternal: $("#autocompleteChildSelect").val()
                                 };
@@ -35242,6 +35245,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                     adapter.type = cascadingLookupAdapter.type;
                                     adapter.relationshipList =
                                         $("#cascadingRelationshipListSelect").val();
+                                    adapter.relationshipListTitle =
+                                        $("#cascadingRelationshipListSelect option:selected").text();
                                     adapter.relationshipListParentColumn =
                                         $("#cascadingLookupRelationshipParentSelect").val();
                                     adapter.relationshipListChildColumn =

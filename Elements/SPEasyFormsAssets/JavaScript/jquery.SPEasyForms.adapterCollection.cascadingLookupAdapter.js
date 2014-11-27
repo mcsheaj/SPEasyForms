@@ -83,6 +83,8 @@
                                     adapter.type = cascadingLookupAdapter.type;
                                     adapter.relationshipList =
                                         $("#cascadingRelationshipListSelect").val();
+                                    adapter.relationshipListTitle =
+                                        $("#cascadingRelationshipListSelect option:selected").text();
                                     adapter.relationshipListParentColumn =
                                         $("#cascadingLookupRelationshipParentSelect").val();
                                     adapter.relationshipListChildColumn =
