@@ -2,7 +2,7 @@
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.p/JavaScript/jquery.SPEasyForms.min.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2014.01.s/JavaScript/jquery.SPEasyForms.min.js"
        Sequence="57151"
     />
     <CustomAction

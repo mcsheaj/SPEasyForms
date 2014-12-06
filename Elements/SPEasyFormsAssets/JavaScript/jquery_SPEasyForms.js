@@ -30176,7 +30176,7 @@ ssw_init = function (window, document) {
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2014.01.p
+ * @version 2014.01.s
  * @requires jQuery v1.11.1 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
@@ -30543,7 +30543,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if (source.indexOf("start.aspx#") >= 0) {
                     source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                 }
-                var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01.p/Pages/SPEasyFormsSettings.aspx") +
+                var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01.s/Pages/SPEasyFormsSettings.aspx") +
                     "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
                     "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -30590,13 +30590,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         loadDynamicStyles: function(options) {
             if (options.jQueryUITheme === undefined) {
-                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01.p/Css/jquery-ui/jquery-ui.css');
+                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01.s/Css/jquery-ui/jquery-ui.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
-                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01.p/Css/speasyforms.css');
+                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01.s/Css/speasyforms.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -31943,8 +31943,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /* global spefjQuery */
 (function ($, undefined) {
 
-    var defaultFormContainer = $.spEasyForms.defaultFormContainer;
-
     ////////////////////////////////////////////////////////////////////////////
     // Object that encapsulates getting, setting, and saving the SPEasyForms
     // configuration file for the current list.
@@ -32112,7 +32110,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 currentConfig = {
                     layout: {
                         def: [{
-                            "containerType": defaultFormContainer.containerType
+                            "containerType": $.spEasyForms.defaultFormContainer.containerType
                         }]
                     },
                     visibility: {
@@ -32145,7 +32143,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.01.p";
+            opt.currentConfig.version = "2014.01.s";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig !== oldConfig) {
@@ -32896,7 +32894,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01.p/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01.s/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });

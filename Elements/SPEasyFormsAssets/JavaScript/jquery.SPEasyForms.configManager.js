@@ -10,8 +10,6 @@
 /* global spefjQuery */
 (function ($, undefined) {
 
-    var defaultFormContainer = $.spEasyForms.defaultFormContainer;
-
     ////////////////////////////////////////////////////////////////////////////
     // Object that encapsulates getting, setting, and saving the SPEasyForms
     // configuration file for the current list.
@@ -179,7 +177,7 @@
                 currentConfig = {
                     layout: {
                         def: [{
-                            "containerType": defaultFormContainer.containerType
+                            "containerType": $.spEasyForms.defaultFormContainer.containerType
                         }]
                     },
                     visibility: {
@@ -212,7 +210,7 @@
          *********************************************************************/
         set: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.01.p";
+            opt.currentConfig.version = "2014.01.s";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig !== oldConfig) {
