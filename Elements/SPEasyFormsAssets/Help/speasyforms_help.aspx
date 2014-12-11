@@ -1270,9 +1270,12 @@ EmployeeId</strong>. The configuration for this field should look like:</p>
                     <img title="image" src="images/Download_033.png" alt="image" style="padding-top:0px; padding-left:0px; margin:10px 0px; display:inline; padding-right:0px; border:0px" border="0" height="329" width="604">
                 </a>
             </p>
-            <p>The last column in this table shows adapter specific configuration in the raw, because the editor does not know anything about this configuration information other than that it is in the configuration. Also note that the foreign lists are
-                stored as GUIDs. This means that if this configuration is exported and imported into a list in a different site, the adapters will need to be reconfigured. I may try to fix that or at least provide an easy way to reconfigure them prior
-                to the first release, if I get a chance.</p>
+            <p>The last column in this table shows adapter specific configuration in the raw, because the editor does not know anything about this configuration information other than that it is in the configuration. 
+                Also note that the foreign lists are
+                stored by GUID and Title. The GUID is used to find the list, but if there is no list with the given id the Title is used
+                instead. This means the configuration should fix itself on import as long as there is a list with the same Title in 
+                the site you are importing to, and it has the same fields.
+            </p>
 <h3>4.4 Validation</h3>
 <p>Neither of the two adapters included in the first release has any validation issues, since they do not hide the field/controls, they just augment the functionality of the field.&nbsp; It is certainly quite possible that a field adapter could hide validation errors from the user, making it difficult or impossible for the user to submit the form, but validation works the same on Autocomplete fields and Cascading Look Up fields as it does on OOB text fields and look up fields.</p>
             <h2>5. Wrap Up</h2>
