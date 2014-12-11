@@ -63,7 +63,7 @@
             result.listId = this.getCurrentListId(opt);
             if (opt.useCache) {
                 opt.currentContext = result;
-                 $.spEasyForms.writeCachedContext(opt);
+                $.spEasyForms.writeCachedContext(opt);
             }
             this.ctx = result;
             return result;
@@ -128,7 +128,7 @@
                                     currentContext.userInformation[prop] = row.row.find("td[id^='SPField']").text().trim();
                                 });
                             }
-                            // GetGroupCollectionFromSite
+                                // GetGroupCollectionFromSite
                             else if ($(this.responseText).find("GetGroupCollectionFromWebResponse").length > 0) {
                                 spContext.siteGroups = {};
                                 $(this.responseText).find("Group").each(function() {
@@ -139,7 +139,7 @@
                                     spContext.siteGroups[group.name] = group;
                                 });
                             }
-                            // GetGroupCollectionFromUser
+                                // GetGroupCollectionFromUser
                             else if ($(this.responseText).find("GetGroupCollectionFromUserResponse").length > 0) {
                                 spContext.groups = {};
                                 $(this.responseText).find("Group").each(function() {
@@ -154,7 +154,7 @@
                     });
                     if (opt.useCache) {
                         opt.currentContext = currentContext;
-                         $.spEasyForms.writeCachedContext(opt);
+                        $.spEasyForms.writeCachedContext(opt);
                     }
                     opt.callback(options);
                 }).fail(function() {
@@ -262,7 +262,7 @@
                 if (opt.useCache && !("accountName" in opt)) {
                     currentContext.userProfile = user;
                     opt.currentContext = currentContext;
-                     $.spEasyForms.writeCachedContext(opt);
+                    $.spEasyForms.writeCachedContext(opt);
                 }
             }
             return user;
@@ -399,7 +399,7 @@
                     delete opt.currentContext.listContexts[Object.keys(opt.currentContext.listContexts)[0]];
                 }
                 opt.currentContext.listContexts[opt.listId] = result;
-                 $.spEasyForms.writeCachedContext(opt);
+                $.spEasyForms.writeCachedContext(opt);
             }
             return result;
         },
@@ -596,47 +596,39 @@
                 }
             });
 
-            if (opt.currentConfig && opt.currentConfig.adapters && opt.currentConfig.adapters.def) {
-                var adapterNames = Object.keys(opt.currentConfig.adapters.def);
-                $.each($(adapterNames), function (idx, current) {
-                    var adapter = opt.currentConfig.adapters.def[current];
-                    if ("relationshipList" in adapter) {
-                        if (!("relationshipListTitle" in adapter)) {
-                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
-                                if (listObj.id === adapter.relationshipList) {
-                                    adapter.relationshipListTitle = listObj.title;
-                                }
-                            });
-                        }
-                        else {
-                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
-                                if (listObj.title === adapter.relationshipListTitle) {
-                                    adapter.relationshipList = listObj.id;
-                                }
-                            });
-                        }
-                    }
-                    else if ("sourceList" in adapter) {
-                        if (!("sourceListTitle" in adapter)) {
-                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
-                                if (listObj.id === adapter.sourceList) {
-                                    adapter.sourceListTitle = listObj.title;
-                                }
-                            });
-                        }
-                        else {
-                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
-                                if (listObj.title === adapter.sourceListTitle) {
-                                    adapter.sourceList = listObj.id;
-                                }
-                            });
-                        }
-                    }
-                });
-            }
+            this.fixAdapterListReferences(opt);
 
             this.config = opt.currentConfig;
             return opt.currentConfig;
+        },
+
+        fixAdapterListReferences: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if (opt.currentConfig && opt.currentConfig.adapters && opt.currentConfig.adapters.def) {
+                var adapterNames = Object.keys(opt.currentConfig.adapters.def);
+                $.each($(adapterNames), function (idx, current) {
+                    var matcher = new RegExp("List$");
+                    var adapter = opt.currentConfig.adapters.def[current];
+                    $.each($(Object.keys(adapter)), function (i, k) {
+                        if (matcher.test(k)) {
+                            if (!(k + "Title" in adapter)) {
+                                $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
+                                    if (listObj.id === adapter[k]) {
+                                        adapter[k + "Title"] = listObj.title;
+                                    }
+                                });
+                            }
+                            else {
+                                $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
+                                    if (listObj.title === adapter[k + "Title"]) {
+                                        adapter[k] = listObj.id;
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+            }
         },
 
         /*********************************************************************

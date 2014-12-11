@@ -231,7 +231,7 @@
     </div>
     <div class="contents">
         <div class="inner-contents">
-            <p>SPEasyForms is a Rapid Application Development (RAD) tool for applying jQuery constructs to Out of Box (OOB) SharePoint forms without necessarily knowing anything about JavaScript or HTML or CSS. You configure SPEasyForms through a drag and
+            <p>SPEasyForms is a GUI tool for applying jQuery constructs to Out of Box (OOB) SharePoint forms without necessarily knowing anything about JavaScript or HTML or CSS. You configure SPEasyForms through a drag and
                 drop IDE-like list settings page, which is available on the list ribbon or as a link on the list settings page of compatible SharePoint list types (currently all lists except Surveys and Discussion Boards). The things you can configure
                 fall into 3 broad categories:</p>
             <ul>
@@ -260,8 +260,7 @@
                 <strong>2. Containers</strong>.If you just need help installing it but then want to jump in, read the next two brief sections and then skip to section
                 <strong>2. Containers</strong>.</p>
             <h3>1.1 System Requirements</h3>
-            <p>SPEasyForms has currently been pretty well tested on Office 365 and moderately tested on SharePoint 2010 and 2013. If you want to try it out now on 2013 or 2010, feel free and post any issues you encounter to the discussion board and we'll
-                address them when we can. There are no plans to support SharePoint 2007.</p>
+            <p>SPEasyForms was developed to run on Office 365 and SharePoint 2010 and 2013. It has been pretty well tested on all three platforms, meaning all of the functionality has been tested on all three platforms, but not necessarily on every list and library type available on all three platforms.&nbsp; Testing was done with Internet Explorer 9, 10, and 11, as well as Firefox 24, 28, and 32 and Chrome 35.&nbsp; That does not mean those are the only browsers we plan to support, but there is a limit to how many browsers a small team can reasonably test. If you find an issue with a particular browser, report it in the issues list on CodePlex and we will address it as quickly as possible. There are no plans to support SharePoint 2007.</p>
             <h3>1.2 Installation</h3>
             <p>In order to install SPEasyForms, you must have sufficient privileges to install a sandbox solution and activate a site collection feature (that means you need to be an SCA).</p>
             <p>Anyway, to get started, download the latest recommended release from <a href="https://speasyforms.codeplex.com/">
@@ -567,9 +566,6 @@ https://speasyforms.codeplex.com</a> and follow these steps to install it:</p>
                     </tr>
                 </tbody>
             </table>
-            <p>Note to self: must find graphic artist. I'm no artist myself, and it's amazing how quickly you can run out of useful icons when you're trying to use the built-in jQuery UI icons for anything other than say navigation. I can certainly make
-                simple icons, but it is time consuming and not high on my priority list, so for now I'll live with using the built-in icons and be content if different buttons have different icons even if the icons don't necessarily convey much about
-                the purpose of the button. The buttons do have hover tool tips, so if you're not sure what they are hover over them.</p>
             <h3>1.6 Limitations</h3>
             <p>SPEasyForms is intended to work on the OOB new, edit, and display forms for most list types. It does not work on Discussions or Surveys, and there are other list types it hasn't been adequately tested on. It also does not allow you to configure
                 content types based on folder. Folders rarely have enough metadata to require such a solution, but the bigger issue is that Microsoft subclasses folder for some pretty strange content types (like document set or OneNote document) that
@@ -727,9 +723,7 @@ edit</strong>, or <strong>disp, </strong>case insensitive, and it would be helpf
                     <img title="image" src="images/Download_059.png" alt="image" style="padding-top:0px; padding-left:0px; margin:10px 0px; display:inline; padding-right:0px; border-width:0px" border="0" height="492" width="604">
                 </a>
             </p>
-            <p>Again, its not particularly sexy, but it's starting to show some potential. With just the columns container I can create a wide variety of grid view type layouts, limited only by the horizontal size of the controls and how wide I'm willing
-                to let the form get. And let's face it, everyone knows most user's have a display with more horizontal real estate than vertical and nobody likes to scroll (at least maybe everybody except the guys who wrote the first SharePoint
-                forms ;). On a side note, I might be giving away my Java background throwing around terms like grid view layout, but I could have just as easily thrown out C/C++, maybe MFC, or even ADA terms. OK, so I'm not so young, but I digress.
+            <p>Again, its not particularly sexy, but it&#39;s starting to show some potential. With just the columns container I can create a wide variety of grid view type layouts, limited only by the horizontal size of the controls and how wide I&#39;m willing to let the form get. And let&#39;s face it, everyone knows most user&#39;s have a display with more horizontal real estate than vertical and nobody likes to scroll (at least maybe everybody except the guys who wrote the first SharePoint forms ;).
             </p>
             <p>Anyway, the basic idea behind containers is to organize fields in a way that maximizes screen real estate, and the Columns container provides some ability to do just that. But the other containers, tabs and accordion, have even more potential
                 to maximize screen real estate, so lets quickly see how they work. Since we hopefully have the basics down, I'm going to move a little quicker through those sections.</p>
@@ -959,30 +953,6 @@ could write their own JavaScript, call the web
             <p>The other thing to note is the author check box in the applies to area. This is there to allow you to apply a rule specifically to the original author of the item (i.e. whoever opened the new form and saved it). It's not that uncommon to get
                 requirements like make this field editable by the author but read only for everybody else, and without this check box there would be no way to generally satisfy this requirement. Of course, once again you'd need multiple blah, blah, blah,
                 because a single rule can only have one state.</p>
-            <p>Finally, I've done this kind of solution before and I'm guessing when and if I get feedback, one common request will be to add support for configuring rules based on Active Directory users and groups. Just to be clear up front, I will NEVER
-                accept this requirement. OK, let me back up a bit and say I will consider accepting this requirement if you can give me a compelling reason why it is needed, but I'm going to be the sole arbiter of what is compelling and I will bet you
-                can't. The rest of this section is going to be a bit of a rant on why, and it's kind of a historical sequence of events, so if you don't care you can safely move on to the next section of this document:</p>
-            <ul>
-                <li>In the past I have allowed rules based on SharePoint groups, AD groups, and even individuals.
-                </li>
-                <li>I generally document that I recommend using SharePoint groups only and why.</li>
-                <li>Every single person that I know of who actually uses my feature configures lots of complex rules based on AD entities only, in most cases individuals but a few somewhat enlightened souls at least use AD groups.
-                </li>
-                <li>People come and go from organizations, and for that matter organizations come and go, get renamed, split and merge, etc., which of course results in AD groups coming and going.
-                </li>
-            </ul>
-            <p>I think you can probably see where I'm going with this, right? This all leads to another sequence of events:</p>
-            <ul>
-                <li>People start asking for enhancements like an interface to change all the rules for entity X to now be for entity Y, to which I politely reply no thank you (people who have worked with me in the past will refute this characterization of
-                    my response) and explain that this is precisely the reason I recommended using only SharePoint groups. On the bright side, they already have an interface I explain. The configuration is all JSON, open it in an editor, ctrl+H, search
-                    and replace. But do remember that earlier I said muck with the JSON manually AT YOUR OWN RISK.</li>
-                <li>The bug reports start coming in. The form crashes. Tiger teams are formed, debugging begins, and it turns out the form doesn't like it very much when there are rules based on a person or group that no longer exists in AD (or is disabled, 
-                    or had their name changed, or is a group in a protected OU that the current user doesn't have access to etc. etc. ...). Of course in
-                    a perfect world all of these problems would have been shaken out in test, but it's hard to adequately test all the edge cases when you are doing the work at an organization at which you do not have AD admin privileges.
-                </li>
-            </ul>
-            <p>So anyway, my case is simple; that you should always use groups for this kind of configuration, and that the administration of these groups should be within your control. Most SCAs are not AD administrators. Q.E.D.
-            </p>
             <h3>3.3 Rules Based on the Value of Another Field</h3>
             <p>The last class of individual conditional requirements I wanted to satisfy is rules like 'make the field hidden if Code is red, read only if Code is green, and editable if Code is blue. This will obviously require multiple rules and we're still
                 not ready for that, but the basic building block for this type of rule is something like:</p>
@@ -1310,8 +1280,7 @@ EmployeeId</strong>. The configuration for this field should look like:</p>
                 if you want to describe a user interface. 
             </p>
             <p>When I set out on this project, my goal was to provide a turn key professional solution that could be installed and used by administrators and power users. I think I've achieved that goal somewhat. Agree or disagree, I'd love to hear your
-                feedback on the SPEasyForms CodePlex site. I also wanted to make it extensible with a plugin architecture. I think I've achieved that to some degree too, and I will start documenting it as soon as I've done the first stable release. I
-                expect that to be in a month or two.</p>
+                feedback on the SPEasyForms CodePlex site. I think I’ve achieved that to some degree too, and I will start documenting that over the next few months.</p>
             <p>The nice thing about the requirements in the scenario used in this document is that they all mapped perfectly to what SPEasyForms already does. You're mileage may vary.</p>
         </div>
         <div></div>

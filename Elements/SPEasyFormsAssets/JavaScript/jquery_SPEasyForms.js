@@ -30176,7 +30176,7 @@ ssw_init = function (window, document) {
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2014.01.s
+ * @version 2014.01.u
  * @requires jQuery v1.11.1 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
@@ -30518,7 +30518,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-445);
             }
             else {
-                $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-325);
+                $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-405);
             }
             $(window).resize(function() {
                 $("div.speasyforms-panel").height($(window).height()-180);
@@ -30526,7 +30526,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-445);
                 }
                 else {
-                    $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-325);
+                    $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-405);
                 }
             });
             $('#spEasyFormsRibbon').show;
@@ -30543,7 +30543,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if (source.indexOf("start.aspx#") >= 0) {
                     source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                 }
-                var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01.s/Pages/SPEasyFormsSettings.aspx") +
+                var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01.u/Pages/SPEasyFormsSettings.aspx") +
                     "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
                     "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -30590,13 +30590,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         loadDynamicStyles: function(options) {
             if (options.jQueryUITheme === undefined) {
-                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01.s/Css/jquery-ui/jquery-ui.css');
+                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01.u/Css/jquery-ui/jquery-ui.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
-                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01.s/Css/speasyforms.css');
+                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01.u/Css/speasyforms.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -30876,7 +30876,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             result.listId = this.getCurrentListId(opt);
             if (opt.useCache) {
                 opt.currentContext = result;
-                 $.spEasyForms.writeCachedContext(opt);
+                $.spEasyForms.writeCachedContext(opt);
             }
             this.ctx = result;
             return result;
@@ -30941,7 +30941,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                     currentContext.userInformation[prop] = row.row.find("td[id^='SPField']").text().trim();
                                 });
                             }
-                            // GetGroupCollectionFromSite
+                                // GetGroupCollectionFromSite
                             else if ($(this.responseText).find("GetGroupCollectionFromWebResponse").length > 0) {
                                 spContext.siteGroups = {};
                                 $(this.responseText).find("Group").each(function() {
@@ -30952,7 +30952,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                     spContext.siteGroups[group.name] = group;
                                 });
                             }
-                            // GetGroupCollectionFromUser
+                                // GetGroupCollectionFromUser
                             else if ($(this.responseText).find("GetGroupCollectionFromUserResponse").length > 0) {
                                 spContext.groups = {};
                                 $(this.responseText).find("Group").each(function() {
@@ -30967,7 +30967,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     });
                     if (opt.useCache) {
                         opt.currentContext = currentContext;
-                         $.spEasyForms.writeCachedContext(opt);
+                        $.spEasyForms.writeCachedContext(opt);
                     }
                     opt.callback(options);
                 }).fail(function() {
@@ -31075,7 +31075,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if (opt.useCache && !("accountName" in opt)) {
                     currentContext.userProfile = user;
                     opt.currentContext = currentContext;
-                     $.spEasyForms.writeCachedContext(opt);
+                    $.spEasyForms.writeCachedContext(opt);
                 }
             }
             return user;
@@ -31212,7 +31212,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     delete opt.currentContext.listContexts[Object.keys(opt.currentContext.listContexts)[0]];
                 }
                 opt.currentContext.listContexts[opt.listId] = result;
-                 $.spEasyForms.writeCachedContext(opt);
+                $.spEasyForms.writeCachedContext(opt);
             }
             return result;
         },
@@ -31409,47 +31409,39 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
             });
 
-            if (opt.currentConfig && opt.currentConfig.adapters && opt.currentConfig.adapters.def) {
-                var adapterNames = Object.keys(opt.currentConfig.adapters.def);
-                $.each($(adapterNames), function (idx, current) {
-                    var adapter = opt.currentConfig.adapters.def[current];
-                    if ("relationshipList" in adapter) {
-                        if (!("relationshipListTitle" in adapter)) {
-                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
-                                if (listObj.id === adapter.relationshipList) {
-                                    adapter.relationshipListTitle = listObj.title;
-                                }
-                            });
-                        }
-                        else {
-                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
-                                if (listObj.title === adapter.relationshipListTitle) {
-                                    adapter.relationshipList = listObj.id;
-                                }
-                            });
-                        }
-                    }
-                    else if ("sourceList" in adapter) {
-                        if (!("sourceListTitle" in adapter)) {
-                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
-                                if (listObj.id === adapter.sourceList) {
-                                    adapter.sourceListTitle = listObj.title;
-                                }
-                            });
-                        }
-                        else {
-                            $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
-                                if (listObj.title === adapter.sourceListTitle) {
-                                    adapter.sourceList = listObj.id;
-                                }
-                            });
-                        }
-                    }
-                });
-            }
+            this.fixAdapterListReferences(opt);
 
             this.config = opt.currentConfig;
             return opt.currentConfig;
+        },
+
+        fixAdapterListReferences: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if (opt.currentConfig && opt.currentConfig.adapters && opt.currentConfig.adapters.def) {
+                var adapterNames = Object.keys(opt.currentConfig.adapters.def);
+                $.each($(adapterNames), function (idx, current) {
+                    var matcher = new RegExp("List$");
+                    var adapter = opt.currentConfig.adapters.def[current];
+                    $.each($(Object.keys(adapter)), function (i, k) {
+                        if (matcher.test(k)) {
+                            if (!(k + "Title" in adapter)) {
+                                $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
+                                    if (listObj.id === adapter[k]) {
+                                        adapter[k + "Title"] = listObj.title;
+                                    }
+                                });
+                            }
+                            else {
+                                $.each($(spContext.getListCollection(opt)), function (idx, listObj) {
+                                    if (listObj.title === adapter[k + "Title"]) {
+                                        adapter[k] = listObj.id;
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+            }
         },
 
         /*********************************************************************
@@ -32143,7 +32135,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.01.s";
+            opt.currentConfig.version = "2014.01.u";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig !== oldConfig) {
@@ -32894,7 +32886,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01.s/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01.u/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });
@@ -33022,6 +33014,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 buttons: {
                     "Ok": function() {
                         opt.currentConfig = $.spEasyForms.utilities.parseJSON($("#importedJson").val());
+                        $.spEasyForms.sharePointContext.fixAdapterListReferences(opt);
                         $.spEasyForms.configManager.set(opt);
                         containerCollection.toEditor(opt);
                         $("#importConfigurationDialog").dialog("close");

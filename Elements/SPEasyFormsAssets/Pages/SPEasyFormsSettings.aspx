@@ -59,7 +59,7 @@
             overflow-x: hidden;
         }
         div.speasyforms-panel {
-            width: 290px;
+            width: 400px;
             height: 700px;
             overflow-x: hidden;
             overflow-y: scroll;
@@ -70,7 +70,10 @@
         td.speasyforms-form,
         #toggleContext,
         #outputTable {
-            padding-left: 305px;
+            padding-left: 405px;
+        }
+        td.speasyforms-sortablefields {
+            width: 45%;
         }
         #contentRow {
             padding-top: 0px;
@@ -162,7 +165,7 @@
         }
         table.speasyforms-fieldstitle,
         table.speasyforms-sortablefields {
-            width: 270px;
+            width: 375px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -174,14 +177,13 @@
             border: 1px solid lightblue !important;
             cursor: move !important;
             background: white;
-            font-size: .7em;
+            font-size: .9em;
         }
         tr.speasyforms-sortablefields:hover, tr.speasyforms-sortablerules:hover {
             cursor: move !important;
             background: lightyellow !important;
         }
         table.speasyforms-sortablecontainers {
-            width: 280px;
         }
         td.speasyforms-sortablecontainers {
             border: 1px solid lightblue !important;
@@ -225,6 +227,7 @@
         td.speasyforms-conditionalvisibility,
         td.speasyforms-adapter {
             background: #ddd;
+            width: 1px;
         }
         td.speasyforms-visibilityrulebutton {
             background: #eee;
@@ -433,6 +436,7 @@
             background-color: white;
             padding: 10px;
             border: 1px solid gray;
+            overflow: auto;
         }
         #spEasyFormsContent {
             position: fixed;
@@ -605,7 +609,7 @@
         </div>
         <div id='spEasyFormsAboutDialog' class='tabs-min' style='display:none' title='About SPEasyForms'>
             <div class='speasyforms-helptext ui-corner-all'>
-                <p><b>Version: 2014.01.s</b>
+                <p><b>Version: 2014.01.u</b>
                 </p>
                 <h2>The MIT License (MIT)</h2>
                 <p>Copyright (c) 2014 Joe McShea</p>
