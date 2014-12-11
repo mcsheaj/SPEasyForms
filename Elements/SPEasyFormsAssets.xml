@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
-    <Module Name="SPEasyFormsAssetsCss" Url="Style Library/SPEasyFormsAssets/2014.01.u/Css">
+    <Module Name="SPEasyFormsAssetsCss" Url="Style Library/SPEasyFormsAssets/2014.01.v/Css">
         <File Path="SPEasyFormsAssets\speasyforms.css" Url="speasyforms.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCss" Url="Style Library/SPEasyFormsAssets/2014.01.u/Css/jquery-ui">
+    <Module Name="SPEasyFormsAssetsCss" Url="Style Library/SPEasyFormsAssets/2014.01.v/Css/jquery-ui">
         <File Path="SPEasyFormsAssets\jquery-ui.css" Url="jquery-ui.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.ui.theme.css" Url="jquery.ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssImages" Url="Style Library/SPEasyFormsAssets/2014.01.u/Css/jquery-ui/images">
+    <Module Name="SPEasyFormsAssetsCssImages" Url="Style Library/SPEasyFormsAssets/2014.01.v/Css/jquery-ui/images">
         <File Path="SPEasyFormsAssets\ui-bg_flat_0_aaaaaa_40x100.png" Url="ui-bg_flat_0_aaaaaa_40x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\ui-bg_flat_55_fbec88_40x100.png" Url="ui-bg_flat_55_fbec88_40x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\ui-bg_glass_75_d0e5f5_1x400.png" Url="ui-bg_glass_75_d0e5f5_1x400.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -24,10 +24,10 @@
         <File Path="SPEasyFormsAssets\ui-icons_d8e7f3_256x240.png" Url="ui-icons_d8e7f3_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\ui-icons_f9bd01_256x240.png" Url="ui-icons_f9bd01_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsHelp" Url="Style Library/SPEasyFormsAssets/2014.01.u/Help">
+    <Module Name="SPEasyFormsAssetsHelp" Url="Style Library/SPEasyFormsAssets/2014.01.v/Help">
         <File Path="SPEasyFormsAssets\speasyforms_help.aspx" Url="speasyforms_help.aspx" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsHelpImages" Url="Style Library/SPEasyFormsAssets/2014.01.u/Help/Images">
+    <Module Name="SPEasyFormsAssetsHelpImages" Url="Style Library/SPEasyFormsAssets/2014.01.v/Help/Images">
         <File Path="SPEasyFormsAssets\bullet_blue.png" Url="bullet_blue.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\Download.png" Url="Download.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\Download_002.png" Url="Download_002.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -90,7 +90,7 @@
         <File Path="SPEasyFormsAssets\Download_059.png" Url="Download_059.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\Download_060.png" Url="Download_060.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsJavaScript" Url="Style Library/SPEasyFormsAssets/2014.01.u/JavaScript">
+    <Module Name="SPEasyFormsAssetsJavaScript" Url="Style Library/SPEasyFormsAssets/2014.01.v/JavaScript">
         <File Path="SPEasyFormsAssets\jquery.js" Url="jquery.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui.js" Url="jquery-ui.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPServices.js" Url="jquery.SPServices.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -112,7 +112,7 @@
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" Url="jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" Url="jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsPages" Url="Style Library/SPEasyFormsAssets/2014.01.u/Pages">
+    <Module Name="SPEasyFormsAssetsPages" Url="Style Library/SPEasyFormsAssets/2014.01.v/Pages">
         <File Path="SPEasyFormsAssets\SPEasyFormsSettings.aspx" Url="SPEasyFormsSettings.aspx" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
 </Elements>
