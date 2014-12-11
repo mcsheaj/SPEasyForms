@@ -25,7 +25,7 @@
             background: white;
             border-spacing: 10px;
         }
-        tabel.ms-formtable tr {
+        table.ms-formtable tr {
             padding: 10px !important;
         }
         td.ms-formlabel {
