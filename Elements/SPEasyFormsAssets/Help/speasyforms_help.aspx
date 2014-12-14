@@ -927,7 +927,7 @@ could write their own JavaScript, call the web
             <p>
                 <img src="images/Download_055.png" alt="" height="165" width="600">
             </p>
-            <p>This rules just says hide the field from everyone on all forms with no conditions. As a stand alone rule, this is rarely going to make sense, if you never want it displayed or editable, why did you add the field in the first place. I suppose
+            <p>This rules just says hide the field from everyone on all forms with no conditions. As a stand alone rule, this is rarely going to make sense. if you never want it displayed or editable, why did you add the field in the first place? I suppose
                 you could be setting the field through a workflow and using it in a view or something like that. However, once we start looking at multiple rules and precedence, you may find that you are writing rules like this pretty frequently as part
                 of a set of rules for the same field, but we'll get to that in a bit.</p>
             <p>Looking back at the <strong>Add/Edit Rule Dialog </strong>you can see the forms to which the rule applies, and New, Edit, and Display are all checked by default. Click the gear icon next to the rule to edit it, remove the check on the Edit
@@ -1000,7 +1000,7 @@ could write their own JavaScript, call the web
                     <strong>OR</strong> comparison, i.e. 'member <strong>OR</strong> visitor'.</li>
                 <li><strong>Forms</strong>: specify more than than one form and it is an <strong>
 OR</strong> comparison, and if this isn't intuitive to you, how in the heck do you imagine somebody could be on the New
-                    <strong>AND</strong> Edit forms at the same time.</li>
+                    <strong>AND</strong> Edit forms at the same time?</li>
                 <li><strong>And When</strong>: specify more than one condition and it's an <strong>
 AND</strong> comparison, i.e. 'Code Equals red <strong>AND</strong> State/Province Equals VA'. You can achieve
                     <strong>OR</strong> with these conditions only through multiple rules, which thank heaven we're finally ready to talk about.
@@ -1013,7 +1013,7 @@ AND</strong> comparison, i.e. 'Code Equals red <strong>AND</strong> State/Provin
                     <img title="image" src="images/Download_032.png" alt="image" style="padding-top:0px; padding-left:0px; display:inline; padding-right:0px; border:0px" border="0" height="214" width="604">
                 </a>
             </p>
-            <p>How do you imagine these rules will be interpreted. Hint: not as they were intended to be interpreted I'm guessing. Rules are evaluated as follows:
+            <p>How do you imagine these rules will be interpreted? Hint: not as they were intended to be interpreted I'm guessing. Rules are evaluated as follows:
             </p>
             <ul>
                 <li>Rules are evaluated in the same order in which the appear in the UI.</li>
