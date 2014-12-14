@@ -34543,7 +34543,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var conditions = $(".speasyforms-conditionalvalue");
             result.conditions = [];
             conditions.each(function () {
-                if ($(this).val().length > 0 && $(this).prev().prev().val().length > 0) {
+                if ($(this).val().length >= 0 && $(this).prev().prev().val().length > 0) {
                     var newCondition = {};
                     newCondition.name = $(this).prev().prev().val();
                     newCondition.type = $(this).prev().val();
