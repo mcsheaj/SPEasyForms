@@ -822,7 +822,7 @@ edit</strong>, or <strong>disp, </strong>case insensitive, and it would be helpf
                 leave some fields on the default form; you may not. If you don't, read the next section which will tell you how to configure multiple content types.</p>
             <h3>2.5 Multiple Content Types</h3>
             <p>If you skipped the overview and you've just been following along without being particularly inquisitive and clicking on stuff I haven't told you about yet, you may have noticed that at no point in following this scenario did you see the Employee
-                specific fields anywhere in the editor. That's because when the editor loads it brings up the default content type. But given your recent experience with opening the new Employee field, you should understand some things about how SPEasyForms
+                specific fields anywhere in the editor. That's because when the editor loads it brings up the default content type. But given your recent experience with opening the new Employee form, you should understand some things about how SPEasyForms
                 deals with multiple content types:
             </p>
             <ol>
