@@ -3,7 +3,7 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2014.01.v
+ * @version 2014.01
  * @requires jQuery v1.11.1 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
@@ -370,7 +370,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if (source.indexOf("start.aspx#") >= 0) {
                     source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                 }
-                var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01.v/Pages/SPEasyFormsSettings.aspx") +
+                var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01/Pages/SPEasyFormsSettings.aspx") +
                     "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
                     "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
                     "&Source=" + encodeURIComponent(source);
@@ -417,13 +417,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         loadDynamicStyles: function(options) {
             if (options.jQueryUITheme === undefined) {
-                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01.v/Css/jquery-ui/jquery-ui.css');
+                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01/Css/jquery-ui/jquery-ui.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
-                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01.v/Css/speasyforms.css');
+                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01/Css/speasyforms.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');

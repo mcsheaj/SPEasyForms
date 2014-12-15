@@ -210,7 +210,7 @@
          *********************************************************************/
         set: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.01.v";
+            opt.currentConfig.version = "2014.01";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig !== oldConfig) {
