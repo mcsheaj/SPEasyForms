@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.00.01.Alpha/jquery.SPEasyForms.DefaultToCurrentUserAdapter.js"
+       Sequence="57341"
+    />
+</Elements>

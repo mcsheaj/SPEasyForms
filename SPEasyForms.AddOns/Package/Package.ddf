@@ -1,0 +1,17 @@
+.OPTION Explicit
+.Set DiskDirectory1="."
+.Set CabinetNameTemplate="SPEasyForms.AddOns.wsp"
+.Set CabinetFileCountThreshold=0
+.Set FolderFileCountThreshold=0
+.Set FolderSizeThreshold=0
+.Set MaxCabinetSize=0
+.Set MaxDiskFileCount=0
+.Set MaxDiskSize=0
+
+Manifest.xml
+
+.Set DestinationDir="SPEasyForms.AddOns"
+..\Features\Feature.xml
+..\Elements\SPEasyForms.AddOns.ScriptLinks.xml
+..\Elements\SPEasyForms.AddOns.Assets.xml
+..\Elements\jquery.SPEasyForms.DefaultToCurrentUserAdapter.js

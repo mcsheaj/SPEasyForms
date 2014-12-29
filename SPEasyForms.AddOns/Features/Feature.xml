@@ -1,0 +1,14 @@
+﻿<?xml  version="1.0" encoding="utf-8"?>
+<Feature Id="83d6bab2-b101-4816-bdbb-6ba82f3b03b0"
+   Title="SharePoint Easy Forms Add-Ons"
+   Description="Default to current user adapter."
+    Version="1.0.0.0"
+    Hidden="FALSE"
+    Scope="Site"
+    xmlns="http://schemas.microsoft.com/sharepoint/">
+    <ElementManifests>
+        <ElementManifest Location="SPEasyForms.AddOns.Assets.xml" />
+        <ElementManifest Location="SPEasyForms.AddOns.ScriptLinks.xml" />
+        <ElementFile Location="jquery.SPEasyForms.DefaultToCurrentUserAdapter.js" />
+    </ElementManifests>
+</Feature>

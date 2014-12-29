@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <Module Name="SPEasyFormsAddOnsAssets" Url="Style Library/SPEasyFormsAssets/AddOns/2014.00.01.Alpha">
+        <File Path="jquery.SPEasyForms.DefaultToCurrentUserAdapter.js" Url="jquery.SPEasyForms.DefaultToCurrentUserAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+    </Module>
+</Elements>
