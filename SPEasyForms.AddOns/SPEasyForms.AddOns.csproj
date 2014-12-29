@@ -39,9 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Elements\jquery.SPEasyForms.DefaultToCurrentUserAdapter.js" />
     <Content Include="Elements\SPEasyForms.AddOns.Assets.xml" />
     <Content Include="Elements\SPEasyForms.AddOns.ScriptLinks.xml" />
@@ -51,6 +48,9 @@
   <ItemGroup>
     <None Include="Package\Build.bat" />
     <None Include="Package\Package.ddf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
