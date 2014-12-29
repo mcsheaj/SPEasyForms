@@ -158,7 +158,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Package\Manifest.xml" />
-    <Content Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.columns.js" />

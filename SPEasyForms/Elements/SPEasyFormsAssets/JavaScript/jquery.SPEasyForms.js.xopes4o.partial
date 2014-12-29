@@ -288,7 +288,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
             var ctWidth = $("#spEasyFormsContentTypeSelect").width();
             if(ctWidth > 54) {
-                $("#spEasyFormsContentType").width(ctWidth + 5);
+                $("#spEasyFormsContentType").width(ctWidth + 10);
             }
             $("#spEasyFormsContentTypeSelect").change(function() {
                 delete containerCollection.rows;
