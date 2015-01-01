@@ -9,6 +9,6 @@
     <ElementManifests>
         <ElementManifest Location="SPEasyForms.AddOns.Assets.xml" />
         <ElementManifest Location="SPEasyForms.AddOns.ScriptLinks.xml" />
-        <ElementFile Location="jquery.SPEasyForms.DefaultToCurrentUserAdapter.js" />
+        <ElementFile Location="DefaultToCurrentUserAdapter.js" />
     </ElementManifests>
 </Feature>

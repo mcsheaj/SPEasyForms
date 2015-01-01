@@ -39,7 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Elements\jquery.SPEasyForms.DefaultToCurrentUserAdapter.js" />
+    <Content Include="Elements\DefaultToCurrentUserAdapter.js" />
     <Content Include="Elements\SPEasyForms.AddOns.Assets.xml" />
     <Content Include="Elements\SPEasyForms.AddOns.ScriptLinks.xml" />
     <Content Include="Features\Feature.xml" />
