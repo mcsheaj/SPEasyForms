@@ -31,40 +31,40 @@
         },
 
         // modify a configured field in a new, edit, or display form
-transform: function (options) {
-    var opt = $.extend({}, $.spEasyForms.defaults, options);
-    if (visibilityRuleCollection.getFormType(opt) !== "new") {
-        return;
-    }
-    if (containerCollection.rows[opt.adapter.columnNameInternal]) {
-        var pplpkrDiv = $("[id^='" + opt.adapter.columnNameInternal + "'][id$='ClientPeoplePicker']");
-        var currentUser = $.spEasyForms.sharePointContext.getUserInformation(opt).name;
-        if (pplpkrDiv.length > 0) {
-            ExecuteOrDelayUntilScriptLoaded(function () {
-                var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
-                if (clientPplPicker.GetAllUserInfo().length === 0) {
-                    clientPplPicker.AddUserKeys(currentUser);
-                }
-            }, "clientpeoplepicker.js");
-        } else {
-            var displayName = containerCollection.rows[opt.adapter.columnNameInternal].displayName;
-            var picker = $().SPServices.SPFindPeoplePicker({
-                peoplePickerDisplayName: displayName
-            });
-            if (!picker.currentValue) {
-                ExecuteOrDelayUntilScriptLoaded(function () {
-                    setTimeout(function () {
-                        $().SPServices.SPFindPeoplePicker({
-                            peoplePickerDisplayName: displayName,
-                            valueToSet: currentUser,
-                            checkNames: false
-                        });
-                    }, 1000);
-                }, "sp.js");
+        transform: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if (visibilityRuleCollection.getFormType(opt) !== "new") {
+                return;
             }
-        }
-    }
-},
+            if (containerCollection.rows[opt.adapter.columnNameInternal]) {
+                var pplpkrDiv = $("[id^='" + opt.adapter.columnNameInternal + "'][id$='ClientPeoplePicker']");
+                var currentUser = $.spEasyForms.sharePointContext.getUserInformation(opt).name;
+                if (pplpkrDiv.length > 0) {
+                    ExecuteOrDelayUntilScriptLoaded(function () {
+                        var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
+                        if (clientPplPicker.GetAllUserInfo().length === 0) {
+                            clientPplPicker.AddUserKeys(currentUser);
+                        }
+                    }, "clientpeoplepicker.js");
+                } else {
+                    var displayName = containerCollection.rows[opt.adapter.columnNameInternal].displayName;
+                    var picker = $().SPServices.SPFindPeoplePicker({
+                        peoplePickerDisplayName: displayName
+                    });
+                    if (!picker.currentValue) {
+                        ExecuteOrDelayUntilScriptLoaded(function () {
+                            setTimeout(function () {
+                                $().SPServices.SPFindPeoplePicker({
+                                    peoplePickerDisplayName: displayName,
+                                    valueToSet: currentUser,
+                                    checkNames: false
+                                });
+                            }, 1000);
+                        }, "sp.js");
+                    }
+                }
+            }
+        },
 
         // initialize dialog box for configuring adapter on the settings page
         toEditor: function (options) {
