@@ -4,8 +4,8 @@
  * groups of fields (which I imagine is all containers).  It implements everything 
  * but the transform function.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */

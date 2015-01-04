@@ -10,5 +10,6 @@
         <ElementManifest Location="SPEasyForms.AddOns.Assets.xml" />
         <ElementManifest Location="SPEasyForms.AddOns.ScriptLinks.xml" />
         <ElementFile Location="DefaultToCurrentUserAdapter.js" />
+        <ElementFile Location="VisibilityRulesExtension.js" />
     </ElementManifests>
 </Feature>

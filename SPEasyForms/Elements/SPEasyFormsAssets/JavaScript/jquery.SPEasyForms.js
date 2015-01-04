@@ -4,13 +4,13 @@
  * to enter field values etc.)
  *
  * @version 2014.01
- * @requires jQuery v1.11.1 
+ * @requires jQuery.SPEasyForms.2014.01 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
  * @optional ssw Session Storage Wrapper - Cross Document Transport of
  *    JavaScript Data; used to cache the context across pages if available
  *    and options.useCache === true
- * @copyright 2014 Joe McShea
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */

@@ -30177,13 +30177,13 @@ ssw_init = function (window, document) {
  * to enter field values etc.)
  *
  * @version 2014.01
- * @requires jQuery v1.11.1 
+ * @requires jQuery.SPEasyForms.2014.01 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2014.01 or greater
  * @optional ssw Session Storage Wrapper - Cross Document Transport of
  *    JavaScript Data; used to cache the context across pages if available
  *    and options.useCache === true
- * @copyright 2014 Joe McShea
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -30721,8 +30721,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.utilites - general helper functions for SPEasyForms
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -30815,8 +30815,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * SPEasyForms.sharePointContext - object for capturing SharePoint context information
  * using web services.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -31543,8 +31543,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.sharePointFieldRows - object to parse field rows into a map.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -31927,8 +31927,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * SPEasyForms.configManager - Object that encapsulates getting, setting, and saving the SPEasyForms
  * configuration file for the current list.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -32209,8 +32209,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection - object to hold and manage all containers.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -33165,8 +33165,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection.defaultFormContainer - object representing the OOB SharePoint form.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -33228,8 +33228,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * groups of fields (which I imagine is all containers).  It implements everything 
  * but the transform function.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -33460,8 +33460,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection.accordion - Object representing an accordion container.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -33557,8 +33557,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection.columns - Object representing a multi-column container.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -33681,8 +33681,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection.tabs - Object representing a tabs container.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -33810,8 +33810,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.visibilityRuleCollection - object to hold and manage all field visibility rules.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -34698,8 +34698,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.adapterCollection - collection of field control adapters.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -34976,8 +34976,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * SPEasyForms.adapterCollection.autocompleteAdapter - implementation of type ahead field control 
  * adapter for SPFieldText.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -35154,8 +35154,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.adapterCollection.cascadingLookupAdapter - implementaiton of a cascading lookup field adapter.
  *
- * @requires jQuery v1.11.1 
- * @copyright 2014 Joe McShea
+ * @requires jQuery.SPEasyForms.2014.01 
+ * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */

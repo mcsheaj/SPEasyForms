@@ -9,3 +9,4 @@ Manifest.xml
 ..\Elements\SPEasyForms.AddOns.ScriptLinks.xml
 ..\Elements\SPEasyForms.AddOns.Assets.xml
 ..\Elements\DefaultToCurrentUserAdapter.js
+..\Elements\VisibilityRulesExtension.js

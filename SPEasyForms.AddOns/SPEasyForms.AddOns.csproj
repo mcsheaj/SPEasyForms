@@ -40,9 +40,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Elements\DefaultToCurrentUserAdapter.js" />
-    <Content Include="Elements\SPEasyForms.AddOns.Assets.xml" />
-    <Content Include="Elements\SPEasyForms.AddOns.ScriptLinks.xml" />
-    <Content Include="Features\Feature.xml" />
+    <Content Include="Elements\SPEasyForms.AddOns.Assets.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Elements\SPEasyForms.AddOns.ScriptLinks.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Elements\VisibilityRulesExtension.js" />
+    <Content Include="Features\Feature.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Package\Manifest.xml" />
   </ItemGroup>
   <ItemGroup>
