@@ -12,6 +12,9 @@
 /* global spefjQuery */
 (function ($, undefined) {
 
+    // return without doing anything if SPEasyForms has not been loaded
+    if (!$.spEasyForms) return;
+
     // shorthand alias for SPEasyForms instances we're going to need
     var visibilityRuleCollection = $.spEasyForms.visibilityRuleCollection;
     var utils = $.spEasyForms.utilities;

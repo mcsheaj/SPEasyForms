@@ -13,13 +13,13 @@
 /* global spefjQuery, SPClientPeoplePicker, ExecuteOrDelayUntilScriptLoaded */
 (function ($, undefined) {
 
+    // return without doing anything if there is already a DefaultToCurrentUser adapter
+    if (!$.spEasyForms || "DefaultToCurrentUser" in $.spEasyForms.adapterCollection.adapterImplementations) return;
+
     // shorthand alias for SPEasyForms instances we're going to need
     var containerCollection = $.spEasyForms.containerCollection;
     var visibilityRuleCollection = $.spEasyForms.visibilityRuleCollection;
     var adapterCollection = $.spEasyForms.adapterCollection;
-
-    // return without doing anything if there is already a DefaultToCurrentUser adapter
-    if (!$.spEasyForms || "DefaultToCurrentUser" in adapterCollection.adapterImplementations) return;
 
     /* Field control adapter for default to current user on user fields */
     $.spEasyForms.defaultToCurrentUserAdapter = {
