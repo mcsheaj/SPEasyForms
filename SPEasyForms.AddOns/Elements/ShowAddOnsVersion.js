@@ -18,7 +18,7 @@
     // only operate on the settings page
     if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
         $().ready(function () { 
-            $("b:contains('Version: 2014.01')").parent().append("<br><b>AddOns: 2015.00.03</b>");
+            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2015.00.03</b>");
         });
     }
 
