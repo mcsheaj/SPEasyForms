@@ -10,3 +10,5 @@ Manifest.xml
 ..\Elements\SPEasyForms.AddOns.Assets.xml
 ..\Elements\DefaultToCurrentUserAdapter.js
 ..\Elements\VisibilityRulesExtension.js
+..\Elements\CheckConditionalsPatch.js
+..\Elements\ShowAddOnsVersion.js

@@ -871,10 +871,12 @@
                         var type = $.spEasyForms.utilities.jsCase(condition.type);
                         var comparisonOperator = visibilityRuleCollection.comparisonOperators[type];
                         result = comparisonOperator(currentValue, condition.value);
+                        if (result === false)
+                            return false; // return from $.each
                     }
                     else {
                         result = false;
-                        return false;
+                        return false; // return from $.each
                     }
                 });
             }

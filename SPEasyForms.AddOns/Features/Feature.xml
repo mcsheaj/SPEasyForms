@@ -11,5 +11,7 @@
         <ElementManifest Location="SPEasyForms.AddOns.ScriptLinks.xml" />
         <ElementFile Location="DefaultToCurrentUserAdapter.js" />
         <ElementFile Location="VisibilityRulesExtension.js" />
+        <ElementFile Location="CheckConditionalsPatch.js" />
+        <ElementFile Location="ShowAddOnsVersion.js" />
     </ElementManifests>
 </Feature>

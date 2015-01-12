@@ -30256,7 +30256,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             fieldDisplayNameAltSelector: 'h3.ms-standardheader',
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
-            initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0
+            initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
+            version: "2015.01"
         },
 
         /********************************************************************
@@ -34680,10 +34681,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         var type = $.spEasyForms.utilities.jsCase(condition.type);
                         var comparisonOperator = visibilityRuleCollection.comparisonOperators[type];
                         result = comparisonOperator(currentValue, condition.value);
+                        if (result === false)
+                            return false; // return from $.each
                     }
                     else {
                         result = false;
-                        return false;
+                        return false; // return from $.each
                     }
                 });
             }

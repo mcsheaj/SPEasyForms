@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Elements\CheckConditionalsPatch.js" />
     <Content Include="Elements\DefaultToCurrentUserAdapter.js" />
+    <Content Include="Elements\ShowAddOnsVersion.js" />
     <Content Include="Elements\SPEasyForms.AddOns.Assets.xml">
       <SubType>Designer</SubType>
     </Content>

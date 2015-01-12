@@ -2,7 +2,7 @@
  * SPEasyForms VisibilityRulesExtension - some additional comparison operators
  * and state handlers for use in SPEasyForms visibility rules.
  *
- * @version 2015.00.02
+ * @version 2015.00.03
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -102,7 +102,7 @@
     // add/edit visibility rule dialog (in title case)
     var stateHandlers = {
         highlightRed: function (options) {
-            utils.highlight(options.row.row, "Red");
+            utils.highlight(options.row.row, "LightPink");
         },
         highlightYellow: function (options) {
             utils.highlight(options.row.row, "Yellow");
