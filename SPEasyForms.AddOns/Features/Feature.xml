@@ -13,5 +13,6 @@
         <ElementFile Location="VisibilityRulesExtension.js" />
         <ElementFile Location="CheckConditionalsPatch.js" />
         <ElementFile Location="ShowAddOnsVersion.js" />
+        <ElementFile Location="InitializeFieldsFromRequestParameters.js" />
     </ElementManifests>
 </Feature>

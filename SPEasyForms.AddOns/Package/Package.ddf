@@ -12,3 +12,4 @@ Manifest.xml
 ..\Elements\VisibilityRulesExtension.js
 ..\Elements\CheckConditionalsPatch.js
 ..\Elements\ShowAddOnsVersion.js
+..\Elements\InitializeFieldsFromRequestParameters.js
