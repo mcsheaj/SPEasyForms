@@ -173,7 +173,7 @@
                     // set the input to the date portion of the date/time
                     tr.row.find("input").val($.datepicker.formatDate("mm/dd/yy", date));
                     // if there is an hours drop down, select the hour based on date.getHours
-                    if (tr.row.find("option[value='']").length > 0) {
+                    if (tr.row.find("option[value='" + date.getHours() + "']").length > 0) {
                         tr.row.find("select[id$='Hours']").val(date.getHours());
                     }
                     else {
