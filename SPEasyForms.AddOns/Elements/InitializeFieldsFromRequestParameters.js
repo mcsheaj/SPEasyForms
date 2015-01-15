@@ -10,7 +10,7 @@
  *    http://www.opensource.org/licenses/mit-license.php
  * 
  * window.location.search: (need to url encode for safety)
- * spef_SingleLine=newtextvalue&spef_Title=newtitle&spef_MultiLinePlain=newlines&spef_MultiLinePlainAppend=newappend&spef_ChoiceDropDown=Bravo&spef_ChoiceRadioButtons=Green&spef_ChoiceCheckboxes=Three;One&spef_ChoiceCheckboxesWFillIn=Enter Choice %232;fillintest&spef_Number=1&spef_Currency=2.19&spef_Date=1/1/2015&spef_DateAndTime=1/2/2015 4:25 PM&spef_YesNo=NO&spef_HyperLink=speasyforms.codeplex.com|SPEasyForms Home&spef_ChoiceDropDownWFillIn=A&spef_ChoiceRadioWFillIn=Aardvark&spef_SinglePerson=joe@thesharepointconcierge.onmicrosoft.com&spef_MultiplePeople=scott@thesharepointconcierge.onmicrosoft.com;joe@thesharepointconcierge.onmicrosoft.com&spef_SingleGroup=SPEasyForms Visitors&spef_MultipleGroups=SPEasyForms Members;SPEasyForms Visitors&spef_Lookup=Accessories&spef_LookupMulti=3;7
+ * spef_SingleLine=newtextvalue&spef_Title=newtitle&spef_MultiLinePlain=newlines&spef_MultiLinePlainAppend=newappend&spef_ChoiceDropDown=Bravo&spef_ChoiceRadioButtons=Green&spef_ChoiceCheckboxes=Three;One&spef_ChoiceCheckboxesWFillIn=Enter Choice %232;fillintest&spef_Number=1&spef_Currency=2.19&spef_Date=1/1/2015&spef_DateAndTime=1/2/2015 4:25 PM&spef_YesNo=NO&spef_HyperLink=http://speasyforms.codeplex.com|SPEasyForms Home&spef_ChoiceDropDownWFillIn=A&spef_ChoiceRadioWFillIn=Aardvark&spef_SinglePerson=joe@thesharepointconcierge.onmicrosoft.com&spef_MultiplePeople=scott@thesharepointconcierge.onmicrosoft.com;joe@thesharepointconcierge.onmicrosoft.com&spef_SingleGroup=SPEasyForms Visitors&spef_MultipleGroups=SPEasyForms Members;SPEasyForms Visitors&spef_Lookup=Accessories&spef_LookupMulti=3;7
  * 
  * breakdown of parameters:
  * spef_SingleLine=newtextvalue
@@ -110,6 +110,10 @@
                         else {
                             // otherwise, look for a fill in choice input
                             var inpt = tr.row.find("input[type='text'][id$='FillInChoice']");
+                            if (inpt.length === 0) {
+                                // sp2010
+                                inpt = tr.row.find("input[type='text'][title^='" + tr.displayName + "']");
+                            }
                             if (inpt.length > 0) {
                                 // if we find one, set its value
                                 inpt.val(tr.value);
@@ -133,6 +137,10 @@
                             else {
                                 // otherwise look for a fill in input
                                 var input = tr.row.find("input[type='text'][id$='FillInText']");
+                                if (input.length === 0) {
+                                    // sp2010
+                                    input = tr.row.find("input[type='text'][title^='" + tr.displayName + "']");
+                                }
                                 if (input.length > 0) {
                                     if (input.val().length > 0) {
                                         // if there is already a value, append this one with a semi-colon separator
@@ -148,6 +156,8 @@
                                         input.parent().parent().prev().find("input[type='checkbox']").prop("checked", true);
                                         input.parent().parent().prev().find("input[type='radio']").prop("checked", true);
                                     }
+                                }
+                                else {
                                 }
                             }
                         });
@@ -165,7 +175,21 @@
                     // set the input to the date portion of the date/time
                     tr.row.find("input").val($.datepicker.formatDate("mm/dd/yy", date));
                     // if there is an hours drop down, select the hour based on date.getHours
-                    tr.row.find("select[id$='Hours']").val(date.getHours());
+                    if (tr.row.find("option[value='']").length > 0) {
+                        tr.row.find("select[id$='Hours']").val(date.getHours());
+                    }
+                    else {
+                        // sp2010
+                        var i = date.getHours();
+                        var fmt = "";
+                        if (i < 12) {
+                            fmt = i + " AM";
+                        }
+                        else {
+                            fmt = (i - 12) + " PM";
+                        }
+                        tr.row.find("select[id$='Hours']").val(fmt);
+                    }
                     // if there is a minutes drop down, select the minutes based on date.getMinutes, Note: that SharePoint only 
                     // allows 5 minute increments so if you pass in 04 as the minutes notthing is selected
                     tr.row.find("select[id$='Minutes']").val(date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
@@ -212,7 +236,7 @@
                                 $().SPServices.SPFindPeoplePicker({
                                     peoplePickerDisplayName: displayName,
                                     valueToSet: tr.value,
-                                    checkNames: false
+                                    checkNames: true
                                 });
                             }, 1000);
                         }, "sp.js");
