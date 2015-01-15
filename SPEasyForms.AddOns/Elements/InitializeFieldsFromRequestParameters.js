@@ -157,8 +157,6 @@
                                         input.parent().parent().prev().find("input[type='radio']").prop("checked", true);
                                     }
                                 }
-                                else {
-                                }
                             }
                         });
                     }
