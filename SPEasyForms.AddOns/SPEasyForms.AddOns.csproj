@@ -42,6 +42,7 @@
     <Content Include="Elements\CheckConditionalsPatch.js" />
     <Content Include="Elements\DefaultToCurrentUserAdapter.js" />
     <Content Include="Elements\InitializeFieldsFromRequestParameters.js" />
+    <Content Include="Elements\ResizeModalDialog.js" />
     <Content Include="Elements\ShowAddOnsVersion.js" />
     <Content Include="Elements\SPEasyForms.AddOns.Assets.xml">
       <SubType>Designer</SubType>

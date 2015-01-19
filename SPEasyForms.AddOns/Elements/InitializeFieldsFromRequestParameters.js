@@ -3,7 +3,7 @@
  * matches the pattern spef_[ColumnInternalName] and set the corresponding field value
  * to the value of the parameter.
  *
- * @version 2015.00.04
+ * @version 2015.00.05
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -50,14 +50,11 @@
     if (spEasyFormsVersion !== "2014.01") return;
 
     // save a reference to the original SPEasyForms init method
-    $.spEasyForms.originalInit = $.spEasyForms.init;
+    $.spEasyForms.InitializeFieldsFromRequestParameters_originalInit = $.spEasyForms.init;
 
     // replace the original SPEasyForms init method
     $.spEasyForms.init = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
-
-        // call the original SPEasyForms init method
-        $.spEasyForms.originalInit(opt);
 
         // get a 'hashmap' of request parameters
         var parameters = $.spEasyForms.utilities.getRequestParameters();
@@ -81,6 +78,9 @@
                 }
             }
         });
+
+        // call the original SPEasyForms init method
+        $.spEasyForms.InitializeFieldsFromRequestParameters_originalInit(opt);
     };
 
     // add a method to the SPEasyForms sharePointFieldRows instance to set the value of a field

@@ -14,5 +14,6 @@
         <ElementFile Location="CheckConditionalsPatch.js" />
         <ElementFile Location="ShowAddOnsVersion.js" />
         <ElementFile Location="InitializeFieldsFromRequestParameters.js" />
+        <ElementFile Location="ResizeModalDialog.js" />
     </ElementManifests>
 </Feature>

@@ -13,3 +13,4 @@ Manifest.xml
 ..\Elements\CheckConditionalsPatch.js
 ..\Elements\ShowAddOnsVersion.js
 ..\Elements\InitializeFieldsFromRequestParameters.js
+..\Elements\ResizeModalDialog.js
