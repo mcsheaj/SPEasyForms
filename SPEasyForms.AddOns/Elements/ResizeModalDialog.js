@@ -62,6 +62,8 @@
             $(".ms-dlgOverlay", window.parent.document).next().css("display", "none");
             $(".ms-dlgTitle", window.parent.document).css("width", "100%");
             $("a[id^='DlgResize'", window.parent.document).css("display", "none");
+            $("table.ms-usereditor").width(250);
+            $("span.ms-usereditor").width(250);
         }
         else {
             $(".ms-dlgContent", window.parent.document).height(dlgHeight);
