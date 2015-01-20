@@ -29,11 +29,13 @@
         // call the original SPEasyForms init method
         $.spEasyForms.ResizeModalDialog_originalInit(options);
 
+        var formHidden = $(".ms-formtable").css("display") === "none";
+
         ExecuteOrDelayUntilScriptLoaded(function () {
             var dlg = SP.UI.ModalDialog.get_childDialog();
             if (dlg !== null) {
                 setTimeout(function () {
-                    if ($("#spEasyFormsContainersPre").length > 0) {
+                    if (formHidden || $("#spEasyFormsContainersPre").length > 0) {
                         $.spEasyForms.utilities.autoSizeDialog();
                     }
                 }, 3000);
