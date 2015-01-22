@@ -2,32 +2,32 @@
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.05/DefaultToCurrentUserAdapter.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/DefaultToCurrentUserAdapter.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.05/VisibilityRulesExtension.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/VisibilityRulesExtension.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.05/CheckConditionalsPatch.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/CheckConditionalsPatch.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.05/ShowAddOnsVersion.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/ShowAddOnsVersion.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.05/InitializeFieldsFromRequestParameters.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/InitializeFieldsFromRequestParameters.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.05/ResizeModalDialog.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/ResizeModalDialog.js"
        Sequence="57401"
     />
 </Elements>

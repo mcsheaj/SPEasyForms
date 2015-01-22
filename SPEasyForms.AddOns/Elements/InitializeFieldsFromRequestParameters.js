@@ -3,7 +3,7 @@
  * matches the pattern spef_[ColumnInternalName] and set the corresponding field value
  * to the value of the parameter.
  *
- * @version 2015.00.05
+ * @version 2015.00.06
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -81,6 +81,10 @@
 
         // call the original SPEasyForms init method
         $.spEasyForms.InitializeFieldsFromRequestParameters_originalInit(opt);
+
+        // fix time fields on containers (SP 2010)
+        $("select[id$='DateTimeFieldDateHours']").css("font-size", "8pt");
+        $("select[id$='DateTimeFieldDateMinutes']").css("font-size", "8pt");
     };
 
     // add a method to the SPEasyForms sharePointFieldRows instance to set the value of a field

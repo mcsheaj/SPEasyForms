@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
-    <Module Name="SPEasyFormsAddOnsAssets" Url="Style Library/SPEasyFormsAssets/AddOns/2015.00.05">
+    <Module Name="SPEasyFormsAddOnsAssets" Url="Style Library/SPEasyFormsAssets/AddOns/2015.00.06">
         <File Path="DefaultToCurrentUserAdapter.js" Url="DefaultToCurrentUserAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="VisibilityRulesExtension.js" Url="VisibilityRulesExtension.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="CheckConditionalsPatch.js" Url="CheckConditionalsPatch.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
