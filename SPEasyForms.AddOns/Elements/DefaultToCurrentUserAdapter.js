@@ -14,7 +14,7 @@
 (function ($, undefined) {
 
     // return without doing anything if there is already a DefaultToCurrentUser adapter
-    if (!$.spEasyForms || "DefaultToCurrentUser" in $.spEasyForms.adapterCollection.adapterImplementations) return;
+    if (!$ || !$.spEasyForms || "DefaultToCurrentUser" in $.spEasyForms.adapterCollection.adapterImplementations) return;
 
     // shorthand alias for SPEasyForms instances we're going to need
     var containerCollection = $.spEasyForms.containerCollection;
@@ -128,4 +128,4 @@
 
     // add adapter to adapter collection
     adapterCollection.adapterImplementations[defaultToCurrentUserAdapter.type] = defaultToCurrentUserAdapter;
-})(spefjQuery);
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);

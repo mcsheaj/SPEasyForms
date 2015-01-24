@@ -15,5 +15,6 @@
         <ElementFile Location="ShowAddOnsVersion.js" />
         <ElementFile Location="InitializeFieldsFromRequestParameters.js" />
         <ElementFile Location="ResizeModalDialog.js" />
+        <ElementFile Location="ToEditorPatch.js" />
     </ElementManifests>
 </Feature>

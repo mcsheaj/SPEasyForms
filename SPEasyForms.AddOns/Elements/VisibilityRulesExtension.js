@@ -13,7 +13,7 @@
 (function ($, undefined) {
 
     // return without doing anything if SPEasyForms has not been loaded
-    if (!$.spEasyForms) return;
+    if (!$ || !$.spEasyForms) return;
 
     // shorthand alias for SPEasyForms instances we're going to need
     var visibilityRuleCollection = $.spEasyForms.visibilityRuleCollection;
@@ -119,4 +119,4 @@
     // makes my new operators take a back seat to ones already defined in SPEasyForms proper
     utils.extend(visibilityRuleCollection.stateHandlers, stateHandlers);
 
-})(spefjQuery);
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);

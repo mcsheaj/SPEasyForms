@@ -7,5 +7,6 @@
         <File Path="ShowAddOnsVersion.js" Url="ShowAddOnsVersion.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="InitializeFieldsFromRequestParameters.js" Url="InitializeFieldsFromRequestParameters.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="ResizeModalDialog.js" Url="ResizeModalDialog.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="ToEditorPatch.js" Url="ToEditorPatch.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
 </Elements>

@@ -50,6 +50,7 @@
     <Content Include="Elements\SPEasyForms.AddOns.ScriptLinks.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Elements\ToEditorPatch.js" />
     <Content Include="Elements\VisibilityRulesExtension.js" />
     <Content Include="Features\Feature.xml">
       <SubType>Designer</SubType>

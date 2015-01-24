@@ -13,7 +13,7 @@
 /* global spefjQuery, ExecuteOrDelayUntilScriptLoaded, _spPageContextInfo, SP */
 (function ($, undefined) {
     // return without doing anything if SPEasyForms has not been loaded
-    if (!$.spEasyForms) return;
+    if (!$ || !$.spEasyForms) return;
 
     // get the version number from the default options (not defined in 2014.01)
     var spEasyFormsVersion = ($.spEasyForms.defaults.version ? $.spEasyForms.defaults.version : "2014.01");
@@ -109,4 +109,4 @@
         }
         return contentWidth;
     };
-})(spefjQuery);
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
