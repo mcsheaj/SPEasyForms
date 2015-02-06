@@ -8,6 +8,6 @@
         <File Path="RTEPatch.js" Url="RTEPatch.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="buttons.png" Url="buttons.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="buttons_hover.png" Url="buttons_hover.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="toolbar.png" Url="toolbar.gif" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="toolbar.png" Url="toolbar.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
 </Elements>
