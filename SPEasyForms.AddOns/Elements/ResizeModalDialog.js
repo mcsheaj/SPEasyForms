@@ -36,77 +36,14 @@
             if (dlg !== null) {
                 setTimeout(function () {
                     if (formHidden || $("#spEasyFormsContainersPre").length > 0) {
-                        $.spEasyForms.utilities.autoSizeDialog();
+                        SP.UI.ModalDialog.get_childDialog().autoSize();
+                        var dlgContent = $(".ms-dlgContent", window.parent.document);
+                        dlgContent.css({ top: ($(window.top).height() / 2 - dlgContent.height() / 2) });
+                        dlgContent.prev().css({ top: ($(window.top).height() / 2 - dlgContent.height() / 2) });
                     }
-                }, 3000);
+                }, 1000);
             }
         }, "sp.ui.dialog.js");
     };
 
-    $.spEasyForms.utilities.autoSizeDialog = function () {
-        $(".ms-webpartzone-cell").css("margin", "auto");
-
-        var dlgHeight = $.spEasyForms.utilities.getFormHeight();
-        var dlgWidth = $.spEasyForms.utilities.getFormWidth();
-
-        if (_spPageContextInfo.webUIVersion === 4) {
-            $(".ms-dlgContent", window.parent.document).height(dlgHeight);
-            $(".ms-dlgBorder", window.parent.document).height(dlgHeight);
-            $(".ms-dlgFrame", window.parent.document).height(dlgHeight - 32);
-
-            $(".ms-dlgContent", window.parent.document).width(dlgWidth);
-            $(".ms-dlgBorder", window.parent.document).width(dlgWidth - 2);
-            $(".ms-dlgFrame", window.parent.document).width(dlgWidth - 2);
-
-            $("#s4-workspace").css("overflow-x", "hidden");
-            $(".ms-dlgOverlay", window.parent.document).next().css("display", "none");
-            $(".ms-dlgTitle", window.parent.document).css("width", "100%");
-            $("a[id^='DlgResize'", window.parent.document).css("display", "none");
-            $("table.ms-usereditor").width(250);
-            $("span.ms-usereditor").width(250);
-        }
-        else {
-            $(".ms-dlgContent", window.parent.document).height(dlgHeight);
-            $(".ms-dlgBorder", window.parent.document).height(dlgHeight);
-            $(".ms-dlgFrame", window.parent.document).height(dlgHeight - 55);
-
-            $(".ms-dlgContent", window.parent.document).width(dlgWidth);
-            $(".ms-dlgBorder", window.parent.document).width(dlgWidth - 1);
-            $(".ms-dlgFrame", window.parent.document).width(dlgWidth - 30);
-
-            $(".sp-peoplepicker-topLevel").width(210);
-            $(".sp-peoplepicker-topLevelDisabled").width(210);
-        }
-
-        var dlgContent = $(".ms-dlgContent", window.parent.document);
-        dlgContent.css({
-            top: ($(window.top).height() / 2 - dlgContent.height() / 2),
-            left: $(window.top).width() / 2 - dlgContent.width() / 2
-        });
-    };
-
-    $.spEasyForms.utilities.getFormHeight = function () {
-        var contentHeight =
-            ($("#spEasyFormsContainersPre").length > 0 ? $("#spEasyFormsContainersPre").height() : 0) +
-            ($("#spEasyFormsContainersPost").length > 0 ? $("#spEasyFormsContainersPost").height() : 0) +
-            $(".ms-formtable").height() + 300;
-        if (contentHeight > ($(window.top).height() - 20)) {
-            contentHeight = $(window.top).height() - 20;
-        }
-        return contentHeight;
-    };
-
-    $.spEasyForms.utilities.getFormWidth = function () {
-        var contentWidth = $(".ms-dlgContent", window.parent.document).width();
-        if ($("#spEasyFormsContainersPre").length > 0 && contentWidth < $("#spEasyFormsContainersPre").width()) {
-            contentWidth = $("#spEasyFormsContainersPre").width() + 90;
-        }
-        if ($("#spEasyFormsContainersPost").length > 0 && contentWidth < $("#spEasyFormsContainersPost").width()) {
-            contentWidth = $("#spEasyFormsContainersPost").width() + 90;
-        }
-        if (contentWidth > ($(window.top).width() - 20)) {
-            contentWidth = $(window.top).width() - 20;
-        }
-        return contentWidth;
-    };
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
