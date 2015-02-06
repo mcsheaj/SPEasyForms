@@ -1,0 +1,21 @@
+﻿<?xml  version="1.0" encoding="utf-8"?>
+<Feature Id="844b42ab-5f6a-4f90-b059-8b8fb129a984"
+   Title="SharePoint Easy Forms Add-Ons Rich Text Editor"
+   Description="Replace all Rich Text Editor controls in forms with an implementation that works on SPEasyForms containers, and also in browsers other than IE."
+    Version="1.0.0.0"
+    Hidden="FALSE"
+    Scope="Site"
+    xmlns="http://schemas.microsoft.com/sharepoint/">
+    <ElementManifests>
+        <ElementManifest Location="SPEasyForms.AddOns.Assets.xml" />
+        <ElementManifest Location="SPEasyForms.AddOns.ScriptLinks.xml" />
+        <ElementFile Location="jquery.cleditor.js" />
+        <ElementFile Location="jquery.cleditor.css" />
+        <ElementFile Location="jquery.cleditor.xhtml.js" />
+        <ElementFile Location="jquery.cleditor.sharepoint.js" />
+        <ElementFile Location="RTEPatch.js" />
+        <ElementFile Location="buttons.png" />
+        <ElementFile Location="buttons_hover.png" />
+        <ElementFile Location="toolbar.png" />
+    </ElementManifests>
+</Feature>

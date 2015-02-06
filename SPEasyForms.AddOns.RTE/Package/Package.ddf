@@ -1,0 +1,18 @@
+.OPTION Explicit
+.Set DiskDirectory1="."
+.Set CabinetNameTemplate="SPEasyForms.AddOns.RTE.wsp"
+
+Manifest.xml
+
+.Set DestinationDir="SPEasyForms.AddOns.RTE"
+..\Features\Feature.xml
+..\Elements\SPEasyForms.AddOns.ScriptLinks.xml
+..\Elements\SPEasyForms.AddOns.Assets.xml
+..\Elements\jquery.cleditor.js
+..\Elements\jquery.cleditor.css
+..\Elements\jquery.cleditor.sharepoint.js
+..\Elements\jquery.cleditor.xhtml.js
+..\Elements\RTEPatch.js
+..\Elements\buttons.png
+..\Elements\buttons_hover.png
+..\Elements\toolbar.png
