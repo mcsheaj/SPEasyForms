@@ -3,7 +3,7 @@
  * matches the pattern spef_[ColumnInternalName] and set the corresponding field value
  * to the value of the parameter.
  *
- * @version 2015.00.06
+ * @version 2015.00.07
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:

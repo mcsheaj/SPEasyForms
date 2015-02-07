@@ -39,18 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Elements\CheckConditionalsPatch.js" />
     <Content Include="Elements\DefaultToCurrentUserAdapter.js" />
+    <Content Include="Elements\HotFixes.js" />
     <Content Include="Elements\InitializeFieldsFromRequestParameters.js" />
-    <Content Include="Elements\ResizeModalDialog.js" />
-    <Content Include="Elements\ShowAddOnsVersion.js" />
     <Content Include="Elements\SPEasyForms.AddOns.Assets.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Elements\SPEasyForms.AddOns.ScriptLinks.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Elements\ToEditorPatch.js" />
     <Content Include="Elements\VisibilityRulesExtension.js" />
     <Content Include="Features\Feature.xml">
       <SubType>Designer</SubType>

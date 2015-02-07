@@ -2,37 +2,32 @@
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/DefaultToCurrentUserAdapter.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.07/DefaultToCurrentUserAdapter.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/VisibilityRulesExtension.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.07/VisibilityRulesExtension.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/CheckConditionalsPatch.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.07/HotFixes.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/ShowAddOnsVersion.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.07/ShowAddOnsVersion.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/InitializeFieldsFromRequestParameters.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.07/InitializeFieldsFromRequestParameters.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/ResizeModalDialog.js"
-       Sequence="57401"
-    />
-    <CustomAction
-       Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.06/ToEditorPatch.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.07/ToEditorPatch.js"
        Sequence="57401"
     />
 </Elements>

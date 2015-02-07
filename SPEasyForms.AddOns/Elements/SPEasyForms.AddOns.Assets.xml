@@ -1,12 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
-    <Module Name="SPEasyFormsAddOnsAssets" Url="Style Library/SPEasyFormsAssets/AddOns/2015.00.06">
+    <Module Name="SPEasyFormsAddOnsAssets" Url="Style Library/SPEasyFormsAssets/AddOns/2015.00.07">
         <File Path="DefaultToCurrentUserAdapter.js" Url="DefaultToCurrentUserAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="VisibilityRulesExtension.js" Url="VisibilityRulesExtension.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="CheckConditionalsPatch.js" Url="CheckConditionalsPatch.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="ShowAddOnsVersion.js" Url="ShowAddOnsVersion.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="HotFixes.js" Url="HotFixes.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="InitializeFieldsFromRequestParameters.js" Url="InitializeFieldsFromRequestParameters.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="ResizeModalDialog.js" Url="ResizeModalDialog.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="ToEditorPatch.js" Url="ToEditorPatch.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
 </Elements>
