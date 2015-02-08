@@ -48,7 +48,7 @@
                         dlgContent.css({ top: ($(window.top).height() / 2 - dlgContent.height() / 2) });
                         dlgContent.prev().css({ top: ($(window.top).height() / 2 - dlgContent.height() / 2) });
                     }
-                }, 1000);
+                }, (_spPageContextInfo.webUIVersion === 4 ? 2000 : 3000));
             }
         }, "sp.ui.dialog.js");
     };
@@ -357,7 +357,7 @@
             $.each(fieldCollection.fields, function (fieldIdx, field) {
                 var currentRow = containerCollection.rows[field.fieldInternalName];
                 if (currentRow) {
-                    var rtePresent = currentRow.row.find("iframe[id^='" + field.fieldInternalName + "'][id$='TextField_iframe']").length > 0;
+                    var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
                     if (!rtePresent && !currentRow.fieldMissing) {
                         result.push(field.fieldInternalName);
                         if (currentRow) {
@@ -423,7 +423,7 @@
                 if (fieldCollection.fields.length > i) {
                     var field = fieldCollection.fields[i];
                     var currentRow = containerCollection.rows[field.fieldInternalName];
-                    var rtePresent = currentRow.row.find("iframe[id^='" + field.fieldInternalName + "'][id$='TextField_iframe']").length > 0;
+                    var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
                     if (!rtePresent && currentRow && !currentRow.fieldMissing) {
                         result.push(field.fieldInternalName);
                         if (currentRow) {
@@ -488,7 +488,7 @@
             $.each(fieldCollection.fields, function (fieldIdx, field) {
                 var currentRow = containerCollection.rows[field.fieldInternalName];
                 if (currentRow) {
-                    var rtePresent = currentRow.row.find("iframe[id^='" + field.fieldInternalName + "'][id$='TextField_iframe']").length > 0;
+                    var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
                     if (!rtePresent && !currentRow.fieldMissing) {
                         result.push(field.fieldInternalName);
                         currentRow.row.appendTo("#" + tableId);
@@ -505,63 +505,7 @@
         return result;
     };
 
-    containerCollection.initializeRows = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        var currentContentType = $("#spEasyFormsContentTypeSelect").val();
-        if (window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
-            containerCollection.rows = $.spEasyForms.sharePointFieldRows.init(opt);
-        } else if (!containerCollection.rows || Object.keys(containerCollection.rows).length === 0) {
-            if (!containerCollection.currentCt || containerCollection.currentCt !== currentContentType) {
-                containerCollection.currentCt = currentContentType;
-                if (containerCollection.currentCt in containerCollection.rowCache) {
-                    containerCollection.rows = containerCollection.rowCache[containerCollection.currentCt];
-                }
-            } else {
-                containerCollection.rows = $.spEasyForms.sharePointFieldRows.init(opt);
-            }
-            if (!containerCollection.rows || Object.keys(containerCollection.rows).length === 0) {
-                var currentListId = $.spEasyForms.sharePointContext.getCurrentListId(opt);
-                if (currentListId !== undefined && currentListId.length > 0) {
-                    var formText = "";
-                    if ($.spEasyForms.sharePointContext.formCache !== undefined) {
-                        formText = $.spEasyForms.sharePointContext.formCache;
-                    } else {
-                        $.ajax({
-                            async: false,
-                            cache: false,
-                            url: $.spEasyForms.utilities.webRelativePathAsAbsolutePath("/_layouts/listform.aspx") +
-                                "?PageType=4&ListId=" +
-                                currentListId +
-                                ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") +
-                                "&RootFolder=",
-                            complete: function (xData) {
-                                formText = xData.responseText;
-                            }
-                        });
-                    }
-
-                    opt.input = $(formText);
-                    containerCollection.rows = $.spEasyForms.sharePointFieldRows.init(opt);
-                    $.each(containerCollection.rows, function (fieldIdx, row) {
-                        var td = row.row.find("td.ms-formbody");
-                        td.html("");
-                        $('.ms-formtable').append(row.row);
-                    });
-                }
-            }
-        }
-        // undo changes to the row that might have been applied by the transforms,
-        // since they may have moved.
-        $.each(containerCollection.rows, function (i, currentRow) {
-            currentRow.row.find("*[data-transformAdded='true']").remove();
-            currentRow.row.find("*[data-transformHidden='true']").
-            attr("data-transformHidden", "false").show();
-        });
-        containerCollection.rowCache[containerCollection.currentCt] = containerCollection.rows;
-        return containerCollection.rows;
-    };
-
-    spContext.getListContext = function (options) {
+    $.spEasyForms.sharePointContext.getListContext = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
         if (!opt.currentContext) {
             opt.currentContext = spContext.get();
@@ -590,7 +534,7 @@
                 $.ajax({
                     async: false,
                     url: $.spEasyForms.utilities.webRelativePathAsAbsolutePath("/_layouts/listform.aspx") +
-                        "?PageType=4&ListId=" +
+                        "?PageType=6&ListId=" +
                         opt.listId +
                         ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") +
                         "&RootFolder=",
@@ -605,7 +549,8 @@
                         });
                     }
                 });
-            } else {
+            }
+            else {
                 $.each(rows, function (idx, row) {
                     result.fields[row.internalName] = row;
                 });
@@ -629,8 +574,7 @@
                         $(xData.responseText).find("List").attr("DefaultViewUrl");
                     result.schema = {};
                     $.each($(xData.responseText).find("Field"), function (idx, field) {
-                        if ($(field).attr("Hidden") !== "hidden" &&
-                            $(field).attr("ReadOnly") !== "readonly") {
+                        if ($(field).attr("Hidden") !== "hidden") {
                             var newField = {};
                             newField.name = $(field).attr("Name");
                             newField.staticName = $(field).attr("StaticName");
@@ -681,43 +625,5 @@
         return result;
     };
 
-    $.spEasyForms.sharePointFieldRows.init = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        var input;
-        if (opt.input !== undefined) {
-            input = opt.input.find(opt.formBodySelector).closest("tr");
-        } else {
-            input = $(opt.formBodySelector).closest("tr");
-            this.rows = {};
-        }
-        var results = {};
-        results.ContentType = {};
-        if (!opt.dontIncludeNodes) {
-            if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1 && $("h3:contains('Content Type')").length === 0) {
-                results.ContentType.row = $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'>Content Type</h3></td><td class='ms-formbody'></td></tr>");
-            } else {
-                results.ContentType.row = $("h3:contains('Content Type')");
-            }
-        }
-        results.ContentType.internalName = "ContentType";
-        results.ContentType.displayName = "Content Type";
-        results.ContentType.spFieldType = "SPFieldContentType";
-        opt.row = results.ContentType;
-        results.ContentType.value = $.spEasyForms.sharePointFieldRows.value(opt);
-        if (results.ContentType.value === "" && $(".ms-descriptiontext:contains('Content Type:') > span").text().length > 0) {
-            results.ContentType.value = $(".ms-descriptiontext:contains('Content Type:') > span").text();
-        }
-        input.each(function () {
-            opt.tr = $(this);
-            var current = $.spEasyForms.sharePointFieldRows.processTr(opt);
-            if (current.internalName !== undefined) {
-                results[current.internalName] = current;
-            }
-        });
-        if (opt.input === undefined) {
-            this.rows = results;
-        }
-        return results;
-    };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
