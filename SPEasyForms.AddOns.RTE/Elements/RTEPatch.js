@@ -86,7 +86,7 @@
                     "source",
                 fonts: "Arial,Arial Black,Comic Sans MS,Courier New,Narrow,Garamond," +
                        "Georgia,Impact,Sans Serif,Serif,Tahoma,Times New Roman,Trebuchet MS,Verdana",
-                useCss: false,
+                useCSS: false,
                 bodyStyle: "font-face: Times New Roman; margin: 1px; cursor:text"
             });
             area.closest("td").find("span.ms-formdescription").remove();
@@ -98,63 +98,5 @@
 				ed[0].refresh(ed);
 			}
 		});
-    }
-
-/*
-    if (typeof(asyncDeltaManager) !== "undefined") {
-        ExecuteOrDelayUntilScriptLoaded(function() {
-            asyncDeltaManager.add_endRequest(applyClEditorToRteFields);
-        }, "start.js");
-    } else {
-        _spBodyOnLoadFunctionNames.push("applyClEditorToRteFields");
-    }
-*/
+	}
 })(typeof(spefjQuery) === 'undefined' ? null : spefjQuery);
-
-
-
-
-
-/*
-    RTE_ConvertTextAreaToRichEdit = function() {};
-
-    function htmlDecode(input){
-        var e = document.createElement('div');
-        e.innerHTML = input;
-        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-    }
-
-    // only operate on the settings page
-    if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") < 0) {
-        
-        // save a reference to the original SPEasyForms init method
-        $.spEasyForms.RTEPatch_originalInit = $.spEasyForms.init;
-    
-        // replace the original SPEasyForms init method
-        $.spEasyForms.init = function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            
-            // call the original SPEasyForms init method
-            $.spEasyForms.RTEPatch_originalInit(opt);
-
-            if($.spEasyForms.sharePointFieldRows.rows && Object.keys($.spEasyForms.sharePointFieldRows.rows).length > 0) {
-                $.each(Object.keys($.spEasyForms.sharePointFieldRows.rows), function(idx, key) {
-                    var row = $.spEasyForms.sharePointFieldRows.rows[key];
-                    if(row.spFieldType === "SPFieldNote" || row.spFieldType === "SPFieldMultiLine")
-                    {
-                        var rteFrame = row.row.find("iframe[id^='" + row.internalName + "'][id$='TextField_iframe']");
-                        if(rteFrame.length > 0) {
-                            setTimeout(function () {
-                                var rt = row.row.find("textarea[id^='" + row.internalName + "'][id$='TextField']");
-                                if(rt.length > 0 && rt.html().length > 0) {
-                                    rteFrame.contents().find("body").append(htmlDecode(rt.html()));
-                                }
-                            }, 2000);
-                        }
-                    }
-                });
-            }
-        };
-        
-    }
-*/
