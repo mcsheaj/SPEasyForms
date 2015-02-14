@@ -40,8 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Elements\buttons.png" />
-    <Content Include="Elements\buttons_hover.png" />
-    <Content Include="Elements\buttons_no_background.png" />
     <Content Include="Elements\DefaultToCurrentUserAdapter.js" />
     <Content Include="Elements\HotFixes.js" />
     <Content Include="Elements\InitializeFieldsFromRequestParameters.js" />

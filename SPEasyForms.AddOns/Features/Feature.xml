@@ -18,7 +18,6 @@
         <ElementFile Location="jquery.cleditor.xhtml.js" />
         <ElementFile Location="jquery.cleditor.sharepoint.js" />
         <ElementFile Location="buttons.png" />
-        <ElementFile Location="buttons_hover.png" />
         <ElementFile Location="toolbar.png" />
     </ElementManifests>
 </Feature>

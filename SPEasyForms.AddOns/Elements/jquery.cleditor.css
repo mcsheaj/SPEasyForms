@@ -4,10 +4,10 @@
 .cleditorMain * {-moz-box-sizing:content-box; -webkit-box-sizing:content-box; box-sizing:content-box}
 .cleditorMain iframe {border:none; margin:0; padding:0}
 .cleditorMain textarea {overflow-y:scroll; font:10pt Arial,Verdana; resize:none; outline:none}
-.cleditorToolbar {background: url('toolbar.png') repeat; background-color: rgb(243,243,243); border-bottom: 1px solid gray; height: 25px;}
+.cleditorToolbar {background: rgb(243,243,243) url('toolbar.png') repeat; height: 25px;}
 .cleditorGroup {float:left; height:24px}
 .cleditorButton {float:left; width:22px; height:22px; margin:1px 0 1px 0; background-image: url('buttons.png')}
-.cleditorButton:hover { background-image: url('buttons_hover.png');}
+.cleditorButton:hover { background: white url('buttons.png'); }
 .cleditorDisabled {opacity:0.3; filter:alpha(opacity=30)}
 .cleditorDivider {float:left; width:1px; height:23px; margin:1px 0 1px 0; background:#CCC}
 .cleditorPopup {border:solid 1px #999; background-color:white; color:#333333; position:absolute; font:10pt Arial,Verdana; cursor:default; z-index:10000}
