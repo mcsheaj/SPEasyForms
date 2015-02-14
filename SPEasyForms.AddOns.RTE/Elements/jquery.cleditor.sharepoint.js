@@ -44,6 +44,12 @@
             keyCode: 73,
             shift: false
         },
+        key85: {
+            name: "underline",
+            title: "Underline (Ctrl + U)",
+            keyCode: 85,
+            shift: false
+        },
         key117: {
             name: "underline",
             title: "Underline (Ctrl + U)",
@@ -93,14 +99,14 @@
             shift: false
         },
         keyS188: {
-            name: "rtl",
-            title: "Right to Left (Ctrl + Shift + <)",
+            name: "ltr",
+            title: "Left to Right (Ctrl + Shift + >)",
             keyCode: 188,
             shift: true
         },
         keyS190: {
-            name: "ltr",
-            title: "Left to Right (Ctrl + Shift + >)",
+            name: "rtl",
+            title: "Right to Left (Ctrl + Shift + <)",
             keyCode: 190,
             shift: true
         }
