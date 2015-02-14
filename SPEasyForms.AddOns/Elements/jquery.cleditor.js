@@ -987,7 +987,7 @@
                 wid = $main.width();
 
             // Resize the toolbar
-            var hgt = $group.offset().top + $group.outerHeight() - $toolbar.offset().top + 1;
+            var hgt = 25;
             $toolbar.height(hgt);
 
             // Resize the iframe
