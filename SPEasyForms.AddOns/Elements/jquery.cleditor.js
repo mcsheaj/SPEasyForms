@@ -521,6 +521,11 @@
 
         }
 
+        // Joe McShea - added callback to handle sticky buttons
+        if (data.editor.options.buttonClickCallback) {
+            return data.editor.options.buttonClickCallback(e, data);
+        }
+
         // Focus the editor
         focus(editor);
 
@@ -529,7 +534,8 @@
     // hoverEnter - mouseenter event handler for buttons and popup items
     function hoverEnter(e) {
         var $div = $(e.target).closest("div");
-        $div.css(BACKGROUND_COLOR, $div.data(BUTTON_NAME) ? "#FFF" : "#FFC");
+        // Joe McShea - modified hover color on button to more closely match the SharePoint RTE
+        $div.css(BACKGROUND_COLOR, $div.data(BUTTON_NAME) ? "#FC6" : "#FFC");
     }
 
     // hoverLeave - mouseleave event handler for buttons and popup items
@@ -922,8 +928,8 @@
                 }
 
                 // Joe McShea - added callback to handle shortcut keys
-                if (e.type === "keydown" && options.docEventHandler) {
-                    return options.docEventHandler(e, editor);
+                if (e.type === "keydown" && options.keyDownCallback) {
+                    return options.keyDownCallback(e, editor);
                 }
             });
 
@@ -952,8 +958,8 @@
             // Joe McShea - added callback to handle shortcut keys
             $doc.bind("keydown", function(e) {
                 // Joe McShea - added callback to handle shortcut keys
-                if (e.type === "keydown" && options.docEventHandler) {
-                    return options.docEventHandler(e, editor);
+                if (e.type === "keydown" && options.keyDownCallback) {
+                    return options.keyDownCallback(e, editor);
                 }
             });
 				

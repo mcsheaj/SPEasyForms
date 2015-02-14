@@ -7,7 +7,7 @@
 .cleditorToolbar {background: rgb(243,243,243) url('toolbar.png') repeat; height: 25px;}
 .cleditorGroup {float:left; height:24px}
 .cleditorButton {float:left; width:22px; height:22px; margin:1px 0 1px 0; background-image: url('buttons.png')}
-.cleditorButton:hover { background: white url('buttons.png'); }
+.cleditorButtonSelected {float:left; width:22px; height:22px; margin:1px 0 1px 0; background: #fc9 url('buttons.png') no-repeat !important}
 .cleditorDisabled {opacity:0.3; filter:alpha(opacity=30)}
 .cleditorDivider {float:left; width:1px; height:23px; margin:1px 0 1px 0; background:#CCC}
 .cleditorPopup {border:solid 1px #999; background-color:white; color:#333333; position:absolute; font:10pt Arial,Verdana; cursor:default; z-index:10000}

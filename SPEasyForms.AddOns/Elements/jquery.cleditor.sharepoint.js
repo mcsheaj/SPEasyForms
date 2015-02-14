@@ -130,8 +130,8 @@
     };
 
     // define a callback for events on the iframe document event handler
-    $.cleditor.defaultOptions.cleditor_sharepoint_docEventHandler = $.cleditor.defaultOptions.docEventHandler;
-    $.cleditor.defaultOptions.docEventHandler = function(e, editor) {
+    $.cleditor.defaultOptions.cleditor_sharepoint_docEventHandler = $.cleditor.defaultOptions.keyDownCallback;
+    $.cleditor.defaultOptions.keyDownCallback = function (e, editor) {
         var key = "key" + (e.shiftKey ? "S" : "") + e.keyCode;
         if (e.type === "keydown" && e.ctrlKey && key in buttonShortcuts) {
             var shortcut = buttonShortcuts[key];
