@@ -34,21 +34,31 @@
                 execCtx.TemplateFunction &&
                 execCtx.TemplateFunction.toString().indexOf("function SPFieldNote_Edit") === 0) {
 
-                if (!isCssLoaded) {
-                    var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/AddOns/RTE.2015.00.01/jquery.cleditor.css');
-                    $("head").append('<link rel="stylesheet" type="text/css" href="' + css + '">');
-                    isCssLoaded = true;
-                }
                 var original = browseris.ie5up;
                 browseris.ie5up = false;
                 result = RTEPatch_Original_CallFunctionWithErrorHandling(fn, c, erv, execCtx);
                 browseris.ie5up = original;
                 var selector = "textarea[id^='" + c.CurrentFieldSchema.Name + "_" + c.CurrentFieldSchema.Id + "'][id$='TextField']";
-                rteSelectors.push({ schema: c.CurrentFieldSchema, selector: selector });
+                rteSelectors.push({
+                    schema: c.CurrentFieldSchema,
+                    selector: selector
+                });
             } else {
                 result = RTEPatch_Original_CallFunctionWithErrorHandling(fn, c, erv, execCtx);
             }
             return result;
+        }
+    } else {
+        RTE_ConvertTextAreaToRichEdit = function(strBaseElementID, fRestrictedMode, fAllowHyperlink,
+            strDirection, strWebLocale, fSimpleTextOnly, fEditable, fUseDynamicHeightSizing,
+            iMaxHeightSize, iMinHeightSize, strMode, urlWebRoot, strThemeUrl, strBodyClassName,
+            fAllowRelativeLinks, strBaseUrl, fUseDynamicWidthSizing, iMaxWidthSize, iMinWidthSize,
+            fEnforceAccessibilityMode, fPreserveScript, fHookUpEvents, fGenerateToolbar) {
+            // IE
+            rteSelectors.push({
+                schema: undefined,
+                selector: "#" + strBaseElementID
+            });
         }
     }
 
@@ -56,25 +66,37 @@
     $.spEasyForms.RTEPatch_originalInit = $.spEasyForms.init;
 
     // replace the original SPEasyForms init method
-    $.spEasyForms.init = function (options) {
+    $.spEasyForms.init = function(options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
-		
+
         // call the original SPEasyForms init method
         $.spEasyForms.RTEPatch_originalInit(opt);
-	
-		$.each($(rteSelectors), function(idx, selector) {
-		    var area = $(selector);
-            area.closest("td").find("span.ms-formdescription").remove();
-			area.hide();
-		});
-		
-		$.spEasyForms.applyClEditorToRteFields();
+
+        if (!isCssLoaded) {
+            var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/AddOns/RTE.2015.00.01/jquery.cleditor.css');
+            $("head").append('<link rel="stylesheet" type="text/css" href="' + css + '">');
+            isCssLoaded = true;
+        }
+
+        // non IE browsers
+        if (rteSelectors.length === 0) {
+            $("textarea[id$='TextField']").each(function(idx, area) {
+                if ($(area).closest("td").find("span.ms-formdescription").length > 0) {
+                    rteSelectors.push({
+                        schema: undefined,
+                        selector: "#" + area.id
+                    });
+                }
+            });
+        }
+
+        $.spEasyForms.applyClEditorToRteFields();
     };
 
     $.spEasyForms.applyClEditorToRteFields = function() {
         $.each($(rteSelectors), function(idx, selector) {
             var area = $(selector.selector);
-            var height = (selector.schema.NumberOfLines * 18) + 3;
+            var height = (area.attr("rows") * 18) + 3;
             var editor = area.cleditor({
                 width: 385,
                 height: height,
@@ -85,18 +107,19 @@
                     "color highlight ltr rtl | " +
                     "source",
                 fonts: "Arial,Arial Black,Comic Sans MS,Courier New,Narrow,Garamond," +
-                       "Georgia,Impact,Sans Serif,Serif,Tahoma,Times New Roman,Trebuchet MS,Verdana",
+                    "Georgia,Impact,Sans Serif,Serif,Tahoma,Times New Roman,Trebuchet MS,Verdana",
                 useCSS: false,
                 bodyStyle: "font-face: Times New Roman; margin: 1px; cursor:text"
             });
             area.closest("td").find("span.ms-formdescription").remove();
             area.closest("tr").find(".ms-formbody > span > br").remove();
         });
-		$(".cleditorMain iframe").on("load", function() {
-		    var ed = $(this).closest("div.cleditorMain").find("textarea").cleditor();
-		    if ($(this).contents().find("body").html().length === 0) {
-				ed[0].refresh(ed);
-			}
-		});
-	}
+        var frames = $(".cleditorMain iframe");
+        frames.on("load", function() {
+            var ed = $(this).closest("div.cleditorMain").find("textarea").cleditor();
+            if ($(this).contents().find("body").html().length === 0) {
+                ed[0].refresh(ed);
+            }
+        });
+    }
 })(typeof(spefjQuery) === 'undefined' ? null : spefjQuery);
