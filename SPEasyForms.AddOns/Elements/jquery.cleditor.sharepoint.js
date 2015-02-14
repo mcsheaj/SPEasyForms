@@ -114,9 +114,15 @@
     var buttonShortcuts = $.cleditor.buttonShortcuts;
 
     // override the cleditor function to add shortcuts to the button titles (i.e. tooltips)
+    var cssLoaded = false;
     $.fn.sharePoint_Original_cleditor = $.fn.cleditor;
-    $.fn.cleditor = function(options) {
-        $.each($(Object.keys(buttonShortcuts)), function(idx, code) {
+    $.fn.cleditor = function (options) {
+        if (!cssLoaded) {
+            var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/AddOns/2015.00.08/jquery.cleditor.css');
+            $("head").append('<link rel="stylesheet" type="text/css" href="' + css + '">');
+            cssLoaded = true;
+        }
+        $.each($(Object.keys(buttonShortcuts)), function (idx, code) {
             var shortcut = buttonShortcuts[code];
             $.cleditor.buttons[shortcut.name].title = shortcut.title;
         });

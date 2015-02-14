@@ -21,7 +21,6 @@
     // this patch only needs to be applied to v2014.01
     if ($.spEasyForms.defaults.version !== "2014.01") return;
 
-    var isCssLoaded = false;
     var rteSelectors = [];
     if (typeof(CallFunctionWithErrorHandling) === "function") {
         var RTEPatch_Original_CallFunctionWithErrorHandling = CallFunctionWithErrorHandling;
@@ -71,12 +70,6 @@
 
         // call the original SPEasyForms init method
         $.spEasyForms.RTEPatch_originalInit(opt);
-
-        if (!isCssLoaded) {
-            var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/AddOns/RTE.2015.00.01/jquery.cleditor.css');
-            $("head").append('<link rel="stylesheet" type="text/css" href="' + css + '">');
-            isCssLoaded = true;
-        }
 
         // non IE browsers
         if (rteSelectors.length === 0) {
