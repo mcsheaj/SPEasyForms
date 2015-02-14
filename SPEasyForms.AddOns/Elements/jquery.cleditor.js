@@ -521,11 +521,6 @@
 
         }
 
-        // Joe McShea - added callback to handle sticky buttons
-        if (data.editor.options.buttonClickCallback) {
-            return data.editor.options.buttonClickCallback(e, data);
-        }
-
         // Focus the editor
         focus(editor);
 
@@ -534,7 +529,6 @@
     // hoverEnter - mouseenter event handler for buttons and popup items
     function hoverEnter(e) {
         var $div = $(e.target).closest("div");
-        // Joe McShea - modified hover color on button to more closely match the SharePoint RTE
         $div.css(BACKGROUND_COLOR, $div.data(BUTTON_NAME) ? "#FC6" : "#FFC");
     }
 
@@ -993,7 +987,7 @@
                 wid = $main.width();
 
             // Resize the toolbar
-            var hgt = 25;
+            var hgt = $group.offset().top + $group.outerHeight() - $toolbar.offset().top + 1;
             $toolbar.height(hgt);
 
             // Resize the iframe
