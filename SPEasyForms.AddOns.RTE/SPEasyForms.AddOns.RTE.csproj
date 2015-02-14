@@ -39,13 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Elements\buttons.png" />
-    <Content Include="Elements\buttons_hover.png" />
-    <Content Include="Elements\buttons_no_background.png" />
-    <Content Include="Elements\jquery.cleditor.css" />
-    <Content Include="Elements\jquery.cleditor.js" />
-    <Content Include="Elements\jquery.cleditor.sharepoint.js" />
-    <Content Include="Elements\jquery.cleditor.xhtml.js" />
     <Content Include="Elements\RTEPatch.js" />
     <Content Include="Elements\SPEasyForms.AddOns.Assets.xml" />
     <Content Include="Elements\SPEasyForms.AddOns.ScriptLinks.xml" />

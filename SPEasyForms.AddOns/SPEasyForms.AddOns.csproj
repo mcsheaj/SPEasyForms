@@ -39,15 +39,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Elements\buttons.png" />
+    <Content Include="Elements\buttons_hover.png" />
+    <Content Include="Elements\buttons_no_background.png" />
     <Content Include="Elements\DefaultToCurrentUserAdapter.js" />
     <Content Include="Elements\HotFixes.js" />
     <Content Include="Elements\InitializeFieldsFromRequestParameters.js" />
+    <Content Include="Elements\jquery.cleditor.css" />
+    <Content Include="Elements\jquery.cleditor.js" />
+    <Content Include="Elements\jquery.cleditor.sharepoint.js" />
+    <Content Include="Elements\jquery.cleditor.xhtml.js" />
     <Content Include="Elements\SPEasyForms.AddOns.Assets.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Elements\SPEasyForms.AddOns.ScriptLinks.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Elements\toolbar.png" />
     <Content Include="Elements\VisibilityRulesExtension.js" />
     <Content Include="Features\Feature.xml">
       <SubType>Designer</SubType>

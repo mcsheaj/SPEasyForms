@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms HotFixes - cumulative update for reported bugs.
  *
- * @version 2015.00.07
+ * @version 2015.00.08
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -314,7 +314,7 @@
     // only operate on the settings page
     if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
         $().ready(function () {
-            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2015.00.07</b>");
+            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2015.00.08</b>");
         });
     }
 

@@ -12,3 +12,10 @@ Manifest.xml
 ..\Elements\VisibilityRulesExtension.js
 ..\Elements\HotFixes.js
 ..\Elements\InitializeFieldsFromRequestParameters.js
+..\Elements\jquery.cleditor.js
+..\Elements\jquery.cleditor.css
+..\Elements\jquery.cleditor.sharepoint.js
+..\Elements\jquery.cleditor.xhtml.js
+..\Elements\buttons.png
+..\Elements\buttons_hover.png
+..\Elements\toolbar.png
