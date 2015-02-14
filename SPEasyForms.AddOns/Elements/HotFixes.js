@@ -581,6 +581,12 @@
                             newField.id = $(field).attr("ID");
                             newField.displayName = $(field).attr("DisplayName");
                             newField.type = $(field).attr("Type");
+                            if (newField.type === "Calculated") {
+                                newField.hasFormula = $(field).find("formula").length > 0;
+                                if (newField.hasFormula) {
+                                    newField.formula = $(field).find("formula").text();
+                                }
+                            }
                             newField.required = $(field).attr("Required");
                             result.schema[newField.displayName] = newField;
                             result.schema[newField.name] = newField;
