@@ -237,9 +237,6 @@
             else
                 buttonSelect(data.button, true);
         }
-        else {
-            refreshStickyButtons(data.editor);
-        }
     };
 
     // hoverEnter - replace the hover enter callback to change the colors and handle sticky buttons
