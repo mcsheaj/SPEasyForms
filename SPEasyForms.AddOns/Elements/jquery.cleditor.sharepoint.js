@@ -208,10 +208,14 @@
                 e.preventDefault();
                 e.keyCode = 0;
                 return false;
-            } else if ($.cleditor.defaultOptions.cleditor_sharepoint_keyDownCallback) {
+            }
+            else if ($.cleditor.defaultOptions.cleditor_sharepoint_keyDownCallback) {
+                refreshStickyButtons(editor);
                 return $.cleditor.defaultOptions.cleditor_sharepoint_keyDownCallback(e, editor);
             }
-            refreshStickyButtons(editor);
+            else {
+                refreshStickyButtons(editor);
+            }
         }
     };
 
@@ -233,7 +237,9 @@
             else
                 buttonSelect(data.button, true);
         }
-        refreshStickyButtons(data.editor);
+        else {
+            refreshStickyButtons(data.editor);
+        }
     };
 
     // hoverEnter - replace the hover enter callback to change the colors and handle sticky buttons
