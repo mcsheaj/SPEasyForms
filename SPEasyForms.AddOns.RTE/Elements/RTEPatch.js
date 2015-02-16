@@ -87,14 +87,13 @@
             var area = $(selector.selector);
             var height = (area.attr("rows") * 21);
             area.cleditor({
-                width: 385,
+                width: 360,
                 height: height,
                 controls: "font size | " +
                     "bold italic underline | " +
                     "alignleft center alignright | " +
                     "numbering bullets outdent indent | " +
-                    "color highlight ltr rtl | " +
-                    "source",
+                    "color highlight ltr rtl",
                 fonts: "Arial,Arial Black,Comic Sans MS,Courier New,Narrow,Garamond," +
                     "Georgia,Impact,Sans Serif,Serif,Tahoma,Times New Roman,Trebuchet MS,Verdana",
                 useCSS: false,
