@@ -211,7 +211,6 @@
             } else if ($.cleditor.defaultOptions.cleditor_sharepoint_keyDownCallback) {
                 return $.cleditor.defaultOptions.cleditor_sharepoint_keyDownCallback(e, editor);
             }
-            restoreRange(editor);
             refreshStickyButtons(editor);
         }
     };
@@ -259,7 +258,11 @@
             var stickyButton = stickyButtons[key];
             if (stickyButton.tagNames) {
                 var button = editor.$main.find("div[buttonName='" + key + "']");
-                var p = getRange(editor).parentElement();
+
+                var idoc = editor.$frame[0].contentDocument || editor.$frame[0].contentWindow.document;
+                var iwin = editor.$frame[0].contentWindow || editor.$frame[0].contentDocument.defaultView;
+
+                var p = getSelectionContainer(iwin, idoc);
                 var tagNames = stickyButton.tagNames.constructor === Array ? stickyButton.tagNames : [stickyButton.tagNames];
                 var closestParent = closestBlockInclusive(p, tagNames);
                 if (closestParent.length > 0) {
@@ -285,8 +288,9 @@
     // set the dir attribute of the closest div, span, or paragraph encompassing the
     // current selection range in the editor (adding a div if there is no enclosing element)
     function setDir(editor, dir) {
-        var r = getRange(editor);
-        var p = r.parentElement();
+        var idoc = editor.$frame[0].contentDocument || editor.$frame[0].contentWindow.document;
+        var iwin = editor.$frame[0].contentWindow || editor.$frame[0].contentDocument.defaultView;
+        var p = getSelectionContainer(iwin, idoc);
         var closestBlock = closestBlockInclusive(p, ["div", "span", "p"]);
         if (closestBlock.length > 0) {
             closestBlock.attr("dir", dir);
@@ -301,9 +305,8 @@
     // get the closest enclosing block of the current text selection range
     // that matches any of the tagNames passed in.
     function closestBlockInclusive(elem, tagNames) {
-        var tagName = elem.tagName.toLowerCase();
         var closestBlock;
-        if ($.inArray(tagName, tagNames) > -1) {
+        if (elem.tagName && $.inArray(elem.tagName.toLowerCase(), tagNames) > -1) {
             closestBlock = $(elem);
         }
         else {
@@ -330,31 +333,22 @@
         return false;
     }
 
-    // the rest was copied from cleditor
-    var ua = navigator.userAgent.toLowerCase();
-    var ie = /msie/.test(ua);
-    var iege11 = /(trident)(?:.*rv:([\w.]+))?/.test(ua);
-
-    // getRange - gets the current text range object
-    function getRange(editor) {
-        if (ie) return getSelection(editor).createRange();
-        return getSelection(editor).getRangeAt(0);
-    }
-
-    // getSelection - gets the current text range object
-    function getSelection(editor) {
-        if (ie) return editor.doc.selection;
-        return editor.$frame[0].contentWindow.getSelection();
-    }
-
-    // restoreRange - restores the current ie selection
-    function restoreRange(editor) {
-        if (editor.range) {
-            if (ie)
-                editor.range[0].select();
-            else if (iege11)
-                getSelection(editor).addRange(editor.range[0]);
+    function getSelectionContainer(win, doc) {
+        var container = null;
+        if (win.getSelection) {  // all browsers, except IE before version 9
+            var selectionRange = win.getSelection();
+            if (selectionRange.rangeCount > 0) {
+                var range = selectionRange.getRangeAt(0);
+                container = range.commonAncestorContainer;
+            }
         }
+        else {
+            if (doc.selection) {   // Internet Explorer
+                var textRange = doc.selection.createRange();
+                container = textRange.parentElement();
+            }
+        }
+        return container;
     }
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);

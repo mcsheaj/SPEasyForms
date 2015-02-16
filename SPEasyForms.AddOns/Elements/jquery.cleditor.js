@@ -964,10 +964,15 @@
                     $(editor).triggerHandler(BLURRED);
                 });
             // Joe McShea - added callback to handle shortcut keys
-            $doc.bind("keydown", function(e) {
+            $doc.bind("keydown selectionchange", function (e) {
                 // Joe McShea - added callback to handle shortcut keys
                 if (e.type === "keydown" && options.keyDownCallback) {
                     return options.keyDownCallback(e, editor);
+                }
+
+                // Joe McShea - added callback to handle shortcut keys
+                if (e.type === "selectionchange" && options.selectionChangeCallback) {
+                    return options.selectionChangeCallback(e, editor);
                 }
             });
 				
