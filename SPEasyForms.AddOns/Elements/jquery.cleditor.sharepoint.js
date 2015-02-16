@@ -6,31 +6,12 @@
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
-(function($) {
+/* global spefjQuery */
+(function ($) {
 
     if (!$) return;
 
-    // Define the right to left button
-    $.cleditor.buttons.rtl = {
-        name: "rtl",
-        stripIndex: 33,
-        title: "Right to Left",
-        buttonClick: rtl
-    };
-
-    // Define the left to right button
-    $.cleditor.buttons.ltr = {
-        name: "ltr",
-        stripIndex: 32,
-        title: "Left to Right",
-        buttonClick: ltr
-    };
-
-    // Add the buttons to the default controls before the source button
-    $.cleditor.defaultOptions.controls = $.cleditor.defaultOptions.controls
-        .replace("source", "ltr rtl source");
-
-    // Define an array of shortcut structures
+    // Define an array of structures describing control key shortcuts
     $.cleditor.buttonShortcuts = {
         key66: {
             name: "bold",
@@ -113,6 +94,72 @@
     };
     var buttonShortcuts = $.cleditor.buttonShortcuts;
 
+    // define an array of structures describing sticky buttons
+    $.cleditor.stickyButtons = {
+        bold: {
+            tagNames: "strong"
+        },
+        italic: {
+            tagNames: "em"
+        },
+        underline: {
+            tagNames: "u"
+        },
+        alignleft: {
+            tagNames: "div",
+            attrName: "align",
+            attrValue: "left"
+        },
+        center: {
+            tagNames: "div",
+            attrName: "align",
+            attrValue: "center"
+        },
+        alignright: {
+            tagNames: "div",
+            attrName: "align",
+            attrValue: "right"
+        },
+        bullets: {
+            tagNames: "ul"
+        },
+        numbering: {
+            tagNames: "ol"
+        },
+        ltr: {
+            tagNames: ["div", "ol", "ul","span", "p"],
+            attrName: "dir",
+            attrValue: "ltr"
+        },
+        rtl: {
+            tagNames: ["div", "ol", "ul", "span", "p"],
+            attrName: "dir",
+            attrValue: "rtl"
+        },
+        source: true
+    };
+    var stickyButtons = $.cleditor.stickyButtons;
+
+    // Define the right to left button
+    $.cleditor.buttons.rtl = {
+        name: "rtl",
+        stripIndex: 33,
+        title: "Right to Left",
+        buttonClick: rtl
+    };
+
+    // Define the left to right button
+    $.cleditor.buttons.ltr = {
+        name: "ltr",
+        stripIndex: 32,
+        title: "Left to Right",
+        buttonClick: ltr
+    };
+
+    // Add the buttons to the default controls before the source button
+    $.cleditor.defaultOptions.controls = $.cleditor.defaultOptions.controls
+        .replace("source", "ltr rtl source");
+
     // override the cleditor function to add shortcuts to the button titles (i.e. tooltips)
     var cssLoaded = false;
     $.fn.sharePoint_Original_cleditor = $.fn.cleditor;
@@ -129,32 +176,6 @@
         return this.sharePoint_Original_cleditor(options);
     };
 
-    // define a callback for events on the iframe document event handler
-    $.cleditor.defaultOptions.cleditor_sharepoint_docEventHandler = $.cleditor.defaultOptions.keyDownCallback;
-    $.cleditor.defaultOptions.keyDownCallback = function (e, editor) {
-        var key = "key" + (e.shiftKey ? "S" : "") + e.keyCode;
-        if (e.type === "keydown" && e.ctrlKey && key in buttonShortcuts) {
-            var shortcut = buttonShortcuts[key];
-            if (shortcut.name === "ltr") {
-                rtl(e, {
-                    editor: editor
-                });
-            } else if (shortcut.name === "rtl") {
-                ltr(e, {
-                    editor: editor
-                });
-            } else {
-                var button = $.cleditor.buttons[shortcut.name];
-                editor.execCommand(button.command, undefined, editor.options.useCSS, e.target);
-            }
-            e.preventDefault();
-            e.keyCode = 0;
-            return false;
-        } else if ($.cleditor.defaultOptions.cleditor_sharepoint_docEventHandler) {
-            return $.cleditor.defaultOptions.cleditor_sharepoint_docEventHandler(e, editor);
-        }
-    };
-
     // handle rtl clicked
     function rtl(e, data) {
         return setDir(data.editor, "rtl");
@@ -165,16 +186,110 @@
         return setDir(data.editor, "ltr");
     }
 
+    // define a callback for events on the iframe document key down event
+    $.cleditor.defaultOptions.cleditor_sharepoint_keyDownCallback = $.cleditor.defaultOptions.keyDownCallback;
+    $.cleditor.defaultOptions.keyDownCallback = function (e, editor) {
+        if (e.keyCode > 17) {
+            var key = "key" + (e.shiftKey ? "S" : "") + e.keyCode;
+            if (e.type === "keydown" && e.ctrlKey && key in buttonShortcuts) {
+                var shortcut = buttonShortcuts[key];
+                if (shortcut.name === "ltr") {
+                    rtl(e, {
+                        editor: editor
+                    });
+                } else if (shortcut.name === "rtl") {
+                    ltr(e, {
+                        editor: editor
+                    });
+                } else {
+                    var button = $.cleditor.buttons[shortcut.name];
+                    editor.execCommand(button.command, undefined, editor.options.useCSS, e.target);
+                }
+                e.preventDefault();
+                e.keyCode = 0;
+                return false;
+            } else if ($.cleditor.defaultOptions.cleditor_sharepoint_keyDownCallback) {
+                return $.cleditor.defaultOptions.cleditor_sharepoint_keyDownCallback(e, editor);
+            }
+            restoreRange(editor);
+            refreshStickyButtons(editor);
+        }
+    };
+
+    // define a callback for events on the iframe document selection changed event
+    $.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback = $.cleditor.defaultOptions.selectionChangeCallback;
+    $.cleditor.defaultOptions.selectionChangeCallback = function (e, editor) {
+        refreshStickyButtons(editor);
+        if ($.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback) {
+            $.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback(e, editor);
+        }
+    };
+
+    // define a callback for events on the button div click event
+    $.cleditor.defaultOptions.cleditor_sharepoint_buttonClickCallBack = $.cleditor.defaultOptions.buttonClickCallBack;
+    $.cleditor.defaultOptions.buttonClickCallBack = function (e, data) {
+        if (data.buttonName in stickyButtons && !stickyButtons[data.buttonName].closestSelector) {
+            if (buttonIsSelected(data.button))
+                buttonSelect(data.button, false);
+            else
+                buttonSelect(data.button, true);
+        }
+        refreshStickyButtons(data.editor);
+    };
+
+    // hoverEnter - replace the hover enter callback to change the colors and handle sticky buttons
+    $.cleditor.defaultOptions.hoverEnter = function (e) {
+        var $div = $(e.target).closest("div");
+        if ($div.css("background-color") !== "rgb(255, 229, 204)") {
+            $div.css("background-color", "rgb(255, 204, 153)");
+        }
+    };
+
+    // hoverLeave - replace the hover leave callback to change the colors and handle sticky buttons
+    $.cleditor.defaultOptions.hoverLeave = function (e) {
+        var $div = $(e.target).closest("div");
+        if ($div.css("background-color") !== "rgb(255, 229, 204)") {
+            $div.css("background-color", "transparent");
+        }
+    };
+
+    // determine which sticky buttons should be highlighted based on the text range selected in the editor
+    function refreshStickyButtons(editor) {
+        $.each($(Object.keys($.cleditor.stickyButtons)), function (idx, key) {
+            var stickyButton = stickyButtons[key];
+            if (stickyButton.tagNames) {
+                var button = editor.$main.find("div[buttonName='" + key + "']");
+                var p = getRange(editor).parentElement();
+                var tagNames = stickyButton.tagNames.constructor === Array ? stickyButton.tagNames : [stickyButton.tagNames];
+                var closestParent = closestBlockInclusive(p, tagNames);
+                if (closestParent.length > 0) {
+                    if (stickyButton.attrName && stickyButton.attrValue) {
+                        if (closestParent.attr(stickyButton.attrName) === stickyButton.attrValue) {
+                            buttonSelect(button, true);
+                        }
+                        else {
+                            buttonSelect(button, false);
+                        }
+                    }
+                    else {
+                        buttonSelect(button, true);
+                    }
+                }
+                else {
+                    buttonSelect(button, false);
+                }
+            }
+        });
+    }
+
     // set the dir attribute of the closest div, span, or paragraph encompassing the
     // current selection range in the editor (adding a div if there is no enclosing element)
     function setDir(editor, dir) {
         var r = getRange(editor);
-        var c = $("div, p, span", editor.doc).closestToOffset({
-            left: r.offsetLeft,
-            top: r.offsetTop
-        });
-        if (c) {
-            c.attr("dir", dir);
+        var p = r.parentElement();
+        var closestBlock = closestBlockInclusive(p, ["div", "span", "p"]);
+        if (closestBlock.length > 0) {
+            closestBlock.attr("dir", dir);
         } else {
             $("body", editor.doc).html("<div dir='" + dir + "'>" + $("body", editor.doc).html() + "</div>");
         }
@@ -183,8 +298,42 @@
         return false;
     }
 
+    // get the closest enclosing block of the current text selection range
+    // that matches any of the tagNames passed in.
+    function closestBlockInclusive(elem, tagNames) {
+        var tagName = elem.tagName.toLowerCase();
+        var closestBlock;
+        if ($.inArray(tagName, tagNames) > -1) {
+            closestBlock = $(elem);
+        }
+        else {
+            closestBlock = $(elem).closest(tagNames.join());
+        }
+        return closestBlock;
+    }
+
+    // select or deselect a button div
+    function buttonSelect(button, on) {
+        if (!on && buttonIsSelected(button)) {
+            $(button).css("background-color", "transparent");
+        }
+        else if (on && !buttonIsSelected(button)) {
+            $(button).css("background-color", "rgb(255, 229, 204)");
+        }
+    }
+
+    // return true if a button div is selected, false otherwise
+    function buttonIsSelected(button) {
+        if ($(button).css("background-color") === "rgb(255, 229, 204)") {
+            return true;
+        }
+        return false;
+    }
+
+    // the rest was copied from cleditor
     var ua = navigator.userAgent.toLowerCase();
     var ie = /msie/.test(ua);
+    var iege11 = /(trident)(?:.*rv:([\w.]+))?/.test(ua);
 
     // getRange - gets the current text range object
     function getRange(editor) {
@@ -198,40 +347,14 @@
         return editor.$frame[0].contentWindow.getSelection();
     }
 
-    // jquery extension to get the closest element from a collection to a given offset
-    $.fn.closestToOffset = function(offset) {
-        var el = null,
-            elOffset, x = offset.left,
-            y = offset.top,
-            distance, dx, dy, minDistance;
-        this.each(function() {
-            elOffset = $(this).offset();
-
-            if (
-                (x >= elOffset.left) && (x <= elOffset.right) &&
-                (y >= elOffset.top) && (y <= elOffset.bottom)
-            ) {
-                el = $(this);
-                return false;
-            }
-
-            var offsets = [
-                [elOffset.left, elOffset.top],
-                [elOffset.right, elOffset.top],
-                [elOffset.left, elOffset.bottom],
-                [elOffset.right, elOffset.bottom]
-            ];
-            for (off in offsets) {
-                dx = offsets[off][0] - x;
-                dy = offsets[off][1] - y;
-                distance = Math.sqrt((dx * dx) + (dy * dy));
-                if (minDistance === undefined || distance < minDistance) {
-                    minDistance = distance;
-                    el = $(this);
-                }
-            }
-        });
-        return el;
+    // restoreRange - restores the current ie selection
+    function restoreRange(editor) {
+        if (editor.range) {
+            if (ie)
+                editor.range[0].select();
+            else if (iege11)
+                getSelection(editor).addRange(editor.range[0]);
+        }
     }
 
-})(typeof(spefjQuery) === 'undefined' ? null : spefjQuery);
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);

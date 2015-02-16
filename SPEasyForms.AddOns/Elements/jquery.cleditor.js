@@ -7,7 +7,8 @@
  Dual licensed under the MIT or GPL Version 2 licenses.
  Modified for sharepoint plugin by Joe McShea - all my changes have a comment with my name.
 */
-
+/* global spefjQuery, cleditor:true */
+/*jshint -W016, -W038, -W004 */
 (function($) {
 
     if (!$) return; // Joe McShea - return if spefjQuery is not loaded
@@ -143,7 +144,6 @@
         DISABLED = "disabled",
         DIV_TAG = "<div>",
         FOCUSED = "focused",
-        TRANSPARENT = "transparent",
         UNSELECTABLE = "unselectable",
 
         // Class name constants
@@ -251,7 +251,7 @@
             if (buttonName === "|") {
 
                 // Add a new divider to the group
-                var $div = $(DIV_TAG)
+                $(DIV_TAG)
                     .addClass(DIVIDER_CLASS)
                     .appendTo($group);
 
@@ -275,11 +275,15 @@
                 // Add a new button to the group
                 var $buttonDiv = $(DIV_TAG)
                     .data(BUTTON_NAME, button.name)
+                    .attr("buttonName", button.name)
                     .addClass(BUTTON_CLASS)
                     .attr("title", button.title)
                     .bind(CLICK, $.proxy(buttonClick, editor))
                     .appendTo($group)
-                    .hover(hoverEnter, hoverLeave);
+                    .hover(
+                        // Joe McShea - added the ability for plug-ins to override hover events, for sticky buttons
+                        editor.options.hoverEnter ? editor.options.hoverEnter : hoverEnter,
+                        editor.options.hoverLeave ? editor.options.hoverLeave : hoverLeave);
 
                 // Joe McShea - reduce button height (should make this configurable?)
                 groupWidth += 22;
@@ -519,6 +523,11 @@
             else if (!execCommand(editor, data.command, data.value, data.useCSS, buttonDiv))
                 return false;
 
+        }
+
+        // Joe McShea - added callback to handle shortcut keys
+        if (data.editor.options.buttonClickCallBack) {
+            return data.editor.options.buttonClickCallBack(e, data);
         }
 
         // Focus the editor
@@ -925,6 +934,11 @@
                 if (e.type === "keydown" && options.keyDownCallback) {
                     return options.keyDownCallback(e, editor);
                 }
+
+                // Joe McShea - added callback to handle shortcut keys
+                if (e.type === "selectionchange" && options.selectionChangeCallback) {
+                    return options.selectionChangeCallback(e, editor);
+                }
             });
 
             // Restore the text range and trigger focused event when the iframe gains focus
@@ -964,7 +978,7 @@
             .keydown(function(e) {
                 // Prevent Internet Explorer from going to prior page when an image 
                 // is selected and the backspace key is pressed.
-                if (ie && getSelection(editor).type == "Control" && e.keyCode == 8) {
+                if (ie && getSelection(editor).type === "Control" && e.keyCode === 8) {
                     getSelection(editor).clear();
                     e.preventDefault();
                 }
@@ -1246,4 +1260,5 @@
     }
 
     // Joe McShea - modified to the SPEasyForms instance of jQuery
-})(typeof(spefjQuery) === 'undefined' ? null : spefjQuery);
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
+/*jshint +W016, +W038, +W004 */

@@ -8,7 +8,7 @@
  *    http://www.opensource.org/licenses/mit-license.php
  */
 
-/* global spefjQuery, RTE_ConvertTextAreaToRichEdit */
+/* global spefjQuery, RTE_ConvertTextAreaToRichEdit:true, CallFunctionWithErrorHandling:true, browseris */
 (function($, undefined) {
 
     // return without doing anything if SPEasyForms has not been loaded
@@ -24,7 +24,7 @@
     var rteSelectors = [];
     if (typeof(CallFunctionWithErrorHandling) === "function") {
         var RTEPatch_Original_CallFunctionWithErrorHandling = CallFunctionWithErrorHandling;
-        CallFunctionWithErrorHandling = function(fn, c, erv, execCtx) {
+        CallFunctionWithErrorHandling = function (fn, c, erv, execCtx) {
             var result;
             if (c &&
                 (c.BaseViewID === "NewForm" || c.BaseViewID === "EditForm") &&
@@ -46,19 +46,15 @@
                 result = RTEPatch_Original_CallFunctionWithErrorHandling(fn, c, erv, execCtx);
             }
             return result;
-        }
+        };
     } else {
-        RTE_ConvertTextAreaToRichEdit = function(strBaseElementID, fRestrictedMode, fAllowHyperlink,
-            strDirection, strWebLocale, fSimpleTextOnly, fEditable, fUseDynamicHeightSizing,
-            iMaxHeightSize, iMinHeightSize, strMode, urlWebRoot, strThemeUrl, strBodyClassName,
-            fAllowRelativeLinks, strBaseUrl, fUseDynamicWidthSizing, iMaxWidthSize, iMinWidthSize,
-            fEnforceAccessibilityMode, fPreserveScript, fHookUpEvents, fGenerateToolbar) {
+        RTE_ConvertTextAreaToRichEdit = function (strBaseElementID) {
             // IE
             rteSelectors.push({
                 schema: undefined,
                 selector: "#" + strBaseElementID
             });
-        }
+        };
     }
 
     // save a reference to the original SPEasyForms init method
@@ -86,11 +82,11 @@
         $.spEasyForms.applyClEditorToRteFields();
     };
 
-    $.spEasyForms.applyClEditorToRteFields = function() {
-        $.each($(rteSelectors), function(idx, selector) {
+    $.spEasyForms.applyClEditorToRteFields = function () {
+        $.each($(rteSelectors), function (idx, selector) {
             var area = $(selector.selector);
-            var height = (area.attr("rows") * 18) + 3;
-            var editor = area.cleditor({
+            var height = (area.attr("rows") * 19);
+            area.cleditor({
                 width: 385,
                 height: height,
                 controls: "font size | " +
@@ -108,11 +104,12 @@
             area.closest("tr").find(".ms-formbody > span > br").remove();
         });
         var frames = $(".cleditorMain iframe");
-        frames.on("load", function() {
+        frames.on("load", function () {
             var ed = $(this).closest("div.cleditorMain").find("textarea").cleditor();
             if ($(this).contents().find("body").html().length === 0) {
                 ed[0].refresh(ed);
             }
         });
-    }
+    };
+
 })(typeof(spefjQuery) === 'undefined' ? null : spefjQuery);
