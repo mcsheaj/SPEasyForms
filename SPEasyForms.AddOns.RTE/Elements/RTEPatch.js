@@ -85,7 +85,7 @@
     $.spEasyForms.applyClEditorToRteFields = function () {
         $.each($(rteSelectors), function (idx, selector) {
             var area = $(selector.selector);
-            var height = (area.attr("rows") * 19);
+            var height = (area.attr("rows") * 21);
             area.cleditor({
                 width: 385,
                 height: height,

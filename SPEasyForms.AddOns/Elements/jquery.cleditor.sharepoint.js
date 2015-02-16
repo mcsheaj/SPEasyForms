@@ -263,23 +263,25 @@
                 var iwin = editor.$frame[0].contentWindow || editor.$frame[0].contentDocument.defaultView;
 
                 var p = getSelectionContainer(iwin, idoc);
-                var tagNames = stickyButton.tagNames.constructor === Array ? stickyButton.tagNames : [stickyButton.tagNames];
-                var closestParent = closestBlockInclusive(p, tagNames);
-                if (closestParent.length > 0) {
-                    if (stickyButton.attrName && stickyButton.attrValue) {
-                        if (closestParent.attr(stickyButton.attrName) === stickyButton.attrValue) {
-                            buttonSelect(button, true);
+                if (p) {
+                    var tagNames = stickyButton.tagNames.constructor === Array ? stickyButton.tagNames : [stickyButton.tagNames];
+                    var closestParent = closestBlockInclusive(p, tagNames);
+                    if (closestParent.length > 0) {
+                        if (stickyButton.attrName && stickyButton.attrValue) {
+                            if (closestParent.attr(stickyButton.attrName) === stickyButton.attrValue) {
+                                buttonSelect(button, true);
+                            }
+                            else {
+                                buttonSelect(button, false);
+                            }
                         }
                         else {
-                            buttonSelect(button, false);
+                            buttonSelect(button, true);
                         }
                     }
                     else {
-                        buttonSelect(button, true);
+                        buttonSelect(button, false);
                     }
-                }
-                else {
-                    buttonSelect(button, false);
                 }
             }
         });
@@ -291,14 +293,16 @@
         var idoc = editor.$frame[0].contentDocument || editor.$frame[0].contentWindow.document;
         var iwin = editor.$frame[0].contentWindow || editor.$frame[0].contentDocument.defaultView;
         var p = getSelectionContainer(iwin, idoc);
-        var closestBlock = closestBlockInclusive(p, ["div", "span", "p"]);
-        if (closestBlock.length > 0) {
-            closestBlock.attr("dir", dir);
-        } else {
-            $("body", editor.doc).html("<div dir='" + dir + "'>" + $("body", editor.doc).html() + "</div>");
+        if (p) {
+            var closestBlock = closestBlockInclusive(p, ["div", "span", "p"]);
+            if (closestBlock.length > 0) {
+                closestBlock.attr("dir", dir);
+            } else {
+                $("body", editor.doc).html("<div dir='" + dir + "'>" + $("body", editor.doc).html() + "</div>");
+            }
+            editor.updateTextArea(editor);
+            editor.focus();
         }
-        editor.updateTextArea(editor);
-        editor.focus();
         return false;
     }
 
