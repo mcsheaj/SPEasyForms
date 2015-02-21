@@ -631,5 +631,72 @@
         return result;
     };
 
+    $.spEasyForms.containerCollection.preSaveItem = function () {
+        var opt = $.extend({}, $.spEasyForms.defaults);
+
+        if (!$.spEasyForms.adapterCollection.preSaveItem(opt)) {
+            this.highlightValidationErrors(opt);
+            return false;
+        }
+
+        if (typeof (SPClientForms) !== 'undefined' &&
+            typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
+            typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
+            if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
+                this.highlightValidationErrors(opt);
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    $.spEasyForms.transform = function (opt) {
+        opt.currentConfig = $.spEasyForms.configManager.get(opt);
+        // convert all lookups to simple selects, only for 2010 and
+        // earlier, from Marc Anderson's SPServices documentation and 
+        // attributed to Dan Kline
+        $('.ms-lookuptypeintextbox').each(function() {
+            $().SPServices.SPComplexToSimpleDropdown({
+                columnName: $(this).attr('title'),
+                debug: opt.verbose
+            });
+        });
+        // add ms-formtable to the...um, form table. For some reason 
+        // designer does not put this in custom forms.
+        if ($("table.ms-formtable").length === 0) {
+            $("td.ms-formlabel h3.ms-standardheader").closest("table").addClass("ms-formtable");
+        }
+        $.spEasyForms.containerCollection.transform(opt);
+        // Override the core.js PreSaveItem function, to allow containers 
+        // and/or adapters to react to validation errors.
+        if (typeof(PreSaveItem) !== 'undefined') {
+            var originalPreSaveItem = PreSaveItem;
+            PreSaveItem = function () {
+                var result = originalPreSaveItem();
+                if (result) {
+                    result = spefjQuery.spEasyForms.containerCollection.preSaveItem();
+                }
+                return result;
+            };
+        }
+        // override the save button in 2013/O365 so validation 
+        // occurs before PreSaveAction, like it did in previous
+        // version of SharePoint
+        $("input[value='Save']").each(function () {
+            if (null !== this.getAttributeNode("onclick")) {
+                var onSave = this.getAttributeNode("onclick").nodeValue;
+                onSave = onSave.replace(
+                    "if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
+                var newOnSave = document.createAttribute('onclick');
+                newOnSave.value = onSave;
+                this.setAttributeNode(newOnSave);
+            }
+        });
+        spEasyForms.appendContext(opt);
+        if (_spPageContextInfo.webUIVersion === 4) {
+            $(".ui-widget input").css("font-size", "8pt");
+        }
+    };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);

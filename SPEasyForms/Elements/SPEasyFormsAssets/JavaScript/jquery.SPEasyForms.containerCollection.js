@@ -183,23 +183,24 @@
          * @returns {bool} - true if the submit should proceed, false if it should
          *     be cancelled.
          *********************************************************************/
-        preSaveItem: function() {
-            var opt = $.extend({}, $.spEasyForms.defaults, {});
-            var result = true;
+        preSaveItem: function () {
+            var opt = $.extend({}, $.spEasyForms.defaults);
 
-            var hasValidationErrors = false;
+            if (!$.spEasyForms.adapterCollection.preSaveItem(opt)) {
+                this.highlightValidationErrors(opt);
+                return false;
+            }
+
             if (typeof(SPClientForms) !== 'undefined' &&
                 typeof(SPClientForms.ClientFormManager) !== 'undefined' &&
                 typeof(SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
-                hasValidationErrors = SPClientForms.ClientFormManager.SubmitClientForm('WPQ2');
-            }
-            
-            result = result && $.spEasyForms.adapterCollection.preSaveItem(opt);
-            if (hasValidationErrors) {
-                result = result && this.highlightValidationErrors(opt);
+                if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
+                    this.highlightValidationErrors(opt);
+                    return false;
+                }
             }
 
-            return result && !hasValidationErrors;
+            return true;
         },
 
         highlightValidationErrors: function(options) {

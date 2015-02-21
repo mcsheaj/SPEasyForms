@@ -262,10 +262,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // and/or adapters to react to validation errors.
             if (typeof(PreSaveItem) !== 'undefined') {
                 var originalPreSaveItem = PreSaveItem;
-                PreSaveItem = function() {
-                    var result = $.spEasyForms.containerCollection.preSaveItem();
-                    if (result && "function" === typeof(originalPreSaveItem)) {
-                        return originalPreSaveItem();
+                PreSaveItem = function () {
+                    var result = originalPreSaveItem();
+                    if (result) {
+                        result = spefjQuery.spEasyForms.containerCollection.preSaveItem();
                     }
                     return result;
                 };
@@ -273,13 +273,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // override the save button in 2013/O365 so validation 
             // occurs before PreSaveAction, like it did in previous
             // version of SharePoint
-            $("input[value='Save']").each(function() {
-                var onSave = this.getAttributeNode("onclick").nodeValue;
-                onSave = onSave.replace(
-                    "if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
-                var newOnSave = document.createAttribute('onclick');
-                newOnSave.value = onSave;
-                this.setAttributeNode(newOnSave);
+            $("input[value='Save']").each(function () {
+                if (null !== this.getAttributeNode("onclick")) {
+                    var onSave = this.getAttributeNode("onclick").nodeValue;
+                    onSave = onSave.replace(
+                        "if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
+                    var newOnSave = document.createAttribute('onclick');
+                    newOnSave.value = onSave;
+                    this.setAttributeNode(newOnSave);
+                }
             });
             spEasyForms.appendContext(opt);
             if (_spPageContextInfo.webUIVersion === 4) {
