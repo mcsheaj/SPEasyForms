@@ -30435,10 +30435,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // and/or adapters to react to validation errors.
             if (typeof(PreSaveItem) !== 'undefined') {
                 var originalPreSaveItem = PreSaveItem;
-                PreSaveItem = function() {
-                    var result = $.spEasyForms.containerCollection.preSaveItem();
-                    if (result && "function" === typeof(originalPreSaveItem)) {
-                        return originalPreSaveItem();
+                PreSaveItem = function () {
+                    var result = originalPreSaveItem();
+                    if (result) {
+                        result = spefjQuery.spEasyForms.containerCollection.preSaveItem();
                     }
                     return result;
                 };
@@ -30446,13 +30446,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // override the save button in 2013/O365 so validation 
             // occurs before PreSaveAction, like it did in previous
             // version of SharePoint
-            $("input[value='Save']").each(function() {
-                var onSave = this.getAttributeNode("onclick").nodeValue;
-                onSave = onSave.replace(
-                    "if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
-                var newOnSave = document.createAttribute('onclick');
-                newOnSave.value = onSave;
-                this.setAttributeNode(newOnSave);
+            $("input[value='Save']").each(function () {
+                if (null !== this.getAttributeNode("onclick")) {
+                    var onSave = this.getAttributeNode("onclick").nodeValue;
+                    onSave = onSave.replace(
+                        "if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
+                    var newOnSave = document.createAttribute('onclick');
+                    newOnSave.value = onSave;
+                    this.setAttributeNode(newOnSave);
+                }
             });
             spEasyForms.appendContext(opt);
             if (_spPageContextInfo.webUIVersion === 4) {
@@ -32392,23 +32394,24 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * @returns {bool} - true if the submit should proceed, false if it should
          *     be cancelled.
          *********************************************************************/
-        preSaveItem: function() {
-            var opt = $.extend({}, $.spEasyForms.defaults, {});
-            var result = true;
+        preSaveItem: function () {
+            var opt = $.extend({}, $.spEasyForms.defaults);
 
-            var hasValidationErrors = false;
+            if (!$.spEasyForms.adapterCollection.preSaveItem(opt)) {
+                this.highlightValidationErrors(opt);
+                return false;
+            }
+
             if (typeof(SPClientForms) !== 'undefined' &&
                 typeof(SPClientForms.ClientFormManager) !== 'undefined' &&
                 typeof(SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
-                hasValidationErrors = SPClientForms.ClientFormManager.SubmitClientForm('WPQ2');
-            }
-            
-            result = result && $.spEasyForms.adapterCollection.preSaveItem(opt);
-            if (hasValidationErrors) {
-                result = result && this.highlightValidationErrors(opt);
+                if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
+                    this.highlightValidationErrors(opt);
+                    return false;
+                }
             }
 
-            return result && !hasValidationErrors;
+            return true;
         },
 
         highlightValidationErrors: function(options) {

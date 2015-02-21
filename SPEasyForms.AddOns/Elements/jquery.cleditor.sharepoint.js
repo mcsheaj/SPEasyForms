@@ -340,6 +340,7 @@
         return false;
     }
 
+    // get the parent element of the current selection range
     function getSelectionContainer(win, doc) {
         var container = null;
         if (win.getSelection) {  // all browsers, except IE before version 9
