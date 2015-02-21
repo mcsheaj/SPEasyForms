@@ -629,15 +629,15 @@
                     This project uses the following third party open source libraries:
                 </p>
                 <p>
-                    <a href='http://jquery.com' target='_blank' class='speasyforms-aboutlink'>jQuery</a><br /> 
+                    <a href='http://jquery.com' target='_blank' class='speasyforms-aboutlink'>jQuery v1.11.1</a><br /> 
                     Copyright 2005, 2014 <a href='http://jquery.org' target='_blank' class='speasyforms-aboutlink'>jQuery Foundation, Inc.</a> and other contributors, Licensed MIT 
                 </p>
                 <p>
-                    <a href='http://jqueryui.com' target='_blank' class='speasyforms-aboutlink'>jQuery UI</a><br /> 
+                    <a href='http://jqueryui.com' target='_blank' class='speasyforms-aboutlink'>jQuery UI v1.9.2</a><br /> 
                     Copyright 2005, 2014 <a href='http://jquery.org' target='_blank' class='speasyforms-aboutlink'>jQuery Foundation, Inc.</a> and other contributors, Licensed MIT 
                 </p>
                 <p>
-                    <a href='http://spservices.codeplex.com' target='_blank' class='speasyforms-aboutlink'>SPServices</a><br />
+                    <a href='http://spservices.codeplex.com' target='_blank' class='speasyforms-aboutlink'>SPServices v2014.01</a><br />
                     Copyright (c) 2009-2013 <a href='http://www.sympraxisconsulting.com' target='_blank' class='speasyforms-aboutlink'>Sympraxis Consulting LLC</a>, written by 
                     <a href='http://sympmarc.com/' target='_blank' class='speasyforms-aboutlink'>Marc Anderson</a>, Licensed MIT
                 </p>
