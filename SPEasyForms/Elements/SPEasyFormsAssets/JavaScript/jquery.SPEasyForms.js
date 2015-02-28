@@ -84,7 +84,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
             initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
-            version: "2015.01"
+            version: "2014.01"
         },
 
         /********************************************************************
