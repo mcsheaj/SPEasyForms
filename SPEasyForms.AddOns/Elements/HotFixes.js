@@ -699,4 +699,28 @@
         }
     };
 
+    var original_sharePointFieldRows_value = $.spEasyForms.sharePointFieldRows.value;
+    $.spEasyForms.sharePointFieldRows.value = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var tr = opt.row;
+        tr.value = "";
+        try {
+            if ($.spEasyForms.visibilityRuleCollection.getFormType(opt) === "display") {
+                return tr.row.find("td.ms-formbody").text().trim();
+            }
+            switch (tr.spFieldType) {
+                case "SPFieldBusinessData":
+                    tr.value = tr.row.find("div.ms-inputuserfield span span").text().trim();
+                    break;
+                default:
+                    tr.value = original_sharePointFieldRows_value(options);
+                    break;
+            }
+        } catch (e) { }
+        if (!tr.value) {
+            tr.value = "";
+        }
+        return tr.value;
+    };
+
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
