@@ -16,6 +16,7 @@
         <ElementFile Location="jquery.cleditor.js" />
         <ElementFile Location="jquery.cleditor.css" />
         <ElementFile Location="jquery.cleditor.xhtml.js" />
+        <ElementFile Location="HtmlSnippetContainer.js" />
         <ElementFile Location="jquery.cleditor.sharepoint.js" />
         <ElementFile Location="buttons.png" />
         <ElementFile Location="toolbar.png" />

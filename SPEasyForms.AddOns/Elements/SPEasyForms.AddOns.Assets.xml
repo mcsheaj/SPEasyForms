@@ -8,6 +8,7 @@
         <File Path="jquery.cleditor.js" Url="jquery.cleditor.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="jquery.cleditor.css" Url="jquery.cleditor.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="jquery.cleditor.xhtml.js" Url="jquery.cleditor.xhtml.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="HtmlSnippetContainer.js" Url="HtmlSnippetContainer.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="jquery.cleditor.sharepoint.js" Url="jquery.cleditor.sharepoint.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="buttons.png" Url="buttons.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="toolbar.png" Url="toolbar.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

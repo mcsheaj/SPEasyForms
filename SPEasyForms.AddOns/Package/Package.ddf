@@ -16,5 +16,6 @@ Manifest.xml
 ..\Elements\jquery.cleditor.css
 ..\Elements\jquery.cleditor.sharepoint.js
 ..\Elements\jquery.cleditor.xhtml.js
+..\Elements\HtmlSnippetContainer.js
 ..\Elements\buttons.png
 ..\Elements\toolbar.png

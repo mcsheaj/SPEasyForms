@@ -17,6 +17,11 @@
     />
     <CustomAction
        Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.08/HtmlSnippetContainer.js"
+       Sequence="57355"
+    />
+    <CustomAction
+       Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2015.00.08/DefaultToCurrentUserAdapter.js"
        Sequence="57401"
     />

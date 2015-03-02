@@ -156,9 +156,20 @@
         buttonClick: ltr
     };
 
+    // Define the background button
+    $.cleditor.buttons.backgroundcolor = {
+        name: "backgroundcolor",
+        stripIndex: 34,
+        title: "Background Color",
+        popupName: "color",
+        popupClick: backgroundColor
+    };
+
     // Add the buttons to the default controls before the source button
     $.cleditor.defaultOptions.controls = $.cleditor.defaultOptions.controls
         .replace("source", "ltr rtl source");
+    $.cleditor.defaultOptions.controls = $.cleditor.defaultOptions.controls
+        .replace("highlight", "highlight background");
 
     // override the cleditor function to add shortcuts to the button titles (i.e. tooltips)
     var cssLoaded = false;
@@ -184,6 +195,44 @@
     // handle ltr clicked
     function ltr(e, data) {
         return setDir(data.editor, "ltr");
+    }
+
+    function backgroundColor(e, data) {
+        var editor = data.editor;
+        var idoc = editor.$frame[0].contentDocument || editor.$frame[0].contentWindow.document;
+        var iwin = editor.$frame[0].contentWindow || editor.$frame[0].contentDocument.defaultView;
+        var p = getSelectionContainer(iwin, idoc);
+        if (p) {
+            var closestBlock = closestBlockInclusive(p, ["div"]);
+            if (closestBlock.length > 0) {
+                closestBlock.css("backgroundColor", e.target.style.backgroundColor);
+            } else {
+                $("body", editor.doc).html("<div style='backgroundColor: " +
+                    e.target.style.backgroundColor + "'>" + $("body", editor.doc).html() + "</div>");
+            }
+            editor.updateTextArea(editor);
+            editor.focus();
+        }
+        return false;
+    }
+
+    // set the dir attribute of the closest div, span, or paragraph encompassing the
+    // current selection range in the editor (adding a div if there is no enclosing element)
+    function setDir(editor, dir) {
+        var idoc = editor.$frame[0].contentDocument || editor.$frame[0].contentWindow.document;
+        var iwin = editor.$frame[0].contentWindow || editor.$frame[0].contentDocument.defaultView;
+        var p = getSelectionContainer(iwin, idoc);
+        if (p) {
+            var closestBlock = closestBlockInclusive(p, ["div", "span", "p"]);
+            if (closestBlock.length > 0) {
+                closestBlock.attr("dir", dir);
+            } else {
+                $("body", editor.doc).html("<div dir='" + dir + "'>" + $("body", editor.doc).html() + "</div>");
+            }
+            editor.updateTextArea(editor);
+            editor.focus();
+        }
+        return false;
     }
 
     // define a callback for events on the iframe document key down event
@@ -220,13 +269,13 @@
     };
 
     // define a callback for events on the iframe document selection changed event
-    $.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback = $.cleditor.defaultOptions.selectionChangeCallback;
-    $.cleditor.defaultOptions.selectionChangeCallback = function (e, editor) {
-        refreshStickyButtons(editor);
-        if ($.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback) {
-            $.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback(e, editor);
-        }
-    };
+    //$.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback = $.cleditor.defaultOptions.selectionChangeCallback;
+    //$.cleditor.defaultOptions.selectionChangeCallback = function (e, editor) {
+    //    refreshStickyButtons(editor);
+    //    if ($.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback) {
+    //        $.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback(e, editor);
+    //    }
+    //};
 
     // define a callback for events on the button div click event
     $.cleditor.defaultOptions.cleditor_sharepoint_buttonClickCallBack = $.cleditor.defaultOptions.buttonClickCallBack;
@@ -288,25 +337,6 @@
                 }
             }
         });
-    }
-
-    // set the dir attribute of the closest div, span, or paragraph encompassing the
-    // current selection range in the editor (adding a div if there is no enclosing element)
-    function setDir(editor, dir) {
-        var idoc = editor.$frame[0].contentDocument || editor.$frame[0].contentWindow.document;
-        var iwin = editor.$frame[0].contentWindow || editor.$frame[0].contentDocument.defaultView;
-        var p = getSelectionContainer(iwin, idoc);
-        if (p) {
-            var closestBlock = closestBlockInclusive(p, ["div", "span", "p"]);
-            if (closestBlock.length > 0) {
-                closestBlock.attr("dir", dir);
-            } else {
-                $("body", editor.doc).html("<div dir='" + dir + "'>" + $("body", editor.doc).html() + "</div>");
-            }
-            editor.updateTextArea(editor);
-            editor.focus();
-        }
-        return false;
     }
 
     // get the closest enclosing block of the current text selection range
