@@ -34,6 +34,7 @@
         $.spEasyForms.Hotfixes_originalInit(options);
         if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
             $(".ms-formtable").width(600);
+            $("table.ms-formtable").css({ padding: "0" });
         }
     };
 

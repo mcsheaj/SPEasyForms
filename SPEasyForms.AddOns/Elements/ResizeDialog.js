@@ -35,10 +35,19 @@
                         SP.UI.ModalDialog.get_childDialog().autoSize();
                         var dlgContent = $(".ms-dlgContent", window.parent.document);
                         var top = ($(window.top).height() - dlgContent.outerHeight()) / 2;
-                        dlgContent.css({ top: (top > 0 ? top : 0) });
-                        dlgContent.prev().css({ top: (top > 0 ? top : 0) });
+                        var left = ($(window.top).width() - dlgContent.outerWidth()) / 2;
+                        dlgContent.css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
+                        dlgContent.prev().css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
+
+                        var dlgFrame = $(".ms-dlgFrame", window.parent.document);
+                        if (dlgFrame.height() > $(window.parent).height()) {
+                            dlgFrame.height($(window.parent).height());
+                        }
+                        if (dlgFrame.width() > $(window.parent).width()) {
+                            dlgFrame.width($(window.parent).width());
+                        }
                     }
-                }, (_spPageContextInfo.webUIVersion === 4 ? 2000 : 3000));
+                }, 3000);
             }
         }, "sp.ui.dialog.js");
     };
