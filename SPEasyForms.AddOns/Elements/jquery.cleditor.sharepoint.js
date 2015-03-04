@@ -169,7 +169,7 @@
     $.cleditor.defaultOptions.controls = $.cleditor.defaultOptions.controls
         .replace("source", "ltr rtl source");
     $.cleditor.defaultOptions.controls = $.cleditor.defaultOptions.controls
-        .replace("highlight", "highlight background");
+        .replace("highlight", "highlight backgroundcolor");
 
     // override the cleditor function to add shortcuts to the button titles (i.e. tooltips)
     var cssLoaded = false;
@@ -205,9 +205,9 @@
         if (p) {
             var closestBlock = closestBlockInclusive(p, ["div"]);
             if (closestBlock.length > 0) {
-                closestBlock.css("backgroundColor", e.target.style.backgroundColor);
+                closestBlock.css("background-color", e.target.style.backgroundColor);
             } else {
-                $("body", editor.doc).html("<div style='backgroundColor: " +
+                $("body", editor.doc).html("<div style='background-color: " +
                     e.target.style.backgroundColor + "'>" + $("body", editor.doc).html() + "</div>");
             }
             editor.updateTextArea(editor);

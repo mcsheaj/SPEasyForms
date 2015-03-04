@@ -1,4 +1,4 @@
-﻿/*
+/*
  * SPEasyForms HotFixes - cumulative update for reported bugs.
  *
  * @version 2015.00.08
@@ -45,12 +45,17 @@
                     if (formHidden || $("#spEasyFormsContainersPre").length > 0) {
                         SP.UI.ModalDialog.get_childDialog().autoSize();
                         var dlgContent = $(".ms-dlgContent", window.parent.document);
-                        dlgContent.css({ top: ($(window.top).height() / 2 - dlgContent.height() / 2) });
-                        dlgContent.prev().css({ top: ($(window.top).height() / 2 - dlgContent.height() / 2) });
+                        var top = ($(window.top).height() - dlgContent.outerHeight()) / 2;
+                        dlgContent.css({ top: (top > 0 ? top : 0) });
+                        dlgContent.prev().css({ top: (top > 0 ? top : 0) });
                     }
                 }, (_spPageContextInfo.webUIVersion === 4 ? 2000 : 3000));
             }
         }, "sp.ui.dialog.js");
+
+        if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
+            $(".ms-formtable").width(600);
+        }
     };
 
     // override the checkConditionals method of visibilityRuleCollection to handle multiple
@@ -332,7 +337,7 @@
             " ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
         var containerDiv = $("#" + opt.containerId);
         containerDiv.append("<div id='" + opt.divId + "' class='" + divClass +
-            "' style='width: 99%;'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
+            "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
         var mostFields = 0;
         $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
             if (fieldCollection.fields.length > mostFields) {
@@ -657,7 +662,7 @@
         // convert all lookups to simple selects, only for 2010 and
         // earlier, from Marc Anderson's SPServices documentation and 
         // attributed to Dan Kline
-        $('.ms-lookuptypeintextbox').each(function() {
+        $('.ms-lookuptypeintextbox').each(function () {
             $().SPServices.SPComplexToSimpleDropdown({
                 columnName: $(this).attr('title'),
                 debug: opt.verbose
@@ -671,7 +676,7 @@
         $.spEasyForms.containerCollection.transform(opt);
         // Override the core.js PreSaveItem function, to allow containers 
         // and/or adapters to react to validation errors.
-        if (typeof(PreSaveItem) !== 'undefined') {
+        if (typeof (PreSaveItem) !== 'undefined') {
             var originalPreSaveItem = PreSaveItem;
             PreSaveItem = function () {
                 var result = originalPreSaveItem();
@@ -762,5 +767,115 @@
         }
         return result;
     }
+
+    containerCollection.transform = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var fieldsInUse = [];
+
+        this.initializeRows(opt);
+
+        // if it looks like a form, apply transforms
+        if (Object.keys(containerCollection.rows).length > 0) {
+            $("#spEasyFormsContainersPre").remove();
+            $("#spEasyFormsContainersPost").remove();
+
+            $('<div id="spEasyFormsContainersPre"></div>').insertBefore(
+                "table.ms-formtable");
+            $('<div id="spEasyFormsContainersPost"></div>').insertAfter(
+                "table.ms-formtable");
+
+            opt.currentConfig = $.spEasyForms.configManager.get(opt);
+            opt.prepend = true;
+            $.each(opt.currentConfig.layout.def, function (index, layout) {
+                var implementation = $.spEasyForms.utilities.jsCase(layout.containerType);
+                if (implementation in containerCollection.containerImplementations) {
+                    var impl = containerCollection.containerImplementations[implementation];
+                    if (typeof (impl.transform) === 'function') {
+                        opt.index = index;
+                        opt.currentContainerLayout = layout;
+                        opt.containerId = "spEasyFormsContainers" + (opt.prepend ? "Pre" : "Post");
+                        $.merge(fieldsInUse, impl.transform(opt));
+                    }
+                    if (layout.containerType !== $.spEasyForms.defaultFormContainer.containerType) {
+                        if (impl.fieldCollectionsDlgTitle && $("#" + opt.containerId).children().last().find("td.ms-formbody").length === 0) {
+                            $("#" + opt.containerId).children().last().hide();
+                        }
+                    }
+                    else {
+                        opt.prepend = false;
+                    }
+                }
+            });
+
+            if (window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
+                $.spEasyForms.visibilityRuleCollection.transform(opt);
+                $.spEasyForms.adapterCollection.transform(opt);
+            }
+
+            $.each(opt.currentConfig.layout.def, function (index, layout) {
+                var implementation = $.spEasyForms.utilities.jsCase(layout.containerType);
+                if (implementation in containerCollection.containerImplementations) {
+                    var impl = containerCollection.containerImplementations[implementation];
+                    if (typeof (impl.postTransform) === 'function') {
+                        opt.index = index;
+                        opt.currentContainerLayout = layout;
+                        opt.containerId = "spEasyFormsContainers" + (opt.prepend ? "Pre" : "Post");
+                        impl.postTransform(opt);
+                    }
+                }
+            });
+
+            this.highlightValidationErrors(opt);
+
+        }
+
+        return fieldsInUse;
+    };
+
+    containerCollection.initContainers = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var fieldsInUse = [];
+        var defaultFormContainerId;
+        var nextIndex = Object.keys(opt.currentConfig.layout.def).length - 1;
+        $.each(opt.currentConfig.layout.def, function (index, layout) {
+            if (layout.index && $.isNumeric(layout.index) && parseInt(layout.index) >= nextIndex) {
+                nextIndex = parseInt(layout.index) + 1;
+            }
+        });
+        $.each(opt.currentConfig.layout.def, function (index, layout) {
+            opt.id = "spEasyFormsContainer" + index;
+            opt.title = layout.containerType;
+            opt.currentContainerLayout = layout;
+            if (!layout.index) {
+                layout.index = nextIndex++;
+                $.spEasyForms.configManager.set(opt);
+            }
+            opt.containerIndex = layout.index;
+            containerCollection.appendContainer(opt);
+            if (layout.containerType !== $.spEasyForms.defaultFormContainer.containerType) {
+                var implementation = layout.containerType[0].toLowerCase() +
+                    layout.containerType.substring(1);
+                if (implementation in containerCollection.containerImplementations) {
+                    var impl = containerCollection.containerImplementations[implementation];
+                    if (typeof (impl.toEditor) === 'function') {
+                        opt.index = index;
+                        opt.currentContainerLayout = layout;
+                        var tmp = impl.toEditor(opt);
+                        $.merge(fieldsInUse, tmp);
+                    }
+                }
+            }
+            else {
+                defaultFormContainerId = opt.id;
+            }
+            if (!opt.verbose) {
+                $("#" + opt.id).find("tr.speasyforms-fieldmissing").hide();
+            }
+        });
+        opt.id = defaultFormContainerId;
+        opt.fieldsInUse = fieldsInUse;
+        $.spEasyForms.defaultFormContainer.toEditor(opt);
+        return fieldsInUse;
+    };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);

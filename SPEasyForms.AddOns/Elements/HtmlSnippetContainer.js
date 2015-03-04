@@ -27,19 +27,49 @@
 
         // transform the current form based on the configuration of this container
         transform: function(options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+			if(opt.currentContainerLayout.contents) {
+			    $("#" + opt.containerId).append("<span class='speasyforms-htmlsnippet'>" + opt.currentContainerLayout.contents + "</span>");
+			}
             return [];
         },
 
         // second stage transform, this is called after visibility rules and adapters are applied
-        postTransform: function(options) {},
+        postTransform: function() {},
 
         // an opportunity to do validation tasks prior to committing an item
-        preSaveItem: function(options) {},
+        preSaveItem: function() {},
 
-        // draw the container in the properties pane on the settings page
+        // draw the container in the properties pane of the settings page from the JSON vpmgohitsyopm
         toEditor: function(options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            $("#" + opt.id).append("<textarea  id='snippetContents" + opt.index + "' rows='15' cols='80' style='display:none'>" +
+			
+            if ($("#" + opt.id + "EditSnippet" + opt.index).length === 0) {
+                $("#" + opt.id).find(".speasyforms-buttoncell").prepend(
+                    '<button id="' + opt.id + "EditSnippet" + opt.index +
+                    '" title="Edit HTML Snippet" ' +
+                    'class="speasyforms-containerbtn">Edit HTML Snippet</button>');
+
+                $('#' + opt.id + "EditSnippet" + opt.index).button({
+                    icons: {
+                        primary: "ui-icon-gear"
+                    },
+                    text: false
+                }).click(function() {
+					htmlSnippet.settings(opt);
+					$("#snippetContents").val(opt.currentContainerLayout.contents);
+					$("#snippetContainerIndex").val($("#" + opt.id).attr("data-containerindex"));
+					$("#configureSnippetDialog").find("iframe").contents().find("body").html(opt.currentContainerLayout.contents.replace(/<(?=\/?script)/ig, "&lt;"));
+					if ($("#snippetContents").is(":visible")) {
+					    $("#configureSnippetDialog").find("iframe").hide();
+					}
+                    return false;
+                });
+            }
+			
+            $("#" + opt.id).append("<span class='speasyforms-sortablefields'>" + 
+                opt.currentContainerLayout.contents.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') + "</span>" +
+			    "<textarea  id='snippetContents" + opt.index + "' rows='15' cols='80' style='display:none'>" +
                 opt.currentContainerLayout.contents + "</textarea>");
             return [];
         },
@@ -50,7 +80,7 @@
             var result = {
                 containerType: opt.containerType,
                 index: $(opt.container).attr("data-containerIndex"),
-                contents: $(opt.container).find("textarea").val
+                contents: $(opt.container).find("textarea").val()
             };
             return result;
         },
@@ -62,13 +92,15 @@
                 $("#spEasyFormsContainerDialogs").append(
                     "<div id='configureSnippetDialog' class='speasyforms-dialogdiv' title='HTML Snippet Container'>" +
                     "<textarea  id='snippetContents' rows='15' cols='80'></textarea>" +
+                    "<input type='hidden' name='snippetContainerIndex' id='snippetContainerIndex' value='" +
+                    (opt.containerIndex ? opt.containerIndex : '') + "'/>" +
                     "</div>");
                 var configureSnippetOpts = {
-                    width: 800,
+                    width: 830,
                     modal: true,
-                    open: function(event, ui) {
+                    open: function() {
                         $("#snippetContents").cleditor({
-                            width: 770,
+                            width: 800,
                             height: 200,
                             controls:
                                 "font size style | " +
@@ -83,23 +115,40 @@
                             useCSS: true,
                             bodyStyle: "font-face: Times New Roman; margin: 1px; cursor:text"
                         });
-                        $(".cleditorToolbar").height(25);
                         $("#configureSnippetDialog").css("overflow", "hidden");
+                        var ed = $('#configureSnippetDialog').find("textarea").cleditor();
+                        if (ed.length > 0) {
+                            ed[0].refresh(ed);
+                        }
+                        $(".cleditorToolbar").height(25);
                     },
                     buttons: {
                         "Ok": function() {
-                            var newLayout = {
-                                containerType: htmlSnippet.containerType,
-                                contents: $("#snippetContents").val()
-                            };
                             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-                            opt.currentConfig.layout.def.push(newLayout);
+                            var containerIndex = $("#snippetContainerIndex").val();
+                            if (containerIndex) {
+                                $.each(opt.currentConfig.layout.def, function (idx, container) {
+                                    if (container.index.toString() === containerIndex.toString()) {
+                                        container.contents = $("#snippetContents").val();
+                                        return false;
+                                    }
+                                });
+                            }
+                            else {
+                                var newLayout = {
+                                    containerType: htmlSnippet.containerType,
+                                    contents: $("#snippetContents").val()
+                                };
+                                opt.currentConfig.layout.def.push(newLayout);
+                            }
                             $.spEasyForms.configManager.set(opt);
                             containerCollection.toEditor(opt);
+                            $("#snippetContainerIndex").val("");
                             $("#configureSnippetDialog").dialog("close");
                             return false;
                         },
                         "Cancel": function() {
+                            $("#snippetContainerIndex").val("");
                             $("#configureSnippetDialog").dialog("close");
                             return false;
                         }
@@ -108,6 +157,9 @@
                     resizable: false
                 };
                 $("#configureSnippetDialog").dialog(configureSnippetOpts);
+            }
+            if (!opt.containerIndex) {
+                $("#snippetContents").val("");
             }
             $("#configureSnippetDialog").dialog("open");
         }

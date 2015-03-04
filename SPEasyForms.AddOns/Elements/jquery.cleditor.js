@@ -9,7 +9,7 @@
 */
 /* global spefjQuery, cleditor:true */
 /*jshint -W016, -W038, -W004 */
-(function($) {
+(function ($) {
 
     if (!$) return; // Joe McShea - return if spefjQuery is not loaded
 
@@ -101,20 +101,20 @@
         },
 
         // imagesPath - returns the path to the images folder
-        imagesPath: function() {
+        imagesPath: function () {
             return imagesPath();
         }
 
     };
 
     // cleditor - creates a new editor for each of the matched textareas
-    $.fn.cleditor = function(options) {
+    $.fn.cleditor = function (options) {
 
         // Create a new jQuery object to hold the results
         var $result = $([]);
 
         // Loop through all matching textareas and create the editors
-        this.each(function(idx, elem) {
+        this.each(function (idx, elem) {
             if (elem.tagName.toUpperCase() === "TEXTAREA") {
                 var data = $.data(elem, CLEDITOR);
                 if (!data) data = new cleditor(elem, options);
@@ -185,7 +185,7 @@
     // Expand the buttons.init string back into the buttons object
     //   and create seperate object properties for each button.
     //   e.g. buttons.size.title = "Font Size"
-    $.each(buttons.init.split("|"), function(idx, button) {
+    $.each(buttons.init.split("|"), function (idx, button) {
         var items = button.split(","),
             name = items[0];
         buttons[name] = {
@@ -203,7 +203,7 @@
     //============
 
     // cleditor - creates a new editor for the passed in textarea element
-    cleditor = function(area, options) {
+    cleditor = function (area, options) {
 
         var editor = this;
 
@@ -219,7 +219,7 @@
             }) // Needed for IE6 & 7 (won't work in CSS file)
         .hide()
             .data(CLEDITOR, editor)
-            .blur(function() {
+            .blur(function () {
                 // Update the iframe when the textarea loses focus
                 updateFrame(editor, true);
             });
@@ -244,7 +244,7 @@
         var groupWidth = 0;
 
         // Add the buttons to the toolbar
-        $.each(options.controls.split(" "), function(idx, buttonName) {
+        $.each(options.controls.split(" "), function (idx, buttonName) {
             if (buttonName === "") return true;
 
             // Divider
@@ -266,7 +266,7 @@
 
             }
 
-            // Button
+                // Button
             else {
 
                 // Get the button definition
@@ -316,7 +316,7 @@
 
         // Bind the document click event handler
         if (!documentClickAssigned) {
-            $(document).click(function(e) {
+            $(document).click(function (e) {
                 // Dismiss all non-prompt popups
                 var $target = $(e.target);
                 if (!$target.add($target.parents()).is("." + PROMPT_CLASS))
@@ -327,7 +327,7 @@
 
         // Bind the window resize event when the width or height is auto or %
         if (/auto|%/.test("" + options.width + options.height))
-            $(window).bind("resize.cleditor", function() {
+            $(window).bind("resize.cleditor", function () {
                 refresh(editor);
             });
 
@@ -361,8 +361,8 @@
             ["updateTextArea", updateTextArea]
         ];
 
-    $.each(methods, function(idx, method) {
-        fn[method[0]] = function() {
+    $.each(methods, function (idx, method) {
+        fn[method[0]] = function () {
             var editor = this,
                 args = [editor];
             // using each here would cast booleans into objects!
@@ -376,7 +376,7 @@
     });
 
     // blurred - shortcut for .bind("blurred", handler) or .trigger("blurred")
-    fn.blurred = function(handler) {
+    fn.blurred = function (handler) {
         var $this = $(this);
         return handler ? $this.bind(BLURRED, handler) : $this.trigger(BLURRED);
     };
@@ -388,7 +388,7 @@
     };
 
     // focused - shortcut for .bind("focused", handler) or .trigger("focused")
-    fn.focused = function(handler) {
+    fn.focused = function (handler) {
         var $this = $(this);
         return handler ? $this.bind(FOCUSED, handler) : $this.trigger(FOCUSED);
     };
@@ -434,18 +434,28 @@
                 editor.$area.hide();
                 editor.$frame.show();
                 buttonDiv.title = button.title;
+                try {
+                    if (ie) editor.doc.body.contentEditable = true;
+                    else editor.doc.designMode = "on";
+                }
+                catch (err) { }
             }
-
-            // Show the textarea
+                // Show the textarea
             else {
                 editor.$frame.hide();
                 editor.$area.show();
                 buttonDiv.title = "Show Rich Text";
+                try {
+                    if (ie) editor.doc.body.contentEditable = false;
+                    else editor.doc.designMode = "off";
+                }
+                catch (err) { }
+                editor.$area.focus();
             }
 
         }
 
-        // Check for rich text mode
+            // Check for rich text mode
         else if (!sourceMode(editor)) {
 
             // Handle popups
@@ -464,7 +474,7 @@
                     // Wire up the submit button click event handler
                     $popup.children(":button")
                         .unbind(CLICK)
-                        .bind(CLICK, function() {
+                        .bind(CLICK, function () {
 
                             // Insert the image or link if a url was entered
                             var $text = $popup.find(":text"),
@@ -481,13 +491,13 @@
 
                 }
 
-                // Paste as Text
+                    // Paste as Text
                 else if (popupName === "pastetext") {
 
                     // Wire up the submit button click event handler
                     $popup.children(":button")
                         .unbind(CLICK)
-                        .bind(CLICK, function() {
+                        .bind(CLICK, function () {
 
                             // Insert the unformatted text replacing new lines with break tags
                             var $textarea = $popup.find("textarea"),
@@ -515,11 +525,11 @@
 
             }
 
-            // Print
+                // Print
             else if (buttonName === "print")
                 editor.$frame[0].contentWindow.print();
 
-            // All other buttons
+                // All other buttons
             else if (!execCommand(editor, data.command, data.value, data.useCSS, buttonDiv))
                 return false;
 
@@ -567,7 +577,7 @@
 
         // Get the command value
         if (buttonName === "font")
-        // Opera returns the fontfamily wrapped in quotes
+            // Opera returns the fontfamily wrapped in quotes
             value = target.style.fontFamily.replace(/"/g, "");
         else if (buttonName === "size") {
             if (target.tagName.toUpperCase() === "DIV")
@@ -648,47 +658,47 @@
         if (popupContent)
             $popup.html(popupContent);
 
-        // Color
+            // Color
         else if (popupName === "color") {
             var colors = options.colors.split(" ");
             if (colors.length < 10)
                 $popup.width("auto");
-            $.each(colors, function(idx, color) {
+            $.each(colors, function (idx, color) {
                 $(DIV_TAG).appendTo($popup)
                     .css(BACKGROUND_COLOR, "#" + color);
             });
             popupTypeClass = COLOR_CLASS;
         }
 
-        // Font
+            // Font
         else if (popupName === "font")
-            $.each(options.fonts.split(","), function(idx, font) {
+            $.each(options.fonts.split(","), function (idx, font) {
                 $(DIV_TAG).appendTo($popup)
                     .css("fontFamily", font)
                     .html(font);
             });
 
-        // Size
+            // Size
         else if (popupName === "size")
-            $.each(options.sizes.split(","), function(idx, size) {
+            $.each(options.sizes.split(","), function (idx, size) {
                 $(DIV_TAG).appendTo($popup)
                     .html('<font size="' + size + '">' + size + '</font>');
             });
 
-        // Style
+            // Style
         else if (popupName === "style")
-            $.each(options.styles, function(idx, style) {
+            $.each(options.styles, function (idx, style) {
                 $(DIV_TAG).appendTo($popup)
                     .html(style[1] + style[0] + style[1].replace("<", "</"));
             });
 
-        // URL
+            // URL
         else if (popupName === "url") {
             $popup.html('<label>Enter URL:<br /><input type="text" value="http://" style="width:200px" /></label><br /><input type="button" value="Submit" />');
             popupTypeClass = PROMPT_CLASS;
         }
 
-        // Paste as Text
+            // Paste as Text
         else if (popupName === "pastetext") {
             $popup.html('<label>Paste your content here:<br /><textarea rows="3" style="width:200px"></textarea></label><br /><input type="button" value="Submit" />');
             popupTypeClass = PROMPT_CLASS;
@@ -737,7 +747,7 @@
         }
         // Firefox 1.5 throws an exception that can be ignored
         // when toggling designMode from off to on.
-        catch (err) {}
+        catch (err) { }
 
         // Enable or disable the toolbar buttons
         refreshButtons(editor);
@@ -798,7 +808,7 @@
 
     // focus - sets focus to either the textarea or iframe
     function focus(editor) {
-        setTimeout(function() {
+        setTimeout(function () {
             if (sourceMode(editor)) editor.$area.focus();
             else editor.$frame[0].contentWindow.focus();
             refreshButtons(editor);
@@ -841,7 +851,7 @@
 
     // hidePopups - hides all popups
     function hidePopups() {
-        $.each(popups, function(idx, popup) {
+        $.each(popups, function (idx, popup) {
             $(popup)
                 .hide()
                 .unbind(CLICK)
@@ -892,7 +902,7 @@
         // Work around for bug in IE which causes the editor to lose
         // focus when clicking below the end of the document.
         if (ie || iege11)
-            $doc.click(function() {
+            $doc.click(function () {
                 focus(editor);
             });
 
@@ -906,20 +916,20 @@
             // reset the selection just after the beforedeactivate event and just
             // before the beforeactivate event.
             // Joe McShea - added keydown
-            $doc.bind("beforedeactivate beforeactivate selectionchange keypress keyup keydown", function(e) {
+            $doc.bind("beforedeactivate beforeactivate selectionchange keypress keyup keydown", function (e) {
 
                 // Flag the editor as inactive
                 if (e.type === "beforedeactivate")
                     editor.inactive = true;
 
-                // Get rid of the bogus selection and flag the editor as active
+                    // Get rid of the bogus selection and flag the editor as active
                 else if (e.type === "beforeactivate") {
                     if (!editor.inactive && editor.range && editor.range.length > 1)
                         editor.range.shift();
                     delete editor.inactive;
                 }
 
-                // Save the selection when the editor is active
+                    // Save the selection when the editor is active
                 else if (!editor.inactive) {
                     if (!editor.range)
                         editor.range = [];
@@ -942,25 +952,25 @@
             });
 
             // Restore the text range and trigger focused event when the iframe gains focus
-            $frame.focus(function() {
+            $frame.focus(function () {
                 restoreRange(editor);
                 $(editor).triggerHandler(FOCUSED);
             });
 
             // Trigger blurred event when the iframe looses focus
-            $frame.blur(function() {
+            $frame.blur(function () {
                 $(editor).triggerHandler(BLURRED);
             });
 
         }
 
-        // Trigger focused and blurred events for all other browsers
+            // Trigger focused and blurred events for all other browsers
         else {
             $($frame[0].contentWindow)
-                .focus(function() {
+                .focus(function () {
                     $(editor).triggerHandler(FOCUSED);
                 })
-                .blur(function() {
+                .blur(function () {
                     $(editor).triggerHandler(BLURRED);
                 });
             // Joe McShea - added callback to handle shortcut keys
@@ -975,12 +985,12 @@
                     return options.selectionChangeCallback(e, editor);
                 }
             });
-				
+
         }
 
         // Enable the toolbar buttons and update the textarea as the user types or clicks
         $doc.click(hidePopups)
-            .keydown(function(e) {
+            .keydown(function (e) {
                 // Prevent Internet Explorer from going to prior page when an image 
                 // is selected and the backspace key is pressed.
                 if (ie && getSelection(editor).type === "Control" && e.keyCode === 8) {
@@ -988,7 +998,7 @@
                     e.preventDefault();
                 }
             })
-            .bind("keyup mouseup", function() {
+            .bind("keyup mouseup", function () {
                 refreshButtons(editor);
                 updateTextArea(editor, true);
             });
@@ -999,7 +1009,7 @@
         else $frame.show();
 
         // Wait for the layout to finish - shortcut for $(document).ready()
-        $(function() {
+        $(function () {
 
             var $toolbar = editor.$toolbar,
                 $group = $toolbar.children("div:last"),
@@ -1015,7 +1025,7 @@
 
             // Resize the textarea. IE6 textareas have a 1px top
             // & bottom margin that cannot be removed using css.
-            editor.$area.width(wid).height(ie6 ? hgt - 2 : hgt);
+            editor.$area.width(wid).height(ie6 ? hgt - 27 : hgt - 25);
 
             // Switch the iframe into design mode if enabled
             disable(editor, editor.disabled);
@@ -1043,7 +1053,7 @@
 
         // Loop through each button
         var inSourceMode = sourceMode(editor);
-        $.each(editor.$toolbar.find("." + BUTTON_CLASS), function(idx, elem) {
+        $.each(editor.$toolbar.find("." + BUTTON_CLASS), function (idx, elem) {
 
             var $elem = $(elem),
                 button = $.cleditor.buttons[$.data(elem, BUTTON_NAME)],
@@ -1106,7 +1116,7 @@
 
     // select - selects all the text in either the textarea or iframe
     function select(editor) {
-        setTimeout(function() {
+        setTimeout(function () {
             if (sourceMode(editor)) editor.$area.select();
             else execCommand(editor, "selectall");
         }, 0);
@@ -1174,7 +1184,7 @@
         }
 
         // Focus the first input element if any
-        setTimeout(function() {
+        setTimeout(function () {
             $popup.find(":text,textarea").eq(0).focus().select();
         }, 100);
 
@@ -1196,7 +1206,7 @@
         // Joe McShea - modified to initialize an empty editor to get slightly more consisten
         // behavior across browsers
         if (code.length === 0) {
-            code = "<div><br/></div>";
+            code = "<div></div>";
             editor.$area.val(code);
         }
 
@@ -1236,7 +1246,7 @@
             $area = editor.$area;
 
         // Joe McShea - modified so empty editor results in empty text area
-        if (html === "<div><br/></div>") {
+        if (html === "<div></div>") {
             html = "";
         }
 
