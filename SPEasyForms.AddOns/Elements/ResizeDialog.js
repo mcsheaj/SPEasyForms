@@ -20,6 +20,7 @@
     if (spEasyFormsVersion !== "2014.01") return;
 
     // replace the original SPEasyForms init method
+    $.spEasyForms.ResizeModalDialog_originalInit = $.spEasyForms.init;
     $.spEasyForms.init = function (options) {
         // call the original SPEasyForms init method
         $.spEasyForms.ResizeModalDialog_originalInit(options);

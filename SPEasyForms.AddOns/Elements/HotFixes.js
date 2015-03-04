@@ -28,31 +28,10 @@
     // this patch only needs to be applied to v2014.01
     if (spEasyFormsVersion !== "2014.01") return;
 
-    // save a reference to the original SPEasyForms init method
-    $.spEasyForms.ResizeModalDialog_originalInit = $.spEasyForms.init;
-
-    // replace the original SPEasyForms init method
+    $.spEasyForms.Hotfixes_originalInit = $.spEasyForms.init;
     $.spEasyForms.init = function (options) {
         // call the original SPEasyForms init method
-        $.spEasyForms.ResizeModalDialog_originalInit(options);
-
-        var formHidden = $(".ms-formtable").css("display") === "none";
-
-        ExecuteOrDelayUntilScriptLoaded(function () {
-            var dlg = SP.UI.ModalDialog.get_childDialog();
-            if (dlg !== null) {
-                setTimeout(function () {
-                    if (formHidden || $("#spEasyFormsContainersPre").length > 0) {
-                        SP.UI.ModalDialog.get_childDialog().autoSize();
-                        var dlgContent = $(".ms-dlgContent", window.parent.document);
-                        var top = ($(window.top).height() - dlgContent.outerHeight()) / 2;
-                        dlgContent.css({ top: (top > 0 ? top : 0) });
-                        dlgContent.prev().css({ top: (top > 0 ? top : 0) });
-                    }
-                }, (_spPageContextInfo.webUIVersion === 4 ? 2000 : 3000));
-            }
-        }, "sp.ui.dialog.js");
-
+        $.spEasyForms.Hotfixes_originalInit(options);
         if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
             $(".ms-formtable").width(600);
         }
@@ -549,6 +528,7 @@
                             spContext.formCache = xData.responseText;
                         }
                         opt.input = $(xData.responseText);
+                        opt.skipCalculatedFields = true;
                         rows = $.spEasyForms.sharePointFieldRows.init(opt);
                         $.each(rows, function (idx, row) {
                             result.fields[row.internalName] = row;
@@ -736,7 +716,7 @@
     $.spEasyForms.sharePointFieldRows.init = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
         var result = $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_init(options);
-        if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+        if (!opt.skipCalculatedFields && window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
             var hasCalculatedFields = false;
             $.each(Object.keys(result), function (idx, key) {
                 if (result[key].spFieldType === "SPFieldCalculated") {
@@ -847,7 +827,14 @@
             opt.title = layout.containerType;
             opt.currentContainerLayout = layout;
             if (!layout.index) {
-                layout.index = nextIndex++;
+                if (layout.containerType === "DefaultForm") {
+                    layout.index = "d";
+                    nextIndex++;
+                }
+                else {
+                    layout.index = nextIndex++;
+                    layout.index = layout.index.toString();
+                }
                 $.spEasyForms.configManager.set(opt);
             }
             opt.containerIndex = layout.index;
