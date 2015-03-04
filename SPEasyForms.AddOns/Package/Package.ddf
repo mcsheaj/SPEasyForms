@@ -10,7 +10,7 @@ Manifest.xml
 ..\Elements\SPEasyForms.AddOns.Assets.xml
 ..\Elements\DefaultToCurrentUserAdapter.js
 ..\Elements\VisibilityRulesExtension.js
-..\Elements\HotFixes.js
+..\Elements\ResizeDialog.js
 ..\Elements\InitializeFieldsFromRequestParameters.js
 ..\Elements\jquery.cleditor.js
 ..\Elements\jquery.cleditor.css

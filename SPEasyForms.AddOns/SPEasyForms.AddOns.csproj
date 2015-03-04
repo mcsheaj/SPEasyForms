@@ -48,6 +48,7 @@
     <Content Include="Elements\jquery.cleditor.js" />
     <Content Include="Elements\jquery.cleditor.sharepoint.js" />
     <Content Include="Elements\jquery.cleditor.xhtml.js" />
+    <Content Include="Elements\ResizeDialog.js" />
     <Content Include="Elements\SPEasyForms.AddOns.Assets.xml">
       <SubType>Designer</SubType>
     </Content>

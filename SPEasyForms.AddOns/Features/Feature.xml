@@ -12,6 +12,7 @@
         <ElementFile Location="DefaultToCurrentUserAdapter.js" />
         <ElementFile Location="VisibilityRulesExtension.js" />
         <ElementFile Location="HotFixes.js" />
+        <ElementFile Location="ResizeDialog.js" />
         <ElementFile Location="InitializeFieldsFromRequestParameters.js" />
         <ElementFile Location="jquery.cleditor.js" />
         <ElementFile Location="jquery.cleditor.css" />
