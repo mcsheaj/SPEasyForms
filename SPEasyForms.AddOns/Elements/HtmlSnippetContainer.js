@@ -1,7 +1,7 @@
 /*
  * SPEasyForms HtmlSnippetContainer
  *
- * @version 2015.00.08
+ * @version 2015.00.09
  * @requires SPEasyForms v2014.01
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -41,10 +41,42 @@
         // an opportunity to do validation tasks prior to committing an item
         preSaveItem: function() {},
 
-        // draw the container in the properties pane of the settings page from the JSON vpmgohitsyopm
+        // draw the container in the properties pane of the settings page from the JSON
         toEditor: function(options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-			
+
+            // initialize the dialog with the snippet editor
+            if ($("#spEasyFormsContainerDialogs").find("#configureSnippetDialog").length === 0) {
+                $("#spEasyFormsContainerDialogs").append(
+                    "<div id='configureSnippetDialog' class='speasyforms-dialogdiv' title='HTML Snippet Container'>" +
+                    "<textarea  id='snippetContents' rows='15' cols='80'></textarea>" +
+                    "<input type='hidden' name='snippetContainerIndex' id='snippetContainerIndex' value='" +
+                    (opt.containerIndex ? opt.containerIndex : '') + "'/>" +
+                    "</div>");
+                var configureSnippetOpts = {
+                    width: 830,
+                    modal: true,
+                    open: function () {
+                        htmlSnippet.initRTE();
+                    },
+                    buttons: {
+                        "Ok": function () {
+                            htmlSnippet.addOrUpdateSnippet(opt);
+                            $("#snippetContainerIndex").val("");
+                            return false;
+                        },
+                        "Cancel": function () {
+                            $("#configureSnippetDialog").dialog("close");
+                            $("#snippetContainerIndex").val("");
+                            return false;
+                        }
+                    },
+                    autoOpen: false,
+                    resizable: false
+                };
+                $("#configureSnippetDialog").dialog(configureSnippetOpts);
+            }
+
             // add a button to edit the snippet if not already present
             if ($("#" + opt.id + "EditSnippet" + opt.index).length === 0) {
                 $("#" + opt.id).find(".speasyforms-buttoncell").prepend(
@@ -95,36 +127,6 @@
         // launch a dialog to configue this container on the settings page 
         settings: function(options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            if ($("#spEasyFormsContainerDialogs").find("#configureSnippetDialog").length === 0) {
-                $("#spEasyFormsContainerDialogs").append(
-                    "<div id='configureSnippetDialog' class='speasyforms-dialogdiv' title='HTML Snippet Container'>" +
-                    "<textarea  id='snippetContents' rows='15' cols='80'></textarea>" +
-                    "<input type='hidden' name='snippetContainerIndex' id='snippetContainerIndex' value='" +
-                    (opt.containerIndex ? opt.containerIndex : '') + "'/>" +
-                    "</div>");
-                var configureSnippetOpts = {
-                    width: 830,
-                    modal: true,
-                    open: function () {
-                        htmlSnippet.initRTE();
-                    },
-                    buttons: {
-                        "Ok": function () {
-                            htmlSnippet.addOrUpdateSnippet(opt);
-                            $("#snippetContainerIndex").val("");
-                            return false;
-                        },
-                        "Cancel": function() {
-                            $("#configureSnippetDialog").dialog("close");
-                            $("#snippetContainerIndex").val("");
-                            return false;
-                        }
-                    },
-                    autoOpen: false,
-                    resizable: false
-                };
-                $("#configureSnippetDialog").dialog(configureSnippetOpts);
-            }
             if (!opt.containerIndex) {
                 $("#snippetContents").val("");
             }

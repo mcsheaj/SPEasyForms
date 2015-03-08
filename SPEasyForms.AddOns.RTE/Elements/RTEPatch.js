@@ -1,7 +1,7 @@
 /*
  * SPEasyForms RTEPatch - patch SharePoint rich text editors on containers.
  *
- * @version 2015.00.06
+ * @version 2015.00.09
  * @requires SPEasyForms v2014.01
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
