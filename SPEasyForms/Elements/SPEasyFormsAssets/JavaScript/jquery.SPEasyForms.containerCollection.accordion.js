@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms.containerCollection.accordion - Object representing an accordion container.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -41,9 +41,12 @@
                     "'></table></div>");
                 $.each(fieldCollection.fields, function (fieldIdx, field) {
                     var currentRow = containerCollection.rows[field.fieldInternalName];
-                    result.push(field.fieldInternalName);
-                    if (currentRow !== undefined && !currentRow.fieldMissing) {
-                        currentRow.row.appendTo("#" + tableId);
+                    if (currentRow) {
+                        var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
+                        if (!rtePresent && !currentRow.fieldMissing) {
+                            result.push(field.fieldInternalName);
+                            currentRow.row.appendTo("#" + tableId);
+                        }
                     }
                 });
             });
@@ -60,9 +63,13 @@
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var divId = "spEasyFormsAccordionDiv" + opt.index;
             $("#" + divId + " table.speasyforms-accordion").each(function () {
+                var index = $(this)[0].id.replace("spEasyFormsAccordionTable", "");
                 if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
-                    var index = $(this)[0].id.replace("spEasyFormsAccordionTable", "");
                     $("#spEasyFormsAccordionHeader" + index).hide();
+                    $("#spEasyFormsAccordionHeader" + index).next().hide();
+                }
+                else {
+                    $("#spEasyFormsAccordionHeader" + index).show();
                 }
             });
         },

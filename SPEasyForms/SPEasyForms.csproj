@@ -36,6 +36,8 @@
     <Content Include="Elements\SPEasyFormsAssets.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Elements\SPEasyFormsAssets\Css\images\buttons.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\images\toolbar.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_flat_55_fbec88_40x100.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_glass_75_d0e5f5_1x400.png" />
@@ -53,6 +55,7 @@
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_f9bd01_256x240.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\jquery-ui.css" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\jquery.ui.theme.css" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\jquery.cleditor.css" />
     <Content Include="Elements\SPEasyFormsAssets\Css\speasyforms.css" />
     <Content Include="Elements\SPEasyFormsAssets\Help\Images\bullet_blue.png" />
     <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download.png" />
@@ -118,6 +121,11 @@
     <Content Include="Elements\SPEasyFormsAssets\Help\speasyforms_help.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jQuery.SPEasyForms.containerCollection.htmlSnippetContainer.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.sharepoint.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.xhtml.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.configManager.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" />

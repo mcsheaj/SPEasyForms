@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms.containerCollection.tabs - Object representing a tabs container.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -32,7 +32,7 @@
                 " ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
             var containerDiv = $("#" + opt.containerId);
             containerDiv.append("<div id='" + opt.divId + "' class='" + divClass +
-                "' style='width: 99%;'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
+                "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
             var mostFields = 0;
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
                 if (fieldCollection.fields.length > mostFields) {
@@ -56,10 +56,13 @@
                     "'></table></div>");
                 $.each(fieldCollection.fields, function (fieldIdx, field) {
                     var currentRow = containerCollection.rows[field.fieldInternalName];
-                    if (currentRow && !currentRow.fieldMissing) {
-                        result.push(field.fieldInternalName);
-                        if (currentRow) {
-                            currentRow.row.appendTo("#" + tableId);
+                    if (currentRow) {
+                        var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
+                        if (!rtePresent && !currentRow.fieldMissing) {
+                            result.push(field.fieldInternalName);
+                            if (currentRow) {
+                                currentRow.row.appendTo("#" + tableId);
+                            }
                         }
                     }
                 });
@@ -82,8 +85,8 @@
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.divId = "spEasyFormsTabDiv" + opt.index;
             $("#" + opt.divId + " table.speasyforms-tabs").each(function () {
+                var index = $(this)[0].id.replace("spEasyFormsTabsTable", "");
                 if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
-                    var index = $(this)[0].id.replace("spEasyFormsTabsTable", "");
                     if ($(this).parent().css("display") !== "none") {
                         var nextIndex = -1;
                         if ($(this).parent().next().length > 0) {
@@ -94,6 +97,9 @@
                         $(this).parent().hide();
                     }
                     $(".speasyforms-tabs" + index).hide();
+                }
+                else {
+                    $(".speasyforms-tabs" + index).show();
                 }
             });
         },

@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms.utilites - general helper functions for SPEasyForms
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -13,14 +13,14 @@
     // Helper functions.
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.utilities = {
-        jsCase: function(str) {
+        jsCase: function (str) {
             return str[0].toLowerCase() + str.substring(1);
         },
-        
-        titleCase: function(str) {
+
+        titleCase: function (str) {
             return str[0].toUpperCase() + str.substring(1);
         },
-        
+
         /*********************************************************************
          * Wrapper for jQuery.parseJSON; I really don't want to check for null
          * or undefined everywhere to avoid exceptions. I'd rather just get
@@ -30,8 +30,8 @@
          * @param {string} json - a string representation of a json object
          * @returns {object} - the deserialized object
          *********************************************************************/
-        parseJSON: function(json) {
-            if (typeof(json) === 'undefined' ||
+        parseJSON: function (json) {
+            if (typeof (json) === 'undefined' ||
                 json === null ||
                 json.length === 0) {
                 return undefined;
@@ -49,7 +49,7 @@
          *     ...              // one property for each request parameter
          * }
          *********************************************************************/
-        getRequestParameters: function() {
+        getRequestParameters: function () {
             var result = {};
             if (window.location.search.length > 0 &&
                 window.location.search.indexOf('?') >= 0) {
@@ -64,27 +64,59 @@
             }
             return result;
         },
-        
-        siteRelativePathAsAbsolutePath: function(path) {
+
+        siteRelativePathAsAbsolutePath: function (path) {
             var site = _spPageContextInfo.siteServerRelativeUrl;
-            if(path[0] !== '/') {
+            if (path[0] !== '/') {
                 path = '/' + path;
             }
-            if(site !== '/') {
+            if (site !== '/') {
                 path = site + path;
             }
             return path;
         },
-        
-        webRelativePathAsAbsolutePath: function(path) {
+
+        webRelativePathAsAbsolutePath: function (path) {
             var site = $.spEasyForms.sharePointContext.getCurrentSiteUrl();
-            if(path[0] !== '/') {
+            if (path[0] !== '/') {
                 path = '/' + path;
             }
-            if(site !== '/') {
+            if (site !== '/') {
                 path = site + path;
             }
             return path;
+        },
+
+        extend: function (destination, source) {
+            for (var property in source) {
+                if (!(property in destination)) {
+                    destination[property] = source[property];
+                }
+            }
+            return destination;
+        },
+
+        isDate: function (value) {
+            var date = new Date(value);
+            return (date instanceof Date && !isNaN(date.valueOf()));
+        },
+
+        highlight: function (rowNode, backgroundColor) {
+            // if our class hasn't already been added to the head
+            if ($("table.ms-formtable").attr("data-visibility" + backgroundColor) !== "true") {
+                // add a class to the head that defines our highlight color
+                $("head").append("<style>.speasyforms-" + backgroundColor +
+                    " { background-color: " + backgroundColor + "; }</style>");
+
+                // add an attribute to the form table to indicate we've already added our class
+                $("table.ms-formtable").attr("data-visibility" + backgroundColor, "true");
+            }
+
+            // add our class to all table cells in the row, also indicate which class was added with
+            // data-visiblityclassadded so the visibility manager can undo our changes when state
+            // is changing
+            rowNode.find("td").addClass("speasyforms-" + backgroundColor).attr(
+                "data-visibilityclassadded", "speasyforms-" + backgroundColor);
         }
     };
 

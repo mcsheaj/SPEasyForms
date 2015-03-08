@@ -3,10 +3,10 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2014.01
- * @requires jQuery.SPEasyForms.2014.01 
+ * @version 2015.01
+ * @requires jQuery.SPEasyForms.2015.01 
  * @requires jQuery-ui v1.9.2 
- * @requires jQuery.SPServices v2014.01 or greater
+ * @requires jQuery.SPServices v2015.01 or greater
  * @optional ssw Session Storage Wrapper - Cross Document Transport of
  *    JavaScript Data; used to cache the context across pages if available
  *    and options.useCache === true
@@ -15,7 +15,7 @@
  *    http://www.opensource.org/licenses/mit-license.php
  */
 
-/* global spefjQuery:true, ssw, PreSaveItem:true, _spPageContextInfo, ssw_init */
+/* global spefjQuery:true, ssw, PreSaveItem:true, _spPageContextInfo, ssw_init, ExecuteOrDelayUntilScriptLoaded, SP */
 
 // save a reference to our instance of jQuery just in case
 spefjQuery = jQuery.noConflict(true);
@@ -84,7 +84,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
             initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
-            version: "2014.01"
+            version: "2015.01"
         },
 
         /********************************************************************
@@ -122,6 +122,26 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, spEasyForms.defaults, options);
             this.initCacheLibrary(opt);
             this.loadDynamicStyles(opt);
+            // get a 'hashmap' of request parameters
+            var parameters = $.spEasyForms.utilities.getRequestParameters();
+            // get the parsed rows of the form table
+            var rows = $.spEasyForms.sharePointFieldRows.init(options);
+            // foreach request parameter
+            $.each(Object.keys(parameters), function (idx, key) {
+                // if the parameter name begins with the spef_ prefix
+                if (key.indexOf("spef_") === 0) {
+                    // the internal field name should be the parameter name with the prefix removed
+                    var internalName = key.substring(5);
+                    // if the parsed form rows contains a row matching the internal field name
+                    if (internalName in rows) {
+                        // initialize the row and value to set in the options map
+                        opt.row = rows[internalName];
+                        opt.value = parameters[key];
+                        // set the value of the field
+                        $.spEasyForms.sharePointFieldRows.setValue(opt);
+                    }
+                }
+            });
             opt.callback = spEasyForms.contextReady;
             this.options = opt;
             $("#spEasyFormsBusyScreen").dialog({
@@ -141,6 +161,29 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             } else {
                 this.contextReady(options);
             }
+            ExecuteOrDelayUntilScriptLoaded(function () {
+                var dlg = SP.UI.ModalDialog.get_childDialog();
+                if (dlg !== null) {
+                    setTimeout(function () {
+                        if ($(".ms-formtable").css("display") === "none" || $("#spEasyFormsContainersPre").length > 0) {
+                            SP.UI.ModalDialog.get_childDialog().autoSize();
+                            var dlgContent = $(".ms-dlgContent", window.parent.document);
+                            var top = ($(window.top).height() - dlgContent.outerHeight()) / 2;
+                            var left = ($(window.top).width() - dlgContent.outerWidth()) / 2;
+                            dlgContent.css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
+                            dlgContent.prev().css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
+
+                            var dlgFrame = $(".ms-dlgFrame", window.parent.document);
+                            if (dlgFrame.height() > $(window.parent).height()) {
+                                dlgFrame.height($(window.parent).height());
+                            }
+                            if (dlgFrame.width() > $(window.parent).width()) {
+                                dlgFrame.width($(window.parent).width());
+                            }
+                        }
+                    }, 3000);
+                }
+            }, "sp.ui.dialog.js");
         },
 
         /********************************************************************
@@ -241,12 +284,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * execute any transformations, visibility rules, and/or field adapters
          * in the configuration.
          ********************************************************************/
-        transform: function(opt) {
+        transform: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
             // convert all lookups to simple selects, only for 2010 and
             // earlier, from Marc Anderson's SPServices documentation and 
             // attributed to Dan Kline
-            $('.ms-lookuptypeintextbox').each(function() {
+            $('.ms-lookuptypeintextbox').each(function () {
                 $().SPServices.SPComplexToSimpleDropdown({
                     columnName: $(this).attr('title'),
                     debug: opt.verbose
@@ -260,7 +303,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $.spEasyForms.containerCollection.transform(opt);
             // Override the core.js PreSaveItem function, to allow containers 
             // and/or adapters to react to validation errors.
-            if (typeof(PreSaveItem) !== 'undefined') {
+            if (typeof (PreSaveItem) !== 'undefined') {
                 var originalPreSaveItem = PreSaveItem;
                 PreSaveItem = function () {
                     var result = originalPreSaveItem();
@@ -283,7 +326,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     this.setAttributeNode(newOnSave);
                 }
             });
-            spEasyForms.appendContext(opt);
+            $.spEasyForms.appendContext(opt);
             if (_spPageContextInfo.webUIVersion === 4) {
                 $(".ui-widget input").css("font-size", "8pt");
             }
@@ -293,7 +336,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * See if we have a configuration for the current list context and setup
          * the editor for the current configuration (or the default configuration).
          ********************************************************************/
-        toEditor: function(opt) {
+        toEditor: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
             if (_spPageContextInfo.webUIVersion === 4) {
                 $("#spEasyFormsContent").css({
@@ -319,44 +362,53 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 });
                 $("#RibbonContainer").append("<h3 class='speasyforms-breadcrumbs' style='position:fixed;top:0px;color:white;'><a href='" + opt.source + "' style='color:white;'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h3>");
                 $("tr.speasyforms-sortablefields, tr.speasyforms-sortablerules").css("font-size", "0.9em");
+                $("select[id$='DateTimeFieldDateHours']").css("font-size", "8pt");
+                $("select[id$='DateTimeFieldDateMinutes']").css("font-size", "8pt");
             }
             else {
                 $(".ms-cui-topBar2").prepend("<h2 class='speasyforms-breadcrumbs'><a href='" + opt.source + "'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h2>");
             }
-            $.each(opt.currentListContext.contentTypes.order, function(i, ctid) {
-                if(ctid.indexOf("0x0120") !== 0) {
+            $.each(opt.currentListContext.contentTypes.order, function (i, ctid) {
+                if (ctid.indexOf("0x0120") !== 0) {
                     $("#spEasyFormsContentTypeSelect").append("<option value='" +
-                        opt.currentListContext.contentTypes[ctid].id + "'>" + 
+                        opt.currentListContext.contentTypes[ctid].id + "'>" +
                         opt.currentListContext.contentTypes[ctid].name + "</option>");
                 }
             });
-            $("#spEasyFormsContentTypeSelect").change(function() {
+            $("#spEasyFormsContentTypeSelect").change(function () {
                 delete $.spEasyForms.containerCollection.rows;
                 delete $.spEasyForms.sharePointContext.formCache;
                 opt.contentTypeChanged = true;
                 $.spEasyForms.containerCollection.toEditor(opt);
             });
             $.spEasyForms.containerCollection.toEditor(opt);
-            $(window).on("beforeunload", function() {
-                if(!$("#spEasyFormsSaveButton img").hasClass("speasyforms-buttonimgdisabled")) {
+            $(window).on("beforeunload", function () {
+                if (!$("#spEasyFormsSaveButton img").hasClass("speasyforms-buttonimgdisabled")) {
                     return "You have unsaved changes, are you sure you want to leave the page?";
                 }
             });
-            spEasyForms.appendContext(opt);
-            $("div.speasyforms-panel").height($(window).height()-180);
+            $.spEasyForms.appendContext(opt);
+            var bannerHeight = 5;
             if (_spPageContextInfo.webUIVersion === 4) {
-                $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-445);
+                bannerHeight += $("#s4-ribbonrow").height();
             }
             else {
-                $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-405);
+                bannerHeight += $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height();
             }
-            $(window).resize(function() {
-                $("div.speasyforms-panel").height($(window).height()-180);
+            $("div.speasyforms-panel").height($(window).height() - bannerHeight);
+            if (_spPageContextInfo.webUIVersion === 4) {
+                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 445);
+            }
+            else {
+                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 405);
+            }
+            $(window).resize(function () {
+                $("div.speasyforms-panel").height($(window).height() - bannerHeight);
                 if (_spPageContextInfo.webUIVersion === 4) {
-                    $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-445);
+                    $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 445);
                 }
                 else {
-                    $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-405);
+                    $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 405);
                 }
             });
             $('#spEasyFormsRibbon').show;
@@ -368,26 +420,29 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         insertSettingsLink: function(opt) {
             var generalSettings = $("td.ms-descriptiontext:contains('description and navigation')").closest("table");
-            if (generalSettings.length > 0) {
-                var source = window.location.href;
-                if (source.indexOf("start.aspx#") >= 0) {
-                    source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
+            var permissionsLink = $("a:contains('Permissions for this list')");
+            if (permissionsLink.length > 0) {
+                if (generalSettings.length > 0) {
+                    var source = window.location.href;
+                    if (source.indexOf("start.aspx#") >= 0) {
+                        source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
+                    }
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01/Pages/SPEasyFormsSettings.aspx") +
+                        "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
+                        "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
+                        "&Source=" + encodeURIComponent(source);
+                    var newRow = "<tr>" +
+                        "<td style='padding-top: 5px;' " +
+                        "class='ms-descriptiontext ms-linksectionitembullet' " +
+                        "vAlign='top' width='8' noWrap='nowrap'>" +
+                        "<img alt='' src='/_layouts/images/setrect.gif?rev=37' width='5' height='5' />" +
+                        "&nbsp;</td>" +
+                        "<td class='ms-descriptiontext ms-linksectionitemdescription' vAlign='top'> " +
+                        "<a href='" + settings + "'>SPEasyForms Configuration</a>" +
+                        "</td>" +
+                        "</tr>";
+                    generalSettings.append(newRow);
                 }
-                var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01/Pages/SPEasyFormsSettings.aspx") +
-                    "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
-                    "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
-                    "&Source=" + encodeURIComponent(source);
-                var newRow = "<tr>" +
-                    "<td style='padding-top: 5px;' " +
-                    "class='ms-descriptiontext ms-linksectionitembullet' " +
-                    "vAlign='top' width='8' noWrap='nowrap'>" +
-                    "<img alt='' src='/_layouts/images/setrect.gif?rev=37' width='5' height='5' />" +
-                    "&nbsp;</td>" +
-                    "<td class='ms-descriptiontext ms-linksectionitemdescription' vAlign='top'> " +
-                    "<a href='" + settings + "'>SPEasyForms Configuration</a>" +
-                    "</td>" +
-                    "</tr>";
-                generalSettings.append(newRow);
             }
         },
 
@@ -420,13 +475,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         loadDynamicStyles: function(options) {
             if (options.jQueryUITheme === undefined) {
-                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01/Css/jquery-ui/jquery-ui.css');
+                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01/Css/jquery-ui/jquery-ui.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
-                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01/Css/speasyforms.css');
+                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01/Css/speasyforms.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');

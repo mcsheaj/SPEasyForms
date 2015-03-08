@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms.visibilityRuleCollection - object to hold and manage all field visibility rules.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -26,6 +26,36 @@
             notMatches: function (value, test) {
                 var regex = new RegExp(test, "i");
                 return !regex.test(value);
+            },
+            greaterThan: function (value, test) {
+                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                    return (new Date(value)) > (new Date(test));
+                }
+                return (value > test);
+            },
+            greaterThanOrEqual: function (value, test) {
+                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                    return (new Date(value)) >= (new Date(test));
+                }
+                return (value >= test);
+            },
+            lessThan: function (value, test) {
+                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                    return (new Date(value)) < (new Date(test));
+                }
+                return (value < test);
+            },
+            lessThanOrEqual: function (value, test) {
+                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                    return (new Date(value)) <= (new Date(test));
+                }
+                return (value <= test);
+            },
+            notEqual: function (value, test) {
+                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                    return (new Date(value)) > (new Date(test));
+                }
+                return (value !== test);
             }
         },
 
@@ -79,7 +109,19 @@
                     }
                 }
             },
-            editable: function () { /*do nothing*/ }
+            editable: function () { /*do nothing*/ },
+            highlightRed: function (options) {
+                $.spEasyForms.utilities.highlight(options.row.row, "LightPink");
+            },
+            highlightYellow: function (options) {
+                $.spEasyForms.utilities.highlight(options.row.row, "Yellow");
+            },
+            highlightGreen: function (options) {
+                $.spEasyForms.utilities.highlight(options.row.row, "SpringGreen");
+            },
+            highlightBlue: function (options) {
+                $.spEasyForms.utilities.highlight(options.row.row, "Aqua");
+            }
         },
 
         siteGroups: [],
@@ -119,7 +161,7 @@
          *     config: {object}
          * }
          *********************************************************************/
-        transform: function (options) {
+         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (opt.currentConfig && opt.currentConfig.visibility && opt.currentConfig.visibility.def &&
                 Object.keys(opt.currentConfig.visibility.def).length > 0) {
@@ -159,14 +201,17 @@
                                         tr.row.find("input").change(function () {
                                             visibilityRuleCollection.transform(opt);
                                             $.spEasyForms.adapterCollection.transform(opt);
+                                            $.spEasyForms.containerCollection.postTransform(opt);
                                         });
                                         tr.row.find("select").change(function () {
                                             visibilityRuleCollection.transform(opt);
                                             $.spEasyForms.adapterCollection.transform(opt);
+                                            $.spEasyForms.containerCollection.postTransform(opt);
                                         });
                                         tr.row.find("textarea").change(function () {
                                             visibilityRuleCollection.transform(opt);
                                             $.spEasyForms.adapterCollection.transform(opt);
+                                            $.spEasyForms.containerCollection.postTransform(opt);
                                         });
                                         tr.row.attr("data-visibilitychangelistener", "true");
                                     }
@@ -869,7 +914,7 @@
                     if (opt.row) {
                         var currentValue = $.spEasyForms.sharePointFieldRows.value(opt);
                         var type = $.spEasyForms.utilities.jsCase(condition.type);
-                        var comparisonOperator = visibilityRuleCollection.comparisonOperators[type];
+                        var comparisonOperator = $.spEasyForms.visibilityRuleCollection.comparisonOperators[type];
                         result = comparisonOperator(currentValue, condition.value);
                         if (result === false)
                             return false; // return from $.each

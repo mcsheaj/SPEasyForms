@@ -34,7 +34,7 @@
         }
         td.ms-formbody {
             border: 1px solid gray;
-            padding: 0px;
+            padding: 0;
             margin: 20px;
             width: 100%;
             /* hack fix for 2010 */
@@ -76,14 +76,14 @@
             width: 45%;
         }
         #contentRow {
-            padding-top: 0px;
+            padding-top: 0;
         }
         #contentBox {
-            margin-left: 0px;
+            margin-left: 0;
         }
         .speasyforms-form {
             vertical-align: top;
-            padding: 0px 20px;
+            padding: 0 20px;
             width: 100%;
             min-width: 360px;
         }
@@ -137,7 +137,7 @@
         }
         .formTabsTable {
             padding: 1px;
-            margin: 0px;
+            margin: 0;
         }
         .formTabsList {
             background-color: #cdc0b0;
@@ -198,14 +198,14 @@
         }
         button.ui-button-icon-only {
             font-size: .8em;
-            margin: 0px;
-            padding: 0px;
-            min-width: 0px;
+            margin: 0;
+            padding: 0;
+            min-width: 0;
         }
         td.speasyforms-conditionalvisibility,
         td.speasyforms-visibilityrulebutton {
-            margin: 0px;
-            padding: 0px;
+            margin: 0;
+            padding: 0;
             width: 1px;
         }
         div.speasyforms-entitypicker {
@@ -240,9 +240,9 @@
             background: transparent;
             border: none;
             border-bottom: 1px solid #c0c0c0;
-            -moz-border-radius: 0px;
-            -webkit-border-radius: 0px;
-            border-radius: 0px;
+            -moz-border-radius: 0;
+            -webkit-border-radius: 0;
+            border-radius: 0;
         }
         .ui-tabs-nav.tabs-min .ui-state-default {
             background: transparent;
@@ -299,7 +299,7 @@
         table.speasyforms-credits {
             border: 1px solid darkgrey;
             margin: 20px;
-            padding: 0px;
+            padding: 0;
         }
         td.speasyforms-credit {
             white-space: nowrap;
@@ -358,7 +358,7 @@
         }
         .speasyforms-buttonouterdiv-smallimg {
             border: 1px solid #fcfcfc;
-            padding: 0px 2px;
+            padding: 0 2px;
         }
         .speasyforms-buttonouterdiv-smallimg:hover, .speasyforms-buttonouterdiv:hover {
             border: 1px dotted darkblue !important;
@@ -411,7 +411,7 @@
             color: #333;
         }
         h2.speasyforms-breadcrumbs a,
-        h2.speasyforms-breadcrumbs a: visited {
+        h2.speasyforms-breadcrumbs a:visited {
             color: #333;
             text-decoration: underline;
         }
@@ -516,13 +516,13 @@
             </div>
             <div class='speasyforms-buttoncontainer'>
                 <div id='spEasyFormsAddButton' class='speasyforms-buttonouterdiv-smallimg'>
-                    <img width='16px' height='16px' class='speasyforms-buttonsmallimg' src='/_layouts/images/caladd.gif' />Add Container
+                    <img width='16' height='16' class='speasyforms-buttonsmallimg' src='/_layouts/images/caladd.gif' />Add Container
                 </div>
                 <div id='spEasyFormsUndoButton' class='speasyforms-buttonouterdiv-smallimg speasyforms-buttontextdisabled'>
-                    <img width='16px' height='16px' class='speasyforms-buttonsmallimg  speasyforms-buttonimgdisabled' src='/_layouts/images/undohs.png' />Undo
+                    <img width='16' height='16' class='speasyforms-buttonsmallimg  speasyforms-buttonimgdisabled' src='/_layouts/images/undohs.png' />Undo
                 </div>
                 <div id='spEasyFormsRedoButton' class='speasyforms-buttonouterdiv-smallimg speasyforms-buttontextdisabled'>
-                    <img width='16px' height='16px' class='speasyforms-buttonsmallimg  speasyforms-buttonimgdisabled' src='/_layouts/images/redohs.png' />Redo
+                    <img width='16' height='16' class='speasyforms-buttonsmallimg  speasyforms-buttonimgdisabled' src='/_layouts/images/redohs.png' />Redo
                 </div>
             </div>
             <div class='speasyforms-buttongrptext'>
@@ -531,25 +531,25 @@
         </div>
         <div class='speasyforms-buttongroup'>
             <div id='spEasyFormsFormButton' class='speasyforms-buttonouterdiv'>
-                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/create.gif' />
+                <img width='32' height='32' class='speasyforms-buttonimg' src='/_layouts/images/create.gif' />
                 <div class='speasyforms-buttontext'>Form</div>
             </div>
             <div id='spEasyFormsConditionalVisibilityButton' class='speasyforms-buttonouterdiv'>
-                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/centraladmin_security_generalsecurity_32x32.png' />
+                <img width='32' height='32' class='speasyforms-buttonimg' src='/_layouts/images/centraladmin_security_generalsecurity_32x32.png' />
                 <div class='speasyforms-buttontext'>Conditional
                     <br />Visibility</div>
             </div>
             <div id='spEasyFormsFieldAdaptersButton' class='speasyforms-buttonouterdiv'>
-                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/cenadmin.ico' />
+                <img width='32' height='32' class='speasyforms-buttonimg' src='/_layouts/images/cenadmin.ico' />
                 <div class='speasyforms-buttontext'>Field
                     <br />Adapters</div>
             </div>
             <div class='speasyforms-buttoncontainer'>
                 <div id='spEasyFormsExpandButton' class='speasyforms-buttonouterdiv-smallimg'>
-                    <img width='16px' height='16px' class='speasyforms-buttonsmallimg' src='/_layouts/images/ApOpenThisLocation.gif' />Expand
+                    <img width='16' height='16' class='speasyforms-buttonsmallimg' src='/_layouts/images/ApOpenThisLocation.gif' />Expand
                 </div>
                 <div id='spEasyFormsCollapseButton' class='speasyforms-buttonouterdiv-smallimg'>
-                    <img height='16px' width='16px' class='speasyforms-buttonsmallimg' src='/_layouts/images/FLDRNEW.GIF' />Collapse
+                    <img height='16' width='16' class='speasyforms-buttonsmallimg' src='/_layouts/images/FLDRNEW.GIF' />Collapse
                 </div>
             </div>
             <div class='speasyforms-buttongrptext'>
@@ -559,20 +559,20 @@
         <div class='speasyforms-buttongroup'>
             <a href='javascript:void(0)' id='spEasyFormsExportLink'>
                 <div id='spEasyFormsExportButton' class='speasyforms-buttonouterdiv'>
-                    <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/icongo01.gif' />
+                    <img width='32' height='32' class='speasyforms-buttonimg' src='/_layouts/images/icongo01.gif' />
                     <div class='speasyforms-buttontext'>Export</div>
                 </div>
             </a>
             <div id='spEasyFormsImportButton' class='speasyforms-buttonouterdiv'>
-                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/icongo01rtl.gif' />
+                <img width='32' height='32' class='speasyforms-buttonimg' src='/_layouts/images/icongo01rtl.gif' />
                 <div class='speasyforms-buttontext'>Import</div>
             </div>
             <div class='speasyforms-buttoncontainer'>
                 <div id='spEasyFormsClearCacheButton' class='speasyforms-buttonouterdiv-smallimg'>
-                    <img width='16px' height='16px' class='speasyforms-buttonsmallimg' src='/_layouts/images/comdel.gif' />Clear Cache
+                    <img width='16' height='16' class='speasyforms-buttonsmallimg' src='/_layouts/images/comdel.gif' />Clear Cache
                 </div>
                 <div id='spEasyFormsVerboseButton' class='speasyforms-buttonouterdiv-smallimg'>
-                    <img height='16px' width='16px' class='speasyforms-buttonsmallimg' src='/_layouts/images/css16.gif' />Verbose
+                    <img height='16' width='16' class='speasyforms-buttonsmallimg' src='/_layouts/images/css16.gif' />Verbose
                 </div>
             </div>
             <div class='speasyforms-buttongrptext'>
@@ -581,12 +581,12 @@
         </div>
         <div class='speasyforms-buttongroup'>
             <div id='spEasyFormsAboutButton' class='speasyforms-buttonouterdiv'>
-                <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/mewa_infob.gif' />
+                <img width='32' height='32' class='speasyforms-buttonimg' src='/_layouts/images/mewa_infob.gif' />
                 <div class='speasyforms-buttontext'>About</div>
             </div>
             <a href='javascript:void(0)' id='spEasyFormsHelpLink'>
                 <div id='spEasyFormsHelpButton' class='speasyforms-buttonouterdiv'>
-                    <img width='32px' height='32px' class='speasyforms-buttonimg' src='/_layouts/images/lg_ichlp.gif' />
+                    <img width='32' height='32' class='speasyforms-buttonimg' src='/_layouts/images/lg_ichlp.gif' />
                     <div class='speasyforms-buttontext'>Help</div>
                 </div>
             </a>
@@ -609,7 +609,7 @@
         </div>
         <div id='spEasyFormsAboutDialog' class='tabs-min' style='display:none' title='About SPEasyForms'>
             <div class='speasyforms-helptext ui-corner-all'>
-                <p><b>Version: 2014.01</b>
+                <p><b>Version: 2015.01</b>
                 </p>
                 <h2>The MIT License (MIT)</h2>
                 <p>Copyright (c) 2014 Joe McShea</p>
@@ -637,13 +637,17 @@
                     Copyright 2005, 2014 <a href='http://jquery.org' target='_blank' class='speasyforms-aboutlink'>jQuery Foundation, Inc.</a> and other contributors, Licensed MIT 
                 </p>
                 <p>
-                    <a href='http://spservices.codeplex.com' target='_blank' class='speasyforms-aboutlink'>SPServices v2014.01</a><br />
+                    <a href='http://spservices.codeplex.com' target='_blank' class='speasyforms-aboutlink'>SPServices v2015.01</a><br />
                     Copyright (c) 2009-2013 <a href='http://www.sympraxisconsulting.com' target='_blank' class='speasyforms-aboutlink'>Sympraxis Consulting LLC</a>, written by 
                     <a href='http://sympmarc.com/' target='_blank' class='speasyforms-aboutlink'>Marc Anderson</a>, Licensed MIT
                 </p>
                 <p>
                     <a href='https://github.com/molily/javascript-client-side-session-storage' target='_blank' class='speasyforms-aboutlink'>Session Storage Wrapper</a><br />
                     written by Mathias Schaefer, Licensed Public Domain
+                </p>
+                <p>
+                    <a href='http://premiumsoftware.net/cleditor' target='_blank' class='speasyforms-aboutlink'>CLEditor WYSIWYG HTML Editor v1.4.5</a><br />
+                    Copyright 2010, Chris Landowski, <a href='http://premiumsoftware.net/' target='_blank' class='speasyforms-aboutlink'>Premium Software, LLC</a>, Licensed MIT
                 </p>
             </div>
         </div>

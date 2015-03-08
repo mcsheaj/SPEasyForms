@@ -10,11 +10,14 @@
         <ElementManifest Location="SPEasyFormsScriptLinks.xml" />
         <ElementManifest Location="SPEasyFormsCustomActions.xml" />
         <ElementManifest Location="SPEasyFormsAssets.xml" />
-        
+
         <ElementFile Location="SPEasyFormsAssets\speasyforms.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.cleditor.css" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui.css" />
         <ElementFile Location="SPEasyFormsAssets\jquery.ui.theme.css" />
 
+        <ElementFile Location="SPEasyFormsAssets\buttons.png" />
+        <ElementFile Location="SPEasyFormsAssets\toolbar.png" />
         <ElementFile Location="SPEasyFormsAssets\ui-bg_flat_0_aaaaaa_40x100.png" />
         <ElementFile Location="SPEasyFormsAssets\ui-bg_flat_55_fbec88_40x100.png" />
         <ElementFile Location="SPEasyFormsAssets\ui-bg_glass_75_d0e5f5_1x400.png" />
@@ -35,6 +38,9 @@
         <ElementFile Location="SPEasyFormsAssets\jquery-ui.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPServices.js" />
         <ElementFile Location="SPEasyFormsAssets\ssw.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.cleditor.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.cleditor.sharepoint.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.cleditor.xhtml.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery_SPEasyForms.min.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.sharePointContext.js" />
@@ -47,11 +53,13 @@
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.accordion.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.columns.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.tabs.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.htmlSnippetContainer.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.visibilityRuleCollection.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" />
-        
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" />
+
         <ElementFile Location="SPEasyFormsAssets\speasyforms_help.aspx" />
         
         <ElementFile Location="SPEasyFormsAssets\bullet_blue.png" />

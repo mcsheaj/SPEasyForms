@@ -1,12 +1,12 @@
 ﻿/*
  * SPEasyForms.sharePointFieldRows - object to parse field rows into a map.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
-/* global spefjQuery */
+/* global spefjQuery, ExecuteOrDelayUntilScriptLoaded, SPClientPeoplePicker */
 (function ($, undefined) {
 
     ////////////////////////////////////////////////////////////////////////////
@@ -77,6 +77,35 @@
             });
             if (opt.input === undefined) {
                 this.rows = results;
+            }
+            if (!opt.skipCalculatedFields && window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+                var hasCalculatedFields = false;
+                $.each(Object.keys(results), function (idx, key) {
+                    if (results[key].spFieldType === "SPFieldCalculated") {
+                        hasCalculatedFields = true;
+                        return false;
+                    }
+                });
+                if (!hasCalculatedFields) {
+                    var listCtx = $.spEasyForms.sharePointContext.getListContext(options);
+                    $.each(Object.keys(listCtx.schema), function (idx, key) {
+                        var field = listCtx.schema[key];
+                        if (field.type === "Calculated" && field.hasFormula) {
+                            var tr = $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'><nobr>" +
+                                field.displayName + "</nobr></h3></td><td class='ms-formbody'>value</td></tr>");
+                            tr.appendTo("table.ms-formtable");
+                            opt.row = tr;
+                            var newRow = {
+                                internalName: field.name,
+                                displayName: field.displayName,
+                                spFieldType: "SPFieldCalculated",
+                                value: "",
+                                row: tr
+                            };
+                            results[field.name] = newRow;
+                        }
+                    });
+                }
             }
             return results;
         },
@@ -352,6 +381,12 @@
                             });
                         }
                         break;
+                    case "SPFieldBusinessData":
+                        tr.value = tr.row.find("div.ms-inputuserfield span span").text().trim();
+                        break;
+                    case "SPFieldCalculated":
+                        tr.value = tr.find("td.ms-formbody").text().trim();
+                        break;
                     default:
                         tr.value =
                             tr.row.find("td.ms-formbody input").val().trim();
@@ -362,6 +397,193 @@
                 tr.value = "";
             }
             return tr.value;
+        },
+
+        // a method to the SPEasyForms sharePointFieldRows instance to set the value of a field
+        setValue: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var tr = opt.row;
+            tr.value = opt.value ? opt.value : "";
+            try {
+                // if we're on a display form, we can't very well set a field can we?
+                if ($.spEasyForms.visibilityRuleCollection.getFormType(opt) === "display") {
+                    return;
+                }
+                switch (tr.spFieldType) {
+                    case "SPFieldContentType":
+                        // content type is just a select, set its value
+                        tr.row.find("td.ms-formbody select").val(tr.value);
+                        break;
+                    case "SPFieldChoice":
+                    case "SPFieldMultiChoice":
+                        var select = tr.row.find("td.ms-formbody select");
+                        // if there is a select (as opposed to radios or checkboxes)
+                        if (select.length > 0) {
+                            // if the select has an option equal to the value
+                            if (select.find("option[value='" + tr.value + "']").length > 0) {
+                                select.val(tr.value); // set the select value
+                            }
+                            else {
+                                // otherwise, look for a fill in choice input
+                                var inpt = tr.row.find("input[type='text'][id$='FillInChoice']");
+                                if (inpt.length === 0) {
+                                    // sp2010
+                                    inpt = tr.row.find("input[type='text'][title^='" + tr.displayName + "']");
+                                }
+                                if (inpt.length > 0) {
+                                    // if we find one, set its value
+                                    inpt.val(tr.value);
+                                    // also set the checkbox for the indicating a fill in value is supplied
+                                    inpt.parent().parent().prev().find("input[type='radio']").prop("checked", true);
+                                }
+                            }
+                        } else {
+                            // split values on semi-colon
+                            var values = tr.value.split(";");
+                            // clear any checked boxes or fill in inputs
+                            tr.row.find("input[type='checkbox']").prop("checked", false);
+                            tr.row.find("input[type='text'][id$='FillInText']").val("");
+                            $.each($(values), function (idx, value) { // foreach value
+                                // find the label for the value
+                                var label = tr.row.find("label:contains('" + value + "')");
+                                if (label.length > 0) {
+                                    // check the checkbox associated with the label
+                                    label.prev().prop("checked", true);
+                                }
+                                else {
+                                    // otherwise look for a fill in input
+                                    var input = tr.row.find("input[type='text'][id$='FillInText']");
+                                    if (input.length === 0) {
+                                        // sp2010
+                                        input = tr.row.find("input[type='text'][title^='" + tr.displayName + "']");
+                                    }
+                                    if (input.length > 0) {
+                                        if (input.val().length > 0) {
+                                            // if there is already a value, append this one with a semi-colon separator
+                                            input.val(input.val() + ";" + value);
+                                            // also check the checkbox or radio indicating a fill in
+                                            input.parent().parent().prev().find("input[type='checkbox']").prop("checked", true);
+                                            input.parent().parent().prev().find("input[type='radio']").prop("checked", true);
+                                        }
+                                        else {
+                                            // set the fill-in
+                                            input.val(value);
+                                            // also check the checkbox or radio indicating a fill in
+                                            input.parent().parent().prev().find("input[type='checkbox']").prop("checked", true);
+                                            input.parent().parent().prev().find("input[type='radio']").prop("checked", true);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        break;
+                    case "SPFieldNote":
+                    case "SPFieldMultiLine":
+                        // if there is a text area, set its text to the value
+                        if (tr.row.find("textarea").length > 0) {
+                            tr.row.find("textarea").text(tr.value);
+                        }
+                        break;
+                    case "SPFieldDateTime":
+                        var date = new Date(tr.value);
+                        // set the input to the date portion of the date/time
+                        tr.row.find("input").val($.datepicker.formatDate("mm/dd/yy", date));
+                        // if there is an hours drop down, select the hour based on date.getHours
+                        if (tr.row.find("option[value='" + date.getHours() + "']").length > 0) {
+                            tr.row.find("select[id$='Hours']").val(date.getHours());
+                        }
+                        else {
+                            // sp2010
+                            var i = date.getHours();
+                            var fmt = "";
+                            if (i < 12) {
+                                fmt = i + " AM";
+                            }
+                            else {
+                                fmt = (i - 12) + " PM";
+                            }
+                            tr.row.find("select[id$='Hours']").val(fmt);
+                        }
+                        // if there is a minutes drop down, select the minutes based on date.getMinutes, Note: that SharePoint only 
+                        // allows 5 minute increments so if you pass in 04 as the minutes notthing is selected
+                        tr.row.find("select[id$='Minutes']").val(date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+                        break;
+                    case "SPFieldBoolean":
+                        // if 0, false, or no was passed (case insensitive), uncheck the box
+                        if (tr.value.length === 0 || tr.value === "0" || tr.value.toLowerCase() === "false" || tr.value.toLowerCase() === "no") {
+                            tr.row.find("input").prop("checked", false);
+                        }
+                        else {
+                            // otherwise check the box
+                            tr.row.find("input").prop("checked", true);
+                        }
+                        break;
+                    case "SPFieldURL":
+                        // if no pipe, set the url and description to the full value
+                        if (tr.value.indexOf("|") < 0) {
+                            tr.row.find("input").val(tr.value);
+                        }
+                        else {
+                            // otherwise set the url to the first part and the description to the second
+                            var parts = tr.value.split("|", 2);
+                            tr.row.find("input[id$='UrlFieldUrl']").val(parts[0]);
+                            tr.row.find("input[id$='UrlFieldDescription']").val(parts[1]);
+                        }
+                        break;
+                    case "SPFieldUser":
+                    case "SPFieldUserMulti":
+                        var pplpkrDiv = tr.row.find("[id^='" + tr.internalName + "'][id$='ClientPeoplePicker']");
+                        // if there is a client people picker, add each value using it
+                        if (pplpkrDiv.length > 0) {
+                            ExecuteOrDelayUntilScriptLoaded(function () {
+                                var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
+                                var entities = tr.value.split(";");
+                                $.each($(entities), function (idx, entity) {
+                                    clientPplPicker.AddUserKeys(entity);
+                                });
+                            }, "clientpeoplepicker.js");
+                        } else {
+                            // otherwise use SPServices to set the people picker value
+                            var displayName = tr.displayName;
+                            ExecuteOrDelayUntilScriptLoaded(function () {
+                                setTimeout(function () {
+                                    $().SPServices.SPFindPeoplePicker({
+                                        peoplePickerDisplayName: displayName,
+                                        valueToSet: tr.value,
+                                        checkNames: true
+                                    });
+                                }, 1000);
+                            }, "sp.js");
+                        }
+                        break;
+                    case "SPFieldLookup":
+                        // if there is an option with value equal to what's passed in, select it
+                        if (tr.row.find("option[value='" + tr.value + "']").length > 0) {
+                            tr.row.find("option[value='" + tr.value + "']").prop("selected", true);
+                        }
+                        else {
+                            // otherwise select the first option that contains the value in its text
+                            tr.row.find("option:contains('" + tr.value + "'):first").prop("selected", true);
+                        }
+                        break;
+                    case "SPFieldLookupMulti":
+                        // same as above but set multiple values separated by a semi-colon
+                        var valueArray = tr.value.split(";");
+                        $.each($(valueArray), function (idx, value) {
+                            if (tr.row.find("option[value='" + value + "']").length > 0) {
+                                tr.row.find("option[value='" + value + "']").remove().appendTo("select[id$='_SelectResult']");
+                            }
+                            else {
+                                tr.row.find("option:contains('" + value + "'):first").remove().appendTo("select[id$='_SelectResult']");
+                            }
+                        });
+                        break;
+                    default:
+                        // by default, look for an input and set it
+                        tr.row.find("input").val(tr.value);
+                        break;
+                }
+            } catch (e) { }
         },
 
         compareField: function (a, b) {

@@ -2,7 +2,7 @@
  * SPEasyForms.sharePointContext - object for capturing SharePoint context information
  * using web services.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -282,8 +282,9 @@
          *
          * @returns {object} - {}
          *********************************************************************/
-        getListContext: function(options) {
-            var opt = $.extend({},  $.spEasyForms.defaults, options);
+        getListContext: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            $.spEasyForms.initCacheLibrary(opt);
             if (!opt.currentContext) {
                 opt.currentContext = spContext.get();
             }
@@ -299,7 +300,7 @@
             } else {
                 result.title = "Unknow List Title";
                 result.fields = {};
-                if(opt.listId in opt.currentContext.listContexts) {
+                if (opt.listId in opt.currentContext.listContexts) {
                     result = opt.currentContext.listContexts[opt.listId];
                 }
                 var rows = {};
@@ -307,7 +308,7 @@
                     opt.dontIncludeNodes = true;
                     rows = $.spEasyForms.sharePointFieldRows.init(opt);
                 }
-                if(Object.keys(rows).length === 0) {
+                if (Object.keys(rows).length === 0) {
                     $.ajax({
                         async: false,
                         url: $.spEasyForms.utilities.webRelativePathAsAbsolutePath("/_layouts/listform.aspx") +
@@ -320,6 +321,7 @@
                                 spContext.formCache = xData.responseText;
                             }
                             opt.input = $(xData.responseText);
+                            opt.skipCalculatedFields = true;
                             rows = $.spEasyForms.sharePointFieldRows.init(opt);
                             $.each(rows, function (idx, row) {
                                 result.fields[row.internalName] = row;
@@ -327,8 +329,7 @@
                         }
                     });
                 }
-                else
-                {
+                else {
                     $.each(rows, function (idx, row) {
                         result.fields[row.internalName] = row;
                     });
@@ -339,7 +340,7 @@
                     operation: "GetList",
                     listName: opt.listId,
                     debug: opt.verbose,
-                    completefunc: function(xData) {
+                    completefunc: function (xData) {
                         result.title =
                             $(xData.responseText).find("List").attr("Title");
                         result.template =
@@ -351,15 +352,20 @@
                         result.defaultUrl =
                             $(xData.responseText).find("List").attr("DefaultViewUrl");
                         result.schema = {};
-                        $.each($(xData.responseText).find("Field"), function(idx, field) {
-                            if ($(field).attr("Hidden") !== "hidden" &&
-                                $(field).attr("ReadOnly") !== "readonly") {
+                        $.each($(xData.responseText).find("Field"), function (idx, field) {
+                            if ($(field).attr("Hidden") !== "hidden") {
                                 var newField = {};
                                 newField.name = $(field).attr("Name");
                                 newField.staticName = $(field).attr("StaticName");
                                 newField.id = $(field).attr("ID");
                                 newField.displayName = $(field).attr("DisplayName");
                                 newField.type = $(field).attr("Type");
+                                if (newField.type === "Calculated") {
+                                    newField.hasFormula = $(field).find("formula").length > 0;
+                                    if (newField.hasFormula) {
+                                        newField.formula = $(field).find("formula").text();
+                                    }
+                                }
                                 newField.required = $(field).attr("Required");
                                 result.schema[newField.displayName] = newField;
                                 result.schema[newField.name] = newField;
@@ -373,13 +379,13 @@
                     listName: opt.listId,
                     async: false,
                     debug: opt.verbose,
-                    completefunc: function(xData) {
+                    completefunc: function (xData) {
                         var contentTypes = {};
                         if ($(xData.responseText).find("ContentTypes").attr("ContentTypeOrder")) {
                             contentTypes.order = $(xData.responseText).find("ContentTypes").attr("ContentTypeOrder").split(",");
                         }
                         var order = [];
-                        $.each($(xData.responseText).find("ContentType"), function(idx, ct) {
+                        $.each($(xData.responseText).find("ContentType"), function (idx, ct) {
                             var newCt = {};
                             newCt.name = $(ct).attr("Name");
                             newCt.id = $(ct).attr("ID");

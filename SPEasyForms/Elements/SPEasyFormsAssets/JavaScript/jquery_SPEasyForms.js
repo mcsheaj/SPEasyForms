@@ -30170,16 +30170,1934 @@ ssw_init = function (window, document) {
 
 	/* Call the anonymous function: */
 }
+///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.js
+/*!
+ CLEditor WYSIWYG HTML Editor v1.4.5
+ http://premiumsoftware.net/CLEditor
+ requires jQuery v1.4.2 or later
+
+ Copyright 2010, Chris Landowski, Premium Software, LLC
+ Dual licensed under the MIT or GPL Version 2 licenses.
+ Modified for sharepoint plugin by Joe McShea - all my changes have a comment with my name.
+*/
+/* global spefjQuery, cleditor:true */
+/*jshint -W016, -W038, -W004 */
+(function ($) {
+
+    if (!$) return; // Joe McShea - return if spefjQuery is not loaded
+
+    //==============
+    // jQuery Plugin
+    //==============
+
+    $.cleditor = {
+
+        // Define the defaults used for all new cleditor instances
+        defaultOptions: {
+            width: 'auto', // width not including margins, borders or padding
+            height: 250, // height not including margins, borders or padding
+            controls: // controls to add to the toolbar
+            "bold italic underline strikethrough subscript superscript | font size " +
+                "style | color highlight removeformat | bullets numbering | outdent " +
+                "indent | alignleft center alignright justify | undo redo | " +
+                "rule image link unlink | cut copy paste pastetext | print source",
+            colors: // colors in the color popup
+            "FFF FCC FC9 FF9 FFC 9F9 9FF CFF CCF FCF " +
+                "CCC F66 F96 FF6 FF3 6F9 3FF 6FF 99F F9F " +
+                "BBB F00 F90 FC6 FF0 3F3 6CC 3CF 66C C6C " +
+                "999 C00 F60 FC3 FC0 3C0 0CC 36F 63F C3C " +
+                "666 900 C60 C93 990 090 399 33F 60C 939 " +
+                "333 600 930 963 660 060 366 009 339 636 " +
+                "000 300 630 633 330 030 033 006 309 303",
+            fonts: // font names in the font popup
+            "Arial,Arial Black,Comic Sans MS,Courier New,Narrow,Garamond," +
+                "Georgia,Impact,Sans Serif,Serif,Tahoma,Trebuchet MS,Verdana",
+            sizes: // sizes in the font size popup
+            "1,2,3,4,5,6,7",
+            styles: // styles in the style popup
+            [
+                ["Paragraph", "<p>"],
+                ["Header 1", "<h1>"],
+                ["Header 2", "<h2>"],
+                ["Header 3", "<h3>"],
+                ["Header 4", "<h4>"],
+                ["Header 5", "<h5>"],
+                ["Header 6", "<h6>"]
+            ],
+            useCSS: true, // use CSS to style HTML when possible (not supported in ie)
+            docType: // Document type contained within the editor
+            '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">',
+            docCSSFile: // CSS file used to style the document contained within the editor
+            "",
+            bodyStyle: // style to assign to document body contained within the editor
+            "margin:4px; font:10pt Arial,Verdana; cursor:text"
+        },
+
+        // Define all usable toolbar buttons - the init string property is 
+        //   expanded during initialization back into the buttons object and 
+        //   separate object properties are created for each button.
+        //   e.g. buttons.size.title = "Font Size"
+        buttons: {
+            // name,title,command,popupName (""=use name)
+            init: "bold,,|" +
+                "italic,,|" +
+                "underline,,|" +
+                "strikethrough,,|" +
+                "subscript,,|" +
+                "superscript,,|" +
+                "font,,fontname,|" +
+                "size,Font Size,fontsize,|" +
+                "style,,formatblock,|" +
+                "color,Font Color,forecolor,|" +
+                "highlight,Text Highlight Color,hilitecolor,color|" +
+                "removeformat,Remove Formatting,|" +
+                "bullets,,insertunorderedlist|" +
+                "numbering,,insertorderedlist|" +
+                "outdent,,|" +
+                "indent,,|" +
+                "alignleft,Align Text Left,justifyleft|" +
+                "center,,justifycenter|" +
+                "alignright,Align Text Right,justifyright|" +
+                "justify,,justifyfull|" +
+                "undo,,|" +
+                "redo,,|" +
+                "rule,Insert Horizontal Rule,inserthorizontalrule|" +
+                "image,Insert Image,insertimage,url|" +
+                "link,Insert Hyperlink,createlink,url|" +
+                "unlink,Remove Hyperlink,|" +
+                "cut,,|" +
+                "copy,,|" +
+                "paste,,|" +
+                "pastetext,Paste as Text,inserthtml,|" +
+                "print,,|" +
+                "source,Show Source"
+        },
+
+        // imagesPath - returns the path to the images folder
+        imagesPath: function () {
+            return imagesPath();
+        }
+
+    };
+
+    // cleditor - creates a new editor for each of the matched textareas
+    $.fn.cleditor = function (options) {
+
+        // Create a new jQuery object to hold the results
+        var $result = $([]);
+
+        // Loop through all matching textareas and create the editors
+        this.each(function (idx, elem) {
+            if (elem.tagName.toUpperCase() === "TEXTAREA") {
+                var data = $.data(elem, CLEDITOR);
+                if (!data) data = new cleditor(elem, options);
+                $result = $result.add(data);
+            }
+        });
+
+        // return the new jQuery object
+        return $result;
+
+    };
+
+    //==================
+    // Private Variables
+    //==================
+
+    var
+
+    // Misc constants
+    BACKGROUND_COLOR = "backgroundColor",
+        BLURRED = "blurred",
+        BUTTON = "button",
+        BUTTON_NAME = "buttonName",
+        CHANGE = "change",
+        CLEDITOR = "cleditor",
+        CLICK = "click",
+        DISABLED = "disabled",
+        DIV_TAG = "<div>",
+        FOCUSED = "focused",
+        UNSELECTABLE = "unselectable",
+
+        // Class name constants
+        MAIN_CLASS = "cleditorMain", // main containing div
+        TOOLBAR_CLASS = "cleditorToolbar", // toolbar div inside main div
+        GROUP_CLASS = "cleditorGroup", // group divs inside the toolbar div
+        BUTTON_CLASS = "cleditorButton", // button divs inside group div
+        DISABLED_CLASS = "cleditorDisabled", // disabled button divs
+        DIVIDER_CLASS = "cleditorDivider", // divider divs inside group div
+        POPUP_CLASS = "cleditorPopup", // popup divs inside body
+        LIST_CLASS = "cleditorList", // list popup divs inside body
+        COLOR_CLASS = "cleditorColor", // color popup div inside body
+        PROMPT_CLASS = "cleditorPrompt", // prompt popup divs inside body
+        MSG_CLASS = "cleditorMsg", // message popup div inside body
+
+        // Browser detection
+        ua = navigator.userAgent.toLowerCase(),
+        ie = /msie/.test(ua),
+        ie6 = /msie\s6/.test(ua),
+        iege11 = /(trident)(?:.*rv:([\w.]+))?/.test(ua),
+        webkit = /webkit/.test(ua),
+
+        // Test for iPhone/iTouch/iPad
+        iOS = /iPhone|iPad|iPod/i.test(ua),
+
+        // Popups are created once as needed and shared by all editor instances
+        popups = {},
+
+        // Used to prevent the document click event from being bound more than once
+        documentClickAssigned,
+
+        // Local copy of the buttons object
+        buttons = $.cleditor.buttons;
+
+    //===============
+    // Initialization
+    //===============
+
+    // Expand the buttons.init string back into the buttons object
+    //   and create seperate object properties for each button.
+    //   e.g. buttons.size.title = "Font Size"
+    $.each(buttons.init.split("|"), function (idx, button) {
+        var items = button.split(","),
+            name = items[0];
+        buttons[name] = {
+            stripIndex: idx,
+            name: name,
+            title: items[1] === "" ? name.charAt(0).toUpperCase() + name.substr(1) : items[1],
+            command: items[2] === "" ? name : items[2],
+            popupName: items[3] === "" ? name : items[3]
+        };
+    });
+    delete buttons.init;
+
+    //============
+    // Constructor
+    //============
+
+    // cleditor - creates a new editor for the passed in textarea element
+    cleditor = function (area, options) {
+
+        var editor = this;
+
+        // Get the defaults and override with options
+        editor.options = options = $.extend({}, $.cleditor.defaultOptions, options);
+
+        // Hide the textarea and associate it with this editor
+        var $area = editor.$area = $(area)
+            .css({
+                border: "none",
+                margin: 0,
+                padding: 0
+            }) // Needed for IE6 & 7 (won't work in CSS file)
+        .hide()
+            .data(CLEDITOR, editor)
+            .blur(function () {
+                // Update the iframe when the textarea loses focus
+                updateFrame(editor, true);
+            });
+
+        // Create the main container
+        var $main = editor.$main = $(DIV_TAG)
+            .addClass(MAIN_CLASS)
+            .width(options.width)
+            .height(options.height);
+
+        // Create the toolbar
+        var $toolbar = editor.$toolbar = $(DIV_TAG)
+            .addClass(TOOLBAR_CLASS)
+            .appendTo($main);
+
+        // Add the first group to the toolbar
+        var $group = $(DIV_TAG)
+            .addClass(GROUP_CLASS)
+            .appendTo($toolbar);
+
+        // Initialize the group width
+        var groupWidth = 0;
+
+        // Add the buttons to the toolbar
+        $.each(options.controls.split(" "), function (idx, buttonName) {
+            if (buttonName === "") return true;
+
+            // Divider
+            if (buttonName === "|") {
+
+                // Add a new divider to the group
+                $(DIV_TAG)
+                    .addClass(DIVIDER_CLASS)
+                    .appendTo($group);
+
+                // Update the group width
+                $group.width(groupWidth + 1);
+                groupWidth = 0;
+
+                // Create a new group
+                $group = $(DIV_TAG)
+                    .addClass(GROUP_CLASS)
+                    .appendTo($toolbar);
+
+            }
+
+                // Button
+            else {
+
+                // Get the button definition
+                var button = buttons[buttonName];
+
+                // Add a new button to the group
+                var $buttonDiv = $(DIV_TAG)
+                    .data(BUTTON_NAME, button.name)
+                    .attr("buttonName", button.name)
+                    .addClass(BUTTON_CLASS)
+                    .attr("title", button.title)
+                    .bind(CLICK, $.proxy(buttonClick, editor))
+                    .appendTo($group)
+                    .hover(
+                        // Joe McShea - added the ability for plug-ins to override hover events, for sticky buttons
+                        editor.options.hoverEnter ? editor.options.hoverEnter : hoverEnter,
+                        editor.options.hoverLeave ? editor.options.hoverLeave : hoverLeave);
+
+                // Joe McShea - reduce button height (should make this configurable?)
+                groupWidth += 22;
+                $group.width(groupWidth + 1);
+
+                // Prepare the button image
+                var map = {};
+                if (button.css) map = button.css;
+                else if (button.image) map.backgroundImage = imageUrl(button.image);
+                // Joe McShea - reduce button height
+                if (button.stripIndex) map.backgroundPosition = button.stripIndex * -22;
+                $buttonDiv.css(map);
+
+                // Add the unselectable attribute for ie
+                if (ie)
+                    $buttonDiv.attr(UNSELECTABLE, "on");
+
+                // Create the popup
+                if (button.popupName)
+                    createPopup(button.popupName, options, button.popupClass,
+                        button.popupContent, button.popupHover);
+
+            }
+
+        });
+
+        // Add the main div to the DOM and append the textarea
+        $main.insertBefore($area)
+            .append($area);
+
+        // Bind the document click event handler
+        if (!documentClickAssigned) {
+            $(document).click(function (e) {
+                // Dismiss all non-prompt popups
+                var $target = $(e.target);
+                if (!$target.add($target.parents()).is("." + PROMPT_CLASS))
+                    hidePopups();
+            });
+            documentClickAssigned = true;
+        }
+
+        // Bind the window resize event when the width or height is auto or %
+        if (/auto|%/.test("" + options.width + options.height))
+            $(window).bind("resize.cleditor", function () {
+                refresh(editor);
+            });
+
+        // Create the iframe and resize the controls
+        refresh(editor);
+
+    };
+
+    //===============
+    // Public Methods
+    //===============
+
+    var fn = cleditor.prototype,
+
+        // Expose the following private functions as methods on the cleditor object.
+        // The closure compiler will rename the private functions. However, the
+        // exposed method names on the cleditor object will remain fixed.
+        methods = [
+            ["clear", clear],
+            ["disable", disable],
+            ["execCommand", execCommand],
+            ["focus", focus],
+            ["hidePopups", hidePopups],
+            ["sourceMode", sourceMode, true],
+            ["refresh", refresh],
+            ["select", select],
+            ["selectedHTML", selectedHTML, true],
+            ["selectedText", selectedText, true],
+            ["showMessage", showMessage],
+            ["updateFrame", updateFrame],
+            ["updateTextArea", updateTextArea]
+        ];
+
+    $.each(methods, function (idx, method) {
+        fn[method[0]] = function () {
+            var editor = this,
+                args = [editor];
+            // using each here would cast booleans into objects!
+            for (var x = 0; x < arguments.length; x++) {
+                args.push(arguments[x]);
+            }
+            var result = method[1].apply(editor, args);
+            if (method[2]) return result;
+            return editor;
+        };
+    });
+
+    // blurred - shortcut for .bind("blurred", handler) or .trigger("blurred")
+    fn.blurred = function (handler) {
+        var $this = $(this);
+        return handler ? $this.bind(BLURRED, handler) : $this.trigger(BLURRED);
+    };
+
+    // change - shortcut for .bind("change", handler) or .trigger("change")
+    fn.change = function change(handler) {
+        var $this = $(this);
+        return handler ? $this.bind(CHANGE, handler) : $this.trigger(CHANGE);
+    };
+
+    // focused - shortcut for .bind("focused", handler) or .trigger("focused")
+    fn.focused = function (handler) {
+        var $this = $(this);
+        return handler ? $this.bind(FOCUSED, handler) : $this.trigger(FOCUSED);
+    };
+
+    //===============
+    // Event Handlers
+    //===============
+
+    // buttonClick - click event handler for toolbar buttons
+    function buttonClick(e) {
+
+        var editor = this,
+            buttonDiv = e.target,
+            buttonName = $.data(buttonDiv, BUTTON_NAME),
+            button = buttons[buttonName],
+            popupName = button.popupName,
+            popup = popups[popupName];
+
+        // Check if disabled
+        if (editor.disabled || $(buttonDiv).attr(DISABLED) === DISABLED)
+            return;
+
+        // Fire the buttonClick event
+        var data = {
+            editor: editor,
+            button: buttonDiv,
+            buttonName: buttonName,
+            popup: popup,
+            popupName: popupName,
+            command: button.command,
+            useCSS: editor.options.useCSS
+        };
+
+        if (button.buttonClick && button.buttonClick(e, data) === false)
+            return false;
+
+        // Toggle source
+        if (buttonName === "source") {
+
+            // Show the iframe
+            if (sourceMode(editor)) {
+                delete editor.range;
+                editor.$area.hide();
+                editor.$frame.show();
+                buttonDiv.title = button.title;
+                try {
+                    if (ie) editor.doc.body.contentEditable = true;
+                    else editor.doc.designMode = "on";
+                }
+                catch (err) { }
+            }
+                // Show the textarea
+            else {
+                editor.$frame.hide();
+                editor.$area.show();
+                buttonDiv.title = "Show Rich Text";
+                try {
+                    if (ie) editor.doc.body.contentEditable = false;
+                    else editor.doc.designMode = "off";
+                }
+                catch (err) { }
+                editor.$area.focus();
+            }
+
+        }
+
+            // Check for rich text mode
+        else if (!sourceMode(editor)) {
+
+            // Handle popups
+            if (popupName) {
+                var $popup = $(popup);
+
+                // URL
+                if (popupName === "url") {
+
+                    // Check for selection before showing the link url popup
+                    if (buttonName === "link" && selectedText(editor) === "") {
+                        showMessage(editor, "A selection is required when inserting a link.", buttonDiv);
+                        return false;
+                    }
+
+                    // Wire up the submit button click event handler
+                    $popup.children(":button")
+                        .unbind(CLICK)
+                        .bind(CLICK, function () {
+
+                            // Insert the image or link if a url was entered
+                            var $text = $popup.find(":text"),
+                                url = $.trim($text.val());
+                            if (url !== "")
+                                execCommand(editor, data.command, url, null, data.button);
+
+                            // Reset the text, hide the popup and set focus
+                            $text.val("http://");
+                            hidePopups();
+                            focus(editor);
+
+                        });
+
+                }
+
+                    // Paste as Text
+                else if (popupName === "pastetext") {
+
+                    // Wire up the submit button click event handler
+                    $popup.children(":button")
+                        .unbind(CLICK)
+                        .bind(CLICK, function () {
+
+                            // Insert the unformatted text replacing new lines with break tags
+                            var $textarea = $popup.find("textarea"),
+                                text = $textarea.val().replace(/\n/g, "<br />");
+                            if (text !== "")
+                                execCommand(editor, data.command, text, null, data.button);
+
+                            // Reset the text, hide the popup and set focus
+                            $textarea.val("");
+                            hidePopups();
+                            focus(editor);
+
+                        });
+
+                }
+
+                // Show the popup if not already showing for this button
+                if (buttonDiv !== $.data(popup, BUTTON)) {
+                    showPopup(editor, popup, buttonDiv);
+                    return false; // stop propagination to document click
+                }
+
+                // propaginate to document click
+                return;
+
+            }
+
+                // Print
+            else if (buttonName === "print")
+                editor.$frame[0].contentWindow.print();
+
+                // All other buttons
+            else if (!execCommand(editor, data.command, data.value, data.useCSS, buttonDiv))
+                return false;
+
+        }
+
+        // Joe McShea - added callback to handle shortcut keys
+        if (data.editor.options.buttonClickCallBack) {
+            return data.editor.options.buttonClickCallBack(e, data);
+        }
+
+        // Focus the editor
+        focus(editor);
+
+    }
+
+    // hoverEnter - mouseenter event handler for buttons and popup items
+    function hoverEnter(e) {
+        var $div = $(e.target).closest("div");
+        $div.css(BACKGROUND_COLOR, $div.data(BUTTON_NAME) ? "#FC6" : "#FFC");
+    }
+
+    // hoverLeave - mouseleave event handler for buttons and popup items
+    function hoverLeave(e) {
+        $(e.target).closest("div").css(BACKGROUND_COLOR, "transparent");
+    }
+
+    // popupClick - click event handler for popup items
+    function popupClick(e) {
+
+        var editor = this,
+            popup = e.data.popup,
+            target = e.target;
+
+        // Check for message and prompt popups
+        if (popup === popups.msg || $(popup).hasClass(PROMPT_CLASS))
+            return;
+
+        // Get the button info
+        var buttonDiv = $.data(popup, BUTTON),
+            buttonName = $.data(buttonDiv, BUTTON_NAME),
+            button = buttons[buttonName],
+            command = button.command,
+            value,
+            useCSS = editor.options.useCSS;
+
+        // Get the command value
+        if (buttonName === "font")
+            // Opera returns the fontfamily wrapped in quotes
+            value = target.style.fontFamily.replace(/"/g, "");
+        else if (buttonName === "size") {
+            if (target.tagName.toUpperCase() === "DIV")
+                target = target.children[0];
+            value = target.innerHTML;
+        } else if (buttonName === "style")
+            value = "<" + target.tagName + ">";
+        else if (buttonName === "color")
+            value = hex(target.style.backgroundColor);
+        else if (buttonName === "highlight") {
+            value = hex(target.style.backgroundColor);
+            if (ie) command = 'backcolor';
+            else useCSS = true;
+        }
+
+        // Fire the popupClick event
+        var data = {
+            editor: editor,
+            button: buttonDiv,
+            buttonName: buttonName,
+            popup: popup,
+            popupName: button.popupName,
+            command: command,
+            value: value,
+            useCSS: useCSS
+        };
+
+        if (button.popupClick && button.popupClick(e, data) === false)
+            return;
+
+        // Execute the command
+        if (data.command && !execCommand(editor, data.command, data.value, data.useCSS, buttonDiv))
+            return false;
+
+        // Hide the popup and focus the editor
+        hidePopups();
+        focus(editor);
+
+    }
+
+    //==================
+    // Private Functions
+    //==================
+
+    // checksum - returns a checksum using the Adler-32 method
+    function checksum(text) {
+        var a = 1,
+            b = 0;
+        for (var index = 0; index < text.length; ++index) {
+            a = (a + text.charCodeAt(index)) % 65521;
+            b = (b + a) % 65521;
+        }
+        return (b << 16) | a;
+    }
+
+    // clear - clears the contents of the editor
+    function clear(editor) {
+        editor.$area.val("");
+        updateFrame(editor);
+    }
+
+    // createPopup - creates a popup and adds it to the body
+    function createPopup(popupName, options, popupTypeClass, popupContent, popupHover) {
+
+        // Check if popup already exists
+        if (popups[popupName])
+            return popups[popupName];
+
+        // Create the popup
+        var $popup = $(DIV_TAG)
+            .hide()
+            .addClass(POPUP_CLASS)
+            .appendTo("body");
+
+        // Add the content
+
+        // Custom popup
+        if (popupContent)
+            $popup.html(popupContent);
+
+            // Color
+        else if (popupName === "color") {
+            var colors = options.colors.split(" ");
+            if (colors.length < 10)
+                $popup.width("auto");
+            $.each(colors, function (idx, color) {
+                $(DIV_TAG).appendTo($popup)
+                    .css(BACKGROUND_COLOR, "#" + color);
+            });
+            popupTypeClass = COLOR_CLASS;
+        }
+
+            // Font
+        else if (popupName === "font")
+            $.each(options.fonts.split(","), function (idx, font) {
+                $(DIV_TAG).appendTo($popup)
+                    .css("fontFamily", font)
+                    .html(font);
+            });
+
+            // Size
+        else if (popupName === "size")
+            $.each(options.sizes.split(","), function (idx, size) {
+                $(DIV_TAG).appendTo($popup)
+                    .html('<font size="' + size + '">' + size + '</font>');
+            });
+
+            // Style
+        else if (popupName === "style")
+            $.each(options.styles, function (idx, style) {
+                $(DIV_TAG).appendTo($popup)
+                    .html(style[1] + style[0] + style[1].replace("<", "</"));
+            });
+
+            // URL
+        else if (popupName === "url") {
+            $popup.html('<label>Enter URL:<br /><input type="text" value="http://" style="width:200px" /></label><br /><input type="button" value="Submit" />');
+            popupTypeClass = PROMPT_CLASS;
+        }
+
+            // Paste as Text
+        else if (popupName === "pastetext") {
+            $popup.html('<label>Paste your content here:<br /><textarea rows="3" style="width:200px"></textarea></label><br /><input type="button" value="Submit" />');
+            popupTypeClass = PROMPT_CLASS;
+        }
+
+        // Add the popup type class name
+        if (!popupTypeClass && !popupContent)
+            popupTypeClass = LIST_CLASS;
+        $popup.addClass(popupTypeClass);
+
+        // Add the unselectable attribute to all items
+        if (ie) {
+            $popup.attr(UNSELECTABLE, "on")
+                .find("div,font,p,h1,h2,h3,h4,h5,h6")
+                .attr(UNSELECTABLE, "on");
+        }
+
+        // Add the hover effect to all items
+        if ($popup.hasClass(LIST_CLASS) || popupHover === true)
+            $popup.children().hover(hoverEnter, hoverLeave);
+
+        // Add the popup to the array and return it
+        popups[popupName] = $popup[0];
+        return $popup[0];
+
+    }
+
+    // disable - enables or disables the editor
+    function disable(editor, disabled) {
+
+        // Update the textarea and save the state
+        if (disabled) {
+            editor.$area.attr(DISABLED, DISABLED);
+            editor.disabled = true;
+        } else {
+            editor.$area.removeAttr(DISABLED);
+            delete editor.disabled;
+        }
+
+        // Switch the iframe into design mode.
+        // ie6 does not support designMode.
+        // ie7 & ie8 do not properly support designMode="off".
+        try {
+            if (ie) editor.doc.body.contentEditable = !disabled;
+            else editor.doc.designMode = !disabled ? "on" : "off";
+        }
+        // Firefox 1.5 throws an exception that can be ignored
+        // when toggling designMode from off to on.
+        catch (err) { }
+
+        // Enable or disable the toolbar buttons
+        refreshButtons(editor);
+
+    }
+
+    // execCommand - executes a designMode command
+    function execCommand(editor, command, value, useCSS, button) {
+
+        // Restore the current ie selection
+        restoreRange(editor);
+
+        // Set the styling method
+        if (!ie) {
+            if (useCSS === undefined || useCSS === null)
+                useCSS = editor.options.useCSS;
+            editor.doc.execCommand("styleWithCSS", 0, useCSS.toString());
+        }
+
+        // Execute the command and check for error
+        var inserthtml = command.toLowerCase() === "inserthtml";
+        if (ie && inserthtml)
+            getRange(editor).pasteHTML(value);
+
+        else if (iege11 && inserthtml) {
+            var selection = getSelection(editor),
+                range = selection.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(range.createContextualFragment(value));
+            selection.removeAllRanges();
+            selection.addRange(range);
+        } else {
+            var success = true,
+                message;
+            try {
+                success = editor.doc.execCommand(command, 0, value || null);
+            } catch (err) {
+                message = err.message;
+                success = false;
+            }
+            if (!success) {
+                if ("cutcopypaste".indexOf(command) > -1)
+                    showMessage(editor, "For security reasons, your browser does not support the " +
+                        command + " command. Try using the keyboard shortcut or context menu instead.",
+                        button);
+                else
+                    showMessage(editor, (message ? message : "Error executing the " + command + " command."),
+                        button);
+            }
+        }
+
+        // Enable the buttons and update the textarea
+        refreshButtons(editor);
+        updateTextArea(editor, true);
+        return success;
+
+    }
+
+    // focus - sets focus to either the textarea or iframe
+    function focus(editor) {
+        setTimeout(function () {
+            if (sourceMode(editor)) editor.$area.focus();
+            else editor.$frame[0].contentWindow.focus();
+            refreshButtons(editor);
+        }, 0);
+    }
+
+    // getRange - gets the current text range object
+    function getRange(editor) {
+        if (ie) return getSelection(editor).createRange();
+        return getSelection(editor).getRangeAt(0);
+    }
+
+    // getSelection - gets the current text range object
+    function getSelection(editor) {
+        if (ie) return editor.doc.selection;
+        return editor.$frame[0].contentWindow.getSelection();
+    }
+
+    // hex - returns the hex value for the passed in color string
+    function hex(s) {
+
+        // hex("rgb(255, 0, 0)") returns #FF0000
+        var m = /rgba?\((\d+), (\d+), (\d+)/.exec(s);
+        if (m) {
+            s = (m[1] << 16 | m[2] << 8 | m[3]).toString(16);
+            while (s.length < 6)
+                s = "0" + s;
+            return "#" + s;
+        }
+
+        // hex("#F00") returns #FF0000
+        var c = s.split("");
+        if (s.length === 4)
+            return "#" + c[1] + c[1] + c[2] + c[2] + c[3] + c[3];
+
+        // hex("#FF0000") returns #FF0000
+        return s;
+
+    }
+
+    // hidePopups - hides all popups
+    function hidePopups() {
+        $.each(popups, function (idx, popup) {
+            $(popup)
+                .hide()
+                .unbind(CLICK)
+                .removeData(BUTTON);
+        });
+    }
+
+    // imagesPath - returns the path to the images folder
+    function imagesPath() {
+        var href = $("link[href*=cleditor]").attr("href");
+        return href.replace(/^(.*\/)[^\/]+$/, '$1') + "images/";
+    }
+
+    // imageUrl - Returns the css url string for a filemane
+    function imageUrl(filename) {
+        return "url(" + imagesPath() + filename + ")";
+    }
+
+    // refresh - creates the iframe and resizes the controls
+    function refresh(editor) {
+
+        var $main = editor.$main,
+            options = editor.options;
+
+        // Remove the old iframe
+        if (editor.$frame)
+            editor.$frame.remove();
+
+        // Joe McShea - modified src to about:blank
+        var $frame = editor.$frame = $('<iframe frameborder="0" src="about:blank" />')
+            .hide()
+            .appendTo($main);
+
+        // Load the iframe document content
+        var contentWindow = $frame[0].contentWindow,
+            doc = editor.doc = contentWindow.document,
+            $doc = $(doc);
+
+        doc.open();
+        doc.write(
+            options.docType +
+            '<html>' +
+            ((options.docCSSFile === '') ? '' : '<head><link rel="stylesheet" type="text/css" href="' + options.docCSSFile + '" /></head>') +
+            '<body style="' + options.bodyStyle + '"></body></html>'
+        );
+        doc.close();
+
+        // Work around for bug in IE which causes the editor to lose
+        // focus when clicking below the end of the document.
+        if (ie || iege11)
+            $doc.click(function () {
+                focus(editor);
+            });
+
+        // Load the content
+        updateFrame(editor);
+
+        // Bind the ie specific iframe event handlers
+        if (ie || iege11) {
+
+            // Save the current user selection. This code is needed since IE will
+            // reset the selection just after the beforedeactivate event and just
+            // before the beforeactivate event.
+            // Joe McShea - added keydown
+            $doc.bind("beforedeactivate beforeactivate selectionchange keypress keyup keydown", function (e) {
+
+                // Flag the editor as inactive
+                if (e.type === "beforedeactivate")
+                    editor.inactive = true;
+
+                    // Get rid of the bogus selection and flag the editor as active
+                else if (e.type === "beforeactivate") {
+                    if (!editor.inactive && editor.range && editor.range.length > 1)
+                        editor.range.shift();
+                    delete editor.inactive;
+                }
+
+                    // Save the selection when the editor is active
+                else if (!editor.inactive) {
+                    if (!editor.range)
+                        editor.range = [];
+                    editor.range.unshift(getRange(editor));
+
+                    // We only need the last 2 selections
+                    while (editor.range.length > 2)
+                        editor.range.pop();
+                }
+
+                // Joe McShea - added callback to handle shortcut keys
+                if (e.type === "keydown" && options.keyDownCallback) {
+                    return options.keyDownCallback(e, editor);
+                }
+
+                // Joe McShea - added callback to handle shortcut keys
+                if (e.type === "selectionchange" && options.selectionChangeCallback) {
+                    return options.selectionChangeCallback(e, editor);
+                }
+            });
+
+            // Restore the text range and trigger focused event when the iframe gains focus
+            $frame.focus(function () {
+                restoreRange(editor);
+                $(editor).triggerHandler(FOCUSED);
+            });
+
+            // Trigger blurred event when the iframe looses focus
+            $frame.blur(function () {
+                $(editor).triggerHandler(BLURRED);
+            });
+
+        }
+
+            // Trigger focused and blurred events for all other browsers
+        else {
+            $($frame[0].contentWindow)
+                .focus(function () {
+                    $(editor).triggerHandler(FOCUSED);
+                })
+                .blur(function () {
+                    $(editor).triggerHandler(BLURRED);
+                });
+            // Joe McShea - added callback to handle shortcut keys
+            $doc.bind("keydown selectionchange", function (e) {
+                // Joe McShea - added callback to handle shortcut keys
+                if (e.type === "keydown" && options.keyDownCallback) {
+                    return options.keyDownCallback(e, editor);
+                }
+
+                // Joe McShea - added callback to handle shortcut keys
+                if (e.type === "selectionchange" && options.selectionChangeCallback) {
+                    return options.selectionChangeCallback(e, editor);
+                }
+            });
+
+        }
+
+        // Enable the toolbar buttons and update the textarea as the user types or clicks
+        $doc.click(hidePopups)
+            .keydown(function (e) {
+                // Prevent Internet Explorer from going to prior page when an image 
+                // is selected and the backspace key is pressed.
+                if (ie && getSelection(editor).type === "Control" && e.keyCode === 8) {
+                    getSelection(editor).clear();
+                    e.preventDefault();
+                }
+            })
+            .bind("keyup mouseup", function () {
+                refreshButtons(editor);
+                updateTextArea(editor, true);
+            });
+
+        // Show the textarea for iPhone/iTouch/iPad or
+        // the iframe when design mode is supported.
+        if (iOS) editor.$area.show();
+        else $frame.show();
+
+        // Wait for the layout to finish - shortcut for $(document).ready()
+        $(function () {
+
+            var $toolbar = editor.$toolbar,
+                $group = $toolbar.children("div:last"),
+                wid = $main.width();
+
+            // Resize the toolbar
+            var hgt = $group.offset().top + $group.outerHeight() - $toolbar.offset().top + 1;
+            $toolbar.height(hgt);
+
+            // Resize the iframe
+            hgt = (/%/.test("" + options.height) ? $main.height() : parseInt(options.height, 10)) - hgt;
+            $frame.width(wid).height(hgt);
+
+            // Resize the textarea. IE6 textareas have a 1px top
+            // & bottom margin that cannot be removed using css.
+            editor.$area.width(wid).height(ie6 ? hgt - 27 : hgt - 25);
+
+            // Switch the iframe into design mode if enabled
+            disable(editor, editor.disabled);
+
+            // Enable or disable the toolbar buttons
+            refreshButtons(editor);
+
+        });
+
+    }
+
+    // refreshButtons - enables or disables buttons based on availability
+    function refreshButtons(editor) {
+
+        // Webkit requires focus before queryCommandEnabled will return anything but false
+        if (!iOS && webkit && !editor.focused) {
+            editor.$frame[0].contentWindow.focus();
+            window.focus();
+            editor.focused = true;
+        }
+
+        // Get the object used for checking queryCommandEnabled
+        var queryObj = editor.doc;
+        if (ie) queryObj = getRange(editor);
+
+        // Loop through each button
+        var inSourceMode = sourceMode(editor);
+        $.each(editor.$toolbar.find("." + BUTTON_CLASS), function (idx, elem) {
+
+            var $elem = $(elem),
+                button = $.cleditor.buttons[$.data(elem, BUTTON_NAME)],
+                command = button.command,
+                enabled = true;
+
+            // Determine the state
+            if (editor.disabled)
+                enabled = false;
+            else if (button.getEnabled) {
+                var data = {
+                    editor: editor,
+                    button: elem,
+                    buttonName: button.name,
+                    popup: popups[button.popupName],
+                    popupName: button.popupName,
+                    command: button.command,
+                    useCSS: editor.options.useCSS
+                };
+                enabled = button.getEnabled(data);
+                if (enabled === undefined)
+                    enabled = true;
+            } else if (((inSourceMode || iOS) && button.name !== "source") ||
+                (ie && (command === "undo" || command === "redo")))
+                enabled = false;
+            else if (command && command !== "print") {
+                if (ie && command === "hilitecolor")
+                    command = "backcolor";
+                // IE does not support inserthtml, so it's always enabled
+                if ((!ie && !iege11) || command !== "inserthtml") {
+                    try {
+                        enabled = queryObj.queryCommandEnabled(command);
+                    } catch (err) {
+                        enabled = false;
+                    }
+                }
+            }
+
+            // Enable or disable the button
+            if (enabled) {
+                $elem.removeClass(DISABLED_CLASS);
+                $elem.removeAttr(DISABLED);
+            } else {
+                $elem.addClass(DISABLED_CLASS);
+                $elem.attr(DISABLED, DISABLED);
+            }
+
+        });
+    }
+
+    // restoreRange - restores the current ie selection
+    function restoreRange(editor) {
+        if (editor.range) {
+            if (ie)
+                editor.range[0].select();
+            else if (iege11)
+                getSelection(editor).addRange(editor.range[0]);
+        }
+    }
+
+    // select - selects all the text in either the textarea or iframe
+    function select(editor) {
+        setTimeout(function () {
+            if (sourceMode(editor)) editor.$area.select();
+            else execCommand(editor, "selectall");
+        }, 0);
+    }
+
+    // selectedHTML - returns the current HTML selection or and empty string
+    function selectedHTML(editor) {
+        restoreRange(editor);
+        var range = getRange(editor);
+        if (ie)
+            return range.htmlText;
+        var layer = $("<layer>")[0];
+        layer.appendChild(range.cloneContents());
+        var html = layer.innerHTML;
+        layer = null;
+        return html;
+    }
+
+    // selectedText - returns the current text selection or and empty string
+    function selectedText(editor) {
+        restoreRange(editor);
+        if (ie) return getRange(editor).text;
+        return getSelection(editor).toString();
+    }
+
+    // showMessage - alert replacement
+    function showMessage(editor, message, button) {
+        var popup = createPopup("msg", editor.options, MSG_CLASS);
+        popup.innerHTML = message;
+        showPopup(editor, popup, button);
+    }
+
+    // showPopup - shows a popup
+    function showPopup(editor, popup, button) {
+
+        var offset, left, top, $popup = $(popup);
+
+        // Determine the popup location
+        if (button) {
+            var $button = $(button);
+            offset = $button.offset();
+            left = --offset.left;
+            top = offset.top + $button.height();
+        } else {
+            var $toolbar = editor.$toolbar;
+            offset = $toolbar.offset();
+            left = Math.floor(($toolbar.width() - $popup.width()) / 2) + offset.left;
+            top = offset.top + $toolbar.height() - 2;
+        }
+
+        // Position and show the popup
+        hidePopups();
+        $popup.css({
+            left: left,
+            top: top
+        })
+            .show();
+
+        // Assign the popup button and click event handler
+        if (button) {
+            $.data(popup, BUTTON, button);
+            $popup.bind(CLICK, {
+                popup: popup
+            }, $.proxy(popupClick, editor));
+        }
+
+        // Focus the first input element if any
+        setTimeout(function () {
+            $popup.find(":text,textarea").eq(0).focus().select();
+        }, 100);
+
+    }
+
+    // sourceMode - returns true if the textarea is showing
+    function sourceMode(editor) {
+        return editor.$area.is(":visible");
+    }
+
+    // updateFrame - updates the iframe with the textarea contents
+    function updateFrame(editor, checkForChange) {
+
+        var code = editor.$area.val(),
+            options = editor.options,
+            updateFrameCallback = options.updateFrame,
+            $body = $(editor.doc.body);
+
+        // Joe McShea - modified to initialize an empty editor to get slightly more consisten
+        // behavior across browsers
+        if (code.length === 0) {
+            code = "<div></div>";
+            editor.$area.val(code);
+        }
+
+        // Check for textarea change to avoid unnecessary firing
+        // of potentially heavy updateFrame callbacks.
+        if (updateFrameCallback) {
+            var sum = checksum(code);
+            if (checkForChange && editor.areaChecksum === sum)
+                return;
+            editor.areaChecksum = sum;
+        }
+
+        // Convert the textarea source code into iframe html
+        var html = updateFrameCallback ? updateFrameCallback(code) : code;
+
+        // Prevent script injection attacks by html encoding script tags
+        html = html.replace(/<(?=\/?script)/ig, "&lt;");
+
+        // Update the iframe checksum
+        if (options.updateTextArea)
+            editor.frameChecksum = checksum(html);
+
+        // Update the iframe and trigger the change event
+        if (html !== $body.html()) {
+            $body.html(html);
+            $(editor).triggerHandler(CHANGE);
+        }
+
+    }
+
+    // updateTextArea - updates the textarea with the iframe contents
+    function updateTextArea(editor, checkForChange) {
+
+        var html = $(editor.doc.body).html(),
+            options = editor.options,
+            updateTextAreaCallback = options.updateTextArea,
+            $area = editor.$area;
+
+        // Joe McShea - modified so empty editor results in empty text area
+        if (html === "<div></div>") {
+            html = "";
+        }
+
+        // Check for iframe change to avoid unnecessary firing
+        // of potentially heavy updateTextArea callbacks.
+        if (updateTextAreaCallback) {
+            var sum = checksum(html);
+            if (checkForChange && editor.frameChecksum === sum)
+                return;
+            editor.frameChecksum = sum;
+        }
+
+        // Convert the iframe html into textarea source code
+        var code = updateTextAreaCallback ? updateTextAreaCallback(html) : html;
+
+        // Update the textarea checksum
+        if (options.updateFrame)
+            editor.areaChecksum = checksum(code);
+
+        // Update the textarea and trigger the change event
+        if (code !== $area.val()) {
+            $area.val(code);
+            $(editor).triggerHandler(CHANGE);
+        }
+
+    }
+
+    // Joe McShea - modified to the SPEasyForms instance of jQuery
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
+/*jshint +W016, +W038, +W004 */
+
+///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.sharepoint.js
+/*
+ * jquery.cleditor.sharepoint plugin to make cleditor look and act like the OOBSharePoint
+ * rich text editor (except less buggy/finicky).
+ *
+ * @copyright 2015 Joe McShea
+ * @license under the MIT license:
+ *    http://www.opensource.org/licenses/mit-license.php
+ */
+/* global spefjQuery */
+(function ($) {
+
+    if (!$) return;
+
+    // Define an array of structures describing control key shortcuts
+    $.cleditor.buttonShortcuts = {
+        key66: {
+            name: "bold",
+            title: "Bold (Ctrl + B)",
+            keyCode: 66,
+            shift: false
+        },
+        key73: {
+            name: "italic",
+            title: "Italic (Ctrl + I)",
+            keyCode: 73,
+            shift: false
+        },
+        key85: {
+            name: "underline",
+            title: "Underline (Ctrl + U)",
+            keyCode: 85,
+            shift: false
+        },
+        key117: {
+            name: "underline",
+            title: "Underline (Ctrl + U)",
+            keyCode: 117,
+            shift: false
+        },
+        key76: {
+            name: "alignleft",
+            title: "Align Left (Ctrl + L)",
+            keyCode: 76,
+            shift: false
+        },
+        key69: {
+            name: "center",
+            title: "Align Center (Ctrl + E)",
+            keyCode: 69,
+            shift: false
+        },
+        key82: {
+            name: "alignright",
+            title: "Align Right (Ctrl + R)",
+            keyCode: 114,
+            shift: false
+        },
+        keyS69: {
+            name: "numbering",
+            title: "Numbered List (Ctrl + Shift + E)",
+            keyCode: 69,
+            shift: true
+        },
+        keyS76: {
+            name: "bullets",
+            title: "Bulleted List (Ctrl + Shift + L)",
+            keyCode: 76,
+            shift: true
+        },
+        keyS77: {
+            name: "outdent",
+            title: "Decrease Indent (Ctrl + Shift + M)",
+            keyCode: 77,
+            shift: true
+        },
+        key77: {
+            name: "indent",
+            title: "Increase Indent (Ctrl + M)",
+            keyCode: 77,
+            shift: false
+        },
+        keyS188: {
+            name: "ltr",
+            title: "Left to Right (Ctrl + Shift + >)",
+            keyCode: 188,
+            shift: true
+        },
+        keyS190: {
+            name: "rtl",
+            title: "Right to Left (Ctrl + Shift + <)",
+            keyCode: 190,
+            shift: true
+        }
+    };
+    var buttonShortcuts = $.cleditor.buttonShortcuts;
+
+    // define an array of structures describing sticky buttons
+    $.cleditor.stickyButtons = {
+        bold: {
+            tagNames: "strong"
+        },
+        italic: {
+            tagNames: "em"
+        },
+        underline: {
+            tagNames: "u"
+        },
+        alignleft: {
+            tagNames: "div",
+            attrName: "align",
+            attrValue: "left"
+        },
+        center: {
+            tagNames: "div",
+            attrName: "align",
+            attrValue: "center"
+        },
+        alignright: {
+            tagNames: "div",
+            attrName: "align",
+            attrValue: "right"
+        },
+        bullets: {
+            tagNames: "ul"
+        },
+        numbering: {
+            tagNames: "ol"
+        },
+        ltr: {
+            tagNames: ["div", "ol", "ul","span", "p"],
+            attrName: "dir",
+            attrValue: "ltr"
+        },
+        rtl: {
+            tagNames: ["div", "ol", "ul", "span", "p"],
+            attrName: "dir",
+            attrValue: "rtl"
+        },
+        source: true
+    };
+    var stickyButtons = $.cleditor.stickyButtons;
+
+    // Define the right to left button
+    $.cleditor.buttons.rtl = {
+        name: "rtl",
+        stripIndex: 33,
+        title: "Right to Left",
+        buttonClick: rtl
+    };
+
+    // Define the left to right button
+    $.cleditor.buttons.ltr = {
+        name: "ltr",
+        stripIndex: 32,
+        title: "Left to Right",
+        buttonClick: ltr
+    };
+
+    // Define the background button
+    $.cleditor.buttons.backgroundcolor = {
+        name: "backgroundcolor",
+        stripIndex: 34,
+        title: "Background Color",
+        popupName: "color",
+        popupClick: backgroundColor
+    };
+
+    // Add the buttons to the default controls before the source button
+    $.cleditor.defaultOptions.controls = $.cleditor.defaultOptions.controls
+        .replace("source", "ltr rtl source");
+    $.cleditor.defaultOptions.controls = $.cleditor.defaultOptions.controls
+        .replace("highlight", "highlight backgroundcolor");
+
+    // override the cleditor function to add shortcuts to the button titles (i.e. tooltips)
+    var cssLoaded = false;
+    $.fn.sharePoint_Original_cleditor = $.fn.cleditor;
+    $.fn.cleditor = function (options) {
+        if (!cssLoaded) {
+            var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01/Css/jquery.cleditor.css');
+            $("head").append('<link rel="stylesheet" type="text/css" href="' + css + '">');
+            cssLoaded = true;
+        }
+        $.each($(Object.keys(buttonShortcuts)), function (idx, code) {
+            var shortcut = buttonShortcuts[code];
+            $.cleditor.buttons[shortcut.name].title = shortcut.title;
+        });
+        return this.sharePoint_Original_cleditor(options);
+    };
+
+    // handle rtl clicked
+    function rtl(e, data) {
+        return setDir(data.editor, "rtl");
+    }
+
+    // handle ltr clicked
+    function ltr(e, data) {
+        return setDir(data.editor, "ltr");
+    }
+
+    function backgroundColor(e, data) {
+        var editor = data.editor;
+        var idoc = editor.$frame[0].contentDocument || editor.$frame[0].contentWindow.document;
+        var iwin = editor.$frame[0].contentWindow || editor.$frame[0].contentDocument.defaultView;
+        var p = getSelectionContainer(iwin, idoc);
+        if (p) {
+            var closestBlock = closestBlockInclusive(p, ["div"]);
+            if (closestBlock.length > 0) {
+                closestBlock.css("background-color", e.target.style.backgroundColor);
+            } else {
+                $("body", editor.doc).html("<div style='background-color: " +
+                    e.target.style.backgroundColor + "'>" + $("body", editor.doc).html() + "</div>");
+            }
+            editor.updateTextArea(editor);
+            editor.focus();
+        }
+        return false;
+    }
+
+    // set the dir attribute of the closest div, span, or paragraph encompassing the
+    // current selection range in the editor (adding a div if there is no enclosing element)
+    function setDir(editor, dir) {
+        var idoc = editor.$frame[0].contentDocument || editor.$frame[0].contentWindow.document;
+        var iwin = editor.$frame[0].contentWindow || editor.$frame[0].contentDocument.defaultView;
+        var p = getSelectionContainer(iwin, idoc);
+        if (p) {
+            var closestBlock = closestBlockInclusive(p, ["div", "span", "p"]);
+            if (closestBlock.length > 0) {
+                closestBlock.attr("dir", dir);
+            } else {
+                $("body", editor.doc).html("<div dir='" + dir + "'>" + $("body", editor.doc).html() + "</div>");
+            }
+            editor.updateTextArea(editor);
+            editor.focus();
+        }
+        return false;
+    }
+
+    // define a callback for events on the iframe document key down event
+    $.cleditor.defaultOptions.cleditor_sharepoint_keyDownCallback = $.cleditor.defaultOptions.keyDownCallback;
+    $.cleditor.defaultOptions.keyDownCallback = function (e, editor) {
+        if (e.keyCode > 17) {
+            var key = "key" + (e.shiftKey ? "S" : "") + e.keyCode;
+            if (e.type === "keydown" && e.ctrlKey && key in buttonShortcuts) {
+                var shortcut = buttonShortcuts[key];
+                if (shortcut.name === "ltr") {
+                    rtl(e, {
+                        editor: editor
+                    });
+                } else if (shortcut.name === "rtl") {
+                    ltr(e, {
+                        editor: editor
+                    });
+                } else {
+                    var button = $.cleditor.buttons[shortcut.name];
+                    editor.execCommand(button.command, undefined, editor.options.useCSS, e.target);
+                }
+                e.preventDefault();
+                e.keyCode = 0;
+                return false;
+            }
+            else if ($.cleditor.defaultOptions.cleditor_sharepoint_keyDownCallback) {
+                refreshStickyButtons(editor);
+                return $.cleditor.defaultOptions.cleditor_sharepoint_keyDownCallback(e, editor);
+            }
+            else {
+                refreshStickyButtons(editor);
+            }
+        }
+    };
+
+    // define a callback for events on the iframe document selection changed event
+    //$.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback = $.cleditor.defaultOptions.selectionChangeCallback;
+    //$.cleditor.defaultOptions.selectionChangeCallback = function (e, editor) {
+    //    refreshStickyButtons(editor);
+    //    if ($.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback) {
+    //        $.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback(e, editor);
+    //    }
+    //};
+
+    // define a callback for events on the button div click event
+    $.cleditor.defaultOptions.cleditor_sharepoint_buttonClickCallBack = $.cleditor.defaultOptions.buttonClickCallBack;
+    $.cleditor.defaultOptions.buttonClickCallBack = function (e, data) {
+        if (data.buttonName in stickyButtons && !stickyButtons[data.buttonName].closestSelector) {
+            if (buttonIsSelected(data.button))
+                buttonSelect(data.button, false);
+            else
+                buttonSelect(data.button, true);
+        }
+    };
+
+    // hoverEnter - replace the hover enter callback to change the colors and handle sticky buttons
+    $.cleditor.defaultOptions.hoverEnter = function (e) {
+        var $div = $(e.target).closest("div");
+        if ($div.css("background-color") !== "rgb(255, 229, 204)") {
+            $div.css("background-color", "rgb(255, 204, 153)");
+        }
+    };
+
+    // hoverLeave - replace the hover leave callback to change the colors and handle sticky buttons
+    $.cleditor.defaultOptions.hoverLeave = function (e) {
+        var $div = $(e.target).closest("div");
+        if ($div.css("background-color") !== "rgb(255, 229, 204)") {
+            $div.css("background-color", "transparent");
+        }
+    };
+
+    // determine which sticky buttons should be highlighted based on the text range selected in the editor
+    function refreshStickyButtons(editor) {
+        $.each($(Object.keys($.cleditor.stickyButtons)), function (idx, key) {
+            var stickyButton = stickyButtons[key];
+            if (stickyButton.tagNames) {
+                var button = editor.$main.find("div[buttonName='" + key + "']");
+
+                var idoc = editor.$frame[0].contentDocument || editor.$frame[0].contentWindow.document;
+                var iwin = editor.$frame[0].contentWindow || editor.$frame[0].contentDocument.defaultView;
+
+                var p = getSelectionContainer(iwin, idoc);
+                if (p) {
+                    var tagNames = stickyButton.tagNames.constructor === Array ? stickyButton.tagNames : [stickyButton.tagNames];
+                    var closestParent = closestBlockInclusive(p, tagNames);
+                    if (closestParent.length > 0) {
+                        if (stickyButton.attrName && stickyButton.attrValue) {
+                            if (closestParent.attr(stickyButton.attrName) === stickyButton.attrValue) {
+                                buttonSelect(button, true);
+                            }
+                            else {
+                                buttonSelect(button, false);
+                            }
+                        }
+                        else {
+                            buttonSelect(button, true);
+                        }
+                    }
+                    else {
+                        buttonSelect(button, false);
+                    }
+                }
+            }
+        });
+    }
+
+    // get the closest enclosing block of the current text selection range
+    // that matches any of the tagNames passed in.
+    function closestBlockInclusive(elem, tagNames) {
+        var closestBlock;
+        if (elem.tagName && $.inArray(elem.tagName.toLowerCase(), tagNames) > -1) {
+            closestBlock = $(elem);
+        }
+        else {
+            closestBlock = $(elem).closest(tagNames.join());
+        }
+        return closestBlock;
+    }
+
+    // select or deselect a button div
+    function buttonSelect(button, on) {
+        if (!on && buttonIsSelected(button)) {
+            $(button).css("background-color", "transparent");
+        }
+        else if (on && !buttonIsSelected(button)) {
+            $(button).css("background-color", "rgb(255, 229, 204)");
+        }
+    }
+
+    // return true if a button div is selected, false otherwise
+    function buttonIsSelected(button) {
+        if ($(button).css("background-color") === "rgb(255, 229, 204)") {
+            return true;
+        }
+        return false;
+    }
+
+    // get the parent element of the current selection range
+    function getSelectionContainer(win, doc) {
+        var container = null;
+        if (win.getSelection) {  // all browsers, except IE before version 9
+            var selectionRange = win.getSelection();
+            if (selectionRange.rangeCount > 0) {
+                var range = selectionRange.getRangeAt(0);
+                container = range.commonAncestorContainer;
+            }
+        }
+        else {
+            if (doc.selection) {   // Internet Explorer
+                var textRange = doc.selection.createRange();
+                container = textRange.parentElement();
+            }
+        }
+        return container;
+    }
+
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
+///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.xhtml.js
+/*!
+ CLEditor XHTML Plugin v1.0.1
+ http://premiumsoftware.net/cleditor
+ requires CLEditor v1.3.0 or later
+ 
+ Copyright 2010, Chris Landowski, Premium Software, LLC
+ Dual licensed under the MIT or GPL Version 2 licenses.
+
+ Based on John Resig's HTML Parser Project (ejohn.org)
+ http://ejohn.org/files/htmlparser.js
+ Original code by Erik Arvidsson, Mozilla Public License
+ http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
+*/
+
+(function($) {
+	
+	if(!$) return;
+
+  // Save the previously assigned callback handler
+  var oldCallback = $.cleditor.defaultOptions.updateTextArea;
+
+  // Wireup the updateTextArea callback handler
+  $.cleditor.defaultOptions.updateTextArea = function(html) {
+
+    // Fire the previously assigned callback handler
+    if (oldCallback)
+      html = oldCallback(html);
+
+    // Convert the HTML to XHTML
+    return $.cleditor.convertHTMLtoXHTML(html);
+
+  }
+
+  // Expose the convertHTMLtoXHTML method
+  $.cleditor.convertHTMLtoXHTML = function(html) {
+
+    // Regular Expressions for parsing tags and attributes
+
+    // var startTag = /^<(\w+)((?:\s+\w+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/,
+    //	  endTag = /^<\/(\w+)[^>]*>/,
+    //	  attr = /(\w+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
+
+    // Replaced \w+ with [\w+-]+ in the startTag and attr regular expressions just before =.
+    // This allows the parsing of attributes containing dashes '-'.
+    var startTag = /^<(\w+)((?:\s+[\w+-]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/,
+      endTag = /^<\/(\w+)[^>]*>/,
+		  attr = /([\w+-]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
+
+    // Empty Elements - HTML 4.01
+    var empty = makeMap("area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed");
+
+    // Block Elements - HTML 4.01
+    var block = makeMap("address,applet,blockquote,button,center,dd,del,dir,div,dl,dt,fieldset,form,frameset,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,p,pre,script,table,tbody,td,tfoot,th,thead,tr,ul");
+
+    // Inline Elements - HTML 4.01
+    var inline = makeMap("a,abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,code,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,textarea,tt,u,var");
+
+    // Elements that you can, intentionally, leave open (and which close themselves)
+    var closeSelf = makeMap("colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr");
+
+    // Attributes that have their values filled in disabled="disabled"
+    var fillAttrs = makeMap("checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected");
+
+    // Special Elements (can contain anything)
+    var special = makeMap("script,style");
+
+    // Stack of open tag names
+    var stack = [];
+    stack.last = function () {
+      return this[this.length - 1];
+    };
+
+    var index, match, last = html, results = "";
+
+    // Cycle through all html fragments
+    while (html) {
+
+      // Make sure we're not in a script or style element
+      if (!stack.last() || !special[stack.last()]) {
+
+        // Comment
+        if (html.indexOf("<!--") == 0) {
+          index = html.indexOf("-->");
+          if (index >= 0) {
+            results += html.substring(0, index + 3);
+            html = html.substring(index + 3);
+          }
+        }
+
+        // End tag
+        else if (html.indexOf("</") == 0) {
+          match = html.match(endTag);
+          if (match) {
+            html = html.substring(match[0].length);
+            match[0].replace(endTag, parseEndTag);
+          }
+        }
+        
+        // Start tag
+        else if (html.indexOf("<") == 0) {
+          match = html.match(startTag);
+          if (match) {
+            html = html.substring(match[0].length);
+            match[0].replace(startTag, parseStartTag);
+          }
+        }
+
+        // Text
+        else {
+          index = html.indexOf("<");
+          results += (index < 0 ? html : html.substring(0, index));
+          html = index < 0 ? "" : html.substring(index);
+        }
+      }
+
+      // Handle script and style tags
+      else {
+        html = html.replace(new RegExp("(.*)<\/" + stack.last() + "[^>]*>"), function (all, text) {
+          text = text.replace(/<!--(.*?)-->/g, "$1")
+					  .replace(/<!\[CDATA\[(.*?)]]>/g, "$1");
+          results += text;
+          return "";
+        });
+        parseEndTag("", stack.last());
+      }
+
+      // Handle parsing error
+      if (html == last)
+        throw "Parse Error: " + html;
+      last = html;
+    }
+
+    // Clean up any remaining tags
+    parseEndTag();
+
+    // Replace depreciated tags
+    replace(/<b>(.*?)<\/b>/g, "<strong>$1</strong>");
+    replace(/<i>(.*?)<\/i>/g, "<em>$1</em>");
+
+    // Return the XHTML
+    return results;
+
+    //-----------------
+    // Helper Functions
+    //-----------------
+
+    // makeMap - creates a map array object from the passed in comma delimitted string
+    function makeMap(str) {
+      var obj = {}, items = str.split(",");
+      for (var i = 0; i < items.length; i++)
+        obj[items[i]] = true;
+      return obj;
+    }
+
+    // parseStartTag - handles an opening tag
+    function parseStartTag(tag, tagName, rest, unary) {
+
+      // IE generates tags in uppercase
+      tagName = tagName.toLowerCase();
+	  
+	  if(tagName === "p") {
+		  tag = tag.replace("<p", "<div");
+		  tagName = "div"
+	  }
+
+      // Close all inline tags before this block tag
+      if (block[tagName])
+        while (stack.last() && inline[stack.last()])
+          parseEndTag("", stack.last());
+
+      // Close the self closing tag prior to this one
+      if (closeSelf[tagName] && stack.last() == tagName)
+        parseEndTag("", tagName);
+
+      // Push tag onto the stack
+      unary = empty[tagName] || !!unary;
+      if (!unary)
+        stack.push(tagName);
+
+      // Load the tags attributes
+      var attrs = [];
+
+      rest.replace(attr, function (match, name) {
+        var value = arguments[2] ? arguments[2] :
+				  arguments[3] ? arguments[3] :
+				  arguments[4] ? arguments[4] :
+				  fillAttrs[name] ? name : "";
+
+        attrs.push({
+          name: name,
+          escaped: value.replace(/(^|[^\\])"/g, '$1\\\"') //"
+        });
+
+      });
+
+      // Append the tag to the results
+      results += "<" + tagName;
+
+      for (var i = 0; i < attrs.length; i++)
+        results += " " + attrs[i].name + '="' + attrs[i].escaped + '"';
+
+      results += (unary ? "/" : "") + ">";
+
+    }
+
+    // parseEndTag - handles a closing tag
+    function parseEndTag(tag, tagName) {
+
+      // If no tag name is provided, clean shop
+      if (!tagName)
+        var pos = 0;
+
+      // Find the closest opened tag of the same type
+      else {
+        tagName = tagName.toLowerCase();
+		if(tagName === "p") {
+		    tag = tag.replace("p", "div");
+			tagName = "div"
+		}
+        for (var pos = stack.length - 1; pos >= 0; pos--)
+          if (stack[pos] == tagName)
+            break;
+      }
+
+      if (pos >= 0) {
+        // Close all the open elements, up the stack
+        for (var i = stack.length - 1; i >= pos; i--)
+          results += "</" + stack[i] + ">";
+
+        // Remove the open elements from the stack
+        stack.length = pos;
+      }
+
+    }
+
+    // replace - replace shorthand
+    function replace(regexp, newstring) {
+			results = results.replace(regexp, newstring);
+		}
+
+  }
+
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
 ///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.js
 /*
  * SPEasyForms - modify SharePoint forms using jQuery (i.e. put fields on
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2014.01
- * @requires jQuery.SPEasyForms.2014.01 
+ * @version 2015.01
+ * @requires jQuery.SPEasyForms.2015.01 
  * @requires jQuery-ui v1.9.2 
- * @requires jQuery.SPServices v2014.01 or greater
+ * @requires jQuery.SPServices v2015.01 or greater
  * @optional ssw Session Storage Wrapper - Cross Document Transport of
  *    JavaScript Data; used to cache the context across pages if available
  *    and options.useCache === true
@@ -30188,7 +32106,7 @@ ssw_init = function (window, document) {
  *    http://www.opensource.org/licenses/mit-license.php
  */
 
-/* global spefjQuery:true, ssw, PreSaveItem:true, _spPageContextInfo, ssw_init */
+/* global spefjQuery:true, ssw, PreSaveItem:true, _spPageContextInfo, ssw_init, ExecuteOrDelayUntilScriptLoaded, SP */
 
 // save a reference to our instance of jQuery just in case
 spefjQuery = jQuery.noConflict(true);
@@ -30257,7 +32175,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
             initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
-            version: "2014.01"
+            version: "2015.01"
         },
 
         /********************************************************************
@@ -30295,6 +32213,26 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, spEasyForms.defaults, options);
             this.initCacheLibrary(opt);
             this.loadDynamicStyles(opt);
+            // get a 'hashmap' of request parameters
+            var parameters = $.spEasyForms.utilities.getRequestParameters();
+            // get the parsed rows of the form table
+            var rows = $.spEasyForms.sharePointFieldRows.init(options);
+            // foreach request parameter
+            $.each(Object.keys(parameters), function (idx, key) {
+                // if the parameter name begins with the spef_ prefix
+                if (key.indexOf("spef_") === 0) {
+                    // the internal field name should be the parameter name with the prefix removed
+                    var internalName = key.substring(5);
+                    // if the parsed form rows contains a row matching the internal field name
+                    if (internalName in rows) {
+                        // initialize the row and value to set in the options map
+                        opt.row = rows[internalName];
+                        opt.value = parameters[key];
+                        // set the value of the field
+                        $.spEasyForms.sharePointFieldRows.setValue(opt);
+                    }
+                }
+            });
             opt.callback = spEasyForms.contextReady;
             this.options = opt;
             $("#spEasyFormsBusyScreen").dialog({
@@ -30314,6 +32252,29 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             } else {
                 this.contextReady(options);
             }
+            ExecuteOrDelayUntilScriptLoaded(function () {
+                var dlg = SP.UI.ModalDialog.get_childDialog();
+                if (dlg !== null) {
+                    setTimeout(function () {
+                        if ($(".ms-formtable").css("display") === "none" || $("#spEasyFormsContainersPre").length > 0) {
+                            SP.UI.ModalDialog.get_childDialog().autoSize();
+                            var dlgContent = $(".ms-dlgContent", window.parent.document);
+                            var top = ($(window.top).height() - dlgContent.outerHeight()) / 2;
+                            var left = ($(window.top).width() - dlgContent.outerWidth()) / 2;
+                            dlgContent.css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
+                            dlgContent.prev().css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
+
+                            var dlgFrame = $(".ms-dlgFrame", window.parent.document);
+                            if (dlgFrame.height() > $(window.parent).height()) {
+                                dlgFrame.height($(window.parent).height());
+                            }
+                            if (dlgFrame.width() > $(window.parent).width()) {
+                                dlgFrame.width($(window.parent).width());
+                            }
+                        }
+                    }, 3000);
+                }
+            }, "sp.ui.dialog.js");
         },
 
         /********************************************************************
@@ -30414,12 +32375,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * execute any transformations, visibility rules, and/or field adapters
          * in the configuration.
          ********************************************************************/
-        transform: function(opt) {
+        transform: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
             // convert all lookups to simple selects, only for 2010 and
             // earlier, from Marc Anderson's SPServices documentation and 
             // attributed to Dan Kline
-            $('.ms-lookuptypeintextbox').each(function() {
+            $('.ms-lookuptypeintextbox').each(function () {
                 $().SPServices.SPComplexToSimpleDropdown({
                     columnName: $(this).attr('title'),
                     debug: opt.verbose
@@ -30433,7 +32394,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $.spEasyForms.containerCollection.transform(opt);
             // Override the core.js PreSaveItem function, to allow containers 
             // and/or adapters to react to validation errors.
-            if (typeof(PreSaveItem) !== 'undefined') {
+            if (typeof (PreSaveItem) !== 'undefined') {
                 var originalPreSaveItem = PreSaveItem;
                 PreSaveItem = function () {
                     var result = originalPreSaveItem();
@@ -30456,7 +32417,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     this.setAttributeNode(newOnSave);
                 }
             });
-            spEasyForms.appendContext(opt);
+            $.spEasyForms.appendContext(opt);
             if (_spPageContextInfo.webUIVersion === 4) {
                 $(".ui-widget input").css("font-size", "8pt");
             }
@@ -30466,7 +32427,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * See if we have a configuration for the current list context and setup
          * the editor for the current configuration (or the default configuration).
          ********************************************************************/
-        toEditor: function(opt) {
+        toEditor: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
             if (_spPageContextInfo.webUIVersion === 4) {
                 $("#spEasyFormsContent").css({
@@ -30492,44 +32453,53 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 });
                 $("#RibbonContainer").append("<h3 class='speasyforms-breadcrumbs' style='position:fixed;top:0px;color:white;'><a href='" + opt.source + "' style='color:white;'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h3>");
                 $("tr.speasyforms-sortablefields, tr.speasyforms-sortablerules").css("font-size", "0.9em");
+                $("select[id$='DateTimeFieldDateHours']").css("font-size", "8pt");
+                $("select[id$='DateTimeFieldDateMinutes']").css("font-size", "8pt");
             }
             else {
                 $(".ms-cui-topBar2").prepend("<h2 class='speasyforms-breadcrumbs'><a href='" + opt.source + "'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h2>");
             }
-            $.each(opt.currentListContext.contentTypes.order, function(i, ctid) {
-                if(ctid.indexOf("0x0120") !== 0) {
+            $.each(opt.currentListContext.contentTypes.order, function (i, ctid) {
+                if (ctid.indexOf("0x0120") !== 0) {
                     $("#spEasyFormsContentTypeSelect").append("<option value='" +
-                        opt.currentListContext.contentTypes[ctid].id + "'>" + 
+                        opt.currentListContext.contentTypes[ctid].id + "'>" +
                         opt.currentListContext.contentTypes[ctid].name + "</option>");
                 }
             });
-            $("#spEasyFormsContentTypeSelect").change(function() {
+            $("#spEasyFormsContentTypeSelect").change(function () {
                 delete $.spEasyForms.containerCollection.rows;
                 delete $.spEasyForms.sharePointContext.formCache;
                 opt.contentTypeChanged = true;
                 $.spEasyForms.containerCollection.toEditor(opt);
             });
             $.spEasyForms.containerCollection.toEditor(opt);
-            $(window).on("beforeunload", function() {
-                if(!$("#spEasyFormsSaveButton img").hasClass("speasyforms-buttonimgdisabled")) {
+            $(window).on("beforeunload", function () {
+                if (!$("#spEasyFormsSaveButton img").hasClass("speasyforms-buttonimgdisabled")) {
                     return "You have unsaved changes, are you sure you want to leave the page?";
                 }
             });
-            spEasyForms.appendContext(opt);
-            $("div.speasyforms-panel").height($(window).height()-180);
+            $.spEasyForms.appendContext(opt);
+            var bannerHeight = 5;
             if (_spPageContextInfo.webUIVersion === 4) {
-                $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-445);
+                bannerHeight += $("#s4-ribbonrow").height();
             }
             else {
-                $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-405);
+                bannerHeight += $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height();
             }
-            $(window).resize(function() {
-                $("div.speasyforms-panel").height($(window).height()-180);
+            $("div.speasyforms-panel").height($(window).height() - bannerHeight);
+            if (_spPageContextInfo.webUIVersion === 4) {
+                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 445);
+            }
+            else {
+                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 405);
+            }
+            $(window).resize(function () {
+                $("div.speasyforms-panel").height($(window).height() - bannerHeight);
                 if (_spPageContextInfo.webUIVersion === 4) {
-                    $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-445);
+                    $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 445);
                 }
                 else {
-                    $("#spEasyFormsContent").height($(window).height()-180).width($(window).width()-405);
+                    $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 405);
                 }
             });
             $('#spEasyFormsRibbon').show;
@@ -30541,26 +32511,29 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         insertSettingsLink: function(opt) {
             var generalSettings = $("td.ms-descriptiontext:contains('description and navigation')").closest("table");
-            if (generalSettings.length > 0) {
-                var source = window.location.href;
-                if (source.indexOf("start.aspx#") >= 0) {
-                    source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
+            var permissionsLink = $("a:contains('Permissions for this list')");
+            if (permissionsLink.length > 0) {
+                if (generalSettings.length > 0) {
+                    var source = window.location.href;
+                    if (source.indexOf("start.aspx#") >= 0) {
+                        source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
+                    }
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01/Pages/SPEasyFormsSettings.aspx") +
+                        "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
+                        "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
+                        "&Source=" + encodeURIComponent(source);
+                    var newRow = "<tr>" +
+                        "<td style='padding-top: 5px;' " +
+                        "class='ms-descriptiontext ms-linksectionitembullet' " +
+                        "vAlign='top' width='8' noWrap='nowrap'>" +
+                        "<img alt='' src='/_layouts/images/setrect.gif?rev=37' width='5' height='5' />" +
+                        "&nbsp;</td>" +
+                        "<td class='ms-descriptiontext ms-linksectionitemdescription' vAlign='top'> " +
+                        "<a href='" + settings + "'>SPEasyForms Configuration</a>" +
+                        "</td>" +
+                        "</tr>";
+                    generalSettings.append(newRow);
                 }
-                var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01/Pages/SPEasyFormsSettings.aspx") +
-                    "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
-                    "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
-                    "&Source=" + encodeURIComponent(source);
-                var newRow = "<tr>" +
-                    "<td style='padding-top: 5px;' " +
-                    "class='ms-descriptiontext ms-linksectionitembullet' " +
-                    "vAlign='top' width='8' noWrap='nowrap'>" +
-                    "<img alt='' src='/_layouts/images/setrect.gif?rev=37' width='5' height='5' />" +
-                    "&nbsp;</td>" +
-                    "<td class='ms-descriptiontext ms-linksectionitemdescription' vAlign='top'> " +
-                    "<a href='" + settings + "'>SPEasyForms Configuration</a>" +
-                    "</td>" +
-                    "</tr>";
-                generalSettings.append(newRow);
             }
         },
 
@@ -30593,13 +32566,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         loadDynamicStyles: function(options) {
             if (options.jQueryUITheme === undefined) {
-                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01/Css/jquery-ui/jquery-ui.css');
+                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01/Css/jquery-ui/jquery-ui.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
-                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2014.01/Css/speasyforms.css');
+                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01/Css/speasyforms.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
@@ -30724,7 +32697,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.utilites - general helper functions for SPEasyForms
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -30736,14 +32709,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     // Helper functions.
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.utilities = {
-        jsCase: function(str) {
+        jsCase: function (str) {
             return str[0].toLowerCase() + str.substring(1);
         },
-        
-        titleCase: function(str) {
+
+        titleCase: function (str) {
             return str[0].toUpperCase() + str.substring(1);
         },
-        
+
         /*********************************************************************
          * Wrapper for jQuery.parseJSON; I really don't want to check for null
          * or undefined everywhere to avoid exceptions. I'd rather just get
@@ -30753,8 +32726,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * @param {string} json - a string representation of a json object
          * @returns {object} - the deserialized object
          *********************************************************************/
-        parseJSON: function(json) {
-            if (typeof(json) === 'undefined' ||
+        parseJSON: function (json) {
+            if (typeof (json) === 'undefined' ||
                 json === null ||
                 json.length === 0) {
                 return undefined;
@@ -30772,7 +32745,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *     ...              // one property for each request parameter
          * }
          *********************************************************************/
-        getRequestParameters: function() {
+        getRequestParameters: function () {
             var result = {};
             if (window.location.search.length > 0 &&
                 window.location.search.indexOf('?') >= 0) {
@@ -30787,27 +32760,59 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
             return result;
         },
-        
-        siteRelativePathAsAbsolutePath: function(path) {
+
+        siteRelativePathAsAbsolutePath: function (path) {
             var site = _spPageContextInfo.siteServerRelativeUrl;
-            if(path[0] !== '/') {
+            if (path[0] !== '/') {
                 path = '/' + path;
             }
-            if(site !== '/') {
+            if (site !== '/') {
                 path = site + path;
             }
             return path;
         },
-        
-        webRelativePathAsAbsolutePath: function(path) {
+
+        webRelativePathAsAbsolutePath: function (path) {
             var site = $.spEasyForms.sharePointContext.getCurrentSiteUrl();
-            if(path[0] !== '/') {
+            if (path[0] !== '/') {
                 path = '/' + path;
             }
-            if(site !== '/') {
+            if (site !== '/') {
                 path = site + path;
             }
             return path;
+        },
+
+        extend: function (destination, source) {
+            for (var property in source) {
+                if (!(property in destination)) {
+                    destination[property] = source[property];
+                }
+            }
+            return destination;
+        },
+
+        isDate: function (value) {
+            var date = new Date(value);
+            return (date instanceof Date && !isNaN(date.valueOf()));
+        },
+
+        highlight: function (rowNode, backgroundColor) {
+            // if our class hasn't already been added to the head
+            if ($("table.ms-formtable").attr("data-visibility" + backgroundColor) !== "true") {
+                // add a class to the head that defines our highlight color
+                $("head").append("<style>.speasyforms-" + backgroundColor +
+                    " { background-color: " + backgroundColor + "; }</style>");
+
+                // add an attribute to the form table to indicate we've already added our class
+                $("table.ms-formtable").attr("data-visibility" + backgroundColor, "true");
+            }
+
+            // add our class to all table cells in the row, also indicate which class was added with
+            // data-visiblityclassadded so the visibility manager can undo our changes when state
+            // is changing
+            rowNode.find("td").addClass("speasyforms-" + backgroundColor).attr(
+                "data-visibilityclassadded", "speasyforms-" + backgroundColor);
         }
     };
 
@@ -30818,7 +32823,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * SPEasyForms.sharePointContext - object for capturing SharePoint context information
  * using web services.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -31098,8 +33103,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *
          * @returns {object} - {}
          *********************************************************************/
-        getListContext: function(options) {
-            var opt = $.extend({},  $.spEasyForms.defaults, options);
+        getListContext: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            $.spEasyForms.initCacheLibrary(opt);
             if (!opt.currentContext) {
                 opt.currentContext = spContext.get();
             }
@@ -31115,7 +33121,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             } else {
                 result.title = "Unknow List Title";
                 result.fields = {};
-                if(opt.listId in opt.currentContext.listContexts) {
+                if (opt.listId in opt.currentContext.listContexts) {
                     result = opt.currentContext.listContexts[opt.listId];
                 }
                 var rows = {};
@@ -31123,7 +33129,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     opt.dontIncludeNodes = true;
                     rows = $.spEasyForms.sharePointFieldRows.init(opt);
                 }
-                if(Object.keys(rows).length === 0) {
+                if (Object.keys(rows).length === 0) {
                     $.ajax({
                         async: false,
                         url: $.spEasyForms.utilities.webRelativePathAsAbsolutePath("/_layouts/listform.aspx") +
@@ -31136,6 +33142,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 spContext.formCache = xData.responseText;
                             }
                             opt.input = $(xData.responseText);
+                            opt.skipCalculatedFields = true;
                             rows = $.spEasyForms.sharePointFieldRows.init(opt);
                             $.each(rows, function (idx, row) {
                                 result.fields[row.internalName] = row;
@@ -31143,8 +33150,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         }
                     });
                 }
-                else
-                {
+                else {
                     $.each(rows, function (idx, row) {
                         result.fields[row.internalName] = row;
                     });
@@ -31155,7 +33161,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     operation: "GetList",
                     listName: opt.listId,
                     debug: opt.verbose,
-                    completefunc: function(xData) {
+                    completefunc: function (xData) {
                         result.title =
                             $(xData.responseText).find("List").attr("Title");
                         result.template =
@@ -31167,15 +33173,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         result.defaultUrl =
                             $(xData.responseText).find("List").attr("DefaultViewUrl");
                         result.schema = {};
-                        $.each($(xData.responseText).find("Field"), function(idx, field) {
-                            if ($(field).attr("Hidden") !== "hidden" &&
-                                $(field).attr("ReadOnly") !== "readonly") {
+                        $.each($(xData.responseText).find("Field"), function (idx, field) {
+                            if ($(field).attr("Hidden") !== "hidden") {
                                 var newField = {};
                                 newField.name = $(field).attr("Name");
                                 newField.staticName = $(field).attr("StaticName");
                                 newField.id = $(field).attr("ID");
                                 newField.displayName = $(field).attr("DisplayName");
                                 newField.type = $(field).attr("Type");
+                                if (newField.type === "Calculated") {
+                                    newField.hasFormula = $(field).find("formula").length > 0;
+                                    if (newField.hasFormula) {
+                                        newField.formula = $(field).find("formula").text();
+                                    }
+                                }
                                 newField.required = $(field).attr("Required");
                                 result.schema[newField.displayName] = newField;
                                 result.schema[newField.name] = newField;
@@ -31189,13 +33200,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     listName: opt.listId,
                     async: false,
                     debug: opt.verbose,
-                    completefunc: function(xData) {
+                    completefunc: function (xData) {
                         var contentTypes = {};
                         if ($(xData.responseText).find("ContentTypes").attr("ContentTypeOrder")) {
                             contentTypes.order = $(xData.responseText).find("ContentTypes").attr("ContentTypeOrder").split(",");
                         }
                         var order = [];
-                        $.each($(xData.responseText).find("ContentType"), function(idx, ct) {
+                        $.each($(xData.responseText).find("ContentType"), function (idx, ct) {
                             var newCt = {};
                             newCt.name = $(ct).attr("Name");
                             newCt.id = $(ct).attr("ID");
@@ -31546,12 +33557,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.sharePointFieldRows - object to parse field rows into a map.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
-/* global spefjQuery */
+/* global spefjQuery, ExecuteOrDelayUntilScriptLoaded, SPClientPeoplePicker */
 (function ($, undefined) {
 
     ////////////////////////////////////////////////////////////////////////////
@@ -31622,6 +33633,35 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
             if (opt.input === undefined) {
                 this.rows = results;
+            }
+            if (!opt.skipCalculatedFields && window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+                var hasCalculatedFields = false;
+                $.each(Object.keys(results), function (idx, key) {
+                    if (results[key].spFieldType === "SPFieldCalculated") {
+                        hasCalculatedFields = true;
+                        return false;
+                    }
+                });
+                if (!hasCalculatedFields) {
+                    var listCtx = $.spEasyForms.sharePointContext.getListContext(options);
+                    $.each(Object.keys(listCtx.schema), function (idx, key) {
+                        var field = listCtx.schema[key];
+                        if (field.type === "Calculated" && field.hasFormula) {
+                            var tr = $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'><nobr>" +
+                                field.displayName + "</nobr></h3></td><td class='ms-formbody'>value</td></tr>");
+                            tr.appendTo("table.ms-formtable");
+                            opt.row = tr;
+                            var newRow = {
+                                internalName: field.name,
+                                displayName: field.displayName,
+                                spFieldType: "SPFieldCalculated",
+                                value: "",
+                                row: tr
+                            };
+                            results[field.name] = newRow;
+                        }
+                    });
+                }
             }
             return results;
         },
@@ -31897,6 +33937,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             });
                         }
                         break;
+                    case "SPFieldBusinessData":
+                        tr.value = tr.row.find("div.ms-inputuserfield span span").text().trim();
+                        break;
+                    case "SPFieldCalculated":
+                        tr.value = tr.find("td.ms-formbody").text().trim();
+                        break;
                     default:
                         tr.value =
                             tr.row.find("td.ms-formbody input").val().trim();
@@ -31907,6 +33953,193 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 tr.value = "";
             }
             return tr.value;
+        },
+
+        // a method to the SPEasyForms sharePointFieldRows instance to set the value of a field
+        setValue: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var tr = opt.row;
+            tr.value = opt.value ? opt.value : "";
+            try {
+                // if we're on a display form, we can't very well set a field can we?
+                if ($.spEasyForms.visibilityRuleCollection.getFormType(opt) === "display") {
+                    return;
+                }
+                switch (tr.spFieldType) {
+                    case "SPFieldContentType":
+                        // content type is just a select, set its value
+                        tr.row.find("td.ms-formbody select").val(tr.value);
+                        break;
+                    case "SPFieldChoice":
+                    case "SPFieldMultiChoice":
+                        var select = tr.row.find("td.ms-formbody select");
+                        // if there is a select (as opposed to radios or checkboxes)
+                        if (select.length > 0) {
+                            // if the select has an option equal to the value
+                            if (select.find("option[value='" + tr.value + "']").length > 0) {
+                                select.val(tr.value); // set the select value
+                            }
+                            else {
+                                // otherwise, look for a fill in choice input
+                                var inpt = tr.row.find("input[type='text'][id$='FillInChoice']");
+                                if (inpt.length === 0) {
+                                    // sp2010
+                                    inpt = tr.row.find("input[type='text'][title^='" + tr.displayName + "']");
+                                }
+                                if (inpt.length > 0) {
+                                    // if we find one, set its value
+                                    inpt.val(tr.value);
+                                    // also set the checkbox for the indicating a fill in value is supplied
+                                    inpt.parent().parent().prev().find("input[type='radio']").prop("checked", true);
+                                }
+                            }
+                        } else {
+                            // split values on semi-colon
+                            var values = tr.value.split(";");
+                            // clear any checked boxes or fill in inputs
+                            tr.row.find("input[type='checkbox']").prop("checked", false);
+                            tr.row.find("input[type='text'][id$='FillInText']").val("");
+                            $.each($(values), function (idx, value) { // foreach value
+                                // find the label for the value
+                                var label = tr.row.find("label:contains('" + value + "')");
+                                if (label.length > 0) {
+                                    // check the checkbox associated with the label
+                                    label.prev().prop("checked", true);
+                                }
+                                else {
+                                    // otherwise look for a fill in input
+                                    var input = tr.row.find("input[type='text'][id$='FillInText']");
+                                    if (input.length === 0) {
+                                        // sp2010
+                                        input = tr.row.find("input[type='text'][title^='" + tr.displayName + "']");
+                                    }
+                                    if (input.length > 0) {
+                                        if (input.val().length > 0) {
+                                            // if there is already a value, append this one with a semi-colon separator
+                                            input.val(input.val() + ";" + value);
+                                            // also check the checkbox or radio indicating a fill in
+                                            input.parent().parent().prev().find("input[type='checkbox']").prop("checked", true);
+                                            input.parent().parent().prev().find("input[type='radio']").prop("checked", true);
+                                        }
+                                        else {
+                                            // set the fill-in
+                                            input.val(value);
+                                            // also check the checkbox or radio indicating a fill in
+                                            input.parent().parent().prev().find("input[type='checkbox']").prop("checked", true);
+                                            input.parent().parent().prev().find("input[type='radio']").prop("checked", true);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        break;
+                    case "SPFieldNote":
+                    case "SPFieldMultiLine":
+                        // if there is a text area, set its text to the value
+                        if (tr.row.find("textarea").length > 0) {
+                            tr.row.find("textarea").text(tr.value);
+                        }
+                        break;
+                    case "SPFieldDateTime":
+                        var date = new Date(tr.value);
+                        // set the input to the date portion of the date/time
+                        tr.row.find("input").val($.datepicker.formatDate("mm/dd/yy", date));
+                        // if there is an hours drop down, select the hour based on date.getHours
+                        if (tr.row.find("option[value='" + date.getHours() + "']").length > 0) {
+                            tr.row.find("select[id$='Hours']").val(date.getHours());
+                        }
+                        else {
+                            // sp2010
+                            var i = date.getHours();
+                            var fmt = "";
+                            if (i < 12) {
+                                fmt = i + " AM";
+                            }
+                            else {
+                                fmt = (i - 12) + " PM";
+                            }
+                            tr.row.find("select[id$='Hours']").val(fmt);
+                        }
+                        // if there is a minutes drop down, select the minutes based on date.getMinutes, Note: that SharePoint only 
+                        // allows 5 minute increments so if you pass in 04 as the minutes notthing is selected
+                        tr.row.find("select[id$='Minutes']").val(date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+                        break;
+                    case "SPFieldBoolean":
+                        // if 0, false, or no was passed (case insensitive), uncheck the box
+                        if (tr.value.length === 0 || tr.value === "0" || tr.value.toLowerCase() === "false" || tr.value.toLowerCase() === "no") {
+                            tr.row.find("input").prop("checked", false);
+                        }
+                        else {
+                            // otherwise check the box
+                            tr.row.find("input").prop("checked", true);
+                        }
+                        break;
+                    case "SPFieldURL":
+                        // if no pipe, set the url and description to the full value
+                        if (tr.value.indexOf("|") < 0) {
+                            tr.row.find("input").val(tr.value);
+                        }
+                        else {
+                            // otherwise set the url to the first part and the description to the second
+                            var parts = tr.value.split("|", 2);
+                            tr.row.find("input[id$='UrlFieldUrl']").val(parts[0]);
+                            tr.row.find("input[id$='UrlFieldDescription']").val(parts[1]);
+                        }
+                        break;
+                    case "SPFieldUser":
+                    case "SPFieldUserMulti":
+                        var pplpkrDiv = tr.row.find("[id^='" + tr.internalName + "'][id$='ClientPeoplePicker']");
+                        // if there is a client people picker, add each value using it
+                        if (pplpkrDiv.length > 0) {
+                            ExecuteOrDelayUntilScriptLoaded(function () {
+                                var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
+                                var entities = tr.value.split(";");
+                                $.each($(entities), function (idx, entity) {
+                                    clientPplPicker.AddUserKeys(entity);
+                                });
+                            }, "clientpeoplepicker.js");
+                        } else {
+                            // otherwise use SPServices to set the people picker value
+                            var displayName = tr.displayName;
+                            ExecuteOrDelayUntilScriptLoaded(function () {
+                                setTimeout(function () {
+                                    $().SPServices.SPFindPeoplePicker({
+                                        peoplePickerDisplayName: displayName,
+                                        valueToSet: tr.value,
+                                        checkNames: true
+                                    });
+                                }, 1000);
+                            }, "sp.js");
+                        }
+                        break;
+                    case "SPFieldLookup":
+                        // if there is an option with value equal to what's passed in, select it
+                        if (tr.row.find("option[value='" + tr.value + "']").length > 0) {
+                            tr.row.find("option[value='" + tr.value + "']").prop("selected", true);
+                        }
+                        else {
+                            // otherwise select the first option that contains the value in its text
+                            tr.row.find("option:contains('" + tr.value + "'):first").prop("selected", true);
+                        }
+                        break;
+                    case "SPFieldLookupMulti":
+                        // same as above but set multiple values separated by a semi-colon
+                        var valueArray = tr.value.split(";");
+                        $.each($(valueArray), function (idx, value) {
+                            if (tr.row.find("option[value='" + value + "']").length > 0) {
+                                tr.row.find("option[value='" + value + "']").remove().appendTo("select[id$='_SelectResult']");
+                            }
+                            else {
+                                tr.row.find("option:contains('" + value + "'):first").remove().appendTo("select[id$='_SelectResult']");
+                            }
+                        });
+                        break;
+                    default:
+                        // by default, look for an input and set it
+                        tr.row.find("input").val(tr.value);
+                        break;
+                }
+            } catch (e) { }
         },
 
         compareField: function (a, b) {
@@ -31930,7 +34163,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * SPEasyForms.configManager - Object that encapsulates getting, setting, and saving the SPEasyForms
  * configuration file for the current list.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -32138,7 +34371,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         set: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.currentConfig.version = "2014.01";
+            opt.currentConfig.version = "2015.01";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig !== oldConfig) {
@@ -32212,7 +34445,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection - object to hold and manage all containers.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -32241,7 +34474,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *         of form rows, including the jQuery object representing the actual tr.
          * }
          *********************************************************************/
-        transform: function(options) {
+        transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var fieldsInUse = [];
 
@@ -32259,24 +34492,24 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
                 opt.currentConfig = $.spEasyForms.configManager.get(opt);
                 opt.prepend = true;
-                $.each(opt.currentConfig.layout.def, function(index, layout) {
+                $.each(opt.currentConfig.layout.def, function (index, layout) {
                     var implementation = $.spEasyForms.utilities.jsCase(layout.containerType);
                     if (implementation in containerCollection.containerImplementations) {
                         var impl = containerCollection.containerImplementations[implementation];
-                        if(typeof(impl.transform) === 'function') {
+                        if (typeof (impl.transform) === 'function') {
                             opt.index = index;
                             opt.currentContainerLayout = layout;
-                            opt.containerId = "spEasyFormsContainers" + (opt.prepend ? "Pre" : "Post");                            
+                            opt.containerId = "spEasyFormsContainers" + (opt.prepend ? "Pre" : "Post");
                             $.merge(fieldsInUse, impl.transform(opt));
                         }
-                    }
-                    if (layout.containerType !== $.spEasyForms.defaultFormContainer.containerType) {
-                        if ($("#" + opt.containerId).children().last().find("td.ms-formbody").length === 0) {
-                            $("#" + opt.containerId).children().last().hide();
+                        if (layout.containerType !== $.spEasyForms.defaultFormContainer.containerType) {
+                            if (impl.fieldCollectionsDlgTitle && $("#" + opt.containerId).children().last().find("td.ms-formbody").length === 0) {
+                                $("#" + opt.containerId).children().last().hide();
+                            }
                         }
-                    }
-                    else {
-                        opt.prepend = false;
+                        else {
+                            opt.prepend = false;
+                        }
                     }
                 });
 
@@ -32305,6 +34538,31 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             return fieldsInUse;
         },
 
+        postTransform: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            opt.prepend = true;
+            $.each(opt.currentConfig.layout.def, function (index, layout) {
+                var implementation = $.spEasyForms.utilities.jsCase(layout.containerType);
+                if (implementation in containerCollection.containerImplementations) {
+                    var impl = containerCollection.containerImplementations[implementation];
+                    if (typeof (impl.postTransform) === 'function') {
+                        opt.index = index;
+                        opt.currentContainerLayout = layout;
+                        opt.containerId = "spEasyFormsContainers" + (opt.prepend ? "Pre" : "Post");
+                        impl.postTransform(opt);
+                    }
+                }
+                if (layout.containerType !== $.spEasyForms.defaultFormContainer.containerType) {
+                    if ($("#" + opt.containerId).children().last().find("td.ms-formbody").length === 0) {
+                        $("#" + opt.containerId).children().last().hide();
+                    }
+                }
+                else {
+                    opt.prepend = false;
+                }
+            });
+        },
+
         /*********************************************************************
          * Convert a layout to an editor properties panel by looping through each
          * layout part and calling the appropriate implementation's toEditor function.
@@ -32315,7 +34573,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *         If ommitted, call the current lists edit form and parse it to get rows.
          * }
          *********************************************************************/
-        toEditor: function(options) {
+        toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
             this.initializeRows(opt);
@@ -32339,10 +34597,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $.spEasyForms.adapterCollection.toEditor(opt);
             this.initializeHiddenObjects(opt);
 
-            $(".speasyforms-dblclickdialog").dblclick(function() {
+            $(".speasyforms-dblclickdialog").dblclick(function () {
                 opt.dialogType = $(this).parent().attr("data-dialogtype");
                 opt.fieldName = $(this).parent().attr("data-fieldname");
-                if(opt.fieldName in containerCollection.rows) {
+                if (opt.fieldName in containerCollection.rows) {
                     opt.spFieldType = containerCollection.rows[opt.fieldName].spFieldType;
                 }
                 else {
@@ -32364,23 +34622,23 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *
          * @returns {object} - the layout
          *********************************************************************/
-        toConfig: function(options) {
+        toConfig: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var containers = $("td.speasyforms-sortablecontainers");
             var result = $.spEasyForms.configManager.get(opt);
             result.layout = {
                 def: []
             };
-            $.each(containers, function(idx, container) {
+            $.each(containers, function (idx, container) {
                 var type = $(container).find("input[type='hidden'][id$='Hidden']").val();
                 var impl = type[0].toLowerCase() + type.substring(1);
                 if (impl in containerCollection.containerImplementations) {
-                        opt.container = container;
-                        opt.containerType = type;
-                        if (impl in containerCollection.containerImplementations) {
-                            result.layout.def.push(
-                                containerCollection.containerImplementations[impl].toLayout(opt));
-                        }
+                    opt.container = container;
+                    opt.containerType = type;
+                    if (impl in containerCollection.containerImplementations) {
+                        result.layout.def.push(
+                            containerCollection.containerImplementations[impl].toLayout(opt));
+                    }
                 }
             });
             return result;
@@ -32402,9 +34660,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 return false;
             }
 
-            if (typeof(SPClientForms) !== 'undefined' &&
-                typeof(SPClientForms.ClientFormManager) !== 'undefined' &&
-                typeof(SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
+            if (typeof (SPClientForms) !== 'undefined' &&
+                typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
+                typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
                 if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
                     this.highlightValidationErrors(opt);
                     return false;
@@ -32414,16 +34672,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             return true;
         },
 
-        highlightValidationErrors: function(options) {
+        highlightValidationErrors: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = true;
             var config = $.spEasyForms.configManager.get(opt);
-            $.each(config.layout.def, function(index, current) {
+            $.each(config.layout.def, function (index, current) {
                 var containerType = current.containerType[0].toLowerCase() +
                     current.containerType.substring(1);
                 if (containerType in containerCollection.containerImplementations) {
                     var impl = containerCollection.containerImplementations[containerType];
-                    if(typeof(impl.preSaveItem) === 'function') {
+                    if (typeof (impl.preSaveItem) === 'function') {
                         opt.index = index;
                         result = result && impl.preSaveItem(opt);
                     }
@@ -32438,22 +34696,39 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * @returns {object} - an array of all internal field names that are already
          *     on one of the editors.
          *********************************************************************/
-        initContainers: function(options) {
+        initContainers: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var fieldsInUse = [];
             var defaultFormContainerId;
-            $.each(opt.currentConfig.layout.def, function(index, layout) {
+            var nextIndex = Object.keys(opt.currentConfig.layout.def).length - 1;
+            $.each(opt.currentConfig.layout.def, function (index, layout) {
+                if (layout.index && $.isNumeric(layout.index) && parseInt(layout.index) >= nextIndex) {
+                    nextIndex = parseInt(layout.index) + 1;
+                }
+            });
+            $.each(opt.currentConfig.layout.def, function (index, layout) {
                 opt.id = "spEasyFormsContainer" + index;
                 opt.title = layout.containerType;
                 opt.currentContainerLayout = layout;
-                opt.containerIndex = (layout.index !== undefined ? layout.index : index);
+                if (!layout.index) {
+                    if (layout.containerType === "DefaultForm") {
+                        layout.index = "d";
+                        nextIndex++;
+                    }
+                    else {
+                        layout.index = nextIndex++;
+                        layout.index = layout.index.toString();
+                    }
+                    $.spEasyForms.configManager.set(opt);
+                }
+                opt.containerIndex = layout.index;
                 containerCollection.appendContainer(opt);
                 if (layout.containerType !== $.spEasyForms.defaultFormContainer.containerType) {
                     var implementation = layout.containerType[0].toLowerCase() +
                         layout.containerType.substring(1);
                     if (implementation in containerCollection.containerImplementations) {
                         var impl = containerCollection.containerImplementations[implementation];
-                        if(typeof(impl.toEditor) === 'function') {
+                        if (typeof (impl.toEditor) === 'function') {
                             opt.index = index;
                             opt.currentContainerLayout = layout;
                             var tmp = impl.toEditor(opt);
@@ -32473,42 +34748,42 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $.spEasyForms.defaultFormContainer.toEditor(opt);
             return fieldsInUse;
         },
-        
-        initConditionalFieldChoices: function() {
-            
+
+        initConditionalFieldChoices: function () {
+
             var fields = {};
-            $.each(Object.keys(containerCollection.rows), function(idx, name) {
+            $.each(Object.keys(containerCollection.rows), function (idx, name) {
                 fields[containerCollection.rows[name].displayName] = containerCollection.rows[name];
             });
-            $.each(Object.keys(fields).sort(), function(idx, displayName) {
+            $.each(Object.keys(fields).sort(), function (idx, displayName) {
                 var name = fields[displayName].internalName;
-                if(name !== $.spEasyForms.defaultFormContainer.containerType) {
+                if (name !== $.spEasyForms.defaultFormContainer.containerType) {
                     $(".speasyforms-conditionalfield").append(
                         '<option value="' + name + '">' + displayName + '</option>');
                 }
             });
-            
-            $.each(Object.keys($.spEasyForms.visibilityRuleCollection.stateHandlers), function(idx, name) {
+
+            $.each(Object.keys($.spEasyForms.visibilityRuleCollection.stateHandlers), function (idx, name) {
                 $("#addVisibilityRuleState").append("<option>" + $.spEasyForms.utilities.titleCase(name) + "</option>");
             });
-            
-            $.each(Object.keys($.spEasyForms.visibilityRuleCollection.comparisonOperators), function(idx, name) {
+
+            $.each(Object.keys($.spEasyForms.visibilityRuleCollection.comparisonOperators), function (idx, name) {
                 $(".speasyforms-conditionaltype").append("<option>" + $.spEasyForms.utilities.titleCase(name) + "</option>");
             });
-            
+
             $(".speasyforms-conditionalvalue[value='']").not(":first").parent().hide();
         },
-        
-        initializeRows: function(options) {
+
+        initializeRows: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var currentContentType = $("#spEasyFormsContentTypeSelect").val();
-            if(window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
+            if (window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
                 containerCollection.rows = $.spEasyForms.sharePointFieldRows.init(opt);
             }
             else if (!containerCollection.rows || Object.keys(containerCollection.rows).length === 0) {
                 if (!containerCollection.currentCt || containerCollection.currentCt !== currentContentType) {
                     containerCollection.currentCt = currentContentType;
-                    if(containerCollection.currentCt in containerCollection.rowCache) {
+                    if (containerCollection.currentCt in containerCollection.rowCache) {
                         containerCollection.rows = containerCollection.rowCache[containerCollection.currentCt];
                     }
                 }
@@ -32527,18 +34802,18 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 cache: false,
                                 url: $.spEasyForms.utilities.webRelativePathAsAbsolutePath("/_layouts/listform.aspx") +
                                     "?PageType=6&ListId=" +
-                                    currentListId + 
-                                    ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") + 
+                                    currentListId +
+                                    ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") +
                                     "&RootFolder=",
-                                complete: function(xData) {
+                                complete: function (xData) {
                                     formText = xData.responseText;
                                 }
                             });
                         }
-        
+
                         opt.input = $(formText);
                         containerCollection.rows = $.spEasyForms.sharePointFieldRows.init(opt);
-                        $.each(containerCollection.rows, function(fieldIdx, row) {
+                        $.each(containerCollection.rows, function (fieldIdx, row) {
                             var td = row.row.find("td.ms-formbody");
                             td.html("");
                             $('.ms-formtable').append(row.row);
@@ -32548,7 +34823,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
             // undo changes to the row that might have been applied by the transforms,
             // since they may have moved.
-            $.each(containerCollection.rows, function(i, currentRow) {
+            $.each(containerCollection.rows, function (i, currentRow) {
                 currentRow.row.find("*[data-transformAdded='true']").remove();
                 currentRow.row.find("*[data-transformHidden='true']").
                 attr("data-transformHidden", "false").show();
@@ -32556,12 +34831,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             containerCollection.rowCache[containerCollection.currentCt] = containerCollection.rows;
             return containerCollection.rows;
         },
-        
-        initializeHiddenObjects: function(options) {
+
+        initializeHiddenObjects: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (!this.initialized && $("td.speasyforms-sortablecontainers").length > 2) {
-                $("td.speasyforms-sortablecontainers").each(function() {
-                    if(!(opt.verbose && $(this).find(".speasyforms-fieldmissing").length !== 0)) {
+                $("td.speasyforms-sortablecontainers").each(function () {
+                    if (!(opt.verbose && $(this).find(".speasyforms-fieldmissing").length !== 0)) {
                         var containerIndex = $(this).attr("data-containerIndex");
                         containerCollection.hiddenObjects[containerIndex] = {
                             primaryIndex: containerIndex
@@ -32575,7 +34850,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 var keys = Object.keys(this.hiddenObjects);
                 for (i = 0; i < keys.length; i++) {
                     var obj = this.hiddenObjects[keys[i]];
-                    if(obj && "primaryIndex" in obj) {
+                    if (obj && "primaryIndex" in obj) {
                         var container = $("td[data-containerIndex='" + obj.primaryIndex + "']");
                         if ("secondaryIndex" in obj) {
                             $("td[data-containerIndex='" + obj.primaryIndex + "']").find(
@@ -32586,15 +34861,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 }
             }
-            
+
         },
-        
+
         /*********************************************************************
          * Wire the container sorting, clicking, and editor button events.
          *********************************************************************/
-        wireContainerEvents: function(options) {
+        wireContainerEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            
+
             var top = 0;
             // make the field rows in the editor sortable
             $("tbody.speasyforms-sortablefields").sortable({
@@ -32602,13 +34877,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 items: "> tr:not(:first)",
                 helper: "clone",
                 zIndex: 990,
-                start: function() {
+                start: function () {
                     top = $("div.speasyforms-panel").scrollTop();
                 },
-                stop: function() {
+                stop: function () {
                     $("div.speasyforms-panel").scrollTop(top);
                 },
-                update: function(event) {
+                update: function (event) {
                     if (!event.handled) {
                         opt.currentConfig = containerCollection.toConfig(opt);
                         $.spEasyForms.configManager.set(opt);
@@ -32625,7 +34900,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 items: "> tr",
                 helper: "clone",
                 zIndex: 90,
-                update: function(event) {
+                update: function (event) {
                     if (!event.handled) {
                         opt.currentConfig = containerCollection.toConfig(opt);
                         $.spEasyForms.configManager.set(opt);
@@ -32633,13 +34908,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         event.handled = true;
                     }
                 },
-                start: function(event, ui) {
+                start: function (event, ui) {
                     ui.placeholder.height("100px");
                 }
             });
 
             // make the field tables individually collapsible
-            $("h3.speasyforms-sortablefields").dblclick(function(e) {
+            $("h3.speasyforms-sortablefields").dblclick(function (e) {
                 if (e.handled !== true) {
                     var i, j;
                     if ($(this).next().length === 0) {
@@ -32675,7 +34950,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
 
             // make the containers individually collapsible
-            $("td.speasyforms-sortablecontainers").dblclick(function(e) {
+            $("td.speasyforms-sortablecontainers").dblclick(function (e) {
                 if (e.handled !== true) {
                     $('#' + this.id + ' .speasyforms-sortablefields:not(.speasyforms-hidden):not(.speasyforms-fieldmissing)').toggle();
                     var k = $('#' + this.id).attr("data-containerIndex");
@@ -32700,7 +34975,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     primary: "ui-icon-gear"
                 },
                 text: false
-            }).click(function() {
+            }).click(function () {
                 var headerId = $(this).closest("tr").find(
                     "h3.speasyforms-sortablefields")[0].id;
                 $("#fieldCollectionName").val($("#" + headerId).text());
@@ -32715,7 +34990,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     primary: "ui-icon-closethick"
                 },
                 text: false
-            }).click(function() {
+            }).click(function () {
                 $(this).closest("div").remove();
                 opt.currentConfig = containerCollection.toConfig(opt);
                 $.spEasyForms.configManager.set(opt);
@@ -32727,14 +35002,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         /*********************************************************************
          * Wire the top/bottom button bar events.
          *********************************************************************/
-        wireButtonEvents: function(options) {
+        wireButtonEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
             // wire the save button
-            $("#spEasyFormsSaveButton").click(function(event) {
-                if($("#spEasyFormsSaveButton img").hasClass("speasyforms-buttonimgdisabled"))
+            $("#spEasyFormsSaveButton").click(function (event) {
+                if ($("#spEasyFormsSaveButton img").hasClass("speasyforms-buttonimgdisabled"))
                     return;
-                    
+
                 if (!event.handled) {
                     $.spEasyForms.configManager.save(opt);
                     event.handled = true;
@@ -32743,7 +35018,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
 
             // wire the cancel button
-            $("#spEasyFormsCancelButton").click(function(event) {
+            $("#spEasyFormsCancelButton").click(function (event) {
                 if (!event.handled) {
                     window.location.href = $.spEasyForms.utilities.getRequestParameters(opt).Source;
                 }
@@ -32751,8 +35026,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
 
             // wire the add button
-            $("#spEasyFormsAddButton").click(function(event) {
-               if (!event.handled) {
+            $("#spEasyFormsAddButton").click(function (event) {
+                if (!event.handled) {
                     $("#containerType").val("");
                     $("#chooseContainerError").html("");
                     $("#chooseContainerDialog").dialog("open");
@@ -32760,56 +35035,56 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
                 return false;
             });
-            
+
             // wire the undo button
-            $("#spEasyFormsUndoButton").click(function(event) {
-                if($("#spEasyFormsUndoButton img").hasClass("speasyforms-buttonimgdisabled"))
+            $("#spEasyFormsUndoButton").click(function (event) {
+                if ($("#spEasyFormsUndoButton img").hasClass("speasyforms-buttonimgdisabled"))
                     return;
-                    
-                if(!event.handled) {
+
+                if (!event.handled) {
                     var oldConfig = JSON.stringify($.spEasyForms.configManager.get(opt), null, 4);
                     var newConfig = $.spEasyForms.configManager.undoBuffer.pop();
                     $.spEasyForms.configManager.redoBuffer.push(oldConfig);
                     $("#spEasyFormsRedoButton img").removeClass("speasyforms-buttonimgdisabled");
                     $("#spEasyFormsRedoButton").removeClass("speasyforms-buttontextdisabled");
-                    
+
                     opt.currentConfig = $.spEasyForms.utilities.parseJSON(newConfig);
                     $.spEasyForms.configManager.set(opt);
                     newConfig = $.spEasyForms.configManager.undoBuffer.pop();
-                    if($.spEasyForms.configManager.undoBuffer.length === 0) {
+                    if ($.spEasyForms.configManager.undoBuffer.length === 0) {
                         $("#spEasyFormsUndoButton img").addClass("speasyforms-buttonimgdisabled");
                         $("#spEasyFormsUndoButton").addClass("speasyforms-buttontextdisabled");
                     }
-                    
-                    containerCollection.toEditor(opt);
-                    event.handled = true;
-                }                
-            });
-            
-            // wire the redo button
-            $("#spEasyFormsRedoButton").click(function(event) {
-                if($("#spEasyFormsRedoButton img").hasClass("speasyforms-buttonimgdisabled"))
-                    return;
-                    
-                if(!event.handled) {
-                    opt.currentConfig = $.spEasyForms.utilities.parseJSON($.spEasyForms.configManager.redoBuffer.pop());
-                    $.spEasyForms.configManager.set(opt);
-            
-                    if($.spEasyForms.configManager.redoBuffer.length === 0) {
-                        $("#spEasyFormsRedoButton img").addClass("speasyforms-buttonimgdisabled");
-                        $("#spEasyFormsRedoButton").addClass("speasyforms-buttontextdisabled");
-                    }
-                    
+
                     containerCollection.toEditor(opt);
                     event.handled = true;
                 }
-            });            
+            });
+
+            // wire the redo button
+            $("#spEasyFormsRedoButton").click(function (event) {
+                if ($("#spEasyFormsRedoButton img").hasClass("speasyforms-buttonimgdisabled"))
+                    return;
+
+                if (!event.handled) {
+                    opt.currentConfig = $.spEasyForms.utilities.parseJSON($.spEasyForms.configManager.redoBuffer.pop());
+                    $.spEasyForms.configManager.set(opt);
+
+                    if ($.spEasyForms.configManager.redoBuffer.length === 0) {
+                        $("#spEasyFormsRedoButton img").addClass("speasyforms-buttonimgdisabled");
+                        $("#spEasyFormsRedoButton").addClass("speasyforms-buttontextdisabled");
+                    }
+
+                    containerCollection.toEditor(opt);
+                    event.handled = true;
+                }
+            });
 
             // wire the expand buttons
-            $("#spEasyFormsExpandButton").click(function(event) {
+            $("#spEasyFormsExpandButton").click(function (event) {
                 if (!event.handled) {
                     containerCollection.hiddenObjects = [];
-                    if(opt.verbose) {
+                    if (opt.verbose) {
                         $('.speasyforms-sortablefields:not(.speasyforms-hidden)').show();
                     }
                     else {
@@ -32821,8 +35096,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
 
             // wire the collapse buttons
-            $("#spEasyFormsCollapseButton").click(function() {
-                $("td.speasyforms-sortablecontainers").each(function(event) {
+            $("#spEasyFormsCollapseButton").click(function () {
+                $("td.speasyforms-sortablecontainers").each(function (event) {
                     if (!event.handled) {
                         var containerIndex = $(this).attr("data-containerIndex");
                         containerCollection.hiddenObjects[containerIndex] = {
@@ -32834,9 +35109,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $('.speasyforms-sortablefields').hide();
                 return false;
             });
-            
+
             // wire the form button
-            $("#spEasyFormsFormButton").click(function(event) {
+            $("#spEasyFormsFormButton").click(function (event) {
                 if (!event.handled) {
                     $(".tabs-min").hide();
                     $("#tabs-min-form").show();
@@ -32846,7 +35121,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
 
             // wire the visibility button
-            $("#spEasyFormsConditionalVisibilityButton").click(function(event) {
+            $("#spEasyFormsConditionalVisibilityButton").click(function (event) {
                 if (!event.handled) {
                     $(".tabs-min").hide();
                     $("#tabs-min-visibility").show();
@@ -32855,7 +35130,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
 
             // wire the adapters button
-            $("#spEasyFormsFieldAdaptersButton").click(function(event) {
+            $("#spEasyFormsFieldAdaptersButton").click(function (event) {
                 if (!event.handled) {
                     $(".tabs-min").hide();
                     $("#tabs-min-adapters").show();
@@ -32887,30 +35162,30 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
                 return false;
             });
-            
+
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2014.01/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });
 
             // wire the export button
-            $("#spEasyFormsExportLink").click(function() {
-                if($("#spEasyFormsExportButton img").hasClass("speasyforms-buttonimgdisabled"))
+            $("#spEasyFormsExportLink").click(function () {
+                if ($("#spEasyFormsExportButton img").hasClass("speasyforms-buttonimgdisabled"))
                     return false;
 
-                var configFileName = $.spEasyForms.utilities.webRelativePathAsAbsolutePath("/SiteAssets") + 
+                var configFileName = $.spEasyForms.utilities.webRelativePathAsAbsolutePath("/SiteAssets") +
                     "/spef-layout-" + $.spEasyForms.sharePointContext.getCurrentListId(opt).replace("{", "")
                     .replace("}", "") + ".txt";
                 window.open(configFileName);
             });
-            
+
             // wire the import button
-            $("#spEasyFormsImportButton").click(function() {
-                if($("#spEasyFormsImportButton img").hasClass("speasyforms-buttonimgdisabled"))
+            $("#spEasyFormsImportButton").click(function () {
+                if ($("#spEasyFormsImportButton img").hasClass("speasyforms-buttonimgdisabled"))
                     return;
-                    
+
                 $("#importedJson").val("");
                 $("#importConfigurationDialog").dialog('open');
             });
@@ -32921,7 +35196,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     primary: "ui-icon-shuffle"
                 },
                 label: (opt.initAsync ? 'Initialize Synchronously' : 'Initialize Asynchronously')
-            }).click(function() {
+            }).click(function () {
                 if (opt.initAsync) {
                     window.location.href = window.location.href.replace("&spEasyFormsAsync=true", "");
                 } else {
@@ -32934,13 +35209,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         /*********************************************************************
          * Wire the dialog events.
          *********************************************************************/
-        wireDialogEvents: function(options) {
+        wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            
+
             var aboutOpts = {
                 modal: true,
                 buttons: {
-                    "OK": function() {
+                    "OK": function () {
                         $("#spEasyFormsAboutDialog").dialog("close");
                     }
                 },
@@ -32953,7 +35228,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var chooseContainerOpts = {
                 modal: true,
                 buttons: {
-                    "Add": function() {
+                    "Add": function () {
                         if ($("#containerType").val().length > 0) {
                             $("#chooseContainerDialog").dialog("close");
                             var implname = $("#containerType").val()[0].toLowerCase() +
@@ -32969,7 +35244,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 "* You must select a container type.");
                         }
                     },
-                    "Cancel": function() {
+                    "Cancel": function () {
                         $("#chooseContainerDialog").dialog("close");
                     }
                 },
@@ -32980,9 +35255,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 text: "",
                 value: ""
             }));
-            $.each(containerCollection.containerImplementations, function(index) {
+            $.each(containerCollection.containerImplementations, function (index) {
                 var containerType = containerCollection.containerImplementations[index].containerType;
-                if(containerType !== $.spEasyForms.defaultFormContainer.containerType) {
+                if (containerType !== $.spEasyForms.defaultFormContainer.containerType) {
                     $("#containerType").append($('<option>', {
                         text: containerType,
                         value: containerType
@@ -32995,7 +35270,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var editFieldsTableOpts = {
                 modal: true,
                 buttons: {
-                    "Save": function() {
+                    "Save": function () {
                         $("#" + $("#editFieldCollectionContainerId").val()).
                         html($("#fieldCollectionName").val());
                         opt.currentConfig = containerCollection.toConfig(opt);
@@ -33003,7 +35278,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         containerCollection.toEditor(opt);
                         $("#editFieldCollectionDialog").dialog("close");
                     },
-                    "Cancel": function() {
+                    "Cancel": function () {
                         $("#editFieldCollectionDialog").dialog("close");
                     }
                 },
@@ -33016,7 +35291,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 modal: true,
                 width: 630,
                 buttons: {
-                    "Ok": function() {
+                    "Ok": function () {
                         opt.currentConfig = $.spEasyForms.utilities.parseJSON($("#importedJson").val());
                         $.spEasyForms.sharePointContext.fixAdapterListReferences(opt);
                         $.spEasyForms.configManager.set(opt);
@@ -33046,7 +35321,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *        of the container.
          * }
          *********************************************************************/
-        appendContainer: function(options) {
+        appendContainer: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
             $("#" + opt.id).parent().remove();
@@ -33075,7 +35350,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         primary: "ui-icon-closethick"
                     },
                     text: false
-                }).click(function() {
+                }).click(function () {
                     $(this).closest("td.speasyforms-sortablecontainers").remove();
                     opt.currentConfig = $.spEasyForms.options.currentConfig = containerCollection.toConfig(opt);
                     $.spEasyForms.configManager.set(opt);
@@ -33095,7 +35370,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *        by spFieldRows.init(opt).
          * }
          *********************************************************************/
-        createFieldRow: function(options) {
+        createFieldRow: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var r = opt.row;
             var klass = "speasyforms-sortablefields";
@@ -33103,7 +35378,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 klass += " speasyforms-fieldmissing";
             }
             var tr = "<tr class='" + klass + "'" +
-                "title='"+(r.fieldMissing ? "This field was not found in the form and may have been deleted." : "")+"'>" +
+                "title='" + (r.fieldMissing ? "This field was not found in the form and may have been deleted." : "") + "'>" +
                 "<td class='" + klass + "'>" + r.displayName + "</td>" +
                 "<td class='" + klass + " speasyforms-hidden' style='display:none'>" + r.internalName + "</td>" +
                 "<td class='" + klass + "'>" + r.spFieldType + "</td>" +
@@ -33127,7 +35402,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *        for instance for the hiddenObjects array.
          * }
          *********************************************************************/
-        createFieldCollection: function(options) {
+        createFieldCollection: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var name = (opt.name !== undefined ? opt.name : "");
             var id = (opt.id !== undefined ?
@@ -33162,14 +35437,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         }
     };
     var containerCollection = $.spEasyForms.containerCollection;
-    
+
 })(spefjQuery);
 
 ///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.defaultContainer.js
 /*
  * SPEasyForms.containerCollection.defaultFormContainer - object representing the OOB SharePoint form.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -33232,7 +35507,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * groups of fields (which I imagine is all containers).  It implements everything 
  * but the transform function.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -33464,7 +35739,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection.accordion - Object representing an accordion container.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -33504,9 +35779,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "'></table></div>");
                 $.each(fieldCollection.fields, function (fieldIdx, field) {
                     var currentRow = containerCollection.rows[field.fieldInternalName];
-                    result.push(field.fieldInternalName);
-                    if (currentRow !== undefined && !currentRow.fieldMissing) {
-                        currentRow.row.appendTo("#" + tableId);
+                    if (currentRow) {
+                        var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
+                        if (!rtePresent && !currentRow.fieldMissing) {
+                            result.push(field.fieldInternalName);
+                            currentRow.row.appendTo("#" + tableId);
+                        }
                     }
                 });
             });
@@ -33523,9 +35801,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var divId = "spEasyFormsAccordionDiv" + opt.index;
             $("#" + divId + " table.speasyforms-accordion").each(function () {
+                var index = $(this)[0].id.replace("spEasyFormsAccordionTable", "");
                 if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
-                    var index = $(this)[0].id.replace("spEasyFormsAccordionTable", "");
                     $("#spEasyFormsAccordionHeader" + index).hide();
+                    $("#spEasyFormsAccordionHeader" + index).next().hide();
+                }
+                else {
+                    $("#spEasyFormsAccordionHeader" + index).show();
                 }
             });
         },
@@ -33561,7 +35843,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection.columns - Object representing a multi-column container.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -33576,105 +35858,107 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 	// Columns container implementation.
 	////////////////////////////////////////////////////////////////////////////
 	var columns = {
-		containerType: "Columns",
-		fieldCollectionsDlgTitle: "Enter the names of the columns, one per line; these are only displayed on the settings page, not on the form itself.",
-		fieldCollectionsDlgPrompt: "Column Names (one per line):",
+	    containerType: "Columns",
+	    fieldCollectionsDlgTitle: "Enter the names of the columns, one per line; these are only displayed on the settings page, not on the form itself.",
+	    fieldCollectionsDlgPrompt: "Column Names (one per line):",
 
-		transform: function (options) {
-			var opt = $.extend({}, $.spEasyForms.defaults, options);
-			var result = [];
-			var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
-			var outerTableClass = "speasyforms-container speasyforms-columns";
-			$("#" + opt.containerId).append("<table id='" + outerTableId +
-				"' class='" + outerTableClass + "'></table>");
+	    transform: function (options) {
+	        var opt = $.extend({}, $.spEasyForms.defaults, options);
+	        var result = [];
+	        var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
+	        var outerTableClass = "speasyforms-container speasyforms-columns";
+	        $("#" + opt.containerId).append("<table id='" + outerTableId +
+                "' class='" + outerTableClass + "'></table>");
 
-			var condensedFieldCollections = [];
-			$.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-				var newCollection = {};
-				newCollection.name = fieldCollection.name;
-				newCollection.fields = [];
-				$.each(fieldCollection.fields, function (i, field) {
-					var row = containerCollection.rows[field.fieldInternalName];
-					if (row && !row.fieldMissing) {
-						newCollection.fields.push(field);
-					}
-				});
-				if (newCollection.fields.length > 0) {
-					condensedFieldCollections.push(newCollection);
-				}
-			});
+	        var condensedFieldCollections = [];
+	        $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
+	            var newCollection = {};
+	            newCollection.name = fieldCollection.name;
+	            newCollection.fields = [];
+	            $.each(fieldCollection.fields, function (i, field) {
+	                var row = containerCollection.rows[field.fieldInternalName];
+	                if (row && !row.fieldMissing) {
+	                    newCollection.fields.push(field);
+	                }
+	            });
+	            if (newCollection.fields.length > 0) {
+	                condensedFieldCollections.push(newCollection);
+	            }
+	        });
 
-			var rowCount = 0;
-			$.each(condensedFieldCollections, function (idx, fieldCollection) {
-				if (fieldCollection.fields.length > rowCount) rowCount = fieldCollection.fields.length;
-			});
+	        var rowCount = 0;
+	        $.each(condensedFieldCollections, function (idx, fieldCollection) {
+	            if (fieldCollection.fields.length > rowCount) rowCount = fieldCollection.fields.length;
+	        });
 
-			for (var i = 0; i < rowCount; i++) {
-				var rowId = "spEasyFormsColumnRow" + opt.index + "" + i;
-				$("#" + outerTableId).append("<tr id='" + rowId +
-					"' class='speasyforms-columnrow'></tr>");
-				for (var idx = 0; idx < condensedFieldCollections.length; idx++) {
-					var fieldCollection = condensedFieldCollections[idx];
-					var tdId = "spEasyFormsColumnCell" + opt.index + "" + i +
-						"" + idx;
-					var innerTableId = "spEasyFormsInnerTable" + opt.index + "" +
-						i + "" + idx;
-					if (fieldCollection.fields.length > i) {
-						var field = fieldCollection.fields[i];
-						var currentRow = containerCollection.rows[field.fieldInternalName];
-						if (currentRow && !currentRow.fieldMissing) {
-							result.push(field.fieldInternalName);
-							if (currentRow) {
-								if (currentRow.row.find("td.ms-formbody").find(
-									"h3.ms-standardheader").length === 0) {
-									var tdh = currentRow.row.find("td.ms-formlabel");
-									if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
-										currentRow.row.find("td.ms-formbody").prepend(
-											"<div data-transformAdded='true'>&nbsp;</div>");
-									}
-									if (tdh.html() === "Content Type") {
-										currentRow.row.find("td.ms-formbody").prepend(
-											"<h3 class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
-									}
-									else {
-										currentRow.row.find("td.ms-formbody").prepend(
-											tdh.html());
-									}
-									currentRow.row.find("td.ms-formbody").find(
-										"h3.ms-standardheader").
-									attr("data-transformAdded", "true");
-									tdh.hide();
-									tdh.attr("data-transformHidden", "true");
-								}
-								$("#" + rowId).append(
-									"<td id='" + tdId +
-									"' class='speasyforms-columncell'><table id='" +
-									innerTableId + "' style='width: 100%'></table></td>");
-								currentRow.row.appendTo("#" + innerTableId);
-							} else {
-								$("#" + rowId).append("<td id='" + tdId +
-									"' class='speasyforms-columncell'>&nbsp;</td>");
-							}
-						}
-					} else {
-						$("#" + rowId).append("<td id='" + tdId +
-							"' class='speasyforms-columncell'>&nbsp;</td>");
-					}
-				}
-			}
+	        for (var i = 0; i < rowCount; i++) {
+	            var rowId = "spEasyFormsColumnRow" + opt.index + "" + i;
+	            $("#" + outerTableId).append("<tr id='" + rowId +
+                    "' class='speasyforms-columnrow'></tr>");
+	            for (var idx = 0; idx < condensedFieldCollections.length; idx++) {
+	                var fieldCollection = condensedFieldCollections[idx];
+	                var tdId = "spEasyFormsColumnCell" + opt.index + "" + i +
+                        "" + idx;
+	                var innerTableId = "spEasyFormsInnerTable" + opt.index + "" +
+                        i + "" + idx;
+	                if (fieldCollection.fields.length > i) {
+	                    var field = fieldCollection.fields[i];
+	                    var currentRow = containerCollection.rows[field.fieldInternalName];
+	                    var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
+	                    if (!rtePresent && currentRow && !currentRow.fieldMissing) {
+	                        result.push(field.fieldInternalName);
+	                        if (currentRow) {
+	                            if (currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").length === 0) {
+	                                var tdh = currentRow.row.find("td.ms-formlabel");
+	                                if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+	                                    currentRow.row.find("td.ms-formbody").prepend(
+                                            "<div data-transformAdded='true'>&nbsp;</div>");
+	                                }
+	                                if (tdh.html() === "Content Type") {
+	                                    currentRow.row.find("td.ms-formbody").prepend(
+                                            "<h3 class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
+	                                } else {
+	                                    currentRow.row.find("td.ms-formbody").prepend(
+                                            tdh.html());
+	                                }
+	                                currentRow.row.find("td.ms-formbody").find(
+                                        "h3.ms-standardheader").
+                                    attr("data-transformAdded", "true");
+	                                tdh.hide();
+	                                tdh.attr("data-transformHidden", "true");
+	                            }
+	                            $("#" + rowId).append(
+                                    "<td id='" + tdId +
+                                    "' class='speasyforms-columncell'><table id='" +
+                                    innerTableId + "' style='width: 100%'></table></td>");
+	                            currentRow.row.appendTo("#" + innerTableId);
+	                        } else {
+	                            $("#" + rowId).append("<td id='" + tdId +
+                                    "' class='speasyforms-columncell'>&nbsp;</td>");
+	                        }
+	                    }
+	                } else {
+	                    $("#" + rowId).append("<td id='" + tdId +
+                            "' class='speasyforms-columncell'>&nbsp;</td>");
+	                }
+	            }
+	        }
 
-			return result;
-		},
+	        return result;
+	    },
 
-		postTransform: function (options) {
-			var opt = $.extend({}, $.spEasyForms.defaults, options);
-			var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
-			$("#" + outerTableId + " tr.speasyforms-columnrow").each(function () {
-				if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
-					$(this).hide();
-				}
-			});
-		}
+	    postTransform: function (options) {
+	        var opt = $.extend({}, $.spEasyForms.defaults, options);
+	        var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
+	        $("#" + outerTableId + " tr.speasyforms-columnrow").each(function () {
+	            if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
+	                $(this).hide();
+	            }
+	            else {
+	                $(this).show();
+	            }
+	        });
+	    },
 	};
 
 	containerCollection.containerImplementations.columns = $.extend({}, baseContainer, columns);
@@ -33685,7 +35969,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection.tabs - Object representing a tabs container.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -33716,7 +36000,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 " ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
             var containerDiv = $("#" + opt.containerId);
             containerDiv.append("<div id='" + opt.divId + "' class='" + divClass +
-                "' style='width: 99%;'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
+                "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
             var mostFields = 0;
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
                 if (fieldCollection.fields.length > mostFields) {
@@ -33740,10 +36024,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "'></table></div>");
                 $.each(fieldCollection.fields, function (fieldIdx, field) {
                     var currentRow = containerCollection.rows[field.fieldInternalName];
-                    if (currentRow && !currentRow.fieldMissing) {
-                        result.push(field.fieldInternalName);
-                        if (currentRow) {
-                            currentRow.row.appendTo("#" + tableId);
+                    if (currentRow) {
+                        var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
+                        if (!rtePresent && !currentRow.fieldMissing) {
+                            result.push(field.fieldInternalName);
+                            if (currentRow) {
+                                currentRow.row.appendTo("#" + tableId);
+                            }
                         }
                     }
                 });
@@ -33766,8 +36053,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.divId = "spEasyFormsTabDiv" + opt.index;
             $("#" + opt.divId + " table.speasyforms-tabs").each(function () {
+                var index = $(this)[0].id.replace("spEasyFormsTabsTable", "");
                 if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
-                    var index = $(this)[0].id.replace("spEasyFormsTabsTable", "");
                     if ($(this).parent().css("display") !== "none") {
                         var nextIndex = -1;
                         if ($(this).parent().next().length > 0) {
@@ -33778,6 +36065,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         $(this).parent().hide();
                     }
                     $(".speasyforms-tabs" + index).hide();
+                }
+                else {
+                    $(".speasyforms-tabs" + index).show();
                 }
             });
         },
@@ -33810,11 +36100,191 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
 })(spefjQuery);
 
+///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.htmlSnippetContainer.js
+/*
+ * SPEasyForms HtmlSnippetContainer
+ *
+ * @version 2015.01
+ * @copyright 2014-2015 Joe McShea
+ * @license under the MIT license:
+ *    http://www.opensource.org/licenses/mit-license.php
+ */
+
+/* global spefjQuery */
+(function($, undefined) {
+
+    var containerCollection = $.spEasyForms.containerCollection;
+
+    $.spEasyForms.containerCollection.containerImplementations.htmlSnippet = {
+        containerType: "HtmlSnippet",
+
+        // transform the current form based on the configuration of this container
+        transform: function(options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+			if(opt.currentContainerLayout.contents) {
+			    $("#" + opt.containerId).append("<span class='speasyforms-htmlsnippet'>" +
+                    opt.currentContainerLayout.contents + "</span>");
+			}
+            return [];
+        },
+
+        // second stage transform, this is called after visibility rules and adapters are applied
+        postTransform: function() {},
+
+        // an opportunity to do validation tasks prior to committing an item
+        preSaveItem: function() {},
+
+        // draw the container in the properties pane of the settings page from the JSON
+        toEditor: function(options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+
+            // initialize the dialog with the snippet editor
+            if ($("#spEasyFormsContainerDialogs").find("#configureSnippetDialog").length === 0) {
+                $("#spEasyFormsContainerDialogs").append(
+                    "<div id='configureSnippetDialog' class='speasyforms-dialogdiv' title='HTML Snippet Container'>" +
+                    "<textarea  id='snippetContents' rows='15' cols='80'></textarea>" +
+                    "<input type='hidden' name='snippetContainerIndex' id='snippetContainerIndex' value='" +
+                    (opt.containerIndex ? opt.containerIndex : '') + "'/>" +
+                    "</div>");
+                var configureSnippetOpts = {
+                    width: 830,
+                    modal: true,
+                    open: function () {
+                        htmlSnippet.initRTE();
+                    },
+                    buttons: {
+                        "Ok": function () {
+                            htmlSnippet.addOrUpdateSnippet(opt);
+                            $("#snippetContainerIndex").val("");
+                            return false;
+                        },
+                        "Cancel": function () {
+                            $("#configureSnippetDialog").dialog("close");
+                            $("#snippetContainerIndex").val("");
+                            return false;
+                        }
+                    },
+                    autoOpen: false,
+                    resizable: false
+                };
+                $("#configureSnippetDialog").dialog(configureSnippetOpts);
+            }
+
+            // add a button to edit the snippet if not already present
+            if ($("#" + opt.id + "EditSnippet" + opt.index).length === 0) {
+                $("#" + opt.id).find(".speasyforms-buttoncell").prepend(
+                    '<button id="' + opt.id + "EditSnippet" + opt.index +
+                    '" title="Edit HTML Snippet" ' +
+                    'class="speasyforms-containerbtn">Edit HTML Snippet</button>');
+
+                $('#' + opt.id + "EditSnippet" + opt.index).button({
+                    icons: {
+                        primary: "ui-icon-gear"
+                    },
+                    text: false
+                }).click(function() {
+					$("#snippetContents").val(opt.currentContainerLayout.contents);
+					$("#snippetContainerIndex").val($("#" + opt.id).attr("data-containerindex"));
+					$("#configureSnippetDialog").find("iframe").contents().find("body").html(
+                        opt.currentContainerLayout.contents.replace(/<(?=\/?script)/ig, "&lt;"));
+					if ($("#snippetContents").is(":visible")) {
+					    $("#configureSnippetDialog").find("iframe").hide();
+					}
+					htmlSnippet.settings(opt);
+					return false;
+                });
+            }
+			
+            // put contents in a text area show the contents stripping out any scripts
+            $("#" + opt.id).append("<span class='speasyforms-sortablefields'>" + 
+                opt.currentContainerLayout.contents.replace(
+                /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') + "</span>" +
+			    "<textarea  id='snippetContents" + opt.index +
+                "' rows='15' cols='80' style='display:none'>" +
+                opt.currentContainerLayout.contents + "</textarea>");
+
+            return [];
+        },
+
+        // convert whatever is in the properties pane back into a JSOM configuration
+        toLayout: function(options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var result = {
+                containerType: opt.containerType,
+                index: $(opt.container).attr("data-containerIndex"),
+                contents: $(opt.container).find("textarea").val()
+            };
+            return result;
+        },
+
+        // launch a dialog to configue this container on the settings page 
+        settings: function(options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if (!opt.containerIndex) {
+                $("#snippetContents").val("");
+            }
+            $("#configureSnippetDialog").dialog("open");
+        },
+
+        // initialize the text area in the dialog with cleditor
+        initRTE: function() {
+            $("#snippetContents").cleditor({
+                width: 800,
+                height: 200,
+                controls:
+                    "font size style | " +
+                    "bold italic underline strikethrough subscript superscript | " +
+                    "alignleft center alignright | " +
+                    "numbering bullets outdent indent | " +
+                    "color highlight backgroundcolor | " +
+                    "rule image link unlink | " +
+                    "cut copy paste pastetext | " +
+                    "ltr rtl print source",
+                fonts: "Arial,Arial Black,Comic Sans MS,Courier New,Narrow,Garamond," +
+                    "Georgia,Impact,Sans Serif,Serif,Tahoma,Times New Roman,Trebuchet MS,Verdana",
+                useCSS: true,
+                bodyStyle: "font-face: Times New Roman; margin: 1px; cursor:text"
+            });
+            $("#configureSnippetDialog").css("overflow", "hidden");
+            var ed = $('#configureSnippetDialog').find("textarea").cleditor();
+            if (ed.length > 0) {
+                ed[0].refresh(ed);
+            }
+            $(".cleditorToolbar").height(25);
+        },
+
+        // callback for the OK button
+        addOrUpdateSnippet: function (opt) {
+            opt.currentConfig = $.spEasyForms.configManager.get(opt);
+            var containerIndex = $("#snippetContainerIndex").val();
+            if (containerIndex) {
+                $.each(opt.currentConfig.layout.def, function (idx, container) {
+                    if (container.index.toString() === containerIndex.toString()) {
+                        container.contents = $("#snippetContents").val();
+                        return false;
+                    }
+                });
+            }
+            else {
+                var newLayout = {
+                    containerType: htmlSnippet.containerType,
+                    contents: $("#snippetContents").val()
+                };
+                opt.currentConfig.layout.def.push(newLayout);
+            }
+            $.spEasyForms.configManager.set(opt);
+            containerCollection.toEditor(opt);
+            $("#configureSnippetDialog").dialog("close");
+        }
+    };
+    var htmlSnippet = $.spEasyForms.containerCollection.containerImplementations.htmlSnippet;
+
+})(typeof(spefjQuery) === 'undefined' ? null : spefjQuery);
 ///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.visibilityRuleCollection.js
 /*
  * SPEasyForms.visibilityRuleCollection - object to hold and manage all field visibility rules.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -33839,6 +36309,36 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             notMatches: function (value, test) {
                 var regex = new RegExp(test, "i");
                 return !regex.test(value);
+            },
+            greaterThan: function (value, test) {
+                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                    return (new Date(value)) > (new Date(test));
+                }
+                return (value > test);
+            },
+            greaterThanOrEqual: function (value, test) {
+                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                    return (new Date(value)) >= (new Date(test));
+                }
+                return (value >= test);
+            },
+            lessThan: function (value, test) {
+                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                    return (new Date(value)) < (new Date(test));
+                }
+                return (value < test);
+            },
+            lessThanOrEqual: function (value, test) {
+                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                    return (new Date(value)) <= (new Date(test));
+                }
+                return (value <= test);
+            },
+            notEqual: function (value, test) {
+                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                    return (new Date(value)) > (new Date(test));
+                }
+                return (value !== test);
             }
         },
 
@@ -33892,7 +36392,19 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 }
             },
-            editable: function () { /*do nothing*/ }
+            editable: function () { /*do nothing*/ },
+            highlightRed: function (options) {
+                $.spEasyForms.utilities.highlight(options.row.row, "LightPink");
+            },
+            highlightYellow: function (options) {
+                $.spEasyForms.utilities.highlight(options.row.row, "Yellow");
+            },
+            highlightGreen: function (options) {
+                $.spEasyForms.utilities.highlight(options.row.row, "SpringGreen");
+            },
+            highlightBlue: function (options) {
+                $.spEasyForms.utilities.highlight(options.row.row, "Aqua");
+            }
         },
 
         siteGroups: [],
@@ -33932,7 +36444,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *     config: {object}
          * }
          *********************************************************************/
-        transform: function (options) {
+         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (opt.currentConfig && opt.currentConfig.visibility && opt.currentConfig.visibility.def &&
                 Object.keys(opt.currentConfig.visibility.def).length > 0) {
@@ -33972,14 +36484,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                         tr.row.find("input").change(function () {
                                             visibilityRuleCollection.transform(opt);
                                             $.spEasyForms.adapterCollection.transform(opt);
+                                            $.spEasyForms.containerCollection.postTransform(opt);
                                         });
                                         tr.row.find("select").change(function () {
                                             visibilityRuleCollection.transform(opt);
                                             $.spEasyForms.adapterCollection.transform(opt);
+                                            $.spEasyForms.containerCollection.postTransform(opt);
                                         });
                                         tr.row.find("textarea").change(function () {
                                             visibilityRuleCollection.transform(opt);
                                             $.spEasyForms.adapterCollection.transform(opt);
+                                            $.spEasyForms.containerCollection.postTransform(opt);
                                         });
                                         tr.row.attr("data-visibilitychangelistener", "true");
                                     }
@@ -34682,7 +37197,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (opt.row) {
                         var currentValue = $.spEasyForms.sharePointFieldRows.value(opt);
                         var type = $.spEasyForms.utilities.jsCase(condition.type);
-                        var comparisonOperator = visibilityRuleCollection.comparisonOperators[type];
+                        var comparisonOperator = $.spEasyForms.visibilityRuleCollection.comparisonOperators[type];
                         result = comparisonOperator(currentValue, condition.value);
                         if (result === false)
                             return false; // return from $.each
@@ -34704,7 +37219,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.adapterCollection - collection of field control adapters.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -34982,7 +37497,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * SPEasyForms.adapterCollection.autocompleteAdapter - implementation of type ahead field control 
  * adapter for SPFieldText.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -35160,7 +37675,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.adapterCollection.cascadingLookupAdapter - implementaiton of a cascading lookup field adapter.
  *
- * @requires jQuery.SPEasyForms.2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -35413,4 +37928,133 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     adapterCollection.adapterImplementations[cascadingLookupAdapter.type] = cascadingLookupAdapter;
 
 })(spefjQuery);
+
+///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js
+/*
+ * $.spEasyForms.defaultToCurrentUserAdapter - an adapter plug-in for SPEasyForms
+ * that creates an adapter for user fields to enter a default value of the current
+ * user on new forms.
+ *
+ * @version 2015.01
+ * @copyright 2014-2015 Joe McShea
+ * @license under the MIT license:
+ *    http://www.opensource.org/licenses/mit-license.php
+ */
+
+/* global spefjQuery, SPClientPeoplePicker, ExecuteOrDelayUntilScriptLoaded */
+(function ($, undefined) {
+
+    // shorthand alias for SPEasyForms instances we're going to need
+    var containerCollection = $.spEasyForms.containerCollection;
+    var visibilityRuleCollection = $.spEasyForms.visibilityRuleCollection;
+    var adapterCollection = $.spEasyForms.adapterCollection;
+
+    /* Field control adapter for default to current user on user fields */
+    $.spEasyForms.defaultToCurrentUserAdapter = {
+        type: "DefaultToCurrentUser",
+
+        // return an array of field types to which this adapter can be applied
+        supportedTypes: function () {
+            return ["SPFieldUser", "SPFieldUserMulti"];
+        },
+
+        // modify a configured field in a new, edit, or display form
+        transform: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if (visibilityRuleCollection.getFormType(opt) !== "new") {
+                return;
+            }
+            if (containerCollection.rows[opt.adapter.columnNameInternal]) {
+                var pplpkrDiv = $("[id^='" + opt.adapter.columnNameInternal + "'][id$='ClientPeoplePicker']");
+                var currentUser = $.spEasyForms.sharePointContext.getUserInformation(opt).name;
+                if (pplpkrDiv.length > 0) {
+                    ExecuteOrDelayUntilScriptLoaded(function () {
+                        var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
+                        if (clientPplPicker.GetAllUserInfo().length === 0) {
+                            clientPplPicker.AddUserKeys(currentUser);
+                        }
+                    }, "clientpeoplepicker.js");
+                } else {
+                    var displayName = containerCollection.rows[opt.adapter.columnNameInternal].displayName;
+                    var picker = $().SPServices.SPFindPeoplePicker({
+                        peoplePickerDisplayName: displayName
+                    });
+                    if (!picker.currentValue) {
+                        ExecuteOrDelayUntilScriptLoaded(function () {
+                            setTimeout(function () {
+                                $().SPServices.SPFindPeoplePicker({
+                                    peoplePickerDisplayName: displayName,
+                                    valueToSet: currentUser,
+                                    checkNames: false
+                                });
+                            }, 1000);
+                        }, "sp.js");
+                    }
+                }
+            }
+        },
+
+        // initialize dialog box for configuring adapter on the settings page
+        toEditor: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            // add the dialog div to the UI if it is not already there
+            if ($("#addDefaultToCurrentUserDialog").length === 0) {
+                var txt = "<div id='addDefaultToCurrentUserDialog' " +
+                    "class='speasyforms-dialogdiv' " +
+                    "title='Default to Current User Adapter'>" +
+                    "Would you like to add/remove a Default to Current User adapter to " +
+                    "'<span id='defaultToCurrentFieldName'></span>'?</div>";
+                $("#spEasyFormsContainerDialogs").append(txt);
+            }
+            // initialize the jQuery UI dialog
+            var defaultToCurrentOpts = {
+                modal: true,
+                buttons: {
+                    "Add": function () {
+                        // add an adapter to the adaptes list and redraw the editor
+                        if ($("#defaultToCurrentFieldName").text().length > 0) {
+                            var result = {
+                                type: defaultToCurrentUserAdapter.type,
+                                columnNameInternal: $("#defaultToCurrentFieldName").text()
+                            };
+                            opt.adapters[result.columnNameInternal] = result;
+                            $.spEasyForms.configManager.set(opt);
+                            containerCollection.toEditor(opt);
+                        }
+                        $('#addDefaultToCurrentUserDialog').dialog("close");
+                    },
+                    "Remove": function () {
+                        // remove the adapter from the adaptes list and redraw the editor
+                        if ($("#defaultToCurrentFieldName").text().length > 0 &&
+                            $("#defaultToCurrentFieldName").text() in opt.adapters) {
+                            delete opt.adapters[$("#defaultToCurrentFieldName").text()];
+                            $.spEasyForms.configManager.set(opt);
+                        }
+                        $('#addDefaultToCurrentUserDialog').dialog("close");
+                        containerCollection.toEditor(opt);
+                        return false;
+                    }
+                },
+                autoOpen: false,
+                width: 400
+            };
+            $('#addDefaultToCurrentUserDialog').dialog(defaultToCurrentOpts);
+        },
+
+        // launch the adapter dialog box to configure a field
+        launchDialog: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            // initialize the field name in the dialog
+            $("#defaultToCurrentFieldName").text(opt.fieldName);
+            // launch the dialog
+            $('#addDefaultToCurrentUserDialog').dialog("open");
+        }
+    };
+
+    // define shorthand local variable for adapter
+    var defaultToCurrentUserAdapter = $.spEasyForms.defaultToCurrentUserAdapter;
+
+    // add adapter to adapter collection
+    adapterCollection.adapterImplementations[defaultToCurrentUserAdapter.type] = defaultToCurrentUserAdapter;
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
 
