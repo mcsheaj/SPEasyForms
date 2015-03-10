@@ -12,7 +12,7 @@
 (function ($) {
 
     if (!$) return; // Joe McShea - return if spefjQuery is not loaded
-
+      
     //==============
     // jQuery Plugin
     //==============
