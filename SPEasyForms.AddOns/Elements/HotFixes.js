@@ -1,7 +1,7 @@
 /*
  * SPEasyForms HotFixes - cumulative update for reported bugs.
  *
- * @version 2015.00.09
+ * @version 2015.00.10
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -299,7 +299,7 @@
     // only operate on the settings page
     if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
         $().ready(function () {
-            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2015.00.09</b>");
+            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2015.00.10</b>");
         });
     }
 
@@ -1009,6 +1009,27 @@
         opt.fieldsInUse = fieldsInUse;
         $.spEasyForms.defaultFormContainer.toEditor(opt);
         return fieldsInUse;
+    };
+
+    $.spEasyForms.configManager.original_set = $.spEasyForms.configManager.set;
+    $.spEasyForms.configManager.set = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        if (!opt.currentConfig) {
+            opt.currentConfig = {
+                layout: {
+                    def: [{
+                        "containerType": $.spEasyForms.defaultFormContainer.containerType
+                    }]
+                },
+                visibility: {
+                    def: {}
+                },
+                adapters: {
+                    def: {}
+                }
+            };
+        }
+        $.spEasyForms.configManager.original_set(opt);
     };
 
     $.spEasyForms.configManager.save = function (options) {

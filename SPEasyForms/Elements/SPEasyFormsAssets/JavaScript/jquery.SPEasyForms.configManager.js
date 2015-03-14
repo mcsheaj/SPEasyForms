@@ -210,6 +210,21 @@
          *********************************************************************/
         set: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if (!opt.currentConfig) {
+                opt.currentConfig = {
+                    layout: {
+                        def: [{
+                            "containerType": $.spEasyForms.defaultFormContainer.containerType
+                        }]
+                    },
+                    visibility: {
+                        def: {}
+                    },
+                    adapters: {
+                        def: {}
+                    }
+                };
+            }
             opt.currentConfig.version = "2015.01";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
