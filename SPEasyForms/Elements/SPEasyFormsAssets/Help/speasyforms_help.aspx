@@ -39,7 +39,7 @@
             background: -o-linear-gradient(left, #deefff 0%, #98bede 76%);
             background: -ms-linear-gradient(left, #deefff 0%, #98bede 76%);
             background: linear-gradient(to right, #deefff 0%, #98bede 76%);
-            filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#deefff', endColorstr='#98bede', GradientType=1);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#deefff', endColorstr='#98bede', GradientType=1);
         }
         .menu {
             padding-right: 20px;

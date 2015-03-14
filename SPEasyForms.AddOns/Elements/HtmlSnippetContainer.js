@@ -9,7 +9,7 @@
  */
 
 /* global spefjQuery */
-(function($, undefined) {
+(function ($, undefined) {
 
     // return without doing anything if SPEasyForms has not been loaded
     if (!$ || !$.spEasyForms) return;
@@ -26,23 +26,23 @@
         containerType: "HtmlSnippet",
 
         // transform the current form based on the configuration of this container
-        transform: function(options) {
+        transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-			if(opt.currentContainerLayout.contents) {
-			    $("#" + opt.containerId).append("<span class='speasyforms-htmlsnippet'>" +
+            if (opt.currentContainerLayout.contents) {
+                $("#" + opt.containerId).append("<span class='speasyforms-htmlsnippet'>" +
                     opt.currentContainerLayout.contents + "</span>");
-			}
+            }
             return [];
         },
 
         // second stage transform, this is called after visibility rules and adapters are applied
-        postTransform: function() {},
+        postTransform: function () { },
 
         // an opportunity to do validation tasks prior to committing an item
-        preSaveItem: function() {},
+        preSaveItem: function () { },
 
         // draw the container in the properties pane of the settings page from the JSON
-        toEditor: function(options) {
+        toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
             htmlSnippet.initDialog(opt);
@@ -59,21 +59,21 @@
                         primary: "ui-icon-gear"
                     },
                     text: false
-                }).click(function() {
-					$("#snippetContents").val(opt.currentContainerLayout.contents);
-					$("#snippetContainerIndex").val($("#" + opt.id).attr("data-containerindex"));
-					$("#configureSnippetDialog").find("iframe").contents().find("body").html(
+                }).click(function () {
+                    $("#snippetContents").val(opt.currentContainerLayout.contents);
+                    $("#snippetContainerIndex").val($("#" + opt.id).attr("data-containerindex"));
+                    $("#configureSnippetDialog").find("iframe").contents().find("body").html(
                         opt.currentContainerLayout.contents.replace(/<(?=\/?script)/ig, "&lt;"));
-					if ($("#snippetContents").is(":visible")) {
-					    $("#configureSnippetDialog").find("iframe").hide();
-					}
-					htmlSnippet.settings(opt);
-					return false;
+                    if ($("#snippetContents").is(":visible")) {
+                        $("#configureSnippetDialog").find("iframe").hide();
+                    }
+                    htmlSnippet.settings(opt);
+                    return false;
                 });
             }
-			
+
             // put contents in a text area show the contents stripping out any scripts
-            $("#" + opt.id).append("<span class='speasyforms-sortablefields'>" + 
+            $("#" + opt.id).append("<span class='speasyforms-sortablefields'>" +
                 opt.currentContainerLayout.contents.replace(
                 /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') + "</span>" +
 			    "<textarea  id='snippetContents" + opt.index +
@@ -84,7 +84,7 @@
         },
 
         // convert whatever is in the properties pane back into a JSOM configuration
-        toLayout: function(options) {
+        toLayout: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = {
                 containerType: opt.containerType,
@@ -95,7 +95,7 @@
         },
 
         // launch a dialog to configue this container on the settings page 
-        settings: function(options) {
+        settings: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (!opt.containerIndex) {
                 $("#snippetContents").val("");
@@ -105,7 +105,7 @@
         },
 
         // initialize the dialog with the snippet editor
-        initDialog: function(options) {
+        initDialog: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if ($("#spEasyFormsContainerDialogs").find("#configureSnippetDialog").length === 0) {
                 $("#spEasyFormsContainerDialogs").append(
@@ -140,7 +140,7 @@
         },
 
         // initialize the text area in the dialog with cleditor
-        initRTE: function() {
+        initRTE: function () {
             $("#snippetContents").cleditor({
                 width: 800,
                 height: 200,
@@ -192,4 +192,4 @@
     };
     var htmlSnippet = $.spEasyForms.containerCollection.containerImplementations.htmlSnippet;
 
-})(typeof(spefjQuery) === 'undefined' ? null : spefjQuery);
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);

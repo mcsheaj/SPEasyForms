@@ -8,7 +8,7 @@
  *    http://www.opensource.org/licenses/mit-license.php
  */
 
-/* global spefjQuery, ExecuteOrDelayUntilScriptLoaded, _spPageContextInfo, SP */
+/* global spefjQuery, ExecuteOrDelayUntilScriptLoaded, SP */
 (function ($, undefined) {
     // return without doing anything if SPEasyForms has not been loaded
     if (!$ || !$.spEasyForms) return;
