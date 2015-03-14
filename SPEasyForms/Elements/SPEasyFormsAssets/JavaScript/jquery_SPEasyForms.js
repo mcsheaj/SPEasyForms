@@ -31881,7 +31881,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             tr.value = "";
             try {
                 if ($.spEasyForms.visibilityRuleCollection.getFormType(opt) === "display") {
-                    return tr.row.find("td.ms-formbody").text().trim();
+                    tr.value = tr.row.find("td.ms-formbody").clone().children().remove().end().text().trim();
+                    return tr.value;
                 }
                 switch (tr.spFieldType) {
                     case "SPFieldContentType":
@@ -32027,8 +32028,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         tr.value = tr.find("td.ms-formbody").text().trim();
                         break;
                     default:
-                        tr.value =
-                            tr.row.find("td.ms-formbody input").val().trim();
+                        if (tr.row.find("td.ms-formbody input").length > 0) {
+                            tr.value = tr.row.find("td.ms-formbody input").val().trim();
+                        }
+                        else if (tr.row.find("td.ms-formbody textarea").length > 0) {
+                            tr.value = tr.row.find("td.ms-formbody textarea").val().replace("\n", "<br />\n").trim();
+                        }
+                        else if (tr.row.find("td.ms-formbody select").length > 0) {
+                            tr.value = tr.row.find("td.ms-formbody select").val().trim();
+                        }
                         break;
                 }
             } catch (e) { }
