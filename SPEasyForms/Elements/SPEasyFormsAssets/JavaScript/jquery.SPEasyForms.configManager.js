@@ -261,17 +261,15 @@
                     $("#spEasyFormsImportButton div").removeClass("speasyforms-buttontextdisabled");
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    if (opt.verbose) {
-                        if (xhr.status === 409) {
-                            alert("The web service returned 409 - CONFLICT. " +
-                                "This most likely means you do not have a 'Site Assets' " +
-                                "library in the current site with a URL of SiteAssets. " +
-                                "This is required before you can load and save " +
-                                "SPEasyForms configuration files.");
-                        } else {
-                            alert("Error uploading configuration.\nStatus: " + xhr.status +
-                                "\nStatus Text: " + thrownError);
-                        }
+                    if (xhr.status === 409) {
+                        alert("The web service returned 409 - CONFLICT. " +
+                            "This most likely means you do not have a 'Site Assets' " +
+                            "library in the current site with a URL of SiteAssets. " +
+                            "This is required before you can load and save " +
+                            "SPEasyForms configuration files.");
+                    } else {
+                        alert("Error uploading configuration.\nStatus: " + xhr.status +
+                            "\nStatus Text: " + thrownError);
                     }
                 }
             });

@@ -866,4 +866,43 @@
         return fieldsInUse;
     };
 
+    $.spEasyForms.configManager.save = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var listId = $.spEasyForms.sharePointContext.getCurrentListId(opt);
+        $.ajax({
+            url: $.spEasyForms.utilities.webRelativePathAsAbsolutePath("/SiteAssets") +
+                "/spef-layout-" +
+                listId.replace("{", "").replace("}", "") + ".txt",
+            type: "PUT",
+            headers: {
+                "Content-Type": "text/plain",
+                "Overwrite": "T"
+            },
+            data: $("#spEasyFormsJson pre").text(),
+            success: function () {
+                opt.listId = listId;
+                opt.currentConfig = $.spEasyForms.utilities.parseJSON($("#spEasyFormsJson pre").text());
+                $.spEasyForms.sharePointContext.setConfig(opt);
+                $("#spEasyFormsSaveButton img").addClass("speasyforms-buttonimgdisabled");
+                $("#spEasyFormsSaveButton div").addClass("speasyforms-buttontextdisabled");
+                $("#spEasyFormsExportButton img").removeClass("speasyforms-buttonimgdisabled");
+                $("#spEasyFormsExportButton div").removeClass("speasyforms-buttontextdisabled");
+                $("#spEasyFormsImportButton img").removeClass("speasyforms-buttonimgdisabled");
+                $("#spEasyFormsImportButton div").removeClass("speasyforms-buttontextdisabled");
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                if (xhr.status === 409) {
+                    alert("The web service returned 409 - CONFLICT. " +
+                        "This most likely means you do not have a 'Site Assets' " +
+                        "library in the current site with a URL of SiteAssets. " +
+                        "This is required before you can load and save " +
+                        "SPEasyForms configuration files.");
+                } else {
+                    alert("Error uploading configuration.\nStatus: " + xhr.status +
+                        "\nStatus Text: " + thrownError);
+                }
+            }
+        });
+    };
+
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
