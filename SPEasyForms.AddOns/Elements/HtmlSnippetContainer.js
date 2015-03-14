@@ -45,37 +45,7 @@
         toEditor: function(options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            // initialize the dialog with the snippet editor
-            if ($("#spEasyFormsContainerDialogs").find("#configureSnippetDialog").length === 0) {
-                $("#spEasyFormsContainerDialogs").append(
-                    "<div id='configureSnippetDialog' class='speasyforms-dialogdiv' title='HTML Snippet Container'>" +
-                    "<textarea  id='snippetContents' rows='15' cols='80'></textarea>" +
-                    "<input type='hidden' name='snippetContainerIndex' id='snippetContainerIndex' value='" +
-                    (opt.containerIndex ? opt.containerIndex : '') + "'/>" +
-                    "</div>");
-                var configureSnippetOpts = {
-                    width: 830,
-                    modal: true,
-                    open: function () {
-                        htmlSnippet.initRTE();
-                    },
-                    buttons: {
-                        "Ok": function () {
-                            htmlSnippet.addOrUpdateSnippet(opt);
-                            $("#snippetContainerIndex").val("");
-                            return false;
-                        },
-                        "Cancel": function () {
-                            $("#configureSnippetDialog").dialog("close");
-                            $("#snippetContainerIndex").val("");
-                            return false;
-                        }
-                    },
-                    autoOpen: false,
-                    resizable: false
-                };
-                $("#configureSnippetDialog").dialog(configureSnippetOpts);
-            }
+            htmlSnippet.initDialog(opt);
 
             // add a button to edit the snippet if not already present
             if ($("#" + opt.id + "EditSnippet" + opt.index).length === 0) {
@@ -130,7 +100,43 @@
             if (!opt.containerIndex) {
                 $("#snippetContents").val("");
             }
+            htmlSnippet.initDialog(opt);
             $("#configureSnippetDialog").dialog("open");
+        },
+
+        // initialize the dialog with the snippet editor
+        initDialog: function(options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if ($("#spEasyFormsContainerDialogs").find("#configureSnippetDialog").length === 0) {
+                $("#spEasyFormsContainerDialogs").append(
+                    "<div id='configureSnippetDialog' class='speasyforms-dialogdiv' title='HTML Snippet Container'>" +
+                    "<textarea  id='snippetContents' rows='15' cols='80'></textarea>" +
+                    "<input type='hidden' name='snippetContainerIndex' id='snippetContainerIndex' value='" +
+                    (opt.containerIndex ? opt.containerIndex : '') + "'/>" +
+                    "</div>");
+                var configureSnippetOpts = {
+                    width: 830,
+                    modal: true,
+                    open: function () {
+                        htmlSnippet.initRTE();
+                    },
+                    buttons: {
+                        "Ok": function () {
+                            htmlSnippet.addOrUpdateSnippet(opt);
+                            $("#snippetContainerIndex").val("");
+                            return false;
+                        },
+                        "Cancel": function () {
+                            $("#configureSnippetDialog").dialog("close");
+                            $("#snippetContainerIndex").val("");
+                            return false;
+                        }
+                    },
+                    autoOpen: false,
+                    resizable: false
+                };
+                $("#configureSnippetDialog").dialog(configureSnippetOpts);
+            }
         },
 
         // initialize the text area in the dialog with cleditor
