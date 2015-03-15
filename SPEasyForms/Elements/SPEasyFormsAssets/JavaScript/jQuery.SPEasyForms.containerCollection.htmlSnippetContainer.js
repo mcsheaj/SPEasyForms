@@ -16,26 +16,87 @@
         containerType: "HtmlSnippet",
 
         // transform the current form based on the configuration of this container
-        transform: function(options) {
+        transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-			if(opt.currentContainerLayout.contents) {
-			    $("#" + opt.containerId).append("<span class='speasyforms-htmlsnippet'>" +
+            if (opt.currentContainerLayout.contents) {
+                $("#" + opt.containerId).append("<span class='speasyforms-htmlsnippet'>" +
                     opt.currentContainerLayout.contents + "</span>");
-			}
+            }
             return [];
         },
 
         // second stage transform, this is called after visibility rules and adapters are applied
-        postTransform: function() {},
+        postTransform: function () { },
 
         // an opportunity to do validation tasks prior to committing an item
-        preSaveItem: function() {},
+        preSaveItem: function () { },
 
         // draw the container in the properties pane of the settings page from the JSON
-        toEditor: function(options) {
+        toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            // initialize the dialog with the snippet editor
+            htmlSnippet.initDialog(opt);
+
+            // add a button to edit the snippet if not already present
+            if ($("#" + opt.id + "EditSnippet" + opt.index).length === 0) {
+                $("#" + opt.id).find(".speasyforms-buttoncell").prepend(
+                    '<button id="' + opt.id + "EditSnippet" + opt.index +
+                    '" title="Edit HTML Snippet" ' +
+                    'class="speasyforms-containerbtn">Edit HTML Snippet</button>');
+
+                $('#' + opt.id + "EditSnippet" + opt.index).button({
+                    icons: {
+                        primary: "ui-icon-gear"
+                    },
+                    text: false
+                }).click(function () {
+                    $("#snippetContents").val(opt.currentContainerLayout.contents);
+                    $("#snippetContainerIndex").val($("#" + opt.id).attr("data-containerindex"));
+                    $("#configureSnippetDialog").find("iframe").contents().find("body").html(
+                        opt.currentContainerLayout.contents.replace(/<(?=\/?script)/ig, "&lt;"));
+                    if ($("#snippetContents").is(":visible")) {
+                        $("#configureSnippetDialog").find("iframe").hide();
+                    }
+                    htmlSnippet.settings(opt);
+                    return false;
+                });
+            }
+
+            // put contents in a text area show the contents stripping out any scripts
+            $("#" + opt.id).append("<span class='speasyforms-sortablefields'>" +
+                opt.currentContainerLayout.contents.replace(
+                /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') + "</span>" +
+			    "<textarea  id='snippetContents" + opt.index +
+                "' rows='15' cols='80' style='display:none'>" +
+                opt.currentContainerLayout.contents + "</textarea>");
+
+            return [];
+        },
+
+        // convert whatever is in the properties pane back into a JSOM configuration
+        toLayout: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var result = {
+                containerType: opt.containerType,
+                index: $(opt.container).attr("data-containerIndex"),
+                contents: $(opt.container).find("textarea").val()
+            };
+            return result;
+        },
+
+        // launch a dialog to configue this container on the settings page 
+        settings: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if (!opt.containerIndex) {
+                $("#snippetContents").val("");
+            }
+            htmlSnippet.initDialog(opt);
+            $("#configureSnippetDialog").dialog("open");
+        },
+
+        // initialize the dialog with the snippet editor
+        initDialog: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
             if ($("#spEasyFormsContainerDialogs").find("#configureSnippetDialog").length === 0) {
                 $("#spEasyFormsContainerDialogs").append(
                     "<div id='configureSnippetDialog' class='speasyforms-dialogdiv' title='HTML Snippet Container'>" +
@@ -66,65 +127,10 @@
                 };
                 $("#configureSnippetDialog").dialog(configureSnippetOpts);
             }
-
-            // add a button to edit the snippet if not already present
-            if ($("#" + opt.id + "EditSnippet" + opt.index).length === 0) {
-                $("#" + opt.id).find(".speasyforms-buttoncell").prepend(
-                    '<button id="' + opt.id + "EditSnippet" + opt.index +
-                    '" title="Edit HTML Snippet" ' +
-                    'class="speasyforms-containerbtn">Edit HTML Snippet</button>');
-
-                $('#' + opt.id + "EditSnippet" + opt.index).button({
-                    icons: {
-                        primary: "ui-icon-gear"
-                    },
-                    text: false
-                }).click(function() {
-					$("#snippetContents").val(opt.currentContainerLayout.contents);
-					$("#snippetContainerIndex").val($("#" + opt.id).attr("data-containerindex"));
-					$("#configureSnippetDialog").find("iframe").contents().find("body").html(
-                        opt.currentContainerLayout.contents.replace(/<(?=\/?script)/ig, "&lt;"));
-					if ($("#snippetContents").is(":visible")) {
-					    $("#configureSnippetDialog").find("iframe").hide();
-					}
-					htmlSnippet.settings(opt);
-					return false;
-                });
-            }
-			
-            // put contents in a text area show the contents stripping out any scripts
-            $("#" + opt.id).append("<span class='speasyforms-sortablefields'>" + 
-                opt.currentContainerLayout.contents.replace(
-                /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') + "</span>" +
-			    "<textarea  id='snippetContents" + opt.index +
-                "' rows='15' cols='80' style='display:none'>" +
-                opt.currentContainerLayout.contents + "</textarea>");
-
-            return [];
-        },
-
-        // convert whatever is in the properties pane back into a JSOM configuration
-        toLayout: function(options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var result = {
-                containerType: opt.containerType,
-                index: $(opt.container).attr("data-containerIndex"),
-                contents: $(opt.container).find("textarea").val()
-            };
-            return result;
-        },
-
-        // launch a dialog to configue this container on the settings page 
-        settings: function(options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            if (!opt.containerIndex) {
-                $("#snippetContents").val("");
-            }
-            $("#configureSnippetDialog").dialog("open");
         },
 
         // initialize the text area in the dialog with cleditor
-        initRTE: function() {
+        initRTE: function () {
             $("#snippetContents").cleditor({
                 width: 800,
                 height: 200,
