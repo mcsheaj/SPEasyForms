@@ -34012,7 +34012,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 	                    if (!rtePresent && currentRow && !currentRow.fieldMissing) {
 	                        result.push(field.fieldInternalName);
 	                        if (currentRow) {
-	                            if (currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").length === 0) {
+	                            if (condensedFieldCollections.length > 1 &&
+                                    currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").length === 0) {
 	                                var tdh = currentRow.row.find("td.ms-formlabel");
 	                                if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
 	                                    currentRow.row.find("td.ms-formbody").prepend(
@@ -34031,11 +34032,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 	                                tdh.hide();
 	                                tdh.attr("data-transformHidden", "true");
 	                            }
-	                            $("#" + rowId).append(
-                                    "<td id='" + tdId +
-                                    "' class='speasyforms-columncell'><table id='" +
-                                    innerTableId + "' style='width: 100%'></table></td>");
-	                            currentRow.row.appendTo("#" + innerTableId);
+	                            if (condensedFieldCollections.length > 1) {
+	                                $("#" + rowId).append(
+                                        "<td id='" + tdId +
+                                        "' class='speasyforms-columncell'><table id='" +
+                                        innerTableId + "' style='width: 100%'></table></td>");
+	                                currentRow.row.appendTo("#" + innerTableId);
+	                            }
+	                            else {
+	                                currentRow.row.appendTo("#" + outerTableId);
+	                            }
 	                        } else {
 	                            $("#" + rowId).append("<td id='" + tdId +
                                     "' class='speasyforms-columncell'>&nbsp;</td>");

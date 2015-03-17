@@ -1,7 +1,7 @@
 /*
  * SPEasyForms HotFixes - cumulative update for reported bugs.
  *
- * @version 2015.00.10
+ * @version 2015.00.11
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -299,7 +299,7 @@
     // only operate on the settings page
     if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
         $().ready(function () {
-            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2015.00.10</b>");
+            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2015.00.11</b>");
         });
     }
 
@@ -362,91 +362,6 @@
             $($(this).attr("href")).show();
             return false;
         });
-
-        return result;
-    };
-
-    containerCollection.containerImplementations.columns.transform = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        var result = [];
-        var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
-        var outerTableClass = "speasyforms-container speasyforms-columns";
-        $("#" + opt.containerId).append("<table id='" + outerTableId +
-            "' class='" + outerTableClass + "'></table>");
-
-        var condensedFieldCollections = [];
-        $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-            var newCollection = {};
-            newCollection.name = fieldCollection.name;
-            newCollection.fields = [];
-            $.each(fieldCollection.fields, function (i, field) {
-                var row = containerCollection.rows[field.fieldInternalName];
-                if (row && !row.fieldMissing) {
-                    newCollection.fields.push(field);
-                }
-            });
-            if (newCollection.fields.length > 0) {
-                condensedFieldCollections.push(newCollection);
-            }
-        });
-
-        var rowCount = 0;
-        $.each(condensedFieldCollections, function (idx, fieldCollection) {
-            if (fieldCollection.fields.length > rowCount) rowCount = fieldCollection.fields.length;
-        });
-
-        for (var i = 0; i < rowCount; i++) {
-            var rowId = "spEasyFormsColumnRow" + opt.index + "" + i;
-            $("#" + outerTableId).append("<tr id='" + rowId +
-                "' class='speasyforms-columnrow'></tr>");
-            for (var idx = 0; idx < condensedFieldCollections.length; idx++) {
-                var fieldCollection = condensedFieldCollections[idx];
-                var tdId = "spEasyFormsColumnCell" + opt.index + "" + i +
-                    "" + idx;
-                var innerTableId = "spEasyFormsInnerTable" + opt.index + "" +
-                    i + "" + idx;
-                if (fieldCollection.fields.length > i) {
-                    var field = fieldCollection.fields[i];
-                    var currentRow = containerCollection.rows[field.fieldInternalName];
-                    var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
-                    if (!rtePresent && currentRow && !currentRow.fieldMissing) {
-                        result.push(field.fieldInternalName);
-                        if (currentRow) {
-                            if (currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").length === 0) {
-                                var tdh = currentRow.row.find("td.ms-formlabel");
-                                if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
-                                    currentRow.row.find("td.ms-formbody").prepend(
-                                        "<div data-transformAdded='true'>&nbsp;</div>");
-                                }
-                                if (tdh.html() === "Content Type") {
-                                    currentRow.row.find("td.ms-formbody").prepend(
-                                        "<h3 class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
-                                } else {
-                                    currentRow.row.find("td.ms-formbody").prepend(
-                                        tdh.html());
-                                }
-                                currentRow.row.find("td.ms-formbody").find(
-                                    "h3.ms-standardheader").
-                                attr("data-transformAdded", "true");
-                                tdh.hide();
-                                tdh.attr("data-transformHidden", "true");
-                            }
-                            $("#" + rowId).append(
-                                "<td id='" + tdId +
-                                "' class='speasyforms-columncell'><table id='" +
-                                innerTableId + "' style='width: 100%'></table></td>");
-                            currentRow.row.appendTo("#" + innerTableId);
-                        } else {
-                            $("#" + rowId).append("<td id='" + tdId +
-                                "' class='speasyforms-columncell'>&nbsp;</td>");
-                        }
-                    }
-                } else {
-                    $("#" + rowId).append("<td id='" + tdId +
-                        "' class='speasyforms-columncell'>&nbsp;</td>");
-                }
-            }
-        }
 
         return result;
     };
@@ -1069,6 +984,98 @@
                 }
             }
         });
+    };
+
+    /*v2015.00.11*/
+    containerCollection.containerImplementations.columns.transform = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var result = [];
+        var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
+        var outerTableClass = "speasyforms-container speasyforms-columns";
+        $("#" + opt.containerId).append("<table id='" + outerTableId +
+            "' class='" + outerTableClass + "'></table>");
+
+        var condensedFieldCollections = [];
+        $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
+            var newCollection = {};
+            newCollection.name = fieldCollection.name;
+            newCollection.fields = [];
+            $.each(fieldCollection.fields, function (i, field) {
+                var row = containerCollection.rows[field.fieldInternalName];
+                if (row && !row.fieldMissing) {
+                    newCollection.fields.push(field);
+                }
+            });
+            if (newCollection.fields.length > 0) {
+                condensedFieldCollections.push(newCollection);
+            }
+        });
+
+        var rowCount = 0;
+        $.each(condensedFieldCollections, function (idx, fieldCollection) {
+            if (fieldCollection.fields.length > rowCount) rowCount = fieldCollection.fields.length;
+        });
+
+        for (var i = 0; i < rowCount; i++) {
+            var rowId = "spEasyFormsColumnRow" + opt.index + "" + i;
+            $("#" + outerTableId).append("<tr id='" + rowId +
+                "' class='speasyforms-columnrow'></tr>");
+            for (var idx = 0; idx < condensedFieldCollections.length; idx++) {
+                var fieldCollection = condensedFieldCollections[idx];
+                var tdId = "spEasyFormsColumnCell" + opt.index + "" + i +
+                    "" + idx;
+                var innerTableId = "spEasyFormsInnerTable" + opt.index + "" +
+                    i + "" + idx;
+                if (fieldCollection.fields.length > i) {
+                    var field = fieldCollection.fields[i];
+                    var currentRow = containerCollection.rows[field.fieldInternalName];
+                    var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
+                    if (!rtePresent && currentRow && !currentRow.fieldMissing) {
+                        result.push(field.fieldInternalName);
+                        if (currentRow) {
+                            if (condensedFieldCollections.length > 1 &&
+                                currentRow.row.find("td.ms-formbody").find("h3.ms-standardheader").length === 0) {
+                                var tdh = currentRow.row.find("td.ms-formlabel");
+                                if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+                                    currentRow.row.find("td.ms-formbody").prepend(
+                                        "<div data-transformAdded='true'>&nbsp;</div>");
+                                }
+                                if (tdh.html() === "Content Type") {
+                                    currentRow.row.find("td.ms-formbody").prepend(
+                                        "<h3 class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
+                                } else {
+                                    currentRow.row.find("td.ms-formbody").prepend(
+                                        tdh.html());
+                                }
+                                currentRow.row.find("td.ms-formbody").find(
+                                    "h3.ms-standardheader").
+                                attr("data-transformAdded", "true");
+                                tdh.hide();
+                                tdh.attr("data-transformHidden", "true");
+                            }
+                            if (condensedFieldCollections.length > 1) {
+                                $("#" + rowId).append(
+                                    "<td id='" + tdId +
+                                    "' class='speasyforms-columncell'><table id='" +
+                                    innerTableId + "' style='width: 100%'></table></td>");
+                                currentRow.row.appendTo("#" + innerTableId);
+                            }
+                            else {
+                                currentRow.row.appendTo("#" + outerTableId);
+                            }
+                        } else {
+                            $("#" + rowId).append("<td id='" + tdId +
+                                "' class='speasyforms-columncell'>&nbsp;</td>");
+                        }
+                    }
+                } else {
+                    $("#" + rowId).append("<td id='" + tdId +
+                        "' class='speasyforms-columncell'>&nbsp;</td>");
+                }
+            }
+        }
+
+        return result;
     };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
