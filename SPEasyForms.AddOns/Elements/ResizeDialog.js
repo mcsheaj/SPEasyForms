@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms ResizeDialog - resize and reposition forms in dialog boxes.
  *
- * @version 2015.00.11
+ * @version 2014.01.11
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
