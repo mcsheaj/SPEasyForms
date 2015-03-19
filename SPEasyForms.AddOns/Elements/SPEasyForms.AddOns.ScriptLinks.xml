@@ -2,57 +2,57 @@
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.11/jquery.cleditor.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/jquery.cleditor.js"
        Sequence="57351"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.11/jquery.cleditor.xhtml.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/jquery.cleditor.xhtml.js"
        Sequence="57353"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.11/jquery.cleditor.sharepoint.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/jquery.cleditor.sharepoint.js"
        Sequence="57355"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.11/HtmlSnippetContainer.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/HtmlSnippetContainer.js"
        Sequence="57355"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.11/DefaultToCurrentUserAdapter.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/DefaultToCurrentUserAdapter.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.11/VisibilityRulesExtension.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/VisibilityRulesExtension.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.11/HotFixes.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/HotFixes.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.11/ResizeDialog.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/ResizeDialog.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.11/ShowAddOnsVersion.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/ShowAddOnsVersion.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.11/InitializeFieldsFromRequestParameters.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/InitializeFieldsFromRequestParameters.js"
        Sequence="57401"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.11/ToEditorPatch.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/ToEditorPatch.js"
        Sequence="57401"
     />
 </Elements>

@@ -277,13 +277,13 @@
                 };
                 $.each($(tds[3]).find("div.speasyforms-conditiondisplay"), function (idx, div) {
                     var conditionArray = $(div).text().split(";");
-                    if (conditionArray.length === 3) {
+                    if (conditionArray.length >= 2) {
                         var condition = {
                             name: conditionArray[0],
                             type: conditionArray[1],
-                            value: conditionArray[2]
+                                value: conditionArray.length === 3 ? conditionArray[2] : ""
                         };
-                        if (condition.name && condition.value) {
+                        if (condition.name) {
                             rule.conditions.push(condition);
                         }
                     }

@@ -1,7 +1,7 @@
 /*
  * SPEasyForms HotFixes - cumulative update for reported bugs.
  *
- * @version 2014.01.11
+ * @version 2014.01.12
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -299,7 +299,7 @@
     // only operate on the settings page
     if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
         $().ready(function () {
-            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.11</b>");
+            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.12</b>");
         });
     }
 
@@ -986,7 +986,7 @@
         });
     };
 
-    /*v2014.01.11*/
+    /*v2014-01-11*/
     containerCollection.containerImplementations.columns.transform = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
         var result = [];
@@ -1076,6 +1076,40 @@
         }
 
         return result;
+    };
+
+    /*v2014-01-12*/
+    $.spEasyForms.visibilityRuleCollection.toConfig = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var rules = [];
+        var fieldName = $("#conditionalVisibilityField").val();
+        $("#conditionalVisibilityRules tr:not(:first)").each(function (idx, tr) {
+            var tds = $(tr).find("td");
+            var appliesTo = tds[1].innerHTML !== "Everyone" ? tds[1].innerHTML : "";
+            var rule = {
+                state: tds[0].innerHTML,
+                appliesTo: appliesTo,
+                forms: tds[2].innerHTML,
+                conditions: []
+            };
+            $.each($(tds[3]).find("div.speasyforms-conditiondisplay"), function (idx, div) {
+                var conditionArray = $(div).text().split(";");
+                if (conditionArray.length >= 2) {
+                    var condition = {
+                        name: conditionArray[0],
+                        type: conditionArray[1],
+                        value: conditionArray.length === 3 ? conditionArray[2] : ""
+                    };
+                    if (condition.name) {
+                        rule.conditions.push(condition);
+                    }
+                }
+            });
+            rules.push(rule);
+        });
+        var config = $.spEasyForms.configManager.get(opt);
+        config.visibility.def[fieldName] = rules;
+        return config;
     };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
