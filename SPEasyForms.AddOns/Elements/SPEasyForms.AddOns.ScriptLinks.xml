@@ -42,17 +42,7 @@
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/ShowAddOnsVersion.js"
-       Sequence="57401"
-    />
-    <CustomAction
-       Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/InitializeFieldsFromRequestParameters.js"
-       Sequence="57401"
-    />
-    <CustomAction
-       Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.12/ToEditorPatch.js"
        Sequence="57401"
     />
 </Elements>
