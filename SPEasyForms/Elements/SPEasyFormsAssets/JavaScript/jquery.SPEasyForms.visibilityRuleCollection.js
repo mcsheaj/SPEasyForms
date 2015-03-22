@@ -161,7 +161,7 @@
          *     config: {object}
          * }
          *********************************************************************/
-         transform: function (options) {
+        transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (opt.currentConfig && opt.currentConfig.visibility && opt.currentConfig.visibility.def &&
                 Object.keys(opt.currentConfig.visibility.def).length > 0) {
@@ -281,7 +281,7 @@
                         var condition = {
                             name: conditionArray[0],
                             type: conditionArray[1],
-                                value: conditionArray.length === 3 ? conditionArray[2] : ""
+                            value: conditionArray.length === 3 ? conditionArray[2] : ""
                         };
                         if (condition.name) {
                             rule.conditions.push(condition);
