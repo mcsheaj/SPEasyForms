@@ -42,7 +42,6 @@
     <Content Include="Elements\RTEPatch.js" />
     <Content Include="Elements\SPEasyForms.AddOns.Assets.xml" />
     <Content Include="Elements\SPEasyForms.AddOns.ScriptLinks.xml" />
-    <Content Include="Elements\toolbar.png" />
     <Content Include="Features\Feature.xml" />
     <Content Include="Package\Manifest.xml" />
   </ItemGroup>
