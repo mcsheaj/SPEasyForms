@@ -3,7 +3,7 @@
  * matches the pattern spef_[ColumnInternalName] and set the corresponding field value
  * to the value of the parameter.
  *
- * @version 2014.01.12
+ * @version 2014.01.13
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -61,6 +61,9 @@
             "Copyright 2010, Chris Landowski, " +
             "<a href='http://premiumsoftware.net/' target='_blank' class='speasyforms-aboutlink'>Premium Software, LLC</a></p>");
 
+        // call the original SPEasyForms init method
+        $.spEasyForms.InitializeFieldsFromRequestParameters_originalInit(opt);
+
         // get a 'hashmap' of request parameters
         var parameters = $.spEasyForms.utilities.getRequestParameters();
 
@@ -83,9 +86,6 @@
                 }
             }
         });
-
-        // call the original SPEasyForms init method
-        $.spEasyForms.InitializeFieldsFromRequestParameters_originalInit(opt);
 
         // fix time fields on containers (SP 2010)
         $("select[id$='DateTimeFieldDateHours']").css("font-size", "8pt");
@@ -137,6 +137,7 @@
                         tr.row.find("input[type='checkbox']").prop("checked", false);
                         tr.row.find("input[type='text'][id$='FillInText']").val("");
                         $.each($(values), function (idx, value) { // foreach value
+                            if (value.length === 0) return;
                             // find the label for the value
                             var label = tr.row.find("label:contains('" + value + "')");
                             if (label.length > 0) {
@@ -173,33 +174,52 @@
                 case "SPFieldNote":
                 case "SPFieldMultiLine":
                     // if there is a text area, set its text to the value
-                    if (tr.row.find("textarea").length > 0) {
+                    if (tr.row.find("iframe[Title='Rich Text Editor']").length > 0) {
+                        tr.row.find("iframe[Title='Rich Text Editor']").contents().find("body").html(tr.value);
+                    }
+                    else if (tr.row.find("div[contenteditable='true']").length > 0) {
+                        tr.row.find("div[contenteditable='true']").html(tr.value);
+                        tr.row.find("td.ms-formbody input").val(tr.value);
+                    }
+                    else if (tr.row.find("textarea").length > 0) {
                         tr.row.find("textarea").text(tr.value);
                     }
                     break;
                 case "SPFieldDateTime":
                     var date = new Date(tr.value);
-                    // set the input to the date portion of the date/time
-                    tr.row.find("input").val($.datepicker.formatDate("mm/dd/yy", date));
-                    // if there is an hours drop down, select the hour based on date.getHours
-                    if (tr.row.find("option[value='" + date.getHours() + "']").length > 0) {
-                        tr.row.find("select[id$='Hours']").val(date.getHours());
-                    }
-                    else {
-                        // sp2010
-                        var i = date.getHours();
-                        var fmt = "";
-                        if (i < 12) {
-                            fmt = i + " AM";
+                    if (date.toString() !== "Invalid Date") {
+                        // set the input to the date portion of the date/time
+                        tr.row.find("input").val($.datepicker.formatDate("mm/dd/yy", date));
+                        // if there is an hours drop down, select the hour based on date.getHours
+                        if (tr.row.find("option[value='" + date.getHours() + "']").length > 0) {
+                            tr.row.find("select[id$='Hours']").val(date.getHours());
                         }
                         else {
-                            fmt = (i - 12) + " PM";
+                            // sp2010
+                            var i = date.getHours();
+                            var fmt = "";
+                            if (i < 12) {
+                                fmt = i + " AM";
+                            }
+                            else {
+                                fmt = (i - 12) + " PM";
+                            }
+                            tr.row.find("select[id$='Hours']").val(fmt);
                         }
-                        tr.row.find("select[id$='Hours']").val(fmt);
+                        // if there is a minutes drop down, select the minutes based on date.getMinutes, Note: that SharePoint only 
+                        // allows 5 minute increments so if you pass in 04 as the minutes notthing is selected
+                        tr.row.find("select[id$='Minutes']").val(date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
                     }
-                    // if there is a minutes drop down, select the minutes based on date.getMinutes, Note: that SharePoint only 
-                    // allows 5 minute increments so if you pass in 04 as the minutes notthing is selected
-                    tr.row.find("select[id$='Minutes']").val(date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+                    else {
+                        tr.row.find("input").val("");
+                        if (tr.row.find("option[value='0']").length > 0) {
+                            tr.row.find("select[id$='Hours']").val("0");
+                        }
+                        else {
+                            tr.row.find("select[id$='Hours']").val("12 AM");
+                        }
+                        tr.row.find("select[id$='Minutes']").val("00");
+                    }
                     break;
                 case "SPFieldBoolean":
                     // if 0, false, or no was passed (case insensitive), uncheck the box
@@ -230,6 +250,10 @@
                     if (pplpkrDiv.length > 0) {
                         ExecuteOrDelayUntilScriptLoaded(function () {
                             var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
+                            var resolvedUsersList = $(document.getElementById(clientPplPicker.ResolvedListElementId)).find("span[class='sp-peoplepicker-userSpan']");
+                            $(resolvedUsersList).each(function () {
+                                clientPplPicker.DeleteProcessedUser(this);
+                            });
                             var entities = tr.value.split(";");
                             $.each($(entities), function (idx, entity) {
                                 clientPplPicker.AddUserKeys(entity);
@@ -237,6 +261,8 @@
                         }, "clientpeoplepicker.js");
                     } else {
                         // otherwise use SPServices to set the people picker value
+                        tr.row.find("div[title='People Picker']").html("");
+                        tr.row.find("textarea[title='People Picker']").val("");
                         var displayName = tr.displayName;
                         ExecuteOrDelayUntilScriptLoaded(function () {
                             setTimeout(function () {
@@ -245,6 +271,7 @@
                                     valueToSet: tr.value,
                                     checkNames: true
                                 });
+                                tr.row.find("img[title='Check Names']").trigger("click");
                             }, 1000);
                         }, "sp.js");
                     }

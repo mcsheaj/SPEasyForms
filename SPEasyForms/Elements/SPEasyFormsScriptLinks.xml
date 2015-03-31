@@ -97,7 +97,12 @@
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.SPEasyForms.adapterCollection.DefaultToCurrentUserAdapter.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js"
+       Sequence="57243"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js"
        Sequence="57243"
     />
     <CustomAction

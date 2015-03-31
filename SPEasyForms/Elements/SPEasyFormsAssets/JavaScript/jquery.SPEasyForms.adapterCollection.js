@@ -133,6 +133,28 @@
             else {
                 $("#adapterTab").removeClass("speasyforms-fieldmissing");
             }
+
+            $("tr.speasyforms-adapter-static").each(function (idx, r) {
+                var row = $(r);
+                var internalName = $(row.find("td")[1]).text();
+                if (row.find("td").length > 1) {
+                    row.append("<td><button id='" + internalName + "Delete' title='Delete' class='speasyforms-containerbtn speasyforms-deleteadapter' style='height: 25px;'></button></td>");
+                }
+            });
+
+            $(".speasyforms-deleteadapter").button({
+                icons: {
+                    primary: "ui-icon-closethick"
+                },
+                text: false
+            }).click(function () {
+                var internalName = $($(this).closest("tr").find("td")[1]).text();
+                opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                delete opt.currentConfig.adapters.def[internalName];
+                $.spEasyForms.configManager.set(opt);
+                $.spEasyForms.containerCollection.toEditor(opt);
+                return false;
+            });
         },
 
         launchDialog: function (options) {

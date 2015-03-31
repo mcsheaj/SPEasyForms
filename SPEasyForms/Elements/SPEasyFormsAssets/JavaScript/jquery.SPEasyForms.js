@@ -122,26 +122,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, spEasyForms.defaults, options);
             this.initCacheLibrary(opt);
             this.loadDynamicStyles(opt);
-            // get a 'hashmap' of request parameters
-            var parameters = $.spEasyForms.utilities.getRequestParameters();
-            // get the parsed rows of the form table
-            var rows = $.spEasyForms.sharePointFieldRows.init(options);
-            // foreach request parameter
-            $.each(Object.keys(parameters), function (idx, key) {
-                // if the parameter name begins with the spef_ prefix
-                if (key.indexOf("spef_") === 0) {
-                    // the internal field name should be the parameter name with the prefix removed
-                    var internalName = key.substring(5);
-                    // if the parsed form rows contains a row matching the internal field name
-                    if (internalName in rows) {
-                        // initialize the row and value to set in the options map
-                        opt.row = rows[internalName];
-                        opt.value = parameters[key];
-                        // set the value of the field
-                        $.spEasyForms.sharePointFieldRows.setValue(opt);
-                    }
-                }
-            });
             opt.callback = spEasyForms.contextReady;
             this.options = opt;
             $("#spEasyFormsBusyScreen").dialog({
@@ -184,6 +164,26 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }, 3000);
                 }
             }, "sp.ui.dialog.js");
+            // get a 'hashmap' of request parameters
+            var parameters = $.spEasyForms.utilities.getRequestParameters();
+            // get the parsed rows of the form table
+            var rows = $.spEasyForms.sharePointFieldRows.init(options);
+            // foreach request parameter
+            $.each(Object.keys(parameters), function (idx, key) {
+                // if the parameter name begins with the spef_ prefix
+                if (key.indexOf("spef_") === 0) {
+                    // the internal field name should be the parameter name with the prefix removed
+                    var internalName = key.substring(5);
+                    // if the parsed form rows contains a row matching the internal field name
+                    if (internalName in rows) {
+                        // initialize the row and value to set in the options map
+                        opt.row = rows[internalName];
+                        opt.value = parameters[key];
+                        // set the value of the field
+                        $.spEasyForms.sharePointFieldRows.setValue(opt);
+                    }
+                }
+            });
         },
 
         /********************************************************************

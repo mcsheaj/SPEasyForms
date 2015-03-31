@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
-    <Module Name="SPEasyFormsAddOnsAssets" Url="Style Library/SPEasyFormsAssets/AddOns/2014.01.12">
+    <Module Name="SPEasyFormsAddOnsAssets" Url="Style Library/SPEasyFormsAssets/AddOns/2014.01.13">
         <File Path="DefaultToCurrentUserAdapter.js" Url="DefaultToCurrentUserAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="VisibilityRulesExtension.js" Url="VisibilityRulesExtension.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="HotFixes.js" Url="HotFixes.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -13,5 +13,6 @@
         <File Path="jquery.cleditor.sharepoint.js" Url="jquery.cleditor.sharepoint.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="buttons.png" Url="buttons.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="toolbar.png" Url="toolbar.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="LookupDetailAdapter.js" Url="LookupDetailAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
 </Elements>

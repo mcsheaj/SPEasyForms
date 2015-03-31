@@ -30296,26 +30296,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, spEasyForms.defaults, options);
             this.initCacheLibrary(opt);
             this.loadDynamicStyles(opt);
-            // get a 'hashmap' of request parameters
-            var parameters = $.spEasyForms.utilities.getRequestParameters();
-            // get the parsed rows of the form table
-            var rows = $.spEasyForms.sharePointFieldRows.init(options);
-            // foreach request parameter
-            $.each(Object.keys(parameters), function (idx, key) {
-                // if the parameter name begins with the spef_ prefix
-                if (key.indexOf("spef_") === 0) {
-                    // the internal field name should be the parameter name with the prefix removed
-                    var internalName = key.substring(5);
-                    // if the parsed form rows contains a row matching the internal field name
-                    if (internalName in rows) {
-                        // initialize the row and value to set in the options map
-                        opt.row = rows[internalName];
-                        opt.value = parameters[key];
-                        // set the value of the field
-                        $.spEasyForms.sharePointFieldRows.setValue(opt);
-                    }
-                }
-            });
             opt.callback = spEasyForms.contextReady;
             this.options = opt;
             $("#spEasyFormsBusyScreen").dialog({
@@ -30358,6 +30338,26 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }, 3000);
                 }
             }, "sp.ui.dialog.js");
+            // get a 'hashmap' of request parameters
+            var parameters = $.spEasyForms.utilities.getRequestParameters();
+            // get the parsed rows of the form table
+            var rows = $.spEasyForms.sharePointFieldRows.init(options);
+            // foreach request parameter
+            $.each(Object.keys(parameters), function (idx, key) {
+                // if the parameter name begins with the spef_ prefix
+                if (key.indexOf("spef_") === 0) {
+                    // the internal field name should be the parameter name with the prefix removed
+                    var internalName = key.substring(5);
+                    // if the parsed form rows contains a row matching the internal field name
+                    if (internalName in rows) {
+                        // initialize the row and value to set in the options map
+                        opt.row = rows[internalName];
+                        opt.value = parameters[key];
+                        // set the value of the field
+                        $.spEasyForms.sharePointFieldRows.setValue(opt);
+                    }
+                }
+            });
         },
 
         /********************************************************************
@@ -30897,6 +30897,250 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             rowNode.find("td").addClass("speasyforms-" + backgroundColor).attr(
                 "data-visibilityclassadded", "speasyforms-" + backgroundColor);
         }
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Constructor for a helper class for dialogs to define a relationship list 
+    // (i.e. as used by the cascadingLookupAdapter and lookupDetailAdapter.
+    ////////////////////////////////////////////////////////////////////////////
+    $.spEasyForms.relationshipListAdapterHelper = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var instance = this;
+
+        this.initDialog = function () {
+            // initialize the jQuery UI dialog
+            var lookupDetailOpts = {
+                modal: true,
+                buttons: {
+                    "Ok": function () {
+                        if (opt.relationship.relationshipParentColumn) {
+                            $.spEasyForms.adapterCollection.validateRequired({
+                                id: opt.relationship.relationshipParentColumn.id,
+                                displayName: opt.relationship.relationshipParentColumn.displayName
+                            });
+                        }
+                        $.spEasyForms.adapterCollection.validateRequired({
+                            id: opt.relationship.relationshipChildColumn.id,
+                            displayName: opt.relationship.relationshipChildColumn.displayName
+                        });
+                        $.spEasyForms.adapterCollection.validateRequired({
+                            id: opt.relationship.formParentColumn.id,
+                            displayName: opt.relationship.formParentColumn.displayName
+                        });
+                        $.spEasyForms.adapterCollection.validateRequired({
+                            id: opt.relationship.formChildColumn.id,
+                            displayName: opt.relationship.formChildColumn.displayName
+                        });
+                        if ($("#" + opt.relationship.dialogDiv).find(".speasyforms-error").length === 0) {
+                            if (!opt.currentConfig.adapters) {
+                                opt.currentConfig.adapters = {};
+                            }
+                            if (!opt.currentConfig.adapters.def) {
+                                opt.currentConfig.adapters.def = {};
+                            }
+                            opt.adapters = opt.currentConfig.adapters.def;
+                            if ($("#" + opt.relationship.relationshipListColumn.id).val().length === 0) {
+                                if (opt.adapterField in opt.adapters) {
+                                    delete opt.adapters[opt.adapterField];
+                                }
+                                $.spEasyForms.configManager.set(opt);
+                                $("#" + opt.relationship.dialogDiv).dialog("close");
+                                $.spEasyForms.containerCollection.toEditor(opt);
+                            } else {
+                                var adapter = {};
+                                if (opt.fieldName && opt.fieldName in opt.adapters) {
+                                    adapter = opt.adapters[opt.fieldName];
+                                } else {
+                                    opt.adapters[opt.fieldName] = adapter;
+                                }
+                                adapter.type = opt.relationship.type;
+                                adapter.relationshipList =
+                                    $("#" + opt.relationship.relationshipListColumn.id).val();
+                                adapter.relationshipListTitle =
+                                    $("#" + opt.relationship.relationshipListColumn.id + " option:selected").text();
+                                if (opt.relationship.relationshipParentColumn) {
+                                    adapter.relationshipListParentColumn =
+                                        $("#" + opt.relationship.relationshipParentColumn.id).val();
+                                }
+                                adapter.relationshipListChildColumn =
+                                    $("#" + opt.relationship.relationshipChildColumn.id).val();
+                                adapter.parentColumnInternal =
+                                    $("#" + opt.relationship.formParentColumn.id).val();
+                                adapter.columnNameInternal =
+                                    $("#" + opt.relationship.formChildColumn.id).val();
+                                if (opt.relationship.updateCallback) {
+                                    opt.relationship.updateCallback(adapter);
+                                }
+                                $.spEasyForms.configManager.set(opt);
+                                $("#" + opt.relationship.dialogDiv).dialog("close");
+                                $.spEasyForms.containerCollection.toEditor(opt);
+                            }
+                            return false;
+                        }
+                    },
+                    "Cancel": function () {
+                        $("#" + opt.relationship.dialogDiv).dialog("close");
+                        return false;
+                    }
+                },
+                autoOpen: false,
+                width: 650
+            };
+            $("#" + opt.relationship.dialogDiv).dialog(lookupDetailOpts);
+        };
+
+        this.initControls = function () {
+            var listCollection = $.spEasyForms.sharePointContext.getListCollection(opt);
+            $.each(listCollection, function (idx, list) {
+                $("#" + opt.relationship.relationshipListColumn.id).append(
+                    "<option value='" + list.id + "'>" + list.title +
+                    "</option>");
+            });
+            $("#" + opt.relationship.formListColumn.id).val(opt.currentListContext.title);
+            if ($("#" + opt.relationship.relationshipListColumn.id).attr("data-change") !== "true") {
+                $("#" + opt.relationship.relationshipListColumn.id).attr("data-change", "true");
+                $("#" + opt.relationship.relationshipListColumn.id).change(function () {
+                    instance.initRelationshipFields(opt);
+                });
+                if (opt.relationship.relationshipParentColumn) {
+                    $("#" + opt.relationship.relationshipParentColumn.id).change(function () {
+                        if ($("#" + opt.relationship.relationshipChildColumn.id).find("option[value='" +
+                            $("#" + opt.relationship.relationshipParentColumn.id).val() + "']").length > 0) {
+                            $("#" + opt.relationship.relationshipChildColumn.id).find("option[text='" +
+                                $("#" + opt.relationship.relationshipParentColumn.id).text() + "']");
+                        }
+                    });
+                }
+            }
+            $("#" + opt.relationship.formChildColumn.id).val(opt.fieldName);
+            opt.adapters = opt.currentConfig.adapters.def;
+            if (opt.fieldName in opt.adapters) {
+                var a = opt.adapters[opt.fieldName];
+                $("#" + opt.relationship.relationshipListColumn.id).val(
+                    a.relationshipList);
+                instance.initRelationshipFields(opt);
+                if (opt.relationship.relationshipParentColumn) {
+                    $("#" + opt.relationship.relationshipParentColumn.id).val(
+                        a.relationshipListParentColumn);
+                }
+                $("#" + opt.relationship.relationshipChildColumn.id).val(
+                    a.relationshipListChildColumn);
+                $("#" + opt.relationship.formParentColumn.id).val(
+                    a.parentColumnInternal);
+            }
+        };
+
+        this.initRelationshipFields = function () {
+            if (opt.relationship.relationshipParentColumn) {
+                $("#" + opt.relationship.relationshipParentColumn.id).find("option").remove();
+                $("#" + opt.relationship.relationshipParentColumn.id).append("<option></option>");
+                $("#" + opt.relationship.relationshipParentColumn.id).val("");
+                $("#" + opt.relationship.relationshipParentColumn.id).attr("disabled", "disabled");
+            }
+
+            $("#" + opt.relationship.relationshipChildColumn.id).find("option").remove();
+            $("#" + opt.relationship.relationshipChildColumn.id).append("<option></option>");
+            $("#" + opt.relationship.relationshipChildColumn.id).val("");
+            $("#" + opt.relationship.relationshipChildColumn.id).attr("disabled", "disabled");
+
+            if ($("#" + opt.relationship.relationshipListColumn.id).val().length > 0) {
+                opt.listId = $("#" + opt.relationship.relationshipListColumn.id).val().toLowerCase();
+                var listctx = $.spEasyForms.sharePointContext.getListContext(opt);
+                $.each(Object.keys(listctx.fields), function (idx, field) {
+                    if (opt.relationship.relationshipParentColumn) {
+                        if (listctx.fields[field].spFieldType === "SPFieldLookup") {
+                            $("#" + opt.relationship.relationshipParentColumn.id).append(
+                                "<option value='" +
+                                listctx.fields[field].internalName + "'>" +
+                                listctx.fields[field].displayName + "</option>");
+                        }
+                    }
+                    $("#" + opt.relationship.relationshipChildColumn.id).append(
+                        "<option value='" +
+                        listctx.fields[field].internalName + "'>" +
+                        listctx.fields[field].displayName + "</option>");
+                });
+                if (opt.relationship.relationshipParentColumn) {
+                    $("#" + opt.relationship.relationshipParentColumn.id).removeAttr("disabled");
+                    var choices = $("#" + opt.relationship.relationshipParentColumn.id).find("option");
+                    if (choices.length === 2) {
+                        $("#" + opt.relationship.relationshipParentColumn.id).val(
+                            $(choices[1]).attr("value"));
+                        var relationshipParentText =
+                            $("#" + opt.relationship.relationshipParentColumn.id + " option:selected").text();
+                        var thisParentOption =
+                            $("#" + opt.relationship.relationshipChildColumn.id).find(
+                                "option:contains('" + relationshipParentText + "')");
+                        $("#" + opt.relationship.relationshipChildColumn.id).val(thisParentOption.val());
+                    }
+                }
+                $("#" + opt.relationship.relationshipChildColumn.id).removeAttr("disabled");
+                var thisChildText =
+                    $("#" + opt.relationship.formChildColumn.id + " option:selected").text();
+                var relationshipChildOption =
+                    $("#" + opt.relationship.relationshipChildColumn.id).find(
+                        "option:contains('" + thisChildText + "')");
+                $("#" + opt.relationship.relationshipChildColumn.id).val(
+                    relationshipChildOption.val());
+            }
+        };
+
+        this.constructDialog = function () {
+            if ($("#" + opt.relationship.dialogDiv).length === 0) {
+                var html = "<div id='" + opt.relationship.dialogDiv + "' title='Lookup Detail' class='speasyforms-dialogdiv'>" +
+                    "<table id='" + opt.relationship.dialogDiv + "Table' width='100%' cellpadding='0' cellspacing='0'>" +
+                    "<tr>" +
+                    "<td>" + opt.relationship.relationshipListColumn.displayName + "</td><td><select id='" + opt.relationship.relationshipListColumn.id + "'><option></option></select></td><td></td>" +
+                    "</tr><tr>" +
+                    (opt.relationship.relationshipParentColumn ? "<td></td><td>" + opt.relationship.relationshipParentColumn.displayName + "</td><td><select id='" + opt.relationship.relationshipParentColumn.id + "'><option></option></select></td>" : "") +
+                    "</tr><tr>" +
+                    "<td></td><td>" + opt.relationship.relationshipChildColumn.displayName + "</td><td><select id='" + opt.relationship.relationshipChildColumn.id + "'><option></option></select></td>" +
+                    "</tr><tr><td>&nbsp;</td></tr><tr>" +
+                    "<td>" + opt.relationship.formListColumn.displayName + "</td><td><input type='text' disabled='disabled' id='" + opt.relationship.formListColumn.id + "' value=''/></td><td></td>" +
+                    "</tr><tr>" +
+                    "<td></td><td>" + opt.relationship.formParentColumn.displayName + "</td><td><select id='" + opt.relationship.formParentColumn.id + "'><option></option></select></td>" +
+                    "</tr><tr>" +
+                    "<td></td><td>" + opt.relationship.formChildColumn.displayName + "</td><td><input type='text' id='" + opt.relationship.formChildColumn.id + "' disabled='disabled'/></td>" +
+                    "</tr>" +
+                    "</table>" +
+                    "</div>";
+                $("#spEasyFormsContainerDialogs").append(html);
+            }
+        };
+
+        this.clearDialog = function () {
+            $("#" + opt.relationship.dialogDiv).find(".speasyforms-error").remove();
+            $("#" + opt.relationship.dialogDiv).find(".implementation-specific").remove();
+
+            $("#" + opt.relationship.relationshipListColumn.id).find("option").remove();
+            $("#" + opt.relationship.relationshipListColumn.id).append("<option></option>");
+            $("#" + opt.relationship.relationshipListColumn.id).val("");
+
+            if (opt.relationship.relationshipParentColumn) {
+                $("#" + opt.relationship.relationshipParentColumn.id).find("option").remove();
+                $("#" + opt.relationship.relationshipParentColumn.id).append("<option></option>");
+                $("#" + opt.relationship.relationshipParentColumn.id).val("");
+                $("#" + opt.relationship.relationshipParentColumn.id).attr("disabled", "disabled");
+            }
+
+            $("#" + opt.relationship.relationshipChildColumn.id).find("option").remove();
+            $("#" + opt.relationship.relationshipChildColumn.id).append("<option></option>");
+            $("#" + opt.relationship.relationshipChildColumn.id).val("");
+            $("#" + opt.relationship.relationshipChildColumn.id).attr("disabled", "disabled");
+
+            $("#" + opt.relationship.relationshipChildColumn.id).find("option").remove();
+            $("#" + opt.relationship.relationshipChildColumn.id).append("<option></option>");
+            $("#" + opt.relationship.relationshipChildColumn.id).val("");
+
+            var fields = $.spEasyForms.containerCollection.rows;
+            $.each(Object.keys($.spEasyForms.containerCollection.rows).sort($.spEasyForms.sharePointFieldRows.compareField), function (idx, field) {
+                if (fields[field].spFieldType === "SPFieldLookup") {
+                    $("#" + opt.relationship.formParentColumn.id).append("<option value='" +
+                        fields[field].internalName + "'>" +
+                        fields[field].displayName + "</option>");
+                }
+            });
+        };
     };
 
 })(spefjQuery);
@@ -31717,7 +31961,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (opt.input === undefined) {
                 this.rows = results;
             }
-            if (!opt.skipCalculatedFields && window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+            var currentContext = $.spEasyForms.sharePointContext.get(opt);
+            var listId = $.spEasyForms.sharePointContext.getCurrentListId(opt);
+            if (listId in currentContext.listContexts && !opt.skipCalculatedFields && window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
                 var hasCalculatedFields = false;
                 $.each(Object.keys(results), function (idx, key) {
                     if (results[key].spFieldType === "SPFieldCalculated") {
@@ -32005,20 +32251,34 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         break;
                     case "SPFieldUser":
                     case "SPFieldUserMulti":
-                        var tmp3 = tr.row.find("input[type='hidden']").val();
-                        if (typeof (tmp3) !== 'undefined') {
-                            var hiddenInput = $.spEasyForms.utilities.parseJSON(tmp3);
-                            $.each(hiddenInput, function (idx, entity) {
-                                if (tr.value.length > 0) {
-                                    tr.value += "; ";
-                                }
-                                tr.value += "<a href='" +
-                                    opt.currentContext.webRelativeUrl +
-                                    "/_layouts/userdisp.aspx?ID=" +
-                                    entity.EntityData.SPUserID +
-                                    "' target='_blank'>" +
-                                    entity.DisplayText + "</a>";
+                        var pplpkrDiv = $("[id^='" + tr.internalName + "'][id$='ClientPeoplePicker']");
+                        if (pplpkrDiv.length > 0) {
+                            var tmp3 = tr.row.find("input[type='hidden']").val();
+                            if (typeof (tmp3) !== 'undefined') {
+                                var hiddenInput = $.spEasyForms.utilities.parseJSON(tmp3);
+                                $.each(hiddenInput, function (idx, entity) {
+                                    if (tr.value.length > 0) {
+                                        tr.value += "; ";
+                                    }
+                                    if (entity.isResolved || entity.IsResolved) {
+                                        tr.value += "<a href='" +
+                                        opt.currentContext.webRelativeUrl +
+                                        "/_layouts/userdisp.aspx?ID=" +
+                                        entity.EntityData.SPUserID +
+                                        "' target='_blank'>" +
+                                        entity.DisplayText + "</a>";
+                                    }
+                                    else {
+                                        tr.value += entity.DisplayText;
+                                    }
+                                });
+                            }
+                        }
+                        else {
+                            var picker = $().SPServices.SPFindPeoplePicker({
+                                peoplePickerDisplayName: tr.displayName
                             });
+                            tr.value = picker.currentValue;
                         }
                         break;
                     case "SPFieldBusinessData":
@@ -32091,6 +32351,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             tr.row.find("input[type='checkbox']").prop("checked", false);
                             tr.row.find("input[type='text'][id$='FillInText']").val("");
                             $.each($(values), function (idx, value) { // foreach value
+                                if (value.length === 0) return;
                                 // find the label for the value
                                 var label = tr.row.find("label:contains('" + value + "')");
                                 if (label.length > 0) {
@@ -32127,33 +32388,52 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     case "SPFieldNote":
                     case "SPFieldMultiLine":
                         // if there is a text area, set its text to the value
-                        if (tr.row.find("textarea").length > 0) {
+                        if (tr.row.find("iframe[Title='Rich Text Editor']").length > 0) {
+                            tr.row.find("iframe[Title='Rich Text Editor']").contents().find("body").html(tr.value);
+                        }
+                        else if (tr.row.find("div[contenteditable='true']").length > 0) {
+                            tr.row.find("div[contenteditable='true']").html(tr.value);
+                            tr.row.find("td.ms-formbody input").val(tr.value);
+                        }
+                        else if (tr.row.find("textarea").length > 0) {
                             tr.row.find("textarea").text(tr.value);
                         }
                         break;
                     case "SPFieldDateTime":
                         var date = new Date(tr.value);
-                        // set the input to the date portion of the date/time
-                        tr.row.find("input").val($.datepicker.formatDate("mm/dd/yy", date));
-                        // if there is an hours drop down, select the hour based on date.getHours
-                        if (tr.row.find("option[value='" + date.getHours() + "']").length > 0) {
-                            tr.row.find("select[id$='Hours']").val(date.getHours());
-                        }
-                        else {
-                            // sp2010
-                            var i = date.getHours();
-                            var fmt = "";
-                            if (i < 12) {
-                                fmt = i + " AM";
+                        if (date.toString() !== "Invalid Date") {
+                            // set the input to the date portion of the date/time
+                            tr.row.find("input").val($.datepicker.formatDate("mm/dd/yy", date));
+                            // if there is an hours drop down, select the hour based on date.getHours
+                            if (tr.row.find("option[value='" + date.getHours() + "']").length > 0) {
+                                tr.row.find("select[id$='Hours']").val(date.getHours());
                             }
                             else {
-                                fmt = (i - 12) + " PM";
+                                // sp2010
+                                var i = date.getHours();
+                                var fmt = "";
+                                if (i < 12) {
+                                    fmt = i + " AM";
+                                }
+                                else {
+                                    fmt = (i - 12) + " PM";
+                                }
+                                tr.row.find("select[id$='Hours']").val(fmt);
                             }
-                            tr.row.find("select[id$='Hours']").val(fmt);
+                            // if there is a minutes drop down, select the minutes based on date.getMinutes, Note: that SharePoint only 
+                            // allows 5 minute increments so if you pass in 04 as the minutes notthing is selected
+                            tr.row.find("select[id$='Minutes']").val(date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
                         }
-                        // if there is a minutes drop down, select the minutes based on date.getMinutes, Note: that SharePoint only 
-                        // allows 5 minute increments so if you pass in 04 as the minutes notthing is selected
-                        tr.row.find("select[id$='Minutes']").val(date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+                        else {
+                            tr.row.find("input").val("");
+                            if (tr.row.find("option[value='0']").length > 0) {
+                                tr.row.find("select[id$='Hours']").val("0");
+                            }
+                            else {
+                                tr.row.find("select[id$='Hours']").val("12 AM");
+                            }
+                            tr.row.find("select[id$='Minutes']").val("00");
+                        }
                         break;
                     case "SPFieldBoolean":
                         // if 0, false, or no was passed (case insensitive), uncheck the box
@@ -32184,6 +32464,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         if (pplpkrDiv.length > 0) {
                             ExecuteOrDelayUntilScriptLoaded(function () {
                                 var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
+                                var resolvedUsersList = $(document.getElementById(clientPplPicker.ResolvedListElementId)).find("span[class='sp-peoplepicker-userSpan']");
+                                $(resolvedUsersList).each(function () {
+                                    clientPplPicker.DeleteProcessedUser(this);
+                                });
                                 var entities = tr.value.split(";");
                                 $.each($(entities), function (idx, entity) {
                                     clientPplPicker.AddUserKeys(entity);
@@ -32191,6 +32475,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             }, "clientpeoplepicker.js");
                         } else {
                             // otherwise use SPServices to set the people picker value
+                            tr.row.find("div[title='People Picker']").html("");
+                            tr.row.find("textarea[title='People Picker']").val("");
                             var displayName = tr.displayName;
                             ExecuteOrDelayUntilScriptLoaded(function () {
                                 setTimeout(function () {
@@ -32199,6 +32485,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                         valueToSet: tr.value,
                                         checkNames: true
                                     });
+                                    tr.row.find("img[title='Check Names']").trigger("click");
                                 }, 1000);
                             }, "sp.js");
                         }
@@ -35467,6 +35754,28 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             else {
                 $("#adapterTab").removeClass("speasyforms-fieldmissing");
             }
+
+            $("tr.speasyforms-adapter-static").each(function (idx, r) {
+                var row = $(r);
+                var internalName = $(row.find("td")[1]).text();
+                if (row.find("td").length > 1) {
+                    row.append("<td><button id='" + internalName + "Delete' title='Delete' class='speasyforms-containerbtn speasyforms-deleteadapter' style='height: 25px;'></button></td>");
+                }
+            });
+
+            $(".speasyforms-deleteadapter").button({
+                icons: {
+                    primary: "ui-icon-closethick"
+                },
+                text: false
+            }).click(function () {
+                var internalName = $($(this).closest("tr").find("td")[1]).text();
+                opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                delete opt.currentConfig.adapters.def[internalName];
+                $.spEasyForms.configManager.set(opt);
+                $.spEasyForms.containerCollection.toEditor(opt);
+                return false;
+            });
         },
 
         launchDialog: function (options) {
@@ -36172,5 +36481,184 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
     // add adapter to adapter collection
     adapterCollection.adapterImplementations[defaultToCurrentUserAdapter.type] = defaultToCurrentUserAdapter;
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
+
+///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js
+/*
+ * $.spEasyForms.lookupDetailAdapter - an adapter plug-in for SPEasyForms
+ * that creates an adapter for text fields to listen for changes to a lookup
+ * and pull in data from another field in the lookup list.
+ *
+ * @version 2014.01.13
+ * @requires SPEasyForms v2014.01 
+ * @copyright 2014-2015 Joe McShea
+ * @license under the MIT license:
+ *    http://www.opensource.org/licenses/mit-license.php
+ */
+
+/* global spefjQuery */
+(function ($, undefined) {
+
+    // return without doing anything if there is already a DefaultToCurrentUser adapter
+    if (!$ || !$.spEasyForms || "LookupDetailAdapter" in $.spEasyForms.adapterCollection.adapterImplementations) return;
+
+    // shorthand alias for SPEasyForms instances we're going to need
+    var containerCollection = $.spEasyForms.containerCollection;
+    var visibilityRuleCollection = $.spEasyForms.visibilityRuleCollection;
+    var adapterCollection = $.spEasyForms.adapterCollection;
+    var fieldRows = $.spEasyForms.sharePointFieldRows;
+
+    /* Field control adapter for default to current user on user fields */
+    $.spEasyForms.lookupDetailAdapter = {
+        type: "LookupDetailAdapter",
+
+        // return an array of field types to which this adapter can be applied
+        supportedTypes: function () {
+            return ["SPFieldText", "SPFieldNote", "SPFieldMultiLine", "SPFieldChoice", "SPFieldMultiChoice",
+                "SPFieldDateTime", "SPFieldBoolean", "SPFieldURL", "SPFieldUser", "SPFieldUserMulti"];
+        },
+
+        // modify a configured field in a new, edit, or display form
+        transform: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var adapter = opt.adapter;
+            var rowInfo = containerCollection.rows[adapter.columnNameInternal];
+            if (rowInfo) {
+                var lookupInfo = containerCollection.rows[adapter.parentColumnInternal];
+                if (lookupInfo.row.find("select").attr("data-relationshipListListener") !== "true") {
+                    lookupInfo.row.find("select").attr("data-relationshipListListener", "true").change(function () {
+                        var lookup = $(this);
+
+                        if (adapter.readOnly) {
+                            opt.row = rowInfo;
+                            visibilityRuleCollection.scrubCollection($([opt.row]));
+                        }
+
+                        var query = "<Query><Where><Eq><FieldRef Name='ID' /><Value Type='Counter'>" +
+                            lookup.val() + "</Value></Eq></Where></Query>";
+
+                        var viewFields = "<ViewFields>";
+                        var adapters = [];
+                        $.each(Object.keys(opt.adapters), function (idx, key) {
+                            var current = opt.adapters[key];
+                            if (current.parentColumnInternal === adapter.parentColumnInternal) {
+                                adapters.push(current);
+                                viewFields += "<FieldRef Name='" + current.relationshipListChildColumn + "'></FieldRef>";
+                            }
+                        });
+                        viewFields += "</ViewFields>";
+
+                        $().SPServices({
+                            operation: "GetListItems",
+                            async: false,
+                            listName: adapter.relationshipList,
+                            CAMLQuery: query,
+                            CAMLViewFields: viewFields,
+                            completefunc: function (xData) {
+                                $(xData.responseXML).SPFilterNode('z:row').each(function () {
+                                    var resultRow = $(this);
+                                    $.each($(adapters), function (idx, adapter) {
+                                        opt.row = containerCollection.rows[adapter.columnNameInternal];
+                                        var value = resultRow.attr("ows_" + adapter.relationshipListChildColumn);
+                                        if (typeof(value) !== "undefined" && value !== null) {
+                                            switch (opt.row.spFieldType) {
+                                                case "SPFieldUser":
+                                                case "SPFieldUserMulti":
+                                                    opt.value = resultRow.attr("ows_" + adapter.relationshipListChildColumn);
+                                                    if (opt.value.indexOf(";#") > -1) {
+                                                        var a = opt.value.split(";#");
+                                                        opt.value = "";
+                                                        for (var i = 1; i < a.length; i += 2) {
+                                                            if (opt.value.length > 0) {
+                                                                opt.value += ";";
+                                                            }
+                                                            opt.value += a[i];
+                                                        }
+                                                    }
+                                                    break;
+                                                case "SPFieldDateTime":
+                                                    opt.value = resultRow.attr("ows_" + adapter.relationshipListChildColumn).replace(/-/g, "/");
+                                                    break;
+                                                case "SPFieldURL":
+                                                    opt.value = resultRow.attr("ows_" + adapter.relationshipListChildColumn).replace(", ", "|");
+                                                    break;
+                                                default:
+                                                    opt.value = resultRow.attr("ows_" + adapter.relationshipListChildColumn).replace(/;#/g, ";");
+                                                    break;
+                                            }
+                                        }
+                                        else {
+                                            opt.value = "";
+                                        }
+                                        fieldRows.setValue(opt);
+                                        if (adapter.readOnly) {
+                                            if (opt.row.spFieldType.indexOf('User') < 0) {
+                                                visibilityRuleCollection.scrubCollection($([opt.row.row]));
+                                                visibilityRuleCollection.stateHandlers.readOnly(opt);
+                                            }
+                                            else {
+                                                lookupDetailAdapter.delayResetReadonly(opt);
+                                            }
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
+                }
+            }
+            if (adapter.readOnly) {
+                opt.row = rowInfo;
+                visibilityRuleCollection.scrubCollection($([ opt.row ]));
+                visibilityRuleCollection.stateHandlers.readOnly(opt);
+            }
+        },
+
+        delayResetReadonly: function(options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            setTimeout(function () {
+                visibilityRuleCollection.scrubCollection($([opt.row.row]));
+                visibilityRuleCollection.stateHandlers.readOnly(opt);
+            }, 1000);
+        },
+
+        // initialize dialog box for configuring adapter on the settings page
+        toEditor: function (options) {
+            this.getRelationshipHelper(options).constructDialog();
+        },
+
+        // launch the adapter dialog box to configure a field
+        launchDialog: function (options) {
+            var relationshipHelper = this.getRelationshipHelper(options);
+            relationshipHelper.clearDialog();
+            relationshipHelper.initControls();
+            relationshipHelper.initDialog();
+            $("#lookupDetailDialogTable").append("<tr class='implementation-specific'><td></td><td>" +
+                "<input type='checkbox' id='lookupDetailReadOnly' " + (!options.adapter || options.adapter.readOnly ? "checked = 'checked'" : "") +
+                " /> Read Only</td></tr>");
+            $("#lookupDetailDialog").dialog("open");
+        },
+
+        getRelationshipHelper: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            opt.relationship = {
+                type: lookupDetailAdapter.type,
+                dialogDiv: "lookupDetailDialog",
+                relationshipListColumn: { id: "lookupDetailRelationshipList", displayName: "Relationship List" },
+                relationshipChildColumn: { id: "lookupDetailRelationshipDetailColumn", displayName: "Detail Column" },
+                formListColumn: { id: "lookupDetailList", displayName: "This List" },
+                formParentColumn: { id: "lookupDetailLookupColumn", displayName: "Form Lookup Column" },
+                formChildColumn: { id: "lookupDetailDetailColumn", displayName: "Form Detail Column" },
+                updateCallback: function (adapter) { adapter.readOnly = $("#lookupDetailReadOnly").is(":checked"); }
+            };
+            return new $.spEasyForms.relationshipListAdapterHelper(opt);
+        }
+    };
+
+    // define shorthand local variable for adapter
+    var lookupDetailAdapter = $.spEasyForms.lookupDetailAdapter;
+
+    // add adapter to adapter collection
+    adapterCollection.adapterImplementations[lookupDetailAdapter.type] = lookupDetailAdapter;
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
 

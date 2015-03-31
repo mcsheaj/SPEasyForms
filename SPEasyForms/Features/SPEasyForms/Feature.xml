@@ -59,6 +59,7 @@
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js" />
 
         <ElementFile Location="SPEasyFormsAssets\speasyforms_help.aspx" />
         

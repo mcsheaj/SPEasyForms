@@ -36,5 +36,6 @@
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js</file>
     </files>
 </bundle>

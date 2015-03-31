@@ -116,7 +116,8 @@
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.js" Url="jquery.SPEasyForms.adapterCollection.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" Url="jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" Url="jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.DefaultToCurrentUserAdapter.js" Url="jquery.SPEasyForms.adapterCollection.DefaultToCurrentUserAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" Url="jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js" Url="jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.js" Url="jquery.cleditor.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.sharepoint.js" Url="jquery.cleditor.sharepoint.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.xhtml.js" Url="jquery.cleditor.xhtml.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

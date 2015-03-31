@@ -21,5 +21,6 @@
         <ElementFile Location="jquery.cleditor.sharepoint.js" />
         <ElementFile Location="buttons.png" />
         <ElementFile Location="toolbar.png" />
+        <ElementFile Location="LookupDetailAdapter.js" />
     </ElementManifests>
 </Feature>

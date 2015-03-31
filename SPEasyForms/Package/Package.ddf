@@ -42,6 +42,7 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js
+..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js
 
 ..\Elements\SPEasyFormsAssets\Css\speasyforms.css
 ..\Elements\SPEasyFormsAssets\Css\jquery.cleditor.css

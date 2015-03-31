@@ -1,7 +1,7 @@
 /*
  * SPEasyForms HotFixes - cumulative update for reported bugs.
  *
- * @version 2014.01.12
+ * @version 2014.01.13
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -299,7 +299,7 @@
     // only operate on the settings page
     if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
         $().ready(function () {
-            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.12</b>");
+            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.13</b>");
         });
     }
 
@@ -599,214 +599,6 @@
         if (_spPageContextInfo.webUIVersion === 4) {
             $(".ui-widget input").css("font-size", "8pt");
         }
-    };
-
-    $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_value = $.spEasyForms.sharePointFieldRows.value;
-    $.spEasyForms.sharePointFieldRows.value = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        var tr = opt.row;
-        tr.value = "";
-        try {
-            if ($.spEasyForms.visibilityRuleCollection.getFormType(opt) === "display") {
-                tr.value = tr.row.find("td.ms-formbody").clone().children().remove().end().text().trim();
-                return tr.value;
-            }
-            switch (tr.spFieldType) {
-                case "SPFieldContentType":
-                    tr.value = tr.row.find("td.ms-formbody select option:selected").text();
-                    break;
-                case "SPFieldChoice":
-                    var select = tr.row.find("td.ms-formbody select");
-                    if (select.length > 0) {
-                        tr.value = tr.row.find("td.ms-formbody select").val();
-                        var tmp = tr.row.find("input:checked").first();
-                        var re = new RegExp(/FillInButton$/i);
-                        if (tmp.length > 0 && re.test(tmp[0].id)) {
-                            tr.value = tr.row.find("input[type='text']").val();
-                        }
-                    } else {
-                        tr.value = "";
-                        tr.row.find("input:checked").each(function () {
-                            if (tr.value) { tr.value += ";"; }
-                            var re = new RegExp(/FillInRadio$/i);
-                            if ($(this).length > 0 && !re.test($(this)[0].id)) {
-                                tr.value += $(this).val();
-                            }
-                            else {
-                                tr.value += tr.row.find("input[type='text']").val();
-                            }
-                        });
-                    }
-                    break;
-                case "SPFieldNote":
-                case "SPFieldMultiLine":
-                    tr.value = "";
-                    var input = tr.row.find("td.ms-formbody input");
-                    if (input.length > 0 && !(input.val().search(/^<p>.*<\/p>$/) >= 0 &&
-                        input.val().length === 8)) {
-                        tr.value = input.val().trim();
-                        if (tr.value.indexOf("<div") === 0) {
-                            tr.value = "<div class='ms-rtestate-field'>" + tr.value + "</div>";
-                        }
-                    }
-                    var textarea = tr.row.find("td.ms-formbody textarea");
-                    if (textarea.length > 0) {
-                        tr.value = textarea.val().replace("\n", "<br />\n");
-                    }
-                    var appendedText =
-                        tr.row.find(".ms-imnSpan").parent().parent();
-                    if (appendedText.length > 0) {
-                        $.each(appendedText, function (i, t) {
-                            tr.value += t.outerHTML;
-                        });
-                    }
-                    break;
-                case "SPFieldMultiChoice":
-                    tr.value = "";
-                    tr.row.find("input:checked").each(function () {
-                        if (tr.value.length > 0) tr.value += "; ";
-                        var re = new RegExp(/FillInRadio$/i);
-                        if ($(this).length > 0 && !re.test($(this)[0].id)) {
-                            tr.value += $(this).next().text();
-                        }
-                        else {
-                            tr.value += tr.row.find("input[type='text']").val();
-                        }
-                    });
-                    break;
-                case "SPFieldDateTime":
-                    tr.value = tr.row.find("td.ms-formbody input").val().trim();
-                    var selects = tr.row.find("select");
-                    if (selects.length === 2) {
-                        var tmp2 = $(selects[0]).find(
-                            "option:selected").text().split(' ');
-                        if (tmp2.length === 2) {
-                            var hour = tmp2[0];
-                            var ampm = tmp2[1];
-                            var minutes = $(selects[1]).val();
-                            tr.value += " " + hour + ":" + minutes + " " +
-                                ampm;
-                        }
-                    }
-                    break;
-                case "SPFieldLookup":
-                    tr.value = tr.row.find("option:selected").text();
-                    break;
-                case "SPFieldLookupMulti":
-                    tr.value = tr.row.find("td.ms-formbody input").val().trim();
-                    if (tr.value.indexOf("|t") >= 0) {
-                        var parts = tr.value.split("|t");
-                        tr.value = "";
-                        for (var i = 1; i < parts.length; i += 2) {
-                            if (tr.value.length === 0) {
-                                tr.value += parts[i];
-                            } else {
-                                tr.value += "; " + parts[i];
-                            }
-                        }
-                    }
-                    break;
-                case "SPFieldBoolean":
-                    tr.value =
-                        tr.row.find("td.ms-formbody input").is(":checked");
-                    if (tr.value) {
-                        tr.value = "Yes";
-                    } else {
-                        tr.value = "No";
-                    }
-                    break;
-                case "SPFieldURL":
-                    var inputs = tr.row.find("td.ms-formbody input");
-                    if ($(inputs[0]).val().length > 0 &&
-                        $(inputs[1]).val().length > 0) {
-                        tr.value = "<a href='" + $(inputs[0]).val() +
-                            "' target='_blank'>" + $(inputs[1]).val() +
-                            "</a>";
-                    } else if ($(inputs[0]).val().length > 0) {
-                        tr.value = "<a href='" + $(inputs[0]).val() +
-                            "' target='_blank'>" + $(inputs[0]).val() +
-                            "</a>";
-                    } else {
-                        tr.value = "";
-                    }
-                    break;
-                case "SPFieldUser":
-                case "SPFieldUserMulti":
-                    var tmp3 = tr.row.find("input[type='hidden']").val();
-                    if (typeof (tmp3) !== 'undefined') {
-                        var hiddenInput = $.spEasyForms.utilities.parseJSON(tmp3);
-                        $.each(hiddenInput, function (idx, entity) {
-                            if (tr.value.length > 0) {
-                                tr.value += "; ";
-                            }
-                            tr.value += "<a href='" +
-                                opt.currentContext.webRelativeUrl +
-                                "/_layouts/userdisp.aspx?ID=" +
-                                entity.EntityData.SPUserID +
-                                "' target='_blank'>" +
-                                entity.DisplayText + "</a>";
-                        });
-                    }
-                    break;
-                case "SPFieldBusinessData":
-                    tr.value = tr.row.find("div.ms-inputuserfield span span").text().trim();
-                    break;
-                case "SPFieldCalculated":
-                    tr.value = tr.find("td.ms-formbody").text().trim();
-                    break;
-                default:
-                    if (tr.row.find("td.ms-formbody input").length > 0) {
-                        tr.value = tr.row.find("td.ms-formbody input").val().trim();
-                    }
-                    else if (tr.row.find("td.ms-formbody textarea").length > 0) {
-                        tr.value = tr.row.find("td.ms-formbody textarea").val().replace("\n", "<br />\n").trim();
-                    }
-                    else if (tr.row.find("td.ms-formbody select").length > 0) {
-                        tr.value = tr.row.find("td.ms-formbody select").val().trim();
-                    }
-                    break;
-            }
-        } catch (e) { }
-        if (!tr.value) {
-            tr.value = "";
-        }
-        return tr.value;
-    };
-
-    $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_init = $.spEasyForms.sharePointFieldRows.init;
-    $.spEasyForms.sharePointFieldRows.init = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        var result = $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_init(options);
-        if (!opt.skipCalculatedFields && window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
-            var hasCalculatedFields = false;
-            $.each(Object.keys(result), function (idx, key) {
-                if (result[key].spFieldType === "SPFieldCalculated") {
-                    hasCalculatedFields = true;
-                    return false;
-                }
-            });
-            if (!hasCalculatedFields) {
-                var listCtx = $.spEasyForms.sharePointContext.getListContext(options);
-                $.each(Object.keys(listCtx.schema), function (idx, key) {
-                    var field = listCtx.schema[key];
-                    if (field.type === "Calculated" && field.hasFormula) {
-                        var tr = $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'><nobr>" +
-                            field.displayName + "</nobr></h3></td><td class='ms-formbody'>value</td></tr>");
-                        tr.appendTo("table.ms-formtable");
-                        opt.row = tr;
-                        var newRow = {
-                            internalName: field.name,
-                            displayName: field.displayName,
-                            spFieldType: "SPFieldCalculated",
-                            value: "",
-                            row: tr
-                        };
-                        result[field.name] = newRow;
-                    }
-                });
-            }
-        }
-        return result;
     };
 
     containerCollection.transform = function (options) {
@@ -1110,6 +902,504 @@
         var config = $.spEasyForms.configManager.get(opt);
         config.visibility.def[fieldName] = rules;
         return config;
+    };
+
+    /*v2014-01-13*/
+    $.spEasyForms.adapterCollection.hotfixes_toEditor_Original = $.spEasyForms.adapterCollection.toEditor;
+    $.spEasyForms.adapterCollection.toEditor = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+
+        $.spEasyForms.adapterCollection.hotfixes_toEditor_Original(opt);
+
+        $("tr.speasyforms-adapter-static").each(function (idx, r) {
+            var row = $(r);
+            var internalName = $(row.find("td")[1]).text();
+            if (row.find("td").length > 1) {
+                row.append("<td><button id='" + internalName + "Delete' title='Delete' class='speasyforms-containerbtn speasyforms-deleteadapter' style='height: 25px;'></button></td>");
+            }
+        });
+
+        $(".speasyforms-deleteadapter").button({
+            icons: {
+                primary: "ui-icon-closethick"
+            },
+            text: false
+        }).click(function () {
+            var internalName = $($(this).closest("tr").find("td")[1]).text();
+            opt.currentConfig = containerCollection.toConfig(opt);
+            delete opt.currentConfig.adapters.def[internalName];
+            $.spEasyForms.configManager.set(opt);
+            containerCollection.toEditor(opt);
+            return false;
+        });
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Constructor for a helper class for dialogs to define a relationship list 
+    // (i.e. as used by the cascadingLookupAdapter and lookupDetailAdapter.
+    ////////////////////////////////////////////////////////////////////////////
+    $.spEasyForms.relationshipListAdapterHelper = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var instance = this;
+
+        this.initDialog = function () {
+            // initialize the jQuery UI dialog
+            var lookupDetailOpts = {
+                modal: true,
+                buttons: {
+                    "Ok": function () {
+                        if (opt.relationship.relationshipParentColumn) {
+                            $.spEasyForms.adapterCollection.validateRequired({
+                                id: opt.relationship.relationshipParentColumn.id,
+                                displayName: opt.relationship.relationshipParentColumn.displayName
+                            });
+                        }
+                        $.spEasyForms.adapterCollection.validateRequired({
+                            id: opt.relationship.relationshipChildColumn.id,
+                            displayName: opt.relationship.relationshipChildColumn.displayName
+                        });
+                        $.spEasyForms.adapterCollection.validateRequired({
+                            id: opt.relationship.formParentColumn.id,
+                            displayName: opt.relationship.formParentColumn.displayName
+                        });
+                        $.spEasyForms.adapterCollection.validateRequired({
+                            id: opt.relationship.formChildColumn.id,
+                            displayName: opt.relationship.formChildColumn.displayName
+                        });
+                        if ($("#" + opt.relationship.dialogDiv).find(".speasyforms-error").length === 0) {
+                            if (!opt.currentConfig.adapters) {
+                                opt.currentConfig.adapters = {};
+                            }
+                            if (!opt.currentConfig.adapters.def) {
+                                opt.currentConfig.adapters.def = {};
+                            }
+                            opt.adapters = opt.currentConfig.adapters.def;
+                            if ($("#" + opt.relationship.relationshipListColumn.id).val().length === 0) {
+                                if (opt.adapterField in opt.adapters) {
+                                    delete opt.adapters[opt.adapterField];
+                                }
+                                $.spEasyForms.configManager.set(opt);
+                                $("#" + opt.relationship.dialogDiv).dialog("close");
+                                $.spEasyForms.containerCollection.toEditor(opt);
+                            } else {
+                                var adapter = {};
+                                if (opt.fieldName && opt.fieldName in opt.adapters) {
+                                    adapter = opt.adapters[opt.fieldName];
+                                } else {
+                                    opt.adapters[opt.fieldName] = adapter;
+                                }
+                                adapter.type = opt.relationship.type;
+                                adapter.relationshipList =
+                                    $("#" + opt.relationship.relationshipListColumn.id).val();
+                                adapter.relationshipListTitle =
+                                    $("#" + opt.relationship.relationshipListColumn.id + " option:selected").text();
+                                if (opt.relationship.relationshipParentColumn) {
+                                    adapter.relationshipListParentColumn =
+                                        $("#" + opt.relationship.relationshipParentColumn.id).val();
+                                }
+                                adapter.relationshipListChildColumn =
+                                    $("#" + opt.relationship.relationshipChildColumn.id).val();
+                                adapter.parentColumnInternal =
+                                    $("#" + opt.relationship.formParentColumn.id).val();
+                                adapter.columnNameInternal =
+                                    $("#" + opt.relationship.formChildColumn.id).val();
+                                if (opt.relationship.updateCallback) {
+                                    opt.relationship.updateCallback(adapter);
+                                }
+                                $.spEasyForms.configManager.set(opt);
+                                $("#" + opt.relationship.dialogDiv).dialog("close");
+                                $.spEasyForms.containerCollection.toEditor(opt);
+                            }
+                            return false;
+                        }
+                    },
+                    "Cancel": function () {
+                        $("#" + opt.relationship.dialogDiv).dialog("close");
+                        return false;
+                    }
+                },
+                autoOpen: false,
+                width: 650
+            };
+            $("#" + opt.relationship.dialogDiv).dialog(lookupDetailOpts);
+        };
+
+        this.initControls = function () {
+            var listCollection = $.spEasyForms.sharePointContext.getListCollection(opt);
+            $.each(listCollection, function (idx, list) {
+                $("#" + opt.relationship.relationshipListColumn.id).append(
+                    "<option value='" + list.id + "'>" + list.title +
+                    "</option>");
+            });
+            $("#" + opt.relationship.formListColumn.id).val(opt.currentListContext.title);
+            if ($("#" + opt.relationship.relationshipListColumn.id).attr("data-change") !== "true") {
+                $("#" + opt.relationship.relationshipListColumn.id).attr("data-change", "true");
+                $("#" + opt.relationship.relationshipListColumn.id).change(function () {
+                    instance.initRelationshipFields(opt);
+                });
+                if (opt.relationship.relationshipParentColumn) {
+                    $("#" + opt.relationship.relationshipParentColumn.id).change(function () {
+                        if ($("#" + opt.relationship.relationshipChildColumn.id).find("option[value='" +
+                            $("#" + opt.relationship.relationshipParentColumn.id).val() + "']").length > 0) {
+                            $("#" + opt.relationship.relationshipChildColumn.id).find("option[text='" +
+                                $("#" + opt.relationship.relationshipParentColumn.id).text() + "']");
+                        }
+                    });
+                }
+            }
+            $("#" + opt.relationship.formChildColumn.id).val(opt.fieldName);
+            opt.adapters = opt.currentConfig.adapters.def;
+            if (opt.fieldName in opt.adapters) {
+                var a = opt.adapters[opt.fieldName];
+                $("#" + opt.relationship.relationshipListColumn.id).val(
+                    a.relationshipList);
+                instance.initRelationshipFields(opt);
+                if (opt.relationship.relationshipParentColumn) {
+                    $("#" + opt.relationship.relationshipParentColumn.id).val(
+                        a.relationshipListParentColumn);
+                }
+                $("#" + opt.relationship.relationshipChildColumn.id).val(
+                    a.relationshipListChildColumn);
+                $("#" + opt.relationship.formParentColumn.id).val(
+                    a.parentColumnInternal);
+            }
+        };
+
+        this.initRelationshipFields = function () {
+            if (opt.relationship.relationshipParentColumn) {
+                $("#" + opt.relationship.relationshipParentColumn.id).find("option").remove();
+                $("#" + opt.relationship.relationshipParentColumn.id).append("<option></option>");
+                $("#" + opt.relationship.relationshipParentColumn.id).val("");
+                $("#" + opt.relationship.relationshipParentColumn.id).attr("disabled", "disabled");
+            }
+
+            $("#" + opt.relationship.relationshipChildColumn.id).find("option").remove();
+            $("#" + opt.relationship.relationshipChildColumn.id).append("<option></option>");
+            $("#" + opt.relationship.relationshipChildColumn.id).val("");
+            $("#" + opt.relationship.relationshipChildColumn.id).attr("disabled", "disabled");
+
+            if ($("#" + opt.relationship.relationshipListColumn.id).val().length > 0) {
+                opt.listId = $("#" + opt.relationship.relationshipListColumn.id).val().toLowerCase();
+                var listctx = $.spEasyForms.sharePointContext.getListContext(opt);
+                $.each(Object.keys(listctx.fields), function (idx, field) {
+                    if (opt.relationship.relationshipParentColumn) {
+                        if (listctx.fields[field].spFieldType === "SPFieldLookup") {
+                            $("#" + opt.relationship.relationshipParentColumn.id).append(
+                                "<option value='" +
+                                listctx.fields[field].internalName + "'>" +
+                                listctx.fields[field].displayName + "</option>");
+                        }
+                    }
+                    $("#" + opt.relationship.relationshipChildColumn.id).append(
+                        "<option value='" +
+                        listctx.fields[field].internalName + "'>" +
+                        listctx.fields[field].displayName + "</option>");
+                });
+                if (opt.relationship.relationshipParentColumn) {
+                    $("#" + opt.relationship.relationshipParentColumn.id).removeAttr("disabled");
+                    var choices = $("#" + opt.relationship.relationshipParentColumn.id).find("option");
+                    if (choices.length === 2) {
+                        $("#" + opt.relationship.relationshipParentColumn.id).val(
+                            $(choices[1]).attr("value"));
+                        var relationshipParentText =
+                            $("#" + opt.relationship.relationshipParentColumn.id + " option:selected").text();
+                        var thisParentOption =
+                            $("#" + opt.relationship.relationshipChildColumn.id).find(
+                                "option:contains('" + relationshipParentText + "')");
+                        $("#" + opt.relationship.relationshipChildColumn.id).val(thisParentOption.val());
+                    }
+                }
+                $("#" + opt.relationship.relationshipChildColumn.id).removeAttr("disabled");
+                var thisChildText =
+                    $("#" + opt.relationship.formChildColumn.id + " option:selected").text();
+                var relationshipChildOption =
+                    $("#" + opt.relationship.relationshipChildColumn.id).find(
+                        "option:contains('" + thisChildText + "')");
+                $("#" + opt.relationship.relationshipChildColumn.id).val(
+                    relationshipChildOption.val());
+            }
+        };
+
+        this.constructDialog = function () {
+            if ($("#" + opt.relationship.dialogDiv).length === 0) {
+                var html = "<div id='" + opt.relationship.dialogDiv + "' title='Lookup Detail' class='speasyforms-dialogdiv'>" +
+                    "<table id='" + opt.relationship.dialogDiv + "Table' width='100%' cellpadding='0' cellspacing='0'>" +
+                    "<tr>" +
+                    "<td>" + opt.relationship.relationshipListColumn.displayName + "</td><td><select id='" + opt.relationship.relationshipListColumn.id + "'><option></option></select></td><td></td>" +
+                    "</tr><tr>" +
+                    (opt.relationship.relationshipParentColumn ? "<td></td><td>" + opt.relationship.relationshipParentColumn.displayName + "</td><td><select id='" + opt.relationship.relationshipParentColumn.id + "'><option></option></select></td>" : "") +
+                    "</tr><tr>" +
+                    "<td></td><td>" + opt.relationship.relationshipChildColumn.displayName + "</td><td><select id='" + opt.relationship.relationshipChildColumn.id + "'><option></option></select></td>" +
+                    "</tr><tr><td>&nbsp;</td></tr><tr>" +
+                    "<td>" + opt.relationship.formListColumn.displayName + "</td><td><input type='text' disabled='disabled' id='" + opt.relationship.formListColumn.id + "' value=''/></td><td></td>" +
+                    "</tr><tr>" +
+                    "<td></td><td>" + opt.relationship.formParentColumn.displayName + "</td><td><select id='" + opt.relationship.formParentColumn.id + "'><option></option></select></td>" +
+                    "</tr><tr>" +
+                    "<td></td><td>" + opt.relationship.formChildColumn.displayName + "</td><td><input type='text' id='" + opt.relationship.formChildColumn.id + "' disabled='disabled'/></td>" +
+                    "</tr>" +
+                    "</table>" +
+                    "</div>";
+                $("#spEasyFormsContainerDialogs").append(html);
+            }
+        };
+
+        this.clearDialog = function () {
+            $("#" + opt.relationship.dialogDiv).find(".speasyforms-error").remove();
+            $("#" + opt.relationship.dialogDiv).find(".implementation-specific").remove();
+
+            $("#" + opt.relationship.relationshipListColumn.id).find("option").remove();
+            $("#" + opt.relationship.relationshipListColumn.id).append("<option></option>");
+            $("#" + opt.relationship.relationshipListColumn.id).val("");
+
+            if (opt.relationship.relationshipParentColumn) {
+                $("#" + opt.relationship.relationshipParentColumn.id).find("option").remove();
+                $("#" + opt.relationship.relationshipParentColumn.id).append("<option></option>");
+                $("#" + opt.relationship.relationshipParentColumn.id).val("");
+                $("#" + opt.relationship.relationshipParentColumn.id).attr("disabled", "disabled");
+            }
+
+            $("#" + opt.relationship.relationshipChildColumn.id).find("option").remove();
+            $("#" + opt.relationship.relationshipChildColumn.id).append("<option></option>");
+            $("#" + opt.relationship.relationshipChildColumn.id).val("");
+            $("#" + opt.relationship.relationshipChildColumn.id).attr("disabled", "disabled");
+
+            $("#" + opt.relationship.relationshipChildColumn.id).find("option").remove();
+            $("#" + opt.relationship.relationshipChildColumn.id).append("<option></option>");
+            $("#" + opt.relationship.relationshipChildColumn.id).val("");
+
+            var fields = $.spEasyForms.containerCollection.rows;
+            $.each(Object.keys($.spEasyForms.containerCollection.rows).sort($.spEasyForms.sharePointFieldRows.compareField), function (idx, field) {
+                if (fields[field].spFieldType === "SPFieldLookup") {
+                    $("#" + opt.relationship.formParentColumn.id).append("<option value='" +
+                        fields[field].internalName + "'>" +
+                        fields[field].displayName + "</option>");
+                }
+            });
+        };
+    };
+
+    $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_init = $.spEasyForms.sharePointFieldRows.init;
+    $.spEasyForms.sharePointFieldRows.init = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var result = $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_init(options);
+        var currentContext = $.spEasyForms.sharePointContext.get(opt);
+        var listId = $.spEasyForms.sharePointContext.getCurrentListId(opt);
+        if (listId in currentContext.listContexts && !opt.skipCalculatedFields && window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+            var hasCalculatedFields = false;
+            $.each(Object.keys(result), function (idx, key) {
+                if (result[key].spFieldType === "SPFieldCalculated") {
+                    hasCalculatedFields = true;
+                    return false;
+                }
+            });
+            if (!hasCalculatedFields) {
+                var listCtx = $.spEasyForms.sharePointContext.getListContext(options);
+                $.each(Object.keys(listCtx.schema), function (idx, key) {
+                    var field = listCtx.schema[key];
+                    if (field.type === "Calculated" && field.hasFormula) {
+                        var tr = $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'><nobr>" +
+                            field.displayName + "</nobr></h3></td><td class='ms-formbody'>value</td></tr>");
+                        tr.appendTo("table.ms-formtable");
+                        opt.row = tr;
+                        var newRow = {
+                            internalName: field.name,
+                            displayName: field.displayName,
+                            spFieldType: "SPFieldCalculated",
+                            value: "",
+                            row: tr
+                        };
+                        result[field.name] = newRow;
+                    }
+                });
+            }
+        }
+        return result;
+    };
+
+    $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_value = $.spEasyForms.sharePointFieldRows.value;
+    $.spEasyForms.sharePointFieldRows.value = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var tr = opt.row;
+        tr.value = "";
+        try {
+            if ($.spEasyForms.visibilityRuleCollection.getFormType(opt) === "display") {
+                tr.value = tr.row.find("td.ms-formbody").clone().children().remove().end().text().trim();
+                return tr.value;
+            }
+            switch (tr.spFieldType) {
+                case "SPFieldContentType":
+                    tr.value = tr.row.find("td.ms-formbody select option:selected").text();
+                    break;
+                case "SPFieldChoice":
+                    var select = tr.row.find("td.ms-formbody select");
+                    if (select.length > 0) {
+                        tr.value = tr.row.find("td.ms-formbody select").val();
+                        var tmp = tr.row.find("input:checked").first();
+                        var re = new RegExp(/FillInButton$/i);
+                        if (tmp.length > 0 && re.test(tmp[0].id)) {
+                            tr.value = tr.row.find("input[type='text']").val();
+                        }
+                    } else {
+                        tr.value = "";
+                        tr.row.find("input:checked").each(function () {
+                            if (tr.value) { tr.value += ";"; }
+                            var re = new RegExp(/FillInRadio$/i);
+                            if ($(this).length > 0 && !re.test($(this)[0].id)) {
+                                tr.value += $(this).val();
+                            }
+                            else {
+                                tr.value += tr.row.find("input[type='text']").val();
+                            }
+                        });
+                    }
+                    break;
+                case "SPFieldNote":
+                case "SPFieldMultiLine":
+                    tr.value = "";
+                    var input = tr.row.find("td.ms-formbody input");
+                    if (input.length > 0 && !(input.val().search(/^<p>.*<\/p>$/) >= 0 &&
+                        input.val().length === 8)) {
+                        tr.value = input.val().trim();
+                        if (tr.value.indexOf("<div") === 0) {
+                            tr.value = "<div class='ms-rtestate-field'>" + tr.value + "</div>";
+                        }
+                    }
+                    var textarea = tr.row.find("td.ms-formbody textarea");
+                    if (textarea.length > 0) {
+                        tr.value = textarea.val().replace("\n", "<br />\n");
+                    }
+                    var appendedText =
+                        tr.row.find(".ms-imnSpan").parent().parent();
+                    if (appendedText.length > 0) {
+                        $.each(appendedText, function (i, t) {
+                            tr.value += t.outerHTML;
+                        });
+                    }
+                    break;
+                case "SPFieldMultiChoice":
+                    tr.value = "";
+                    tr.row.find("input:checked").each(function () {
+                        if (tr.value.length > 0) tr.value += "; ";
+                        var re = new RegExp(/FillInRadio$/i);
+                        if ($(this).length > 0 && !re.test($(this)[0].id)) {
+                            tr.value += $(this).next().text();
+                        }
+                        else {
+                            tr.value += tr.row.find("input[type='text']").val();
+                        }
+                    });
+                    break;
+                case "SPFieldDateTime":
+                    tr.value = tr.row.find("td.ms-formbody input").val().trim();
+                    var selects = tr.row.find("select");
+                    if (selects.length === 2) {
+                        var tmp2 = $(selects[0]).find(
+                            "option:selected").text().split(' ');
+                        if (tmp2.length === 2) {
+                            var hour = tmp2[0];
+                            var ampm = tmp2[1];
+                            var minutes = $(selects[1]).val();
+                            tr.value += " " + hour + ":" + minutes + " " +
+                                ampm;
+                        }
+                    }
+                    break;
+                case "SPFieldLookup":
+                    tr.value = tr.row.find("option:selected").text();
+                    break;
+                case "SPFieldLookupMulti":
+                    tr.value = tr.row.find("td.ms-formbody input").val().trim();
+                    if (tr.value.indexOf("|t") >= 0) {
+                        var parts = tr.value.split("|t");
+                        tr.value = "";
+                        for (var i = 1; i < parts.length; i += 2) {
+                            if (tr.value.length === 0) {
+                                tr.value += parts[i];
+                            } else {
+                                tr.value += "; " + parts[i];
+                            }
+                        }
+                    }
+                    break;
+                case "SPFieldBoolean":
+                    tr.value =
+                        tr.row.find("td.ms-formbody input").is(":checked");
+                    if (tr.value) {
+                        tr.value = "Yes";
+                    } else {
+                        tr.value = "No";
+                    }
+                    break;
+                case "SPFieldURL":
+                    var inputs = tr.row.find("td.ms-formbody input");
+                    if ($(inputs[0]).val().length > 0 &&
+                        $(inputs[1]).val().length > 0) {
+                        tr.value = "<a href='" + $(inputs[0]).val() +
+                            "' target='_blank'>" + $(inputs[1]).val() +
+                            "</a>";
+                    } else if ($(inputs[0]).val().length > 0) {
+                        tr.value = "<a href='" + $(inputs[0]).val() +
+                            "' target='_blank'>" + $(inputs[0]).val() +
+                            "</a>";
+                    } else {
+                        tr.value = "";
+                    }
+                    break;
+                case "SPFieldUser":
+                case "SPFieldUserMulti":
+                    var pplpkrDiv = $("[id^='" + tr.internalName + "'][id$='ClientPeoplePicker']");
+                    if (pplpkrDiv.length > 0) {
+                        var tmp3 = tr.row.find("input[type='hidden']").val();
+                        if (typeof (tmp3) !== 'undefined') {
+                            var hiddenInput = $.spEasyForms.utilities.parseJSON(tmp3);
+                            $.each(hiddenInput, function (idx, entity) {
+                                if (tr.value.length > 0) {
+                                    tr.value += "; ";
+                                }
+                                if (entity.isResolved || entity.IsResolved) {
+                                    tr.value += "<a href='" +
+                                    opt.currentContext.webRelativeUrl +
+                                    "/_layouts/userdisp.aspx?ID=" +
+                                    entity.EntityData.SPUserID +
+                                    "' target='_blank'>" +
+                                    entity.DisplayText + "</a>";
+                                }
+                                else {
+                                    tr.value += entity.DisplayText;
+                                }
+                            });
+                        }
+                    }
+                    else {
+                        var picker = $().SPServices.SPFindPeoplePicker({
+                            peoplePickerDisplayName: tr.displayName
+                        });
+                        tr.value = picker.currentValue;
+                    }
+                    break;
+                case "SPFieldBusinessData":
+                    tr.value = tr.row.find("div.ms-inputuserfield span span").text().trim();
+                    break;
+                case "SPFieldCalculated":
+                    tr.value = tr.find("td.ms-formbody").text().trim();
+                    break;
+                default:
+                    if (tr.row.find("td.ms-formbody input").length > 0) {
+                        tr.value = tr.row.find("td.ms-formbody input").val().trim();
+                    }
+                    else if (tr.row.find("td.ms-formbody textarea").length > 0) {
+                        tr.value = tr.row.find("td.ms-formbody textarea").val().replace("\n", "<br />\n").trim();
+                    }
+                    else if (tr.row.find("td.ms-formbody select").length > 0) {
+                        tr.value = tr.row.find("td.ms-formbody select").val().trim();
+                    }
+                    break;
+            }
+        } catch (e) { }
+        if (!tr.value) {
+            tr.value = "";
+        }
+        return tr.value;
     };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
