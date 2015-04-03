@@ -1,7 +1,7 @@
 /*
  * SPEasyForms HotFixes - cumulative update for reported bugs.
  *
- * @version 2014.01.14
+ * @version 2014.01.15
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -299,7 +299,7 @@
     // only operate on the settings page
     if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
         $().ready(function () {
-            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.14</b>");
+            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.15</b>");
         });
     }
 
@@ -1400,6 +1400,48 @@
             tr.value = "";
         }
         return tr.value;
+    };
+
+    /*v2014-01-15*/
+    $.spEasyForms.utilities.appendRow = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var result = false;
+        if (opt.rowInfo && !opt.rowInfo.fieldMissing) {
+            var rtePresent = opt.rowInfo.row.find("iframe[id$='TextField_iframe']").length > 0;
+            if (!rtePresent) {
+                opt.table.append(opt.rowInfo.row);
+                if (opt.headerOnTop) {
+                    var tdh = opt.rowInfo.row.find("td.ms-formlabel");
+                    if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+                        opt.rowInfo.row.find("td.ms-formbody").prepend(
+                            "<div data-transformAdded='true'>&nbsp;</div>");
+                    }
+                    if (tdh.html() === "Content Type") {
+                        opt.rowInfo.row.find("td.ms-formbody").prepend(
+                            "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
+                    } else {
+                        opt.rowInfo.row.find("td.ms-formbody").prepend(
+                            tdh.attr("data-transformAdded", "true").html());
+                    }
+                    tdh.attr("data-transformHidden", "true").hide();
+                }
+                result = true;
+            }
+        }
+        return result;
+    };
+
+    $.spEasyForms.utilities.appendFieldCollection = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        $("#" + opt.parentElement).append("<table width='100%' id='pageTable" + opt.collectionIndex +
+            "' class='speasyforms-wizard' cellspacing='5'></table>");
+        opt.table = $("#" + opt.collectionType + "Table" + opt.collectionIndex);
+        $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
+            opt.rowInfo = containerCollection.rows[field.fieldInternalName];
+            if ($.spEasyForms.utilities.appendRow(opt)) {
+                opt.result.push(field.fieldInternalName);
+            }
+        });
     };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);

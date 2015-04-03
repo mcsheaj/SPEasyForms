@@ -33,12 +33,6 @@
             var containerDiv = $("#" + opt.containerId);
             containerDiv.append("<div id='" + opt.divId + "' class='" + divClass +
                 "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
-            var mostFields = 0;
-            $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                if (fieldCollection.fields.length > mostFields) {
-                    mostFields = fieldCollection.fields.length;
-                }
-            });
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
                 var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.index + "" + idx +
                     " ui-state-default ui-corner-top";

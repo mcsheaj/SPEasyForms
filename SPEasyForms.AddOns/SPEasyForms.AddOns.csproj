@@ -58,6 +58,7 @@
     </Content>
     <Content Include="Elements\toolbar.png" />
     <Content Include="Elements\VisibilityRulesExtension.js" />
+    <Content Include="Elements\WizardContainer.js" />
     <Content Include="Features\Feature.xml">
       <SubType>Designer</SubType>
     </Content>

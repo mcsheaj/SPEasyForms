@@ -22,5 +22,6 @@
         <ElementFile Location="buttons.png" />
         <ElementFile Location="toolbar.png" />
         <ElementFile Location="LookupDetailAdapter.js" />
+        <ElementFile Location="WizardContainer.js" />
     </ElementManifests>
 </Feature>
