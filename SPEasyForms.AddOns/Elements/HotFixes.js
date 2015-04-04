@@ -1403,7 +1403,7 @@
     };
 
     /*v2014-01-15*/
-    $.spEasyForms.utilities.appendRow = function (options) {
+    $.spEasyForms.baseContainer.appendRow = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
         var result = false;
         if (opt.rowInfo && !opt.rowInfo.fieldMissing) {
@@ -1431,14 +1431,14 @@
         return result;
     };
 
-    $.spEasyForms.utilities.appendFieldCollection = function (options) {
+    $.spEasyForms.baseContainer.appendFieldCollection = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
         $("#" + opt.parentElement).append("<table width='100%' id='pageTable" + opt.collectionIndex +
             "' class='speasyforms-wizard' cellspacing='5'></table>");
         opt.table = $("#" + opt.collectionType + "Table" + opt.collectionIndex);
         $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
             opt.rowInfo = containerCollection.rows[field.fieldInternalName];
-            if ($.spEasyForms.utilities.appendRow(opt)) {
+            if ($.spEasyForms.baseContainer.appendRow(opt)) {
                 opt.result.push(field.fieldInternalName);
             }
         });
