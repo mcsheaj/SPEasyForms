@@ -28,7 +28,8 @@
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.accordion.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.columns.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.tabs.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.htmlSnippetContainer.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.htmlSnippet.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.wizard.js</file>
 
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.visibilityRuleCollection.js</file>
 

@@ -1,8 +1,7 @@
 ﻿/*
  * SPEasyForms WizardContainer
  *
- * @version 2014.01.15
- * @requires SPEasyForms v2014.01
+ * @version 2015.01
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -10,15 +9,6 @@
 
 /* global spefjQuery */
 (function ($, undefined) {
-
-    // return without doing anything if SPEasyForms has not been loaded
-    if (!$ || !$.spEasyForms) return;
-
-    // get the version number from the default options (not defined in 2014.01)
-    var spEasyFormsVersion = ($.spEasyForms.defaults.version ? $.spEasyForms.defaults.version : "2014.01");
-
-    // this patch only needs to be applied to v2014.01
-    if (spEasyFormsVersion !== "2014.01") return;
 
     var containerCollection = $.spEasyForms.containerCollection;
     var baseContainer = $.spEasyForms.baseContainer;

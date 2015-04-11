@@ -22,7 +22,7 @@
 
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var result = [];
+            opt.result = [];
             var divId = "spEasyFormsAccordionDiv" + opt.index;
             var divClass =
                 "speasyforms-container speasyforms-accordion speasyforms-accordion" +
@@ -30,25 +30,19 @@
             $("#" + opt.containerId).append("<div id='" + divId + "' class='" +
                 divClass + "'></div>");
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                var tableClass = "speasyforms-accordion " +
-                    "speasyforms-accordion" + opt.index + "" + idx;
-                var tableId = "spEasyFormsAccordionTable" + opt.index + "" + idx;
-                var headerId = "spEasyFormsAccordionHeader" + opt.index + "" + idx;
+                opt.collectionIndex = opt.index + "" + idx;
+                opt.parentElement = "spEasyFormsAccordionDiv" + opt.collectionIndex;
+                opt.collectionType = "accordion";
+                opt.fieldCollection = fieldCollection;
+                opt.tableClass = "speasyforms-accordion";
+
+                var headerId = "spEasyFormsAccordionHeader" + opt.collectionIndex;
                 $("#" + divId).append("<h3 id='" + headerId + "' class='" +
-                    tableClass + "'>" + fieldCollection.name + "</h3>");
+                    opt.tableClass + "'>" + fieldCollection.name + "</h3>");
                 $("#" + divId).append(
-                    "<div><table class='" + tableClass + "' id='" + tableId +
-                    "'></table></div>");
-                $.each(fieldCollection.fields, function (fieldIdx, field) {
-                    var currentRow = containerCollection.rows[field.fieldInternalName];
-                    if (currentRow) {
-                        var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
-                        if (!rtePresent && !currentRow.fieldMissing) {
-                            result.push(field.fieldInternalName);
-                            currentRow.row.appendTo("#" + tableId);
-                        }
-                    }
-                });
+                    "<div id='" + opt.parentElement + "'></div>");
+
+                $.spEasyForms.baseContainer.appendFieldCollection(opt);
             });
             $("#" + divId).accordion({
                 heightStyle: "auto",
@@ -56,14 +50,14 @@
                 collapsible: true
             });
 
-            return result;
+            return opt.result;
         },
 
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var divId = "spEasyFormsAccordionDiv" + opt.index;
             $("#" + divId + " table.speasyforms-accordion").each(function () {
-                var index = $(this)[0].id.replace("spEasyFormsAccordionTable", "");
+                var index = $(this)[0].id.replace("accordionTable", "");
                 if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
                     $("#spEasyFormsAccordionHeader" + index).hide();
                     $("#spEasyFormsAccordionHeader" + index).next().hide();

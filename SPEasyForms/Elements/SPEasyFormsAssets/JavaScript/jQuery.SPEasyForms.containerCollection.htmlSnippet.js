@@ -1,5 +1,5 @@
 /*
- * SPEasyForms HtmlSnippetContainer
+ * SPEasyForms htmlSnippet
  *
  * @version 2015.01
  * @copyright 2014-2015 Joe McShea

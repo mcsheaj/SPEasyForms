@@ -122,7 +122,12 @@
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jQuery.SPEasyForms.containerCollection.HtmlSnippetContainer.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jQuery.SPEasyForms.containerCollection.htmlSnippet.js"
+       Sequence="57251"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jQuery.SPEasyForms.containerCollection.wizard.js"
        Sequence="57251"
     />
     <CustomAction

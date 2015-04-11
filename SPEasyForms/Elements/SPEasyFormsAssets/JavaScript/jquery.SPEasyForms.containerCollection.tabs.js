@@ -22,7 +22,7 @@
 
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var result = [];
+            opt.result = [];
             opt.divId = "spEasyFormsTabDiv" + opt.index;
             var divClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" +
                 opt.index + " ui-tabs ui-widget ui-widget-content ui-corner-all";
@@ -33,33 +33,29 @@
             var containerDiv = $("#" + opt.containerId);
             containerDiv.append("<div id='" + opt.divId + "' class='" + divClass +
                 "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
+            var mostFields = 0;
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.index + "" + idx +
+                if (fieldCollection.fields.length > mostFields) {
+                    mostFields = fieldCollection.fields.length;
+                }
+            });
+            $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
+                opt.collectionIndex = opt.index + "" + idx;
+                opt.parentElement = "spEasyFormsTabsDiv" + opt.collectionIndex;
+                opt.collectionType = "tab";
+                opt.fieldCollection = fieldCollection;
+                opt.tableClass = "speasyforms-tabs";
+
+                var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.collectionIndex +
                     " ui-state-default ui-corner-top";
-                var tableClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" +
-                    opt.index + "" + idx;
-                var innerDivId = "spEasyFormsTabsDiv" + opt.index + "" + idx;
-                var tableId = "spEasyFormsTabsTable" + opt.index + "" + idx;
                 $("#" + listId).append("<li class='" + itemClass +
-                    "'><a href='#" + innerDivId + "'>" + fieldCollection.name +
+                    "'><a href='#" + opt.parentElement + "'>" + fieldCollection.name +
                     "</a></li>");
                 $("#" + opt.divId).append(
-                    "<div id='" + innerDivId +
-                    "' class='ui-tabs-panel ui-widget-content ui-corner-bottom'>" +
-                    "<table class='" + tableClass + "' id='" + tableId +
-                    "'></table></div>");
-                $.each(fieldCollection.fields, function (fieldIdx, field) {
-                    var currentRow = containerCollection.rows[field.fieldInternalName];
-                    if (currentRow) {
-                        var rtePresent = currentRow.row.find("iframe[id$='TextField_iframe']").length > 0;
-                        if (!rtePresent && !currentRow.fieldMissing) {
-                            result.push(field.fieldInternalName);
-                            if (currentRow) {
-                                currentRow.row.appendTo("#" + tableId);
-                            }
-                        }
-                    }
-                });
+                    "<div id='" + opt.parentElement +
+                    "' class='ui-tabs-panel ui-widget-content ui-corner-bottom'>");
+
+                $.spEasyForms.baseContainer.appendFieldCollection(opt);
             });
             $("#" + listId).find("li:first").addClass("ui-tabs-active").addClass("ui-state-active");
             $("#" + opt.divId).find("div.ui-tabs-panel").hide();
@@ -72,14 +68,14 @@
                 return false;
             });
 
-            return result;
+            return opt.result;
         },
 
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.divId = "spEasyFormsTabDiv" + opt.index;
             $("#" + opt.divId + " table.speasyforms-tabs").each(function () {
-                var index = $(this)[0].id.replace("spEasyFormsTabsTable", "");
+                var index = $(this)[0].id.replace("tabTable", "");
                 if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
                     if ($(this).parent().css("display") !== "none") {
                         var nextIndex = -1;

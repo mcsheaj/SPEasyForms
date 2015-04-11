@@ -36,7 +36,8 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.accordion.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.columns.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.tabs.js
-..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.htmlSnippetContainer.js
+..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.htmlSnippet.js
+..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.wizard.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.visibilityRuleCollection.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js

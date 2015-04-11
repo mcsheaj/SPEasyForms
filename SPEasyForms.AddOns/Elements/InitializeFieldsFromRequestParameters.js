@@ -59,7 +59,7 @@
         $(".speasyforms-helptext").append(
             "<p><a href='http://premiumsoftware.net/cleditor' target='_blank' class='speasyforms-aboutlink'>CLEditor WYSIWYG HTML Editor v1.4.5</a><br>" +
             "Copyright 2010, Chris Landowski, " +
-            "<a href='http://premiumsoftware.net/' target='_blank' class='speasyforms-aboutlink'>Premium Software, LLC</a></p>");
+            "<a href='http://premiumsoftware.net/' target='_blank' class='speasyforms-aboutlink'>Premium Software, LLC</a>, Licensed MIT</p>");
 
         // call the original SPEasyForms init method
         $.spEasyForms.InitializeFieldsFromRequestParameters_originalInit(opt);

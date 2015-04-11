@@ -121,7 +121,8 @@
         <File Path="SPEasyFormsAssets\jquery.cleditor.js" Url="jquery.cleditor.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.sharepoint.js" Url="jquery.cleditor.sharepoint.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.xhtml.js" Url="jquery.cleditor.xhtml.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jQuery.SPEasyForms.containerCollection.HtmlSnippetContainer.js" Url="jQuery.SPEasyForms.containerCollection.HtmlSnippetContainer.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jQuery.SPEasyForms.containerCollection.HtmlSnippet.js" Url="jQuery.SPEasyForms.containerCollection.htmlSnippet.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jQuery.SPEasyForms.containerCollection.wizard.js" Url="jQuery.SPEasyForms.containerCollection.wizard.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
     <Module Name="SPEasyFormsAssetsPages" Url="Style Library/SPEasyFormsAssets/2015.01/Pages">
         <File Path="SPEasyFormsAssets\SPEasyFormsSettings.aspx" Url="SPEasyFormsSettings.aspx" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

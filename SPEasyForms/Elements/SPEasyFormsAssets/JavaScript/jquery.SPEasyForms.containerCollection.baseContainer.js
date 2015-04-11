@@ -35,18 +35,18 @@
          *     layout {object} - object representing the configuration for this container
          * }
          *********************************************************************/
-        toEditor: function(options) {
+        toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var parent = opt.id;
             var index = opt.index;
             var layout = opt.currentContainerLayout;
             var result = [];
 
-            $.each(layout.fieldCollections, function(idx, fieldCollection) {
+            $.each(layout.fieldCollections, function (idx, fieldCollection) {
                 var tableId = "spEasyFormsSortableFields" + index + "" + idx;
                 var table = "";
 
-                $.each(fieldCollection.fields, function(fieldIdx, field) {
+                $.each(fieldCollection.fields, function (fieldIdx, field) {
                     opt.row = containerCollection.rows[field.fieldInternalName];
                     if (opt.row === undefined) {
                         opt.row = {
@@ -85,7 +85,7 @@
                         primary: "ui-icon-plusthick"
                     },
                     text: false
-                }).click(function() {
+                }).click(function () {
                     $("#addFieldCollectionNames2").val("");
                     $("#addFieldCollectionsContainerId").val(index);
                     $("#addFieldCollectionsToContainerDialog").attr("title", header);
@@ -103,7 +103,7 @@
          *
          * @returns {object} - the layout
          *********************************************************************/
-        toLayout: function(options) {
+        toLayout: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = {
                 containerType: opt.containerType,
@@ -111,14 +111,14 @@
                 fieldCollections: []
             };
             var tables = $(opt.container).find("table.speasyforms-sortablefields");
-            $.each(tables, function(index, table) {
+            $.each(tables, function (index, table) {
                 var fieldCollection = {
                     name: $(table).prev().
                     find("h3.speasyforms-sortablefields").text()
                 };
                 fieldCollection.fields = [];
                 var trs = $(table).find("tr:not(:first)");
-                $.each(trs, function(idx, tr) {
+                $.each(trs, function (idx, tr) {
                     var tds = $(tr).find("td");
                     fieldCollection.fields.push({
                         fieldInternalName: $(tds[1]).text()
@@ -132,7 +132,7 @@
         /*********************************************************************
          * Launch the settings dialog for this container.
          *********************************************************************/
-        settings: function(options) {
+        settings: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             $("#addFieldCollectionNames").val("");
             this.wireDialogEvents(opt);
@@ -145,21 +145,21 @@
          * Wire the initial configuration and add field collection dialogs for this
          * container.
          *********************************************************************/
-        wireDialogEvents: function(options) {
+        wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
             var configureTabsOpts = {
                 width: 450,
                 modal: true,
                 buttons: {
-                    "Ok": function() {
+                    "Ok": function () {
                         if ($("#addFieldCollectionNames").val().length > 0) {
                             var groupNames = $("#addFieldCollectionNames").val().split('\n');
                             var newLayout = {
                                 containerType: $("#addMultiGroupContainerType").val(),
                                 fieldCollections: []
                             };
-                            $.each($(groupNames), function(idx, name) {
+                            $.each($(groupNames), function (idx, name) {
                                 if (name.trim().length > 0) {
                                     newLayout.fieldCollections.push({
                                         name: name,
@@ -178,7 +178,7 @@
                         }
                         return false;
                     },
-                    "Cancel": function() {
+                    "Cancel": function () {
                         $("#addMultiGroupContainerDialog").dialog("close");
                         return false;
                     }
@@ -192,14 +192,14 @@
                 width: 450,
                 modal: true,
                 buttons: {
-                    "Ok": function() {
+                    "Ok": function () {
                         if ($("#addFieldCollectionNames2").val().length > 0) {
                             var tabNames = $("#addFieldCollectionNames2").val().split('\n');
                             var index = $("#addFieldCollectionsContainerId").val();
                             var nextFieldCollectionIndex = $("#spEasyFormsContainer" +
                                 index +
                                 " table.speasyforms-sortablefields").length;
-                            $.each(tabNames, function(idx, name) {
+                            $.each(tabNames, function (idx, name) {
                                 opt.trs = "";
                                 opt.id = "spEasyFormsSortableFields" + index +
                                     "" + nextFieldCollectionIndex++;
@@ -218,7 +218,7 @@
                         }
                         return false;
                     },
-                    "Cancel": function() {
+                    "Cancel": function () {
                         $("#addFieldCollectionsToContainerDialog").dialog("close");
                         return false;
                     }
@@ -227,7 +227,58 @@
             };
 
             $("#addFieldCollectionsToContainerDialog").dialog(addTabsOpts);
+        },
+
+        appendRow: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var result = false;
+            if (opt.rowInfo && !opt.rowInfo.fieldMissing) {
+                var rtePresent = opt.rowInfo.row.find("iframe[id$='TextField_iframe']").length > 0;
+                if (!rtePresent) {
+                    opt.table.append(opt.rowInfo.row);
+                    if (opt.headerOnTop) {
+                        var tdh = opt.rowInfo.row.find("td.ms-formlabel");
+                        if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+                            opt.rowInfo.row.find("td.ms-formbody").prepend(
+                                "<div data-transformAdded='true'>&nbsp;</div>");
+                        }
+                        if (tdh.html() === "Content Type") {
+                            opt.rowInfo.row.find("td.ms-formbody").prepend(
+                                "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
+                        } else {
+                            opt.rowInfo.row.find("td.ms-formbody").prepend(
+                                tdh.attr("data-transformAdded", "true").html());
+                        }
+                        tdh.attr("data-transformHidden", "true").hide();
+                    }
+                    result = true;
+                }
+            }
+            return result;
+        },
+
+        /*
+        parentElement: 
+        collectionIndex:
+        collectionType:
+        fieldCollection:
+        tableClass:
+        headerOnTop:
+        */
+        appendFieldCollection: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            $("#" + opt.parentElement).append("<table width='100%' id='" + opt.collectionType + "Table" + opt.collectionIndex +
+                "' class='" + opt.tableClass + "' cellspacing='5'></table>");
+            opt.table = $("#" + opt.collectionType + "Table" + opt.collectionIndex);
+            $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
+                opt.rowInfo = containerCollection.rows[field.fieldInternalName];
+                if ($.spEasyForms.baseContainer.appendRow(opt)) {
+                    opt.result.push(field.fieldInternalName);
+                }
+            });
         }
+
     };
 
 })(spefjQuery);
+
