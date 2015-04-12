@@ -59,7 +59,8 @@
             var tableRows = [];
             var rowCount = 0;
             $.each($(opt.tables), function (idx, tableid) {
-                var currentRows = $("#" + tableid).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").closest("tr");
+                var currentRows = $("#" + tableid).
+                    find("tr:not([data-visibilityhidden='true']) td.ms-formbody").closest("tr");
                 tableRows.push(currentRows);
                 if (currentRows.length > rowCount) {
                     rowCount = currentRows.length;
