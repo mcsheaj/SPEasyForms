@@ -34338,7 +34338,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var rowCount = 0;
             $.each($(opt.tables), function (idx, tableid) {
                 var currentRows = $("#" + tableid).
-                    find("tr:not([data-visibilityadded='true']) td.ms-formbody").closest("tr");
+                    find("tr:not([data-visibilityhidden='true']) td.ms-formbody").closest("tr");
                 tableRows.push(currentRows);
                 if (currentRows.length > rowCount) {
                     rowCount = currentRows.length;
@@ -34356,11 +34356,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $.each($(tableRows), function (idx, rows) {
                         if (rows.length > i && $(rows[i]).height() !== height) {
                             $(rows[i]).height(height);
-                        }
-                        if ($(rows[i]).next().attr("data-visibilityadded") === "true") {
-                            if ($(rows[i]).next().height() !== height) {
-                                $(rows[i]).next().height(height);
-                            }
                         }
                     });
                 }
