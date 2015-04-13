@@ -204,6 +204,9 @@
                 opt.row = result;
                 result.value = this.value(opt);
             }
+            result.row.attr("data-displayname", result.displayName);
+            result.row.attr("data-internalname", result.internalName);
+            result.row.attr("data-spfieldtype", result.spFieldType);
             return result;
         },
 

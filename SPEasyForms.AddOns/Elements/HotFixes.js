@@ -966,6 +966,11 @@
                 });
             }
         }
+        $.each(Object.keys(result), function (idx, key) {
+            result[key].row.attr("data-displayname", result.displayName);
+            result[key].row.attr("data-internalname", result.internalName);
+            result[key].row.attr("data-spfieldtype", result.spFieldType);
+        });
         return result;
     };
 
