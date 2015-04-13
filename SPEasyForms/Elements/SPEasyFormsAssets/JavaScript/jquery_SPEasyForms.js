@@ -34974,6 +34974,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
         },
 
+        setTimeoutCalled: false,
+
         stateHandlers: {
             hidden: function (options) {
                 var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -34988,8 +34990,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 var formType = visibilityRuleCollection.getFormType(opt);
                 if (formType !== "display") {
                     var value = $.spEasyForms.sharePointFieldRows.value(opt);
-                    if (!value) {
+                    if (!value && !visibilityRuleCollection.setTimeoutCalled) {
                         if (!opt.noRecurse) {
+                            visibilityRuleCollection.setTimeoutCalled = true;
                             setTimeout(function () {
                                 var o = $.extend({}, $.spEasyForms.defauts, opt);
                                 o.row = row;
