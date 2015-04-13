@@ -34338,7 +34338,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var rowCount = 0;
             $.each($(opt.tables), function (idx, tableid) {
                 var currentRows = $("#" + tableid).
-                    find("tr:not([data-visibilityhidden='true']) td.ms-formbody").closest("tr");
+                    find("tr:not([data-visibilityadded='true']) td.ms-formbody").closest("tr");
                 tableRows.push(currentRows);
                 if (currentRows.length > rowCount) {
                     rowCount = currentRows.length;
@@ -34354,8 +34354,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 });
                 if (height > 0) {
                     $.each($(tableRows), function (idx, rows) {
-                        if (rows.length > i) {
+                        if (rows.length > i && $(rows[i]).height() !== height) {
                             $(rows[i]).height(height);
+                        }
+                        if ($(rows[i]).next().attr("data-visibilityadded") === "true") {
+                            if ($(rows[i]).next().height() !== height) {
+                                $(rows[i]).next().height(height);
+                            }
                         }
                     });
                 }
@@ -34398,7 +34403,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var divClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" +
                 opt.index + " ui-tabs ui-widget ui-widget-content ui-corner-all";
             var listId = "spEasyFormsTabsList" + opt.index;
-            var listClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" +
+            var listClass = "speasyforms-tabs speasyforms-tabs" +
                 opt.index +
                 " ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
             var containerDiv = $("#" + opt.containerId);
@@ -34991,6 +34996,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 $("#readOnly" + row.internalName).html(v);
                                 opt.noRecurse = true;
                                 visibilityRuleCollection.transform(opt);
+                                $.spEasyForms.adapterCollection.transform(opt);
+                                $.spEasyForms.containerCollection.postTransform(opt);
                             }, 1000);
                         }
                         value = "&nbsp;";

@@ -27,7 +27,7 @@
             var divClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" +
                 opt.index + " ui-tabs ui-widget ui-widget-content ui-corner-all";
             var listId = "spEasyFormsTabsList" + opt.index;
-            var listClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" +
+            var listClass = "speasyforms-tabs speasyforms-tabs" +
                 opt.index +
                 " ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
             var containerDiv = $("#" + opt.containerId);

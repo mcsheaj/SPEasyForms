@@ -82,6 +82,8 @@
                                 $("#readOnly" + row.internalName).html(v);
                                 opt.noRecurse = true;
                                 visibilityRuleCollection.transform(opt);
+                                $.spEasyForms.adapterCollection.transform(opt);
+                                $.spEasyForms.containerCollection.postTransform(opt);
                             }, 1000);
                         }
                         value = "&nbsp;";
