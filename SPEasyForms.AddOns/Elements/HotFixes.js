@@ -1371,6 +1371,9 @@
             if (currentRows.length > rowCount) {
                 rowCount = currentRows.length;
             }
+            $.each($(currentRows), function (idx, row) {
+                $(row).css("height", "auto");
+            });
         });
         /* jshint -W083 */
         for (var i = 0; i < rowCount; i++) {
