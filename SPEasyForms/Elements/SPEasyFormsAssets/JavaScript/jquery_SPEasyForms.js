@@ -34721,7 +34721,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             // loop through field collections adding them as headers/tables to the container div
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                // create a header and a div to hold the current field collection
+                // create a header and a div to hold the current page/field collection
                 opt.collectionIndex = opt.index + "" + idx;
                 opt.tableClass = "speasyforms-wizard";
                 opt.outerDiv.append("<h3 id='page" + opt.collectionIndex +
@@ -34853,7 +34853,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             wizard.setNextPrevVisibility(opt);
         },
 
-        // returns the header node for the previous page, or null if there is no previous visible page
+        // returns the header node for the previous page, or null if there is no previous page with visible fields
         getPrevious: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var prev = null;
@@ -34887,7 +34887,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             wizard.setNextPrevVisibility(opt);
         },
 
-        // returns the header node for the next page, or null if there is no next visible page
+        // returns the header node for the next page, or null if there is no next page with visible fields
         getNext: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var next = null;
@@ -34910,12 +34910,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             return next;
         },
 
-        // determine the visibility of the next any previous buttons, based on whether there
-        // is a VISIBLE next or previous page.
+        // determine the visibility of the next and previous buttons, based on whether there
+        // is a next or previous page with visible fields.
         setNextPrevVisibility: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index +
                 " h3.speasyforms-wizard-selected");
+            // hide or show the previous button based on whether the previous page is 
+            // null (i.e. no previous page with visible fields)
             var tmp = this.getPrevious(opt);
             if (!tmp || tmp.length === 0) {
                 opt.selectedHeader.closest("div.speasyforms-wizard-outer").
@@ -34926,6 +34928,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     find(".speasyforms-wizard-prev").show();
 
             }
+            // hide or show the next button based on whether the next page is 
+            // null (i.e. no next page with visible fields)
             tmp = this.getNext(opt);
             if (!tmp || tmp.length === 0) {
                 opt.selectedHeader.closest("div.speasyforms-wizard-outer").
