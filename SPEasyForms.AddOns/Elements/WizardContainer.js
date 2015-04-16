@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms WizardContainer
  *
- * @version 2014.01.15
+ * @version 2014.01.16
  * @requires SPEasyForms v2014.01
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:

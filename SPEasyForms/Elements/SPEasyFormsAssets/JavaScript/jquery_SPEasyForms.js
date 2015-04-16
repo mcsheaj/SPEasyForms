@@ -34802,6 +34802,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     next().show().addClass("speasyforms-wizard-selected");
             }
             wizard.setNextPrevVisibility(opt);
+            return true;
         },
 
         // add next and previous buttons and wire up their events

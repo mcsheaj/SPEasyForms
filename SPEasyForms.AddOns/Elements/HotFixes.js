@@ -1,7 +1,7 @@
 /*
  * SPEasyForms HotFixes - cumulative update for reported bugs.
  *
- * @version 2014.01.15
+ * @version 2014.01.16
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -242,7 +242,7 @@
     // only operate on the settings page
     if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
         $().ready(function () {
-            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.15</b>");
+            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.16</b>");
         });
     }
 
@@ -374,26 +374,6 @@
             $.spEasyForms.writeCachedContext(opt);
         }
         return result;
-    };
-
-    $.spEasyForms.containerCollection.preSaveItem = function () {
-        var opt = $.extend({}, $.spEasyForms.defaults);
-
-        if (!$.spEasyForms.adapterCollection.preSaveItem(opt)) {
-            this.highlightValidationErrors(opt);
-            return false;
-        }
-
-        if (typeof (SPClientForms) !== 'undefined' &&
-            typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
-            typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
-            if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
-                this.highlightValidationErrors(opt);
-                return false;
-            }
-        }
-
-        return true;
     };
 
     $.spEasyForms.transform = function (opt) {
@@ -1397,6 +1377,44 @@
             }
         }
         /* jshint +W083 */
+    };
+
+    /*2014.01.16*/
+    $.spEasyForms.containerCollection.preSaveItem = function () {
+        var opt = $.extend({}, $.spEasyForms.defaults);
+
+        if (!$.spEasyForms.adapterCollection.preSaveItem(opt)) {
+            this.highlightValidationErrors(opt);
+            return false;
+        }
+
+        if (typeof (SPClientForms) !== 'undefined' &&
+            typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
+            typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
+            if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
+                this.highlightValidationErrors(opt);
+
+                var errorMessages = [];
+                var rows = $.spEasyForms.sharePointFieldRows.init();
+                $.each(Object.keys(rows), function (idx, key) {
+                    var rowInfo = rows[key];
+                    if (!rowInfo.row.is(":visible") && rowInfo.row.find("span.ms-formvalidation").text().length > 0) {
+                        errorMessages.push(rowInfo.displayName + ": " + rowInfo.row.find("span.ms-formvalidation").text());
+                    }
+                });
+                $("table.ms-fortable > tr.speasyforms-validation").remove();
+                if (errorMessages.length > 0) {
+                    $("table.ms-formtable").prepend("<tr class='speasyforms-validation'><td id='spEasyFormsValidation' colspan='2'><h3>Hidden Validation Errors</h3></td></tr>");
+                    $.each($(errorMessages), function (idx, msg) {
+                        $("#spEasyFormsValidation").append("<p><span class='ms-formvalidation'>" + msg + "</span></p>");
+                    });
+                }
+
+                return false;
+            }
+        }
+
+        return true;
     };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
