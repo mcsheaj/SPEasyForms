@@ -1126,19 +1126,6 @@
         return result;
     };
 
-    $.spEasyForms.baseContainer.appendFieldCollection = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        $("#" + opt.parentElement).append("<table width='100%' id='pageTable" + opt.collectionIndex +
-            "' class='speasyforms-wizard' cellspacing='5'></table>");
-        opt.table = $("#" + opt.collectionType + "Table" + opt.collectionIndex);
-        $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
-            opt.rowInfo = containerCollection.rows[field.fieldInternalName];
-            if ($.spEasyForms.baseContainer.appendRow(opt)) {
-                opt.result.push(field.fieldInternalName);
-            }
-        });
-    };
-
     /*v2014-01-16*/
     containerCollection.containerImplementations.tabs.transform = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -1417,6 +1404,19 @@
             }
         });
         return result;
+    };
+
+    $.spEasyForms.baseContainer.appendFieldCollection = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        $("#" + opt.parentElement).append("<table width='100%' id='" + opt.collectionType + "Table" + opt.collectionIndex +
+            "' class='" + opt.tableClass + "' cellspacing='5'></table>");
+        opt.table = $("#" + opt.collectionType + "Table" + opt.collectionIndex);
+        $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
+            opt.rowInfo = containerCollection.rows[field.fieldInternalName];
+            if ($.spEasyForms.baseContainer.appendRow(opt)) {
+                opt.result.push(field.fieldInternalName);
+            }
+        });
     };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
