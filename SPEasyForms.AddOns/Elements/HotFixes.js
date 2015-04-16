@@ -911,49 +911,6 @@
         };
     };
 
-    $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_init = $.spEasyForms.sharePointFieldRows.init;
-    $.spEasyForms.sharePointFieldRows.init = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        var result = $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_init(options);
-        var currentContext = $.spEasyForms.sharePointContext.get(opt);
-        var listId = $.spEasyForms.sharePointContext.getCurrentListId(opt);
-        if (listId in currentContext.listContexts && !opt.skipCalculatedFields && window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
-            var hasCalculatedFields = false;
-            $.each(Object.keys(result), function (idx, key) {
-                if (result[key].spFieldType === "SPFieldCalculated") {
-                    hasCalculatedFields = true;
-                    return false;
-                }
-            });
-            if (!hasCalculatedFields) {
-                var listCtx = $.spEasyForms.sharePointContext.getListContext(options);
-                $.each(Object.keys(listCtx.schema), function (idx, key) {
-                    var field = listCtx.schema[key];
-                    if (field.type === "Calculated" && field.hasFormula) {
-                        var tr = $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'><nobr>" +
-                            field.displayName + "</nobr></h3></td><td class='ms-formbody'>value</td></tr>");
-                        tr.appendTo("table.ms-formtable");
-                        opt.row = tr;
-                        var newRow = {
-                            internalName: field.name,
-                            displayName: field.displayName,
-                            spFieldType: "SPFieldCalculated",
-                            value: "",
-                            row: tr
-                        };
-                        result[field.name] = newRow;
-                    }
-                });
-            }
-        }
-        $.each(Object.keys(result), function (idx, key) {
-            result[key].row.attr("data-displayname", result.displayName);
-            result[key].row.attr("data-internalname", result.internalName);
-            result[key].row.attr("data-spfieldtype", result.spFieldType);
-        });
-        return result;
-    };
-
     $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_value = $.spEasyForms.sharePointFieldRows.value;
     $.spEasyForms.sharePointFieldRows.value = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -1415,6 +1372,51 @@
         }
 
         return true;
+    };
+
+    $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_init = $.spEasyForms.sharePointFieldRows.init;
+    $.spEasyForms.sharePointFieldRows.init = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var result = $.spEasyForms.sharePointFieldRows.original_sharePointFieldRows_init(options);
+        var currentContext = $.spEasyForms.sharePointContext.get(opt);
+        var listId = $.spEasyForms.sharePointContext.getCurrentListId(opt);
+        if (listId in currentContext.listContexts && !opt.skipCalculatedFields && window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+            var hasCalculatedFields = false;
+            $.each(Object.keys(result), function (idx, key) {
+                if (result[key].spFieldType === "SPFieldCalculated") {
+                    hasCalculatedFields = true;
+                    return false;
+                }
+            });
+            if (!hasCalculatedFields) {
+                var listCtx = $.spEasyForms.sharePointContext.getListContext(options);
+                $.each(Object.keys(listCtx.schema), function (idx, key) {
+                    var field = listCtx.schema[key];
+                    if (field.type === "Calculated" && field.hasFormula) {
+                        var tr = $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'><nobr>" +
+                            field.displayName + "</nobr></h3></td><td class='ms-formbody'>value</td></tr>");
+                        tr.appendTo("table.ms-formtable");
+                        opt.row = tr;
+                        var newRow = {
+                            internalName: field.name,
+                            displayName: field.displayName,
+                            spFieldType: "SPFieldCalculated",
+                            value: "",
+                            row: tr
+                        };
+                        result[field.name] = newRow;
+                    }
+                });
+            }
+        }
+        $.each(Object.keys(result), function (idx, key) {
+            if (result[key].row) {
+                result[key].row.attr("data-displayname", result.displayName);
+                result[key].row.attr("data-internalname", result.internalName);
+                result[key].row.attr("data-spfieldtype", result.spFieldType);
+            }
+        });
+        return result;
     };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
