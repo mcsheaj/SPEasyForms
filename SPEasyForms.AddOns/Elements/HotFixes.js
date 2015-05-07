@@ -1,7 +1,7 @@
 /*
  * SPEasyForms HotFixes - cumulative update for reported bugs.
  *
- * @version 2014.01.17
+ * @version 2014.01.18
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -36,34 +36,6 @@
             $(".ms-formtable").width(600);
             $("table.ms-formtable").css({ padding: "0" });
         }
-    };
-
-    // override the checkConditionals method of visibilityRuleCollection to handle multiple
-    // conditions correctly
-    $.spEasyForms.visibilityRuleCollection.checkConditionals = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        var result = false;
-        if (!opt.rule.conditions || opt.rule.conditions.length === 0) {
-            result = true;
-        } else {
-            result = true;
-            $.each(opt.rule.conditions, function (idx, condition) {
-                opt.row = $.spEasyForms.containerCollection.rows[condition.name];
-                if (opt.row) {
-                    var currentValue = $.spEasyForms.sharePointFieldRows.value(opt);
-                    var type = $.spEasyForms.utilities.jsCase(condition.type);
-                    var comparisonOperator = $.spEasyForms.visibilityRuleCollection.comparisonOperators[type];
-                    result = comparisonOperator(currentValue, condition.value);
-                    if (result === false)
-                        return false; // return from $.each
-                }
-                else {
-                    result = false;
-                    return false; // return from $.each
-                }
-            });
-        }
-        return result;
     };
 
     // create a posttransform method in the container collection to call all of the
@@ -242,7 +214,7 @@
     // only operate on the settings page
     if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
         $().ready(function () {
-            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.17</b>");
+            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.18</b>");
         });
     }
 
@@ -1418,6 +1390,48 @@
                 opt.result.push(field.fieldInternalName);
             }
         });
+    };
+
+    /*2014-01-18*/
+    // override the checkConditionals method of visibilityRuleCollection to handle multiple
+    // conditions correctly
+    $.spEasyForms.visibilityRuleCollection.checkConditionals = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        var result = false;
+        if (!opt.rule.conditions || opt.rule.conditions.length === 0) {
+            result = true;
+        } else {
+            result = true;
+            $.each(opt.rule.conditions, function (idx, condition) {
+                opt.row = $.spEasyForms.containerCollection.rows[condition.name];
+                if (opt.row) {
+                    var currentValue = $.spEasyForms.sharePointFieldRows.value(opt);
+                    var type = $.spEasyForms.utilities.jsCase(condition.type);
+                    var comparisonOperator = $.spEasyForms.visibilityRuleCollection.comparisonOperators[type];
+                    opt.condition = condition;
+                    var expandedValue = $.spEasyForms.visibilityRuleCollection.expandRuleValue(opt);
+                    result = comparisonOperator(currentValue, expandedValue);
+                    if (result === false)
+                        return false; // return from $.each
+                }
+                else {
+                    result = false;
+                    return false; // return from $.each
+                }
+            });
+        }
+        return result;
+    };
+
+    $.spEasyForms.visibilityRuleCollection.expandRuleValue = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        if (opt.condition.value.indexOf("[CurrentUser]") >= 0) {
+            var ctx = spContext.get(opt);
+            var expandedValue = opt.condition.value;
+            expandedValue = expandedValue.replace(/\[CurrentUser\]/g, "userdisp.aspx\\?ID=" + ctx.userId + "'");
+            return expandedValue;
+        }
+        return opt.condition.value;
     };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);

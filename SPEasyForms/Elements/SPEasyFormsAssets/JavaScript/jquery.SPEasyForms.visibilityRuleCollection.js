@@ -97,7 +97,7 @@
                         '<h3 class="ms-standardheader"><nobr>' +
                         row.displayName +
                         '</nobr></h3></td><td class="ms-formbody">' +
-                        '<span id="readOnly' + row.internalName + '" ">' + value + '</td></tr>';
+                        '<span id="readOnly' + row.internalName + '">' + value + '</td></tr>';
                     if (row.row.find("td.ms-formbody h3.ms-standardheader").length > 0) {
                         html = '<tr data-visibilityadded="true">' +
                             '<td valign="top" ' +
@@ -920,7 +920,9 @@
                         var currentValue = $.spEasyForms.sharePointFieldRows.value(opt);
                         var type = $.spEasyForms.utilities.jsCase(condition.type);
                         var comparisonOperator = $.spEasyForms.visibilityRuleCollection.comparisonOperators[type];
-                        result = comparisonOperator(currentValue, condition.value);
+                        opt.condition = condition;
+                        var expandedValue = $.spEasyForms.visibilityRuleCollection.expandRuleValue(opt);
+                        result = comparisonOperator(currentValue, expandedValue);
                         if (result === false)
                             return false; // return from $.each
                     }
@@ -931,6 +933,17 @@
                 });
             }
             return result;
+        },
+
+        expandRuleValue: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if (opt.condition.value.indexOf("[CurrentUser]") >= 0) {
+                var ctx = spContext.get(opt);
+                var expandedValue = opt.condition.value;
+                expandedValue = expandedValue.replace(/\[CurrentUser\]/g, "userdisp.aspx\\?ID=" + ctx.userId + "'");
+                return expandedValue;
+            }
+            return opt.condition.value;
         }
     };
     var visibilityRuleCollection = $.spEasyForms.visibilityRuleCollection;
