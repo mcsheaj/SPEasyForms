@@ -3,7 +3,7 @@
  * that creates an adapter for text fields to listen for changes to a lookup
  * and pull in data from another field in the lookup list.
  *
- * @version 2014.01.16
+ * @version 2014.01.17
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:

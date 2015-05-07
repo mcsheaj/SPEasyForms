@@ -1,7 +1,7 @@
 /*
  * SPEasyForms HotFixes - cumulative update for reported bugs.
  *
- * @version 2014.01.16
+ * @version 2014.01.17
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -242,7 +242,7 @@
     // only operate on the settings page
     if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
         $().ready(function () {
-            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.16</b>");
+            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.17</b>");
         });
     }
 
@@ -1323,7 +1323,7 @@
         /* jshint +W083 */
     };
 
-    /*2014.01.16*/
+    /*2014-01-16*/
     $.spEasyForms.containerCollection.preSaveItem = function () {
         var opt = $.extend({}, $.spEasyForms.defaults);
 
@@ -1406,6 +1406,7 @@
         return result;
     };
 
+    /*2014-01-17*/
     $.spEasyForms.baseContainer.appendFieldCollection = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
         $("#" + opt.parentElement).append("<table width='100%' id='" + opt.collectionType + "Table" + opt.collectionIndex +

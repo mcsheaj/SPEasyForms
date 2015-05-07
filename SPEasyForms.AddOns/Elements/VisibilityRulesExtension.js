@@ -2,7 +2,7 @@
  * SPEasyForms VisibilityRulesExtension - some additional comparison operators
  * and state handlers for use in SPEasyForms visibility rules.
  *
- * @version 2014.01.16
+ * @version 2014.01.17
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
