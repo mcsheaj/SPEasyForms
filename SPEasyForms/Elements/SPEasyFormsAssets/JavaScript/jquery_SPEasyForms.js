@@ -35893,13 +35893,32 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
         expandRuleValue: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            if (opt.condition.value.indexOf("[CurrentUser]") >= 0) {
+            var expandedValue = opt.condition.value;
+            if (opt.condition.value.indexOf("[CurrentUser") >= 0) {
                 var ctx = spContext.get(opt);
-                var expandedValue = opt.condition.value;
                 expandedValue = expandedValue.replace(/\[CurrentUser\]/g, "userdisp.aspx\\?ID=" + ctx.userId + "'");
-                return expandedValue;
+                expandedValue = expandedValue.replace(/\[CurrentUserId\]/g, ctx.userId);
+                expandedValue = expandedValue.replace(/\[CurrentUserLogin\]/g, ctx.userInformation.userName);
+                expandedValue = expandedValue.replace(/\[CurrentUserEmail\]/g, ctx.userInformation.eMail);
             }
-            return opt.condition.value;
+            if (opt.condition.value.indexOf("[Today") >= 0) {
+                expandedValue = expandedValue.replace(/\[Today\]/g, $.datepicker.formatDate("mm-dd-yy", new Date()));
+            }
+            var parts = expandedValue.match(/(\[Today[+-][0-9]*\])/g);
+            if (parts) {
+                $.each($(parts), function (idx, part) {
+                    var i = Number(part.match(/\[Today[+-]([0-9]*)\]/)[1]);
+                    var d = new Date();
+                    if (part.indexOf("+") >= 0) {
+                        d.setTime(d.getTime() + i * 86400000);
+                    }
+                    else {
+                        d.setTime(d.getTime() - i * 86400000);
+                    }
+                    expandedValue = expandedValue.replace(part, $.datepicker.formatDate("mm/dd/yy", d));
+                });
+            }
+            return expandedValue;
         }
     };
     var visibilityRuleCollection = $.spEasyForms.visibilityRuleCollection;
