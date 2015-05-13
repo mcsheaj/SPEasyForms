@@ -267,7 +267,7 @@
         */
         appendFieldCollection: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            $("#" + opt.parentElement).append("<table width='100%' id='" + opt.collectionType + "Table" + opt.collectionIndex +
+            $("#" + opt.parentElement).append("<table role='presentation' width='100%' id='" + opt.collectionType + "Table" + opt.collectionIndex +
                 "' class='" + opt.tableClass + "' cellspacing='5'></table>");
             opt.table = $("#" + opt.collectionType + "Table" + opt.collectionIndex);
             $.each(opt.fieldCollection.fields, function (fieldIdx, field) {

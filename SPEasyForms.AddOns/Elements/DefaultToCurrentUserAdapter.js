@@ -3,7 +3,7 @@
  * that creates an adapter for user fields to enter a default value of the current
  * user on new forms.
  *
- * @version 2014.01.18
+ * @version 2014.01.19
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:

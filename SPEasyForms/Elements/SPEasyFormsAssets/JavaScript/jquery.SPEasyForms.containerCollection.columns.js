@@ -25,7 +25,7 @@
             opt.result = [];
             var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
             var outerTableClass = "speasyforms-container speasyforms-columns";
-            $("#" + opt.containerId).append("<table id='" + outerTableId +
+            $("#" + opt.containerId).append("<table role='presentation' id='" + outerTableId +
                 "' class='" + outerTableClass + "'><tr id='" + outerTableId + "Row'></tr></table>");
 
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {

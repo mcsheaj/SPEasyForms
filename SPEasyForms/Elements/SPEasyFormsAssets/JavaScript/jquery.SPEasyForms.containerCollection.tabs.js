@@ -32,7 +32,7 @@
                 " ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
             var containerDiv = $("#" + opt.containerId);
             containerDiv.append("<div id='" + opt.divId + "' class='" + divClass +
-                "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
+                "'><ul id='" + listId + "' class='" + listClass + " role='tablist'></ul></div>");
             var mostFields = 0;
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
                 if (fieldCollection.fields.length > mostFields) {
@@ -42,29 +42,31 @@
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
                 opt.collectionIndex = opt.index + "" + idx;
                 opt.parentElement = "spEasyFormsTabsDiv" + opt.collectionIndex;
+                opt.labelId = "spEasyFormsTabsLabel" + opt.collectionIndex;
                 opt.collectionType = "tab";
                 opt.fieldCollection = fieldCollection;
                 opt.tableClass = "speasyforms-tabs";
 
                 var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.collectionIndex +
                     " ui-state-default ui-corner-top";
-                $("#" + listId).append("<li class='" + itemClass +
-                    "'><a href='#" + opt.parentElement + "'>" + fieldCollection.name +
-                    "</a></li>");
+                $("#" + listId).append("<li id='" + opt.labelId + "' class='" + itemClass +
+                    "' role='tab' aria-controls='" + opt.parentElement + "' tabindex='0'><a href='#" + opt.parentElement + "'>" +
+                    fieldCollection.name + "</a></li>");
                 $("#" + opt.divId).append(
-                    "<div id='" + opt.parentElement +
-                    "' class='ui-tabs-panel ui-widget-content ui-corner-bottom'>");
+                    "<div id='" + opt.parentElement + "' aria-labelledby='" + opt.labelId + "' " +
+                    "' class='ui-tabs-panel ui-widget-content ui-corner-bottom' role='tabpanel'>");
 
                 $.spEasyForms.baseContainer.appendFieldCollection(opt);
             });
-            $("#" + listId).find("li:first").addClass("ui-tabs-active").addClass("ui-state-active");
-            $("#" + opt.divId).find("div.ui-tabs-panel").hide();
-            $("#" + opt.divId).find("div.ui-tabs-panel:first").show();
+            $("#" + listId).find("li").attr("aria-selected", "false");
+            $("#" + listId).find("li:first").attr("aria-selected", "true").addClass("ui-tabs-active").addClass("ui-state-active");
+            $("#" + opt.divId).find("div.ui-tabs-panel").attr("aria-hidden", "true".attr("aria-expanded", "false")).hide();
+            $("#" + opt.divId).find("div.ui-tabs-panel:first").attr("aria-hidden", "false").attr("aria-expanded", "true").show();
             $("#" + listId).find("a").click(function () {
-                $("#" + listId).find("li").removeClass("ui-tabs-active").removeClass("ui-state-active");
-                $(this).closest("li").addClass("ui-tabs-active").addClass("ui-state-active");
-                $("#" + opt.divId).find("div.ui-tabs-panel").hide();
-                $($(this).attr("href")).show();
+                $("#" + listId).find("li").attr("aria-selected", "false").removeClass("ui-tabs-active").removeClass("ui-state-active");
+                $(this).closest("li").attr("aria-selected", "true").addClass("ui-tabs-active").addClass("ui-state-active");
+                $("#" + opt.divId).find("div.ui-tabs-panel").attr("aria-hidden", "true").attr("aria-expanded", "false").hide();
+                $($(this).attr("href")).attr("aria-hidden", "false").attr("aria-expanded", "true").show();
                 return false;
             });
 
@@ -79,17 +81,18 @@
                 if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
                     if ($(this).parent().css("display") !== "none") {
                         var nextIndex = -1;
+                        $(this).parent().attr("aria-hidden", "true").attr("aria-expanded", "false").removeAttr("tabindex").hide();
+                        $("#spEasyFormsTabsLabel" + index).removeClass("ui-tabs-active").removeClass("ui-state-active").attr("aria-selected", "false");
                         if ($(this).parent().next().length > 0) {
                             nextIndex = $(this).parent().next()[0].id.replace("spEasyFormsTabsDiv", "");
                             $(this).parent().next().show();
-                            $("li.speasyforms-tabs" + nextIndex).addClass("ui-tabs-active").addClass("ui-state-active");
+                            $("li.speasyforms-tabs" + nextIndex).addClass("ui-tabs-active").addClass("ui-state-active").attr("aria-selected", "true");
                         }
-                        $(this).parent().hide();
                     }
-                    $(".speasyforms-tabs" + index).hide();
+                    $(".speasyforms-tabs" + index).attr("aria-hidden", "true").hide();
                 }
                 else {
-                    $(".speasyforms-tabs" + index).show();
+                    $(".speasyforms-tabs" + index).attr("aria-hidden", "false").show();
                 }
             });
         },

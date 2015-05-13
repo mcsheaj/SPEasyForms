@@ -34168,7 +34168,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         */
         appendFieldCollection: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            $("#" + opt.parentElement).append("<table width='100%' id='" + opt.collectionType + "Table" + opt.collectionIndex +
+            $("#" + opt.parentElement).append("<table role='presentation' width='100%' id='" + opt.collectionType + "Table" + opt.collectionIndex +
                 "' class='" + opt.tableClass + "' cellspacing='5'></table>");
             opt.table = $("#" + opt.collectionType + "Table" + opt.collectionIndex);
             $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
@@ -34310,7 +34310,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             opt.result = [];
             var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
             var outerTableClass = "speasyforms-container speasyforms-columns";
-            $("#" + opt.containerId).append("<table id='" + outerTableId +
+            $("#" + opt.containerId).append("<table role='presentation' id='" + outerTableId +
                 "' class='" + outerTableClass + "'><tr id='" + outerTableId + "Row'></tr></table>");
 
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
@@ -34413,7 +34413,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 " ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
             var containerDiv = $("#" + opt.containerId);
             containerDiv.append("<div id='" + opt.divId + "' class='" + divClass +
-                "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
+                "'><ul id='" + listId + "' class='" + listClass + " role='tablist'></ul></div>");
             var mostFields = 0;
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
                 if (fieldCollection.fields.length > mostFields) {
@@ -34423,29 +34423,31 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
                 opt.collectionIndex = opt.index + "" + idx;
                 opt.parentElement = "spEasyFormsTabsDiv" + opt.collectionIndex;
+                opt.labelId = "spEasyFormsTabsLabel" + opt.collectionIndex;
                 opt.collectionType = "tab";
                 opt.fieldCollection = fieldCollection;
                 opt.tableClass = "speasyforms-tabs";
 
                 var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.collectionIndex +
                     " ui-state-default ui-corner-top";
-                $("#" + listId).append("<li class='" + itemClass +
-                    "'><a href='#" + opt.parentElement + "'>" + fieldCollection.name +
-                    "</a></li>");
+                $("#" + listId).append("<li id='" + opt.labelId + "' class='" + itemClass +
+                    "' role='tab' aria-controls='" + opt.parentElement + "' tabindex='0'><a href='#" + opt.parentElement + "'>" +
+                    fieldCollection.name + "</a></li>");
                 $("#" + opt.divId).append(
-                    "<div id='" + opt.parentElement +
-                    "' class='ui-tabs-panel ui-widget-content ui-corner-bottom'>");
+                    "<div id='" + opt.parentElement + "' aria-labelledby='" + opt.labelId + "' " +
+                    "' class='ui-tabs-panel ui-widget-content ui-corner-bottom' role='tabpanel'>");
 
                 $.spEasyForms.baseContainer.appendFieldCollection(opt);
             });
-            $("#" + listId).find("li:first").addClass("ui-tabs-active").addClass("ui-state-active");
-            $("#" + opt.divId).find("div.ui-tabs-panel").hide();
-            $("#" + opt.divId).find("div.ui-tabs-panel:first").show();
+            $("#" + listId).find("li").attr("aria-selected", "false");
+            $("#" + listId).find("li:first").attr("aria-selected", "true").addClass("ui-tabs-active").addClass("ui-state-active");
+            $("#" + opt.divId).find("div.ui-tabs-panel").attr("aria-hidden", "true".attr("aria-expanded", "false")).hide();
+            $("#" + opt.divId).find("div.ui-tabs-panel:first").attr("aria-hidden", "false").attr("aria-expanded", "true").show();
             $("#" + listId).find("a").click(function () {
-                $("#" + listId).find("li").removeClass("ui-tabs-active").removeClass("ui-state-active");
-                $(this).closest("li").addClass("ui-tabs-active").addClass("ui-state-active");
-                $("#" + opt.divId).find("div.ui-tabs-panel").hide();
-                $($(this).attr("href")).show();
+                $("#" + listId).find("li").attr("aria-selected", "false").removeClass("ui-tabs-active").removeClass("ui-state-active");
+                $(this).closest("li").attr("aria-selected", "true").addClass("ui-tabs-active").addClass("ui-state-active");
+                $("#" + opt.divId).find("div.ui-tabs-panel").attr("aria-hidden", "true").attr("aria-expanded", "false").hide();
+                $($(this).attr("href")).attr("aria-hidden", "false").attr("aria-expanded", "true").show();
                 return false;
             });
 
@@ -34460,17 +34462,18 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
                     if ($(this).parent().css("display") !== "none") {
                         var nextIndex = -1;
+                        $(this).parent().attr("aria-hidden", "true").attr("aria-expanded", "false").removeAttr("tabindex").hide();
+                        $("#spEasyFormsTabsLabel" + index).removeClass("ui-tabs-active").removeClass("ui-state-active").attr("aria-selected", "false");
                         if ($(this).parent().next().length > 0) {
                             nextIndex = $(this).parent().next()[0].id.replace("spEasyFormsTabsDiv", "");
                             $(this).parent().next().show();
-                            $("li.speasyforms-tabs" + nextIndex).addClass("ui-tabs-active").addClass("ui-state-active");
+                            $("li.speasyforms-tabs" + nextIndex).addClass("ui-tabs-active").addClass("ui-state-active").attr("aria-selected", "true");
                         }
-                        $(this).parent().hide();
                     }
-                    $(".speasyforms-tabs" + index).hide();
+                    $(".speasyforms-tabs" + index).attr("aria-hidden", "true").hide();
                 }
                 else {
-                    $(".speasyforms-tabs" + index).show();
+                    $(".speasyforms-tabs" + index).attr("aria-hidden", "false").show();
                 }
             });
         },
@@ -34718,19 +34721,19 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             opt.divId = "spEasyFormsWizardDiv" + opt.index;
             $("#" + opt.containerId).append("<div id=" + opt.divId +
                 " class='speasyforms-wizard-outer ui-widget-content" +
-                " ui-corner-all' style='margin: 10px;'></div>");
+                " ui-corner-all' style='margin: 10px;' role='tablist'></div>");
             opt.outerDiv = $("#" + opt.divId);
 
             // loop through field collections adding them as headers/tables to the container div
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                // create a header and a div to hold the current page/field collection
+                // create a header and a div to hold the current field collection
                 opt.collectionIndex = opt.index + "" + idx;
                 opt.tableClass = "speasyforms-wizard";
                 opt.outerDiv.append("<h3 id='page" + opt.collectionIndex +
-                    "' class='" + opt.tableClass + "' style='padding: 5px;'>" +
+                    "' class='" + opt.tableClass + "' style='padding: 5px;' role='tab' aria-controls='pageContent" + opt.collectionIndex + "'>" +
                     fieldCollection.name + "</h3>" +
-                    "<div id='pageContent" + opt.collectionIndex +
-                    "' class='speasyforms-wizard' style='padding: 10px'>" +
+                    "<div id='pageContent" + opt.collectionIndex + "' aria-labelledby='page" + opt.collectionIndex + "' " +
+                    "class='speasyforms-wizard' style='padding: 10px' role='tabpanel'>" +
                     "</div>");
 
                 // add a table to the div with the fields in the field collection
@@ -34773,21 +34776,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 // set the height/width of each page, hide the unselected pages, 
                 // and show the selected page
                 $(tableSelector).each(function () {
-                    var selectedHeaderSelector = "#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected";
                     $(this).closest("div").width(width).height(height); // set height/width
-                    if ($(selectedHeaderSelector).length > 0) {
-                        $(this).closest("div").hide().prev().hide();
-                    }
-                    else if ($(this).find(wizard.visibileRow).length > 0) {
-                        $(this).closest("div").addClass("speasyforms-wizard-selected").
-                            prev().addClass("speasyforms-wizard-selected");
-                    }
-                    else {
-                        $(this).closest("div").hide().prev().hide();
+                    var selectedHeaderSelector = "#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected";
+                    if ($(selectedHeaderSelector).length === 0) {
+                        if ($(this).find(wizard.visibileRow).length > 0) {
+                            wizard.select($(this).closest("div").prev(), $("#spEasyFormsWizardDiv" + opt.index));
+                        }
                     }
                 });
             }
-            wizard.setNextPrevVisibility(opt);
+            this.setNextPrevVisibility(opt);
         },
 
         // an opportunity to do validation tasks prior to committing an item
@@ -34798,13 +34796,32 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var error = $(errorSelector + ":first");
             if (error.length > 0) {
                 // if so, select and show the first page with validation errors
-                var selectedSelector = "#spEasyFormsWizardDiv" + opt.index + " .speasyforms-wizard-selected";
-                $(selectedSelector).hide(). removeClass("speasyforms-wizard-selected");
-                error.closest("div").prev().show().addClass("speasyforms-wizard-selected").
-                    next().show().addClass("speasyforms-wizard-selected");
+                this.select(error.closest("div").prev(), $("#spEasyFormsWizardDiv" + opt.index));
             }
             wizard.setNextPrevVisibility(opt);
-            return true;
+        },
+
+        // select the content area for the given header
+        select: function (header, outerDiv) {
+            this.deselectall(outerDiv);
+            header.addClass("speasyforms-wizard-selected").attr("aria-selected", "true").attr("aria-hidden", "false").show().
+                next().attr("aria-hidden", "false").attr("aria-expanded", "true").addClass("speasyforms-wizard-selected").show();
+        },
+
+        // deselect the content area for the given header
+        deselect: function (header) {
+            header.removeClass("speasyforms-wizard-selected").attr("aria-selected", "false").attr("aria-hidden", "true").show().
+                next().attr("aria-hidden", "true").attr("aria-expanded", "false").removeClass("speasyforms-wizard-selected").hide();
+        },
+
+        // deselect all content areas
+        deselectall: function (outerDiv) {
+            outerDiv.find("h3.speasyforms-wizard").each(function (idx, h) {
+                var header = $(h);
+                header.removeClass("speasyforms-wizard-selected").attr("aria-selected", "false").attr("aria-hidden", "true").hide();
+                var div = header.next();
+                div.removeClass("speashforms-wizard-selected").attr("aria-expanded", "false").attr("aria-hidden", "true").hide();
+            });
         },
 
         // add next and previous buttons and wire up their events
@@ -34828,16 +34845,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             // handle previous click event
             $("#" + opt.divId + "Previous").button().click(function () {
-                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index +
-                    " h3.speasyforms-wizard-selected");
+                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected");
                 wizard.selectPrevious(opt);
                 return false;
             });
 
             // handle next click event
             $("#" + opt.divId + "Next").button().click(function () {
-                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index +
-                    " h3.speasyforms-wizard-selected");
+                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected");
                 wizard.selectNext(opt);
                 return false;
             });
@@ -34848,15 +34863,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var prev = this.getPrevious(opt);
             if (prev) {
-                opt.selectedHeader.removeClass("speasyforms-wizard-selected").hide().
-                    next().removeClass("speasyforms-wizard-selected").hide();
-                prev.addClass("speasyforms-wizard-selected").show().
-                    next().addClass("speasyforms-wizard-selected").show();
+                this.select(prev, $("#" + opt.divId));
             }
             wizard.setNextPrevVisibility(opt);
         },
 
-        // returns the header node for the previous page, or null if there is no previous page with visible fields
+        // returns the header node for the previous page, or null if there is no previous visible page
         getPrevious: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var prev = null;
@@ -34882,15 +34894,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var next = this.getNext(opt);
             if (next) {
-                opt.selectedHeader.removeClass("speasyforms-wizard-selected").hide().
-                    next().removeClass("speasyforms-wizard-selected").hide();
-                next.addClass("speasyforms-wizard-selected").show().
-                    next().addClass("speasyforms-wizard-selected").show();
+                this.select(next, $("#" + opt.divId));
             }
             wizard.setNextPrevVisibility(opt);
         },
 
-        // returns the header node for the next page, or null if there is no next page with visible fields
+        // returns the header node for the next page, or null if there is no next visible page
         getNext: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var next = null;
@@ -34913,14 +34922,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             return next;
         },
 
-        // determine the visibility of the next and previous buttons, based on whether there
-        // is a next or previous page with visible fields.
+        // determine the visibility of the next any previous buttons, based on whether there
+        // is a VISIBLE next or previous page.
         setNextPrevVisibility: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index +
                 " h3.speasyforms-wizard-selected");
-            // hide or show the previous button based on whether the previous page is 
-            // null (i.e. no previous page with visible fields)
             var tmp = this.getPrevious(opt);
             if (!tmp || tmp.length === 0) {
                 opt.selectedHeader.closest("div.speasyforms-wizard-outer").
@@ -34931,8 +34938,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     find(".speasyforms-wizard-prev").show();
 
             }
-            // hide or show the next button based on whether the next page is 
-            // null (i.e. no next page with visible fields)
             tmp = this.getNext(opt);
             if (!tmp || tmp.length === 0) {
                 opt.selectedHeader.closest("div.speasyforms-wizard-outer").
@@ -34965,6 +34970,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /* global spefjQuery */
 (function ($, undefined) {
 
+    var utils = $.spEasyForms.utilities;
+
     ////////////////////////////////////////////////////////////////////////////
     // Enforcer of field visibility rules.
     ////////////////////////////////////////////////////////////////////////////
@@ -34973,6 +34980,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
         comparisonOperators: {
             equals: function (value, test) {
+                if (utils.isDate(value) && utils.isDate(test)) {
+                    return (new Date(value)) === (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) === Number(test);
+                }
                 return (value.toLowerCase() === test.toLowerCase());
             },
             matches: function (value, test) {
@@ -34984,32 +34997,47 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 return !regex.test(value);
             },
             greaterThan: function (value, test) {
-                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                if (utils.isDate(value) && utils.isDate(test)) {
                     return (new Date(value)) > (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) > Number(test);
                 }
                 return (value > test);
             },
             greaterThanOrEqual: function (value, test) {
-                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                if (utils.isDate(value) && utils.isDate(test)) {
                     return (new Date(value)) >= (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) >= Number(test);
                 }
                 return (value >= test);
             },
             lessThan: function (value, test) {
-                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                if (utils.isDate(value) && utils.isDate(test)) {
                     return (new Date(value)) < (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) < Number(test);
                 }
                 return (value < test);
             },
             lessThanOrEqual: function (value, test) {
-                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                if (utils.isDate(value) && utils.isDate(test)) {
                     return (new Date(value)) <= (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) <= Number(test);
                 }
                 return (value <= test);
             },
             notEqual: function (value, test) {
-                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                if (utils.isDate(value) && utils.isDate(test)) {
                     return (new Date(value)) > (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) !== Number(test);
                 }
                 return (value !== test);
             }
@@ -35894,29 +35922,56 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         expandRuleValue: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var expandedValue = opt.condition.value;
+            // expand current user variables
             if (opt.condition.value.indexOf("[CurrentUser") >= 0) {
-                var ctx = spContext.get(opt);
+                var ctx = $.spEasyForms.sharePointContext.get(opt);
                 expandedValue = expandedValue.replace(/\[CurrentUser\]/g, "userdisp.aspx\\?ID=" + ctx.userId + "'");
                 expandedValue = expandedValue.replace(/\[CurrentUserId\]/g, ctx.userId);
                 expandedValue = expandedValue.replace(/\[CurrentUserLogin\]/g, ctx.userInformation.userName);
                 expandedValue = expandedValue.replace(/\[CurrentUserEmail\]/g, ctx.userInformation.eMail);
             }
+            // expand [Today] variables
+            var date = new Date();
+            var parts;
             if (opt.condition.value.indexOf("[Today") >= 0) {
-                expandedValue = expandedValue.replace(/\[Today\]/g, $.datepicker.formatDate("mm-dd-yy", new Date()));
+                expandedValue = expandedValue.replace(/\[Today\]/g, $.datepicker.formatDate("mm-dd-yy", date));
+                parts = expandedValue.match(/(\[Today[+-][0-9]*\])/g);
+                if (parts) {
+                    $.each($(parts), function (idx, part) {
+                        try {
+                            var i = Number(part.match(/\[Today[+-]([0-9]*)\]/)[1]);
+                            var newDate = new Date();
+                            if (part.indexOf("+") >= 0) {
+                                newDate.setTime(date.getTime() + i * 86400000);
+                            }
+                            else {
+                                newDate.setTime(date.getTime() - i * 86400000);
+                            }
+                            expandedValue = expandedValue.replace(part, $.datepicker.formatDate("mm/dd/yy", newDate));
+                        } catch (e) { }
+                    });
+                }
             }
-            var parts = expandedValue.match(/(\[Today[+-][0-9]*\])/g);
-            if (parts) {
-                $.each($(parts), function (idx, part) {
-                    var i = Number(part.match(/\[Today[+-]([0-9]*)\]/)[1]);
-                    var d = new Date();
-                    if (part.indexOf("+") >= 0) {
-                        d.setTime(d.getTime() + i * 86400000);
-                    }
-                    else {
-                        d.setTime(d.getTime() - i * 86400000);
-                    }
-                    expandedValue = expandedValue.replace(part, $.datepicker.formatDate("mm/dd/yy", d));
-                });
+            // expand [Now] variables
+            if (opt.condition.value.indexOf("[Now") >= 0) {
+                expandedValue = expandedValue.replace(/\[Now\]/g,
+                    $.datepicker.formatDate("mm-dd-yy", date) + " " + date.getHours() + ":" + date.getMinutes());
+                parts = expandedValue.match(/(\[Now[+-][0-9]*\])/g);
+                if (parts) {
+                    $.each($(parts), function (idx, part) {
+                        try {
+                            var i = Number(part.match(/\[Now[+-]([0-9]*)\]/)[1]);
+                            var newDate = new Date();
+                            if (part.indexOf("+") >= 0) {
+                                newDate.setTime(date.getTime() + i * 60000);
+                            } else {
+                                newDate.setTime(date.getTime() - i * 60000);
+                            }
+                            expandedValue = expandedValue.replace(part,
+                                $.datepicker.formatDate("mm/dd/yy", newDate) + " " + newDate.getHours() + ":" + newDate.getMinutes());
+                        } catch (e) { }
+                    });
+                }
             }
             return expandedValue;
         }

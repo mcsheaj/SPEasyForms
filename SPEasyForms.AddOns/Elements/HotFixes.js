@@ -1,7 +1,7 @@
 /*
  * SPEasyForms HotFixes - cumulative update for reported bugs.
  *
- * @version 2014.01.18
+ * @version 2014.01.19
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -214,7 +214,7 @@
     // only operate on the settings page
     if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
         $().ready(function () {
-            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.18</b>");
+            $("b:contains('Version: 2014.01')").parent().append("<br /><b>AddOns: 2014.01.19</b>");
         });
     }
 
@@ -1099,57 +1099,6 @@
     };
 
     /*v2014-01-16*/
-    containerCollection.containerImplementations.tabs.transform = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        opt.result = [];
-        opt.divId = "spEasyFormsTabDiv" + opt.index;
-        var divClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" +
-            opt.index + " ui-tabs ui-widget ui-widget-content ui-corner-all";
-        var listId = "spEasyFormsTabsList" + opt.index;
-        var listClass = "speasyforms-tabs speasyforms-tabs" +
-            opt.index +
-            " ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
-        var containerDiv = $("#" + opt.containerId);
-        containerDiv.append("<div id='" + opt.divId + "' class='" + divClass +
-            "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
-        var mostFields = 0;
-        $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-            if (fieldCollection.fields.length > mostFields) {
-                mostFields = fieldCollection.fields.length;
-            }
-        });
-        $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-            opt.collectionIndex = opt.index + "" + idx;
-            opt.parentElement = "spEasyFormsTabsDiv" + opt.collectionIndex;
-            opt.collectionType = "tab";
-            opt.fieldCollection = fieldCollection;
-            opt.tableClass = "speasyforms-tabs";
-
-            var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.collectionIndex +
-                " ui-state-default ui-corner-top";
-            $("#" + listId).append("<li class='" + itemClass +
-                "'><a href='#" + opt.parentElement + "'>" + fieldCollection.name +
-                "</a></li>");
-            $("#" + opt.divId).append(
-                "<div id='" + opt.parentElement +
-                "' class='ui-tabs-panel ui-widget-content ui-corner-bottom'>");
-
-            $.spEasyForms.baseContainer.appendFieldCollection(opt);
-        });
-        $("#" + listId).find("li:first").addClass("ui-tabs-active").addClass("ui-state-active");
-        $("#" + opt.divId).find("div.ui-tabs-panel").hide();
-        $("#" + opt.divId).find("div.ui-tabs-panel:first").show();
-        $("#" + listId).find("a").click(function () {
-            $("#" + listId).find("li").removeClass("ui-tabs-active").removeClass("ui-state-active");
-            $(this).closest("li").addClass("ui-tabs-active").addClass("ui-state-active");
-            $("#" + opt.divId).find("div.ui-tabs-panel").hide();
-            $($(this).attr("href")).show();
-            return false;
-        });
-
-        return opt.result;
-    };
-
     containerCollection.containerImplementations.accordion.transform = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
         opt.result = [];
@@ -1181,55 +1130,6 @@
         });
 
         return opt.result;
-    };
-
-    containerCollection.containerImplementations.columns.transform = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        opt.result = [];
-        var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
-        var outerTableClass = "speasyforms-container speasyforms-columns";
-        $("#" + opt.containerId).append("<table id='" + outerTableId +
-            "' class='" + outerTableClass + "'><tr id='" + outerTableId + "Row'></tr></table>");
-
-        $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-            opt.collectionIndex = opt.index + "" + idx;
-            opt.parentElement = "spEasyFormsColumnCell" + opt.collectionIndex;
-            opt.collectionType = "columns";
-            opt.fieldCollection = fieldCollection;
-            opt.tableClass = "speasyforms-columncell";
-            opt.headerOnTop = true;
-
-            $("#" + outerTableId + "Row").append("<td id='" + opt.parentElement + "'></td>");
-
-            $.spEasyForms.baseContainer.appendFieldCollection(opt);
-        });
-
-        return opt.result;
-    };
-
-    // replace tabs.postTransform to fix the issue with hidden parts of containers not dynamically
-    // being shown when a field changes causing one of it's fields to be shown
-    containerCollection.containerImplementations.tabs.postTransform = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        opt.divId = "spEasyFormsTabDiv" + opt.index;
-        $("#" + opt.divId + " table.speasyforms-tabs").each(function () {
-            var index = $(this)[0].id.replace("tabTable", "");
-            if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
-                if ($(this).parent().css("display") !== "none") {
-                    var nextIndex = -1;
-                    if ($(this).parent().next().length > 0) {
-                        nextIndex = $(this).parent().next()[0].id.replace("spEasyFormsTabsDiv", "");
-                        $(this).parent().next().show();
-                        $("li.speasyforms-tabs" + nextIndex).addClass("ui-tabs-active").addClass("ui-state-active");
-                    }
-                    $(this).parent().hide();
-                }
-                $(".speasyforms-tabs" + index).hide();
-            }
-            else {
-                $(".speasyforms-tabs" + index).show();
-            }
-        });
     };
 
     // replace accordion.postTransform to fix the issue with hidden parts of containers not dynamically
@@ -1379,18 +1279,6 @@
     };
 
     /*2014-01-17*/
-    $.spEasyForms.baseContainer.appendFieldCollection = function (options) {
-        var opt = $.extend({}, $.spEasyForms.defaults, options);
-        $("#" + opt.parentElement).append("<table width='100%' id='" + opt.collectionType + "Table" + opt.collectionIndex +
-            "' class='" + opt.tableClass + "' cellspacing='5'></table>");
-        opt.table = $("#" + opt.collectionType + "Table" + opt.collectionIndex);
-        $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
-            opt.rowInfo = containerCollection.rows[field.fieldInternalName];
-            if ($.spEasyForms.baseContainer.appendRow(opt)) {
-                opt.result.push(field.fieldInternalName);
-            }
-        });
-    };
 
     /*2014-01-18*/
     // override the checkConditionals method of visibilityRuleCollection to handle multiple
@@ -1423,34 +1311,178 @@
         return result;
     };
 
+    /*2014-01-19*/
     $.spEasyForms.visibilityRuleCollection.expandRuleValue = function (options) {
         var opt = $.extend({}, $.spEasyForms.defaults, options);
         var expandedValue = opt.condition.value;
+        // expand current user variables
         if (opt.condition.value.indexOf("[CurrentUser") >= 0) {
-            var ctx = spContext.get(opt);
+            var ctx = $.spEasyForms.sharePointContext.get(opt);
             expandedValue = expandedValue.replace(/\[CurrentUser\]/g, "userdisp.aspx\\?ID=" + ctx.userId + "'");
             expandedValue = expandedValue.replace(/\[CurrentUserId\]/g, ctx.userId);
             expandedValue = expandedValue.replace(/\[CurrentUserLogin\]/g, ctx.userInformation.userName);
             expandedValue = expandedValue.replace(/\[CurrentUserEmail\]/g, ctx.userInformation.eMail);
         }
+        // expand [Today] variables
+        var date = new Date();
+        var parts;
         if (opt.condition.value.indexOf("[Today") >= 0) {
-            expandedValue = expandedValue.replace(/\[Today\]/g, $.datepicker.formatDate("mm-dd-yy", new Date()));
+            expandedValue = expandedValue.replace(/\[Today\]/g, $.datepicker.formatDate("mm-dd-yy", date));
+            parts = expandedValue.match(/(\[Today[+-][0-9]*\])/g);
+            if (parts) {
+                $.each($(parts), function (idx, part) {
+                    try {
+                        var i = Number(part.match(/\[Today[+-]([0-9]*)\]/)[1]);
+                        var newDate = new Date();
+                        if (part.indexOf("+") >= 0) {
+                            newDate.setTime(date.getTime() + i * 86400000);
+                        }
+                        else {
+                            newDate.setTime(date.getTime() - i * 86400000);
+                        }
+                        expandedValue = expandedValue.replace(part, $.datepicker.formatDate("mm/dd/yy", newDate));
+                    } catch (e) { }
+                });
+            }
         }
-        var parts = expandedValue.match(/(\[Today[+-][0-9]*\])/g);
-        if (parts) {
-            $.each($(parts), function (idx, part) {
-                var i = Number(part.match(/\[Today[+-]([0-9]*)\]/)[1]);
-                var d = new Date();
-                if (part.indexOf("+") >= 0) {
-                    d.setTime(d.getTime() + i * 86400000);
-                }
-                else {
-                    d.setTime(d.getTime() - i * 86400000);
-                }
-                expandedValue = expandedValue.replace(part, $.datepicker.formatDate("mm/dd/yy", d));
-            });
+        // expand [Now] variables
+        if (opt.condition.value.indexOf("[Now") >= 0) {
+            expandedValue = expandedValue.replace(/\[Now\]/g,
+                $.datepicker.formatDate("mm-dd-yy", date) + " " + date.getHours() + ":" + date.getMinutes());
+            parts = expandedValue.match(/(\[Now[+-][0-9]*\])/g);
+            if (parts) {
+                $.each($(parts), function (idx, part) {
+                    try {
+                        var i = Number(part.match(/\[Now[+-]([0-9]*)\]/)[1]);
+                        var newDate = new Date();
+                        if (part.indexOf("+") >= 0) {
+                            newDate.setTime(date.getTime() + i * 60000);
+                        } else {
+                            newDate.setTime(date.getTime() - i * 60000);
+                        }
+                        expandedValue = expandedValue.replace(part,
+                            $.datepicker.formatDate("mm/dd/yy", newDate) + " " + newDate.getHours() + ":" + newDate.getMinutes());
+                    } catch (e) { }
+                });
+            }
         }
         return expandedValue;
+    };
+
+    containerCollection.containerImplementations.tabs.transform = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        opt.result = [];
+        opt.divId = "spEasyFormsTabDiv" + opt.index;
+        var divClass = "speasyforms-container speasyforms-tabs speasyforms-tabs" +
+            opt.index + " ui-tabs ui-widget ui-widget-content ui-corner-all";
+        var listId = "spEasyFormsTabsList" + opt.index;
+        var listClass = "speasyforms-tabs speasyforms-tabs" +
+            opt.index +
+            " ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all";
+        var containerDiv = $("#" + opt.containerId);
+        containerDiv.append("<div id='" + opt.divId + "' class='" + divClass +
+            "'><ul id='" + listId + "' class='" + listClass + " role='tablist'></ul></div>");
+        var mostFields = 0;
+        $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
+            if (fieldCollection.fields.length > mostFields) {
+                mostFields = fieldCollection.fields.length;
+            }
+        });
+        $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
+            opt.collectionIndex = opt.index + "" + idx;
+            opt.parentElement = "spEasyFormsTabsDiv" + opt.collectionIndex;
+            opt.labelId = "spEasyFormsTabsLabel" + opt.collectionIndex;
+            opt.collectionType = "tab";
+            opt.fieldCollection = fieldCollection;
+            opt.tableClass = "speasyforms-tabs";
+
+            var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.collectionIndex +
+                " ui-state-default ui-corner-top";
+            $("#" + listId).append("<li id='" + opt.labelId + "' class='" + itemClass +
+                "' role='tab' aria-controls='" + opt.parentElement + "' tabindex='0'><a href='#" + opt.parentElement + "'>" +
+                fieldCollection.name + "</a></li>");
+            $("#" + opt.divId).append(
+                "<div id='" + opt.parentElement + "' aria-labelledby='" + opt.labelId + "' " +
+                "' class='ui-tabs-panel ui-widget-content ui-corner-bottom' role='tabpanel'>");
+
+            $.spEasyForms.baseContainer.appendFieldCollection(opt);
+        });
+        $("#" + listId).find("li").attr("aria-selected", "false");
+        $("#" + listId).find("li:first").attr("aria-selected", "true").addClass("ui-tabs-active").addClass("ui-state-active");
+        $("#" + opt.divId).find("div.ui-tabs-panel").attr("aria-hidden", "true").hide();
+        $("#" + opt.divId).find("div.ui-tabs-panel:first").attr("aria-hidden", "false").show();
+        $("#" + listId).find("a").click(function () {
+            $("#" + listId).find("li").attr("aria-selected", "false").removeClass("ui-tabs-active").removeClass("ui-state-active");
+            $(this).closest("li").attr("aria-selected", "true").addClass("ui-tabs-active").addClass("ui-state-active");
+            $("#" + opt.divId).find("div.ui-tabs-panel").attr("aria-hidden", "true").hide();
+            $($(this).attr("href")).attr("aria-hidden", "false").show();
+            return false;
+        });
+
+        return opt.result;
+    };
+
+    // replace tabs.postTransform to fix the issue with hidden parts of containers not dynamically
+    // being shown when a field changes causing one of it's fields to be shown
+    containerCollection.containerImplementations.tabs.postTransform = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        opt.divId = "spEasyFormsTabDiv" + opt.index;
+        $("#" + opt.divId + " table.speasyforms-tabs").each(function () {
+            var index = $(this)[0].id.replace("tabTable", "");
+            if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
+                if ($(this).parent().css("display") !== "none") {
+                    var nextIndex = -1;
+                    $(this).parent().attr("aria-hidden", "true").removeAttr("tabindex").hide();
+                    $("#spEasyFormsTabsLabel" + index).removeClass("ui-tabs-active").removeClass("ui-state-active").attr("aria-selected", "false");
+                    if ($(this).parent().next().length > 0) {
+                        nextIndex = $(this).parent().next()[0].id.replace("spEasyFormsTabsDiv", "");
+                        $(this).parent().next().show();
+                        $("li.speasyforms-tabs" + nextIndex).addClass("ui-tabs-active").addClass("ui-state-active").attr("aria-selected", "true");
+                    }
+                }
+                $(".speasyforms-tabs" + index).attr("aria-hidden", "true").hide();
+            }
+            else {
+                $(".speasyforms-tabs" + index).attr("aria-hidden", "false").show();
+            }
+        });
+    };
+
+    $.spEasyForms.baseContainer.appendFieldCollection = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        $("#" + opt.parentElement).append("<table role='presentation' width='100%' id='" + opt.collectionType + "Table" + opt.collectionIndex +
+            "' class='" + opt.tableClass + "' cellspacing='5'></table>");
+        opt.table = $("#" + opt.collectionType + "Table" + opt.collectionIndex);
+        $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
+            opt.rowInfo = containerCollection.rows[field.fieldInternalName];
+            if ($.spEasyForms.baseContainer.appendRow(opt)) {
+                opt.result.push(field.fieldInternalName);
+            }
+        });
+    };
+
+    containerCollection.containerImplementations.columns.transform = function (options) {
+        var opt = $.extend({}, $.spEasyForms.defaults, options);
+        opt.result = [];
+        var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
+        var outerTableClass = "speasyforms-container speasyforms-columns";
+        $("#" + opt.containerId).append("<table role='presentation' id='" + outerTableId +
+            "' class='" + outerTableClass + "'><tr id='" + outerTableId + "Row'></tr></table>");
+
+        $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
+            opt.collectionIndex = opt.index + "" + idx;
+            opt.parentElement = "spEasyFormsColumnCell" + opt.collectionIndex;
+            opt.collectionType = "columns";
+            opt.fieldCollection = fieldCollection;
+            opt.tableClass = "speasyforms-columncell";
+            opt.headerOnTop = true;
+
+            $("#" + outerTableId + "Row").append("<td id='" + opt.parentElement + "'></td>");
+
+            $.spEasyForms.baseContainer.appendFieldCollection(opt);
+        });
+
+        return opt.result;
     };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);

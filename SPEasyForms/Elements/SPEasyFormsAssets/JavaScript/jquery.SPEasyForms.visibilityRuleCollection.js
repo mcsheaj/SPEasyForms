@@ -9,6 +9,8 @@
 /* global spefjQuery */
 (function ($, undefined) {
 
+    var utils = $.spEasyForms.utilities;
+
     ////////////////////////////////////////////////////////////////////////////
     // Enforcer of field visibility rules.
     ////////////////////////////////////////////////////////////////////////////
@@ -17,6 +19,12 @@
 
         comparisonOperators: {
             equals: function (value, test) {
+                if (utils.isDate(value) && utils.isDate(test)) {
+                    return (new Date(value)) === (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) === Number(test);
+                }
                 return (value.toLowerCase() === test.toLowerCase());
             },
             matches: function (value, test) {
@@ -28,32 +36,47 @@
                 return !regex.test(value);
             },
             greaterThan: function (value, test) {
-                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                if (utils.isDate(value) && utils.isDate(test)) {
                     return (new Date(value)) > (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) > Number(test);
                 }
                 return (value > test);
             },
             greaterThanOrEqual: function (value, test) {
-                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                if (utils.isDate(value) && utils.isDate(test)) {
                     return (new Date(value)) >= (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) >= Number(test);
                 }
                 return (value >= test);
             },
             lessThan: function (value, test) {
-                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                if (utils.isDate(value) && utils.isDate(test)) {
                     return (new Date(value)) < (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) < Number(test);
                 }
                 return (value < test);
             },
             lessThanOrEqual: function (value, test) {
-                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                if (utils.isDate(value) && utils.isDate(test)) {
                     return (new Date(value)) <= (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) <= Number(test);
                 }
                 return (value <= test);
             },
             notEqual: function (value, test) {
-                if ($.spEasyForms.utilities.isDate(value) && $.spEasyForms.utilities.isDate(test)) {
+                if (utils.isDate(value) && utils.isDate(test)) {
                     return (new Date(value)) > (new Date(test));
+                }
+                if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                    return Number(value) !== Number(test);
                 }
                 return (value !== test);
             }
@@ -938,29 +961,56 @@
         expandRuleValue: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var expandedValue = opt.condition.value;
+            // expand current user variables
             if (opt.condition.value.indexOf("[CurrentUser") >= 0) {
-                var ctx = spContext.get(opt);
+                var ctx = $.spEasyForms.sharePointContext.get(opt);
                 expandedValue = expandedValue.replace(/\[CurrentUser\]/g, "userdisp.aspx\\?ID=" + ctx.userId + "'");
                 expandedValue = expandedValue.replace(/\[CurrentUserId\]/g, ctx.userId);
                 expandedValue = expandedValue.replace(/\[CurrentUserLogin\]/g, ctx.userInformation.userName);
                 expandedValue = expandedValue.replace(/\[CurrentUserEmail\]/g, ctx.userInformation.eMail);
             }
+            // expand [Today] variables
+            var date = new Date();
+            var parts;
             if (opt.condition.value.indexOf("[Today") >= 0) {
-                expandedValue = expandedValue.replace(/\[Today\]/g, $.datepicker.formatDate("mm-dd-yy", new Date()));
+                expandedValue = expandedValue.replace(/\[Today\]/g, $.datepicker.formatDate("mm-dd-yy", date));
+                parts = expandedValue.match(/(\[Today[+-][0-9]*\])/g);
+                if (parts) {
+                    $.each($(parts), function (idx, part) {
+                        try {
+                            var i = Number(part.match(/\[Today[+-]([0-9]*)\]/)[1]);
+                            var newDate = new Date();
+                            if (part.indexOf("+") >= 0) {
+                                newDate.setTime(date.getTime() + i * 86400000);
+                            }
+                            else {
+                                newDate.setTime(date.getTime() - i * 86400000);
+                            }
+                            expandedValue = expandedValue.replace(part, $.datepicker.formatDate("mm/dd/yy", newDate));
+                        } catch (e) { }
+                    });
+                }
             }
-            var parts = expandedValue.match(/(\[Today[+-][0-9]*\])/g);
-            if (parts) {
-                $.each($(parts), function (idx, part) {
-                    var i = Number(part.match(/\[Today[+-]([0-9]*)\]/)[1]);
-                    var d = new Date();
-                    if (part.indexOf("+") >= 0) {
-                        d.setTime(d.getTime() + i * 86400000);
-                    }
-                    else {
-                        d.setTime(d.getTime() - i * 86400000);
-                    }
-                    expandedValue = expandedValue.replace(part, $.datepicker.formatDate("mm/dd/yy", d));
-                });
+            // expand [Now] variables
+            if (opt.condition.value.indexOf("[Now") >= 0) {
+                expandedValue = expandedValue.replace(/\[Now\]/g,
+                    $.datepicker.formatDate("mm-dd-yy", date) + " " + date.getHours() + ":" + date.getMinutes());
+                parts = expandedValue.match(/(\[Now[+-][0-9]*\])/g);
+                if (parts) {
+                    $.each($(parts), function (idx, part) {
+                        try {
+                            var i = Number(part.match(/\[Now[+-]([0-9]*)\]/)[1]);
+                            var newDate = new Date();
+                            if (part.indexOf("+") >= 0) {
+                                newDate.setTime(date.getTime() + i * 60000);
+                            } else {
+                                newDate.setTime(date.getTime() - i * 60000);
+                            }
+                            expandedValue = expandedValue.replace(part,
+                                $.datepicker.formatDate("mm/dd/yy", newDate) + " " + newDate.getHours() + ":" + newDate.getMinutes());
+                        } catch (e) { }
+                    });
+                }
             }
             return expandedValue;
         }

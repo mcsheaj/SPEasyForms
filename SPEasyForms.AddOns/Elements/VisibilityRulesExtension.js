@@ -2,7 +2,7 @@
  * SPEasyForms VisibilityRulesExtension - some additional comparison operators
  * and state handlers for use in SPEasyForms visibility rules.
  *
- * @version 2014.01.18
+ * @version 2014.01.19
  * @requires SPEasyForms v2014.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
@@ -39,6 +39,7 @@
         };
     }
     
+    /*2014-01-19*/
     // each method will appear in the comparison operator drop down of
     // the add/edit visibility rule dialog (in title case)
     var comparisonOperators = {
@@ -46,11 +47,17 @@
             if (utils.isDate(value) && utils.isDate(test)) {
                 return (new Date(value)) > (new Date(test));
             }
+            if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                return Number(value) > Number(test);
+            }
             return (value > test);
         },
         greaterThanOrEqual: function (value, test) {
             if (utils.isDate(value) && utils.isDate(test)) {
                 return (new Date(value)) >= (new Date(test));
+            }
+            if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                return Number(value) >= Number(test);
             }
             return (value >= test);
         },
@@ -58,11 +65,17 @@
             if (utils.isDate(value) && utils.isDate(test)) {
                 return (new Date(value)) < (new Date(test));
             }
+            if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                return Number(value) < Number(test);
+            }
             return (value < test);
         },
         lessThanOrEqual: function (value, test) {
             if (utils.isDate(value) && utils.isDate(test)) {
                 return (new Date(value)) <= (new Date(test));
+            }
+            if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                return Number(value) <= Number(test);
             }
             return (value <= test);
         },
@@ -70,13 +83,26 @@
             if (utils.isDate(value) && utils.isDate(test)) {
                 return (new Date(value)) > (new Date(test));
             }
-            return (value !== test);
+            if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+                return Number(value) !== Number(test);
+            }
+            return (value.toLowerCase() !== test.toLowerCase());
         }
     };
 
     // replace the visibility managers comparison operators with mine, doing it this way
     // makes my new operators take a back seat to ones already defined in SPEasyForms proper.
     utils.extend(visibilityRuleCollection.comparisonOperators, comparisonOperators);
+
+    visibilityRuleCollection.comparisonOperators.equals = function (value, test) {
+        if (utils.isDate(value) && utils.isDate(test)) {
+            return (new Date(value)) === (new Date(test));
+        }
+        if (/^[0-9]*.?[0-9]*$/.test(value) && /^[0-9]*.?[0-9]*$/.test(test)) {
+            return Number(value) === Number(test);
+        }
+        return (value.toLowerCase() === test.toLowerCase());
+    };
 
     if (!utils.highlight) {
         utils.highlight = function (rowNode, backgroundColor) {

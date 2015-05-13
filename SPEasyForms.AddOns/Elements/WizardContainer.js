@@ -36,7 +36,7 @@
             opt.divId = "spEasyFormsWizardDiv" + opt.index;
             $("#" + opt.containerId).append("<div id=" + opt.divId +
                 " class='speasyforms-wizard-outer ui-widget-content" +
-                " ui-corner-all' style='margin: 10px;'></div>");
+                " ui-corner-all' style='margin: 10px;' role='tablist'></div>");
             opt.outerDiv = $("#" + opt.divId);
 
             // loop through field collections adding them as headers/tables to the container div
@@ -45,10 +45,10 @@
                 opt.collectionIndex = opt.index + "" + idx;
                 opt.tableClass = "speasyforms-wizard";
                 opt.outerDiv.append("<h3 id='page" + opt.collectionIndex +
-                    "' class='" + opt.tableClass + "' style='padding: 5px;'>" +
+                    "' class='" + opt.tableClass + "' style='padding: 5px;' role='tab' aria-controls='pageContent" + opt.collectionIndex + "'>" +
                     fieldCollection.name + "</h3>" +
-                    "<div id='pageContent" + opt.collectionIndex +
-                    "' class='speasyforms-wizard' style='padding: 10px'>" +
+                    "<div id='pageContent" + opt.collectionIndex + "' aria-labelledby='page" + opt.collectionIndex + "' " +
+                    "class='speasyforms-wizard' style='padding: 10px' role='tabpanel'>" +
                     "</div>");
 
                 // add a table to the div with the fields in the field collection
@@ -91,17 +91,12 @@
                 // set the height/width of each page, hide the unselected pages, 
                 // and show the selected page
                 $(tableSelector).each(function () {
-                    var selectedHeaderSelector = "#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected";
                     $(this).closest("div").width(width).height(height); // set height/width
-                    if ($(selectedHeaderSelector).length > 0) {
-                        $(this).closest("div").hide().prev().hide();
-                    }
-                    else if ($(this).find(wizard.visibileRow).length > 0) {
-                        $(this).closest("div").addClass("speasyforms-wizard-selected").
-                            prev().addClass("speasyforms-wizard-selected");
-                    }
-                    else {
-                        $(this).closest("div").hide().prev().hide();
+                    var selectedHeaderSelector = "#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected";
+                    if ($(selectedHeaderSelector).length === 0) {
+                        if ($(this).find(wizard.visibileRow).length > 0) {
+                            wizard.select($(this).closest("div").prev(), $("#spEasyFormsWizardDiv" + opt.index));
+                        }
                     }
                 });
             }
@@ -116,12 +111,32 @@
             var error = $(errorSelector + ":first");
             if (error.length > 0) {
                 // if so, select and show the first page with validation errors
-                var selectedSelector = "#spEasyFormsWizardDiv" + opt.index + " .speasyforms-wizard-selected";
-                $(selectedSelector).hide().removeClass("speasyforms-wizard-selected");
-                error.closest("div").prev().show().addClass("speasyforms-wizard-selected").
-                    next().show().addClass("speasyforms-wizard-selected");
+                this.select(error.closest("div").prev(), $("#spEasyFormsWizardDiv" + opt.index));
             }
             wizard.setNextPrevVisibility(opt);
+        },
+
+        // select the content area for the given header
+        select: function (header, outerDiv) {
+            this.deselectall(outerDiv);
+            header.addClass("speasyforms-wizard-selected").attr("aria-selected", "true").attr("aria-hidden", "false").show().
+                next().attr("aria-hidden", "false").attr("aria-expanded", "true").addClass("speasyforms-wizard-selected").show();
+        },
+
+        // deselect the content area for the given header
+        deselect: function(header) {
+            header.removeClass("speasyforms-wizard-selected").attr("aria-selected", "false").attr("aria-hidden", "true").show().
+                next().attr("aria-hidden", "true").attr("aria-expanded", "false").removeClass("speasyforms-wizard-selected").hide();
+        },
+
+        // deselect all content areas
+        deselectall: function (outerDiv) {
+            outerDiv.find("h3.speasyforms-wizard").each(function (idx, h) {
+                var header = $(h);
+                header.removeClass("speasyforms-wizard-selected").attr("aria-selected", "false").attr("aria-hidden", "true").hide();
+                var div = header.next();
+                div.removeClass("speashforms-wizard-selected").attr("aria-expanded", "false").attr("aria-hidden", "true").hide();
+            });
         },
 
         // add next and previous buttons and wire up their events
@@ -145,16 +160,14 @@
 
             // handle previous click event
             $("#" + opt.divId + "Previous").button().click(function () {
-                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index +
-                    " h3.speasyforms-wizard-selected");
+                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected");
                 wizard.selectPrevious(opt);
                 return false;
             });
 
             // handle next click event
             $("#" + opt.divId + "Next").button().click(function () {
-                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index +
-                    " h3.speasyforms-wizard-selected");
+                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected");
                 wizard.selectNext(opt);
                 return false;
             });
@@ -165,10 +178,7 @@
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var prev = this.getPrevious(opt);
             if (prev) {
-                opt.selectedHeader.removeClass("speasyforms-wizard-selected").hide().
-                    next().removeClass("speasyforms-wizard-selected").hide();
-                prev.addClass("speasyforms-wizard-selected").show().
-                    next().addClass("speasyforms-wizard-selected").show();
+                this.select(prev, $("#" + opt.divId));
             }
             wizard.setNextPrevVisibility(opt);
         },
@@ -199,10 +209,7 @@
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var next = this.getNext(opt);
             if (next) {
-                opt.selectedHeader.removeClass("speasyforms-wizard-selected").hide().
-                    next().removeClass("speasyforms-wizard-selected").hide();
-                next.addClass("speasyforms-wizard-selected").show().
-                    next().addClass("speasyforms-wizard-selected").show();
+                this.select(next, $("#" + opt.divId));
             }
             wizard.setNextPrevVisibility(opt);
         },
