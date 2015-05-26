@@ -10,6 +10,8 @@
         <ElementManifest Location="SPEasyForms.AddOns.Assets.xml" />
         <ElementManifest Location="SPEasyForms.AddOns.ScriptLinks.xml" />
         <ElementFile Location="DefaultToCurrentUserAdapter.js" />
+        <ElementFile Location="StarRatingAdapter.js" />
+        <ElementFile Location="starratingadapter.css" />
         <ElementFile Location="VisibilityRulesExtension.js" />
         <ElementFile Location="HotFixes.js" />
         <ElementFile Location="ResizeDialog.js" />

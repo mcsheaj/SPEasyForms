@@ -28,16 +28,6 @@
     // this patch only needs to be applied to v2014.01
     if (spEasyFormsVersion !== "2014.01") return;
 
-    $.spEasyForms.Hotfixes_originalInit = $.spEasyForms.init;
-    $.spEasyForms.init = function (options) {
-        // call the original SPEasyForms init method
-        $.spEasyForms.Hotfixes_originalInit(options);
-        if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
-            $(".ms-formtable").width(600);
-            $("table.ms-formtable").css({ padding: "0" });
-        }
-    };
-
     // create a posttransform method in the container collection to call all of the
     // individual posttransform methods of the containers
     $.spEasyForms.containerCollection.postTransform = function (options) {
@@ -1483,6 +1473,25 @@
         });
 
         return opt.result;
+    };
+
+    $.spEasyForms.Hotfixes_originalInit = $.spEasyForms.init;
+    $.spEasyForms.init = function (options) {
+        // call the original SPEasyForms init method
+        $.spEasyForms.Hotfixes_originalInit(options);
+        if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") > -1) {
+            $(".ms-formtable").width(600);
+            $("table.ms-formtable").css({ padding: "0" });
+        }
+
+        if ($.spEasyForms.defaults.verbose) {
+            $("#spEasyFormsAboutButton").parent().prepend('<a id="spEasyFormsDiagLink" href="javascript:void(0)"><div class="speasyforms-buttonouterdiv" id="spEasyFormsDiagButton"><img width="32" height="32" class="speasyforms-buttonimg" src="/_layouts/images/menudownload.gif"><div class="speasyforms-buttontext">Diagnostics</div></div></a>');
+            $("#spEasyFormsDiagLink").click(function () {
+                var win = window.open();
+                win.document.write("<pre>\n" + JSON.stringify($.spEasyForms.sharePointContext.getListContext(options), null, 4) + "\n</pre>");
+                win.document.close();
+            });
+        }
     };
 
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);

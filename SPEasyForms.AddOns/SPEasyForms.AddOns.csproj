@@ -56,6 +56,9 @@
     <Content Include="Elements\SPEasyForms.AddOns.ScriptLinks.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Elements\starratingadapter.css" />
+    <Content Include="Elements\StarRatingAdapter.js" />
+    <Content Include="Elements\stars.png" />
     <Content Include="Elements\toolbar.png" />
     <Content Include="Elements\VisibilityRulesExtension.js" />
     <Content Include="Elements\WizardContainer.js" />

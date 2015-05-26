@@ -3,8 +3,7 @@
  * that creates an adapter for text fields to listen for changes to a lookup
  * and pull in data from another field in the lookup list.
  *
- * @version 2014.01.14
- * @requires SPEasyForms v2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php

@@ -2,6 +2,8 @@
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
     <Module Name="SPEasyFormsAddOnsAssets" Url="Style Library/SPEasyFormsAssets/AddOns/2014.01.19">
         <File Path="DefaultToCurrentUserAdapter.js" Url="DefaultToCurrentUserAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="StarRatingAdapter.js" Url="StarRatingAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="starratingadapter.css" Url="starratingadapter.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="VisibilityRulesExtension.js" Url="VisibilityRulesExtension.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="HotFixes.js" Url="HotFixes.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="ResizeDialog.js" Url="ResizeDialog.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

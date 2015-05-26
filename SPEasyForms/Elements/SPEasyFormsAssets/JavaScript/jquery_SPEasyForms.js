@@ -30358,6 +30358,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 }
             });
+            if ($.spEasyForms.defaults.verbose) {
+                $("#spEasyFormsAboutButton").parent().prepend('<a id="spEasyFormsDiagLink" href="javascript:void(0)"><div class="speasyforms-buttonouterdiv" id="spEasyFormsDiagButton"><img width="32" height="32" class="speasyforms-buttonimg" src="/_layouts/images/menudownload.gif"><div class="speasyforms-buttontext">Diagnostics</div></div></a>');
+                $("#spEasyFormsDiagLink").click(function () {
+                    var win = window.open();
+                    win.document.write("<pre>\n" + JSON.stringify($.spEasyForms.sharePointContext.getListContext(options), null, 4) + "\n</pre>");
+                    win.document.close();
+                });
+            }
         },
 
         /********************************************************************
@@ -32471,14 +32479,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         if (pplpkrDiv.length > 0) {
                             ExecuteOrDelayUntilScriptLoaded(function () {
                                 var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
-                                var resolvedUsersList = $(document.getElementById(clientPplPicker.ResolvedListElementId)).find("span[class='sp-peoplepicker-userSpan']");
-                                $(resolvedUsersList).each(function () {
-                                    clientPplPicker.DeleteProcessedUser(this);
-                                });
-                                var entities = tr.value.split(";");
-                                $.each($(entities), function (idx, entity) {
-                                    clientPplPicker.AddUserKeys(entity);
-                                });
+                                if (clientPplPicker) {
+                                    var resolvedUsersList = $(document.getElementById(clientPplPicker.ResolvedListElementId)).find("span[class='sp-peoplepicker-userSpan']");
+                                    $(resolvedUsersList).each(function () {
+                                        clientPplPicker.DeleteProcessedUser(this);
+                                    });
+                                    var entities = tr.value.split(";");
+                                    $.each($(entities), function (idx, entity) {
+                                        clientPplPicker.AddUserKeys(entity);
+                                    });
+                                }
                             }, "clientpeoplepicker.js");
                         } else {
                             // otherwise use SPServices to set the people picker value
@@ -36756,10 +36766,19 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 var currentUser = $.spEasyForms.sharePointContext.getUserInformation(opt).name;
                 if (pplpkrDiv.length > 0) {
                     ExecuteOrDelayUntilScriptLoaded(function () {
-                        var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
-                        if (clientPplPicker.GetAllUserInfo().length === 0) {
-                            clientPplPicker.AddUserKeys(currentUser);
-                        }
+                        setTimeout(function () {
+                            var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
+                            if (clientPplPicker.GetAllUserInfo().length === 0) {
+                                clientPplPicker.AddUserKeys(currentUser);
+                                clientPplPicker.OnValueChangedClientScript = function (elementId, userInfo) {
+                                    if (userInfo.length === 0) {
+                                        if (document.activeElement && document.activeElement.id !== clientPplPicker.EditorElementId) {
+                                            clientPplPicker.AddUserKeys(currentUser);
+                                        }
+                                    }
+                                };
+                            }
+                        }, 1000);
                     }, "clientpeoplepicker.js");
                 } else {
                     var displayName = containerCollection.rows[opt.adapter.columnNameInternal].displayName;
@@ -36851,8 +36870,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * that creates an adapter for text fields to listen for changes to a lookup
  * and pull in data from another field in the lookup list.
  *
- * @version 2014.01.14
- * @requires SPEasyForms v2014.01 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php

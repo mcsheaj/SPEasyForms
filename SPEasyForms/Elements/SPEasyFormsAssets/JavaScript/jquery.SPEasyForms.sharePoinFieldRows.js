@@ -588,14 +588,16 @@
                         if (pplpkrDiv.length > 0) {
                             ExecuteOrDelayUntilScriptLoaded(function () {
                                 var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
-                                var resolvedUsersList = $(document.getElementById(clientPplPicker.ResolvedListElementId)).find("span[class='sp-peoplepicker-userSpan']");
-                                $(resolvedUsersList).each(function () {
-                                    clientPplPicker.DeleteProcessedUser(this);
-                                });
-                                var entities = tr.value.split(";");
-                                $.each($(entities), function (idx, entity) {
-                                    clientPplPicker.AddUserKeys(entity);
-                                });
+                                if (clientPplPicker) {
+                                    var resolvedUsersList = $(document.getElementById(clientPplPicker.ResolvedListElementId)).find("span[class='sp-peoplepicker-userSpan']");
+                                    $(resolvedUsersList).each(function () {
+                                        clientPplPicker.DeleteProcessedUser(this);
+                                    });
+                                    var entities = tr.value.split(";");
+                                    $.each($(entities), function (idx, entity) {
+                                        clientPplPicker.AddUserKeys(entity);
+                                    });
+                                }
                             }, "clientpeoplepicker.js");
                         } else {
                             // otherwise use SPServices to set the people picker value

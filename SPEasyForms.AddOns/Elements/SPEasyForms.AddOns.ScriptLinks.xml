@@ -32,6 +32,11 @@
     />
     <CustomAction
        Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.19/StarRatingAdapter.js"
+       Sequence="57401"
+    />
+    <CustomAction
+       Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/AddOns/2014.01.19/VisibilityRulesExtension.js"
        Sequence="57401"
     />

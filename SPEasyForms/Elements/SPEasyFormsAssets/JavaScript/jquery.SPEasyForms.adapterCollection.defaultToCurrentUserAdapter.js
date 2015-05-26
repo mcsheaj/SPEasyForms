@@ -37,10 +37,19 @@
                 var currentUser = $.spEasyForms.sharePointContext.getUserInformation(opt).name;
                 if (pplpkrDiv.length > 0) {
                     ExecuteOrDelayUntilScriptLoaded(function () {
-                        var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
-                        if (clientPplPicker.GetAllUserInfo().length === 0) {
-                            clientPplPicker.AddUserKeys(currentUser);
-                        }
+                        setTimeout(function () {
+                            var clientPplPicker = SPClientPeoplePicker.SPClientPeoplePickerDict[pplpkrDiv[0].id];
+                            if (clientPplPicker.GetAllUserInfo().length === 0) {
+                                clientPplPicker.AddUserKeys(currentUser);
+                                clientPplPicker.OnValueChangedClientScript = function (elementId, userInfo) {
+                                    if (userInfo.length === 0) {
+                                        if (document.activeElement && document.activeElement.id !== clientPplPicker.EditorElementId) {
+                                            clientPplPicker.AddUserKeys(currentUser);
+                                        }
+                                    }
+                                };
+                            }
+                        }, 1000);
                     }, "clientpeoplepicker.js");
                 } else {
                     var displayName = containerCollection.rows[opt.adapter.columnNameInternal].displayName;

@@ -9,6 +9,8 @@ Manifest.xml
 ..\Elements\SPEasyForms.AddOns.ScriptLinks.xml
 ..\Elements\SPEasyForms.AddOns.Assets.xml
 ..\Elements\DefaultToCurrentUserAdapter.js
+..\Elements\StarRatingAdapter.js
+..\Elements\starratingadapter.css
 ..\Elements\VisibilityRulesExtension.js
 ..\Elements\Hotfixes.js
 ..\Elements\ResizeDialog.js

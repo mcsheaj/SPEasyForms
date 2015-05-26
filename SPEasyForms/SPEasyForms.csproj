@@ -57,6 +57,7 @@
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\jquery.ui.theme.css" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery.cleditor.css" />
     <Content Include="Elements\SPEasyFormsAssets\Css\speasyforms.css" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\starratingadapter.css" />
     <Content Include="Elements\SPEasyFormsAssets\Help\Images\bullet_blue.png" />
     <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download.png" />
     <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_002.png" />
@@ -121,6 +122,7 @@
     <Content Include="Elements\SPEasyFormsAssets\Help\speasyforms_help.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.starRatingAdapter.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jQuery.SPEasyForms.containerCollection.htmlSnippet.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.js" />
