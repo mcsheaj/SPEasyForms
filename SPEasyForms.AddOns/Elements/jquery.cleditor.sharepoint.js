@@ -9,7 +9,7 @@
 /* global spefjQuery */
 (function ($) {
 
-    if (!$) return;
+    if (!$) { return; }
 
     // Define an array of structures describing control key shortcuts
     $.cleditor.buttonShortcuts = {
@@ -166,10 +166,10 @@
     };
 
     // Add the buttons to the default controls before the source button
-    $.cleditor.defaultOptions.controls = $.cleditor.defaultOptions.controls
-        .replace("source", "ltr rtl source");
-    $.cleditor.defaultOptions.controls = $.cleditor.defaultOptions.controls
-        .replace("highlight", "highlight backgroundcolor");
+    $.cleditor.defaultOptions.controls =
+        $.cleditor.defaultOptions.controls.replace("source", "ltr rtl source");
+    $.cleditor.defaultOptions.controls =
+        $.cleditor.defaultOptions.controls.replace("highlight", "highlight backgroundcolor");
 
     // override the cleditor function to add shortcuts to the button titles (i.e. tooltips)
     var cssLoaded = false;
@@ -266,25 +266,19 @@
                 refreshStickyButtons(editor);
             }
         }
+        return true;
     };
-
-    // define a callback for events on the iframe document selection changed event
-    //$.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback = $.cleditor.defaultOptions.selectionChangeCallback;
-    //$.cleditor.defaultOptions.selectionChangeCallback = function (e, editor) {
-    //    refreshStickyButtons(editor);
-    //    if ($.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback) {
-    //        $.cleditor.defaultOptions.cleditor_sharepoint_selectionChangeCallback(e, editor);
-    //    }
-    //};
 
     // define a callback for events on the button div click event
     $.cleditor.defaultOptions.cleditor_sharepoint_buttonClickCallBack = $.cleditor.defaultOptions.buttonClickCallBack;
     $.cleditor.defaultOptions.buttonClickCallBack = function (e, data) {
         if (data.buttonName in stickyButtons && !stickyButtons[data.buttonName].closestSelector) {
-            if (buttonIsSelected(data.button))
+            if (buttonIsSelected(data.button)) {
                 buttonSelect(data.button, false);
-            else
+            }
+            else {
                 buttonSelect(data.button, true);
+            }
         }
     };
 

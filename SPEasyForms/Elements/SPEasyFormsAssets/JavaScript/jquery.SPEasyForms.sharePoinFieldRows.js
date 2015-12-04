@@ -204,13 +204,15 @@
                 opt.row = result;
                 result.value = this.value(opt);
             }
-            $.each(Object.keys(result), function (idx, key) {
-                if (result[key].row) {
-                    result[key].row.attr("data-displayname", result.displayName);
-                    result[key].row.attr("data-internalname", result.internalName);
-                    result[key].row.attr("data-spfieldtype", result.spFieldType);
-                }
-            });
+            if (result.displayName && result.internalName && result.spFieldType) {
+                $.each(Object.keys(result), function (idx, key) {
+                    if (result[key].row) {
+                        result[key].row.attr("data-displayname", result.displayName);
+                        result[key].row.attr("data-internalname", result.internalName);
+                        result[key].row.attr("data-spfieldtype", result.spFieldType);
+                    }
+                });
+            }
             return result;
         },
 

@@ -45,7 +45,7 @@
                 $.spEasyForms.baseContainer.appendFieldCollection(opt);
             });
             $("#" + divId).accordion({
-                heightStyle: "auto",
+                heightStyle: "content",
                 active: false,
                 collapsible: true
             });
@@ -67,7 +67,7 @@
                 }
             });
         },
-
+        
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var divId = "spEasyFormsAccordionDiv" + opt.index;
@@ -78,7 +78,9 @@
                     addClass("speasyforms-accordionvalidationerror");
                     if (!selected) {
                         $("#" + divId).accordion({
-                            active: idx
+                            heightStyle: "content",
+                            active: idx,
+                            collapsible: true
                         });
                         selected = true;
                     }

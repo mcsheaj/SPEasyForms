@@ -38,5 +38,9 @@
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js</file>
+
+        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.xhtml.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.sharepoint.js</file>
     </files>
 </bundle>
