@@ -563,7 +563,7 @@
 
             // wire the save button
             $("#spEasyFormsSaveButton").click(function (event) {
-                if ($("#spEasyFormsSaveButton img").hasClass("speasyforms-buttonimgdisabled"))
+                if ($("#spEasyFormsSaveButton").hasClass("speasyforms-disabled"))
                     return;
 
                 if (!event.handled) {
@@ -594,22 +594,20 @@
 
             // wire the undo button
             $("#spEasyFormsUndoButton").click(function (event) {
-                if ($("#spEasyFormsUndoButton img").hasClass("speasyforms-buttonimgdisabled"))
+                if ($("#spEasyFormsUndoButton").hasClass("speasyforms-disabled"))
                     return;
 
                 if (!event.handled) {
                     var oldConfig = JSON.stringify($.spEasyForms.configManager.get(opt), null, 4);
                     var newConfig = $.spEasyForms.configManager.undoBuffer.pop();
                     $.spEasyForms.configManager.redoBuffer.push(oldConfig);
-                    $("#spEasyFormsRedoButton img").removeClass("speasyforms-buttonimgdisabled");
-                    $("#spEasyFormsRedoButton").removeClass("speasyforms-buttontextdisabled");
+                    $("#spEasyFormsRedoButton").removeClass("speasyforms-disabled").css({ opacity: 1.0 });
 
                     opt.currentConfig = $.spEasyForms.utilities.parseJSON(newConfig);
                     $.spEasyForms.configManager.set(opt);
                     newConfig = $.spEasyForms.configManager.undoBuffer.pop();
                     if ($.spEasyForms.configManager.undoBuffer.length === 0) {
-                        $("#spEasyFormsUndoButton img").addClass("speasyforms-buttonimgdisabled");
-                        $("#spEasyFormsUndoButton").addClass("speasyforms-buttontextdisabled");
+                        $("#spEasyFormsUndoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
                     }
 
                     containerCollection.toEditor(opt);
@@ -619,7 +617,7 @@
 
             // wire the redo button
             $("#spEasyFormsRedoButton").click(function (event) {
-                if ($("#spEasyFormsRedoButton img").hasClass("speasyforms-buttonimgdisabled"))
+                if ($("#spEasyFormsRedoButton").hasClass("speasyforms-disabled"))
                     return;
 
                 if (!event.handled) {
@@ -627,8 +625,7 @@
                     $.spEasyForms.configManager.set(opt);
 
                     if ($.spEasyForms.configManager.redoBuffer.length === 0) {
-                        $("#spEasyFormsRedoButton img").addClass("speasyforms-buttonimgdisabled");
-                        $("#spEasyFormsRedoButton").addClass("speasyforms-buttontextdisabled");
+                        $("#spEasyFormsRedoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
                     }
 
                     containerCollection.toEditor(opt);
@@ -728,7 +725,7 @@
 
             // wire the export button
             $("#spEasyFormsExportLink").click(function () {
-                if ($("#spEasyFormsExportButton img").hasClass("speasyforms-buttonimgdisabled"))
+                if ($("#spEasyFormsExportButton").hasClass("speasyforms-disabled"))
                     return false;
 
                 var configFileName = $.spEasyForms.utilities.webRelativePathAsAbsolutePath("/SiteAssets") +
@@ -739,7 +736,7 @@
 
             // wire the import button
             $("#spEasyFormsImportButton").click(function () {
-                if ($("#spEasyFormsImportButton img").hasClass("speasyforms-buttonimgdisabled"))
+                if ($("#spEasyFormsImportButton").hasClass("speasyforms-disabled"))
                     return;
 
                 $("#importedJson").val("");

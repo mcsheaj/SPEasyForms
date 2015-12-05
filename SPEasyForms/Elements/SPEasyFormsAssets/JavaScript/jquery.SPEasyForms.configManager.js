@@ -170,10 +170,12 @@
             } else {
                 currentConfig = $.spEasyForms.sharePointContext.getConfig(opt);
                 $("#spEasyFormsJson pre").text(JSON.stringify(currentConfig, null, 4));
+                $("#spEasyFormsSaveButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
+                $("#spEasyFormsUndoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
+                $("#spEasyFormsRedoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
             }
             if (currentConfig === undefined) {
-                $("#spEasyFormsExportButton img").addClass("speasyforms-buttonimgdisabled");
-                $("#spEasyFormsExportButton div").addClass("speasyforms-buttontextdisabled");
+                $("#spEasyFormsExportButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
                 currentConfig = {
                     layout: {
                         def: [{
@@ -230,15 +232,11 @@
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig !== oldConfig) {
                 $("#spEasyFormsJson pre").text(newConfig);
-                $("#spEasyFormsSaveButton img").removeClass("speasyforms-buttonimgdisabled");
-                $("#spEasyFormsSaveButton div").removeClass("speasyforms-buttontextdisabled");
-                $("#spEasyFormsExportButton img").addClass("speasyforms-buttonimgdisabled");
-                $("#spEasyFormsExportButton div").addClass("speasyforms-buttontextdisabled");
-                $("#spEasyFormsImportButton img").addClass("speasyforms-buttonimgdisabled");
-                $("#spEasyFormsImportButton div").addClass("speasyforms-buttontextdisabled");
+                $("#spEasyFormsSaveButton").removeClass("speasyforms-disabled").css({ opacity: 1.0 });
+                $("#spEasyFormsExportButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
+                $("#spEasyFormsImportButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
                 this.undoBuffer.push(oldConfig);
-                $("#spEasyFormsUndoButton img").removeClass("speasyforms-buttonimgdisabled");
-                $("#spEasyFormsUndoButton").removeClass("speasyforms-buttontextdisabled");
+                $("#spEasyFormsUndoButton").removeClass("speasyforms-disabled").css({ opacity: 1.0 });
             }
         },
 
@@ -268,12 +266,9 @@
                     opt.listId = listId;
                     opt.currentConfig = $.spEasyForms.utilities.parseJSON($("#spEasyFormsJson pre").text());
                     $.spEasyForms.sharePointContext.setConfig(opt);
-                    $("#spEasyFormsSaveButton img").addClass("speasyforms-buttonimgdisabled");
-                    $("#spEasyFormsSaveButton div").addClass("speasyforms-buttontextdisabled");
-                    $("#spEasyFormsExportButton img").removeClass("speasyforms-buttonimgdisabled");
-                    $("#spEasyFormsExportButton div").removeClass("speasyforms-buttontextdisabled");
-                    $("#spEasyFormsImportButton img").removeClass("speasyforms-buttonimgdisabled");
-                    $("#spEasyFormsImportButton div").removeClass("speasyforms-buttontextdisabled");
+                    $("#spEasyFormsSaveButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
+                    $("#spEasyFormsExportButton").removeClass("speasyforms-disabled").css({ opacity: 1.0 });
+                    $("#spEasyFormsImportButton").removeClass("speasyforms-disabled").css({ opacity: 1.0 });
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     if (xhr.status === 409) {

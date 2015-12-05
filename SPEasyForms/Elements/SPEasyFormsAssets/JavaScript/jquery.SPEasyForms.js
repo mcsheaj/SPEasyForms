@@ -391,7 +391,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
             $.spEasyForms.containerCollection.toEditor(opt);
             $(window).on("beforeunload", function () {
-                if (!$("#spEasyFormsSaveButton img").hasClass("speasyforms-buttonimgdisabled")) {
+                if (!$("#spEasyFormsSaveButton").hasClass("speasyforms-disabled")) {
                     return "You have unsaved changes, are you sure you want to leave the page?";
                 }
             });
@@ -419,7 +419,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 405);
                 }
             });
-            $('#spEasyFormsRibbon').show;
+            $('#spEasyFormsRibbon').show();
         },
 
         /********************************************************************
