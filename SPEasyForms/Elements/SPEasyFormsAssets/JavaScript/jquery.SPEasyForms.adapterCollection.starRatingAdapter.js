@@ -33,12 +33,6 @@
                 var rowInfo = containerCollection.rows[opt.adapter.columnNameInternal];
                 var value = rowInfo.value ? rowInfo.value : 0;
 
-                if (!$("body").attr("data-starcssadded")) {
-                    var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01/Css/starratingadapter.css');
-                    $("head").append('<link rel="stylesheet" type="text/css" href="' + css + '">');
-                    $("body").attr("data-starcssadded", "true");
-                }
-
                 if (visibilityRuleCollection.getFormType(opt) === "display") {
                     if ($("#" + opt.adapter.columnNameInternal + "Stars").length === 0) {
                         var td = rowInfo.row.find("td.ms-formbody");

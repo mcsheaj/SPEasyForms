@@ -34152,7 +34152,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
                         } else {
                             opt.rowInfo.row.find("td.ms-formbody").prepend(
-                                tdh.attr("data-transformAdded", "true").html() + "<br />");
+                                "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.text() + "</nobr></h3>");
                         }
                         tdh.attr("data-transformHidden", "true").hide();
                     }
