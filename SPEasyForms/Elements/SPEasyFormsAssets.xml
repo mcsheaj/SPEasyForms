@@ -13,8 +13,6 @@
         <File Path="SPEasyFormsAssets\jquery.ui.theme.css" Url="jquery.ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
     <Module Name="SPEasyFormsAssetsCssImages" Url="Style Library/SPEasyFormsAssets/2015.01/Css/jquery-ui/images">
-        <File Path="SPEasyFormsAssets\ui-bg_flat_0_aaaaaa_40x100.png" Url="ui-bg_flat_0_aaaaaa_40x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\ui-bg_flat_55_fbec88_40x100.png" Url="ui-bg_flat_55_fbec88_40x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\ui-bg_glass_75_d0e5f5_1x400.png" Url="ui-bg_glass_75_d0e5f5_1x400.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\ui-bg_glass_85_dfeffc_1x400.png" Url="ui-bg_glass_85_dfeffc_1x400.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\ui-bg_glass_95_fef1ec_1x400.png" Url="ui-bg_glass_95_fef1ec_1x400.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

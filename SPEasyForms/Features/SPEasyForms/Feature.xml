@@ -18,8 +18,6 @@
 
         <ElementFile Location="SPEasyFormsAssets\buttons.png" />
         <ElementFile Location="SPEasyFormsAssets\toolbar.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-bg_flat_0_aaaaaa_40x100.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-bg_flat_55_fbec88_40x100.png" />
         <ElementFile Location="SPEasyFormsAssets\ui-bg_glass_75_d0e5f5_1x400.png" />
         <ElementFile Location="SPEasyFormsAssets\ui-bg_glass_85_dfeffc_1x400.png" />
         <ElementFile Location="SPEasyFormsAssets\ui-bg_glass_95_fef1ec_1x400.png" />

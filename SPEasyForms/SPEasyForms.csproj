@@ -38,8 +38,6 @@
     </Content>
     <Content Include="Elements\SPEasyFormsAssets\Css\images\buttons.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\images\toolbar.png" />
-    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_flat_55_fbec88_40x100.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_glass_75_d0e5f5_1x400.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_glass_85_dfeffc_1x400.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-bg_glass_95_fef1ec_1x400.png" />

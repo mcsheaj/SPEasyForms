@@ -840,11 +840,11 @@
                     This project uses the following third party open source libraries:
                 </p>
                 <p>
-                    <a href='http://jquery.com' target='_blank' class='speasyforms-aboutlink'>jQuery v1.11.1</a><br />
+                    <a href='http://jquery.com' target='_blank' class='speasyforms-aboutlink'>jQuery v1.11.3</a><br />
                     Copyright 2005, 2014 <a href='http://jquery.org' target='_blank' class='speasyforms-aboutlink'>jQuery Foundation, Inc.</a> and other contributors, Licensed MIT 
                 </p>
                 <p>
-                    <a href='http://jqueryui.com' target='_blank' class='speasyforms-aboutlink'>jQuery UI v1.9.2</a><br />
+                    <a href='http://jqueryui.com' target='_blank' class='speasyforms-aboutlink'>jQuery UI v1.11.4</a><br />
                     Copyright 2005, 2014 <a href='http://jquery.org' target='_blank' class='speasyforms-aboutlink'>jQuery Foundation, Inc.</a> and other contributors, Licensed MIT 
                 </p>
                 <p>
