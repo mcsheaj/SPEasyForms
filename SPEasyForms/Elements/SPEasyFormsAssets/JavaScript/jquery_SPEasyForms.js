@@ -26974,10 +26974,10 @@ var tooltip = $.widget( "ui.tooltip", {
 ///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPServices.js
 /*
  * SPServices - Work with SharePoint's Web Services using jQuery
- * Version 2014.01
- * @requires jQuery v1.8 or greater - jQuery 1.10.x recommended
+ * Version 2014.02
+ * @requires jQuery v1.8 or greater - jQuery 1.10.x+ recommended
  *
- * Copyright (c) 2009-2013 Sympraxis Consulting LLC
+ * Copyright (c) 2009-2014 Sympraxis Consulting LLC
  * Examples and docs at:
  * http://spservices.codeplex.com
  * Licensed under the MIT license:
@@ -26989,20 +26989,23 @@ var tooltip = $.widget( "ui.tooltip", {
  * @name SPServices
  * @category Plugins/SPServices
  * @author Sympraxis Consulting LLC/marc.anderson@sympraxisconsulting.com
- */
+*/
+
 /* jshint undef: true */
 /* global L_Menu_BaseUrl, _spUserId, _spPageContextInfo, GipAddSelectedItems, GipRemoveSelectedItems, GipGetGroupData */
 
-(function($) {
+(function ($) {
 
     "use strict";
 
     // Version info
-    var VERSION = "2014.01"; // TODO: Update version
+    var VERSION = "2014.02"; // TODO: Update version
+
 
     // String constants
     //   General
     var SLASH = "/";
+    var spDelim = ";#";
     var TXTColumnNotFound = "Column not found on page";
     var SCHEMASharePoint = "http://schemas.microsoft.com/sharepoint";
     var multiLookupPrefix = "MultiLookupPicker";
@@ -27015,33 +27018,46 @@ var tooltip = $.widget( "ui.tooltip", {
         multiSelect: "M"
     };
 
-    // Known list field types
+    // Known list field types - See: http://msdn.microsoft.com/en-us/library/office/microsoft.sharepoint.spfieldtype(v=office.15).aspx
     var spListFieldTypes = [
-        "Text",
-        "DateTime",
-        "datetime",
-        "User",
-        "UserMulti",
-        "Lookup",
-        "LookupMulti",
-        "Boolean",
         "Integer",
-        "Counter",
-        "MultiChoice",
-        "Currency",
-        "float",
-        "Calc",
-        "Attachments",
-        "Calculated",
-        "ContentTypeId",
+        "Text",
         "Note",
-        //          "Computed",
-        "URL",
-        "Number",
+        "DateTime",
+        "Counter",
         "Choice",
+        "Lookup",
+        "Boolean",
+        "Number",
+        "Currency",
+        "URL",
+//        "Computed", // NEW
+//        "Threading", // NEW
+//        "Guid", // NEW
+        "MultiChoice",
+//        "GridChoice", // NEW
+        "Calculated",
+        "File",
+        "Attachments",
+        "User",
+//        "Recurrence", // NEW
+//        "CrossProjectLink", // NEW
         "ModStat",
-        "Guid",
-        "File"
+        "ContentTypeId",
+//        "PageSeparator", // NEW
+//        "ThreadIndex", // NEW
+        "WorkflowStatus", // NEW
+//      "AllDayEvent", // NEW
+//      "WorkflowEventType", // NEW
+//        "Geolocation", // NEW
+//        "OutcomeChoice", // NEW
+
+        // Also seen
+        "UserMulti", // Multiselect users
+        "LookupMulti", // Multi-select lookup
+        "datetime", // Calculated date/time result
+        "float", // Calculated float
+        "Calc" // General calculated
     ];
 
     // Caching
@@ -27054,6 +27070,7 @@ var tooltip = $.widget( "ui.tooltip", {
     var FORMS = "Forms";
     var LISTS = "Lists";
     var MEETINGS = "Meetings";
+    var OFFICIALFILE = "OfficialFile";
     var PEOPLE = "People";
     var PERMISSIONS = "Permissions";
     var PUBLISHEDLINKSSERVICE = "PublishedLinksService";
@@ -27134,7 +27151,12 @@ var tooltip = $.widget( "ui.tooltip", {
     WSops.RemoveMeeting = [MEETINGS, true];
     WSops.SetWorkSpaceTitle = [MEETINGS, true];
 
-    WSops.ResolvePrincipals = [PEOPLE, false];
+    WSops.GetRecordRouting = [OFFICIALFILE, false];
+    WSops.GetRecordRoutingCollection = [OFFICIALFILE, false];
+    WSops.GetServerInfo = [OFFICIALFILE, false];
+    WSops.SubmitFile = [OFFICIALFILE, true];
+
+    WSops.ResolvePrincipals = [PEOPLE, true];
     WSops.SearchPrincipals = [PEOPLE, false];
 
     WSops.AddPermission = [PERMISSIONS, true];
@@ -27312,10 +27334,12 @@ var tooltip = $.widget( "ui.tooltip", {
 
     WSops.AddWebPart = [WEBPARTPAGES, true];
     WSops.AddWebPartToZone = [WEBPARTPAGES, true];
+    WSops.DeleteWebPart = [WEBPARTPAGES, true];
     WSops.GetWebPart2 = [WEBPARTPAGES, false];
     WSops.GetWebPartPage = [WEBPARTPAGES, false];
     WSops.GetWebPartProperties = [WEBPARTPAGES, false];
     WSops.GetWebPartProperties2 = [WEBPARTPAGES, false];
+    WSops.SaveWebPart2 = [WEBPARTPAGES, true];
 
     WSops.CreateContentType = [WEBS, true];
     WSops.GetColumns = [WEBS, false];
@@ -27347,7 +27371,7 @@ var tooltip = $.widget( "ui.tooltip", {
     var SOAPAction;
 
     // Main function, which calls SharePoint's Web Services directly.
-    $.fn.SPServices = function(options) {
+    $.fn.SPServices = function (options) {
 
         // If there are no options passed in, use the defaults.  Extend replaces each default with the passed option.
         var opt = $.extend({}, $.fn.SPServices.defaults, options);
@@ -27369,6 +27393,10 @@ var tooltip = $.widget( "ui.tooltip", {
             case MEETINGS:
                 SOAPEnvelope.opheader += "xmlns='" + SCHEMASharePoint + "/soap/meetings/' >";
                 SOAPAction = SCHEMASharePoint + "/soap/meetings/";
+                break;
+            case OFFICIALFILE:
+                SOAPEnvelope.opheader += "xmlns='" + SCHEMASharePoint + "/soap/recordsrepository/' >";
+                SOAPAction = SCHEMASharePoint + "/soap/recordsrepository/";
                 break;
             case PERMISSIONS:
                 SOAPEnvelope.opheader += "xmlns='" + SCHEMASharePoint + "/soap/directory/' >";
@@ -27428,10 +27456,11 @@ var tooltip = $.widget( "ui.tooltip", {
         // If the webURL has been provided, then use it, else use the current site
         var ajaxURL = "_vti_bin/" + WSops[opt.operation][0] + ".asmx";
         var thisSite = $().SPServices.SPGetCurrentSite();
-        if (opt.webURL.charAt(opt.webURL.length - 1) === SLASH) {
-            ajaxURL = opt.webURL + ajaxURL;
-        } else if (opt.webURL.length > 0) {
-            ajaxURL = opt.webURL + SLASH + ajaxURL;
+        var webURL = opt.webURL !== undefined ? opt.webURL : opt.webUrl;
+        if (webURL.charAt(webURL.length - 1) === SLASH) {
+            ajaxURL = webURL + ajaxURL;
+        } else if (webURL.length > 0) {
+            ajaxURL = webURL + SLASH + ajaxURL;
         } else {
             ajaxURL = thisSite + ((thisSite.charAt(thisSite.length - 1) === SLASH) ? ajaxURL : (SLASH + ajaxURL));
         }
@@ -27450,14 +27479,14 @@ var tooltip = $.widget( "ui.tooltip", {
                 SOAPEnvelope.payload += "</IDs>";
                 break;
 
-                // AUTHENTICATION OPERATIONS
+            // AUTHENTICATION OPERATIONS
             case "Mode":
                 break;
             case "Login":
                 addToPayload(opt, ["username", "password"]);
                 break;
 
-                // COPY OPERATIONS
+            // COPY OPERATIONS
             case "CopyIntoItems":
                 addToPayload(opt, ["SourceUrl"]);
                 SOAPEnvelope.payload += "<DestinationUrls>";
@@ -27479,7 +27508,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 addToPayload(opt, ["Url", "Fields", "Stream"]);
                 break;
 
-                // FORM OPERATIONS
+            // FORM OPERATIONS
             case "GetForm":
                 addToPayload(opt, ["listName", "formUrl"]);
                 break;
@@ -27487,7 +27516,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 addToPayload(opt, ["listName"]);
                 break;
 
-                // LIST OPERATIONS
+            // LIST OPERATIONS
             case "AddAttachment":
                 addToPayload(opt, ["listName", "listItemID", "fileName", "attachment"]);
                 break;
@@ -27598,7 +27627,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 }
                 break;
 
-                // MEETINGS OPERATIONS
+            // MEETINGS OPERATIONS
             case "AddMeeting":
                 addToPayload(opt, ["organizerEmail", "uid", "sequence", "utcDateStamp", "title", "location", "utcDateStart", "utcDateEnd", "nonGregorian"]);
                 break;
@@ -27612,7 +27641,20 @@ var tooltip = $.widget( "ui.tooltip", {
                 addToPayload(opt, ["title"]);
                 break;
 
-                // PEOPLE OPERATIONS
+            // OFFICIALFILE OPERATIONS
+            case "GetRecordRouting":
+                addToPayload(opt, ["recordRouting"]);
+                break;
+            case "GetRecordRoutingCollection":
+                break;
+            case "GetServerInfo":
+                break;
+            case "SubmitFile":
+                addToPayload(opt, ["fileToSubmit"], ["properties"], ["recordRouting"], ["sourceUrl"], ["userName"]);
+                break;
+
+
+            // PEOPLE OPERATIONS
             case "ResolvePrincipals":
                 addToPayload(opt, ["principalKeys", "principalType", "addToUserInfoList"]);
                 break;
@@ -27620,7 +27662,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 addToPayload(opt, ["searchText", "maxResults", "principalType"]);
                 break;
 
-                // PERMISSION OPERATIONS
+            // PERMISSION OPERATIONS
             case "AddPermission":
                 addToPayload(opt, ["objectName", "objectType", "permissionIdentifier", "permissionType", "permissionMask"]);
                 break;
@@ -27640,11 +27682,11 @@ var tooltip = $.widget( "ui.tooltip", {
                 addToPayload(opt, ["objectName", "objectType", "permissionIdentifier", "permissionType", "permissionMask"]);
                 break;
 
-                // PUBLISHEDLINKSSERVICE OPERATIONS
+            // PUBLISHEDLINKSSERVICE OPERATIONS
             case "GetLinks":
                 break;
 
-                // SEARCH OPERATIONS
+            // SEARCH OPERATIONS
             case "GetPortalSearchInfo":
                 SOAPEnvelope.opheader = "<" + opt.operation + " xmlns='http://microsoft.com/webservices/OfficeServer/QueryService'>";
                 SOAPAction = "http://microsoft.com/webservices/OfficeServer/QueryService/" + opt.operation;
@@ -27672,12 +27714,12 @@ var tooltip = $.widget( "ui.tooltip", {
             case "Status":
                 break;
 
-                // SHAREPOINTDIAGNOSTICS OPERATIONS
+            // SHAREPOINTDIAGNOSTICS OPERATIONS
             case "SendClientScriptErrorReport":
                 addToPayload(opt, ["message", "file", "line", "client", "stack", "team", "originalFile"]);
                 break;
 
-                // SITEDATA OPERATIONS
+            // SITEDATA OPERATIONS
             case "EnumerateFolder":
                 addToPayload(opt, ["strFolderUrl"]);
                 break;
@@ -27707,7 +27749,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 SOAPEnvelope = siteDataFixSOAPEnvelope(SOAPEnvelope, opt.operation);
                 break;
 
-                // SITES OPERATIONS
+            // SITES OPERATIONS
             case "CreateWeb":
                 addToPayload(opt, ["url", "title", "description", "templateName", "language", "languageSpecified",
                     "locale", "localeSpecified", "collationLocale", "collationLocaleSpecified", "uniquePermissions",
@@ -27724,7 +27766,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 addToPayload(opt, ["LCID", "TemplateList"]);
                 break;
 
-                // SOCIALDATASERVICE OPERATIONS
+            // SOCIALDATASERVICE OPERATIONS
             case "AddComment":
                 addToPayload(opt, ["url", "comment", "isHighPriority", "title"]);
                 break;
@@ -27840,12 +27882,12 @@ var tooltip = $.widget( "ui.tooltip", {
                 addToPayload(opt, ["url", "lastModifiedTime", "comment", "isHighPriority"]);
                 break;
 
-                // SPELLCHECK OPERATIONS 
+            // SPELLCHECK OPERATIONS 
             case "SpellCheck":
                 addToPayload(opt, ["chunksToSpell", "declaredLanguage", "useLad"]);
                 break;
 
-                // TAXONOMY OPERATIONS 
+            // TAXONOMY OPERATIONS 
             case "AddTerms":
                 addToPayload(opt, ["sharedServiceId", "termSetId", "lcid", "newTerms"]);
                 break;
@@ -27862,7 +27904,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 addToPayload(opt, ["label", "lcid", "matchOption", "resultCollectionSize", "termIds", "addIfNotFound"]);
                 break;
             case "GetTermSets":
-                addToPayload(opt, ["sharedServiceId", "termSetId", "lcid", "clientTimeStamps", "clientVersions"]);
+                addToPayload(opt, ["sharedServiceIds", "termSetIds", "lcid", "clientTimeStamps", "clientVersions"]);
                 break;
 
                 // USERS AND GROUPS OPERATIONS
@@ -27988,7 +28030,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 addToPayload(opt, ["userLoginName", "userName", "userEmail", "userNotes"]);
                 break;
 
-                // USERPROFILESERVICE OPERATIONS
+            // USERPROFILESERVICE OPERATIONS
             case "AddColleague":
                 addToPayload(opt, ["accountName", "colleagueAccountName", "group", "privacy", "isInWorkGroup"]);
                 break;
@@ -28097,7 +28139,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 addToPayload(opt, ["accountName", "data"]);
                 break;
 
-                // VERSIONS OPERATIONS
+            // VERSIONS OPERATIONS
             case "DeleteAllVersions":
                 addToPayload(opt, ["fileName"]);
                 break;
@@ -28111,7 +28153,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 addToPayload(opt, ["fileName", "fileVersion"]);
                 break;
 
-                // VIEW OPERATIONS
+            // VIEW OPERATIONS
             case "AddView":
                 addToPayload(opt, ["listName", "viewName", "viewFields", "query", "rowLimit", "rowLimit", "type", "makeViewDefault"]);
                 break;
@@ -28136,12 +28178,15 @@ var tooltip = $.widget( "ui.tooltip", {
                 ]);
                 break;
 
-                // WEBPARTPAGES OPERATIONS
+            // WEBPARTPAGES OPERATIONS
             case "AddWebPart":
                 addToPayload(opt, ["pageUrl", "webPartXml", "storage"]);
                 break;
             case "AddWebPartToZone":
                 addToPayload(opt, ["pageUrl", "webPartXml", "storage", "zoneId", "zoneIndex"]);
+                break;
+            case "DeleteWebPart":
+                addToPayload(opt, ["pageUrl", "storageKey", "storage"]);
                 break;
             case "GetWebPart2":
                 addToPayload(opt, ["pageUrl", "storageKey", "storage", "behavior"]);
@@ -28155,8 +28200,11 @@ var tooltip = $.widget( "ui.tooltip", {
             case "GetWebPartProperties2":
                 addToPayload(opt, ["pageUrl", "storage", "behavior"]);
                 break;
+            case "SaveWebPart2":
+                addToPayload(opt, ["pageUrl", "storageKey", "webPartXml", "storage", "allowTypeChange"]);
+                break;
 
-                // WEBS OPERATIONS
+            // WEBS OPERATIONS
             case "Webs.CreateContentType":
                 addToPayload(opt, ["displayName", "parentType", "newFields", "contentTypeProperties"]);
                 break;
@@ -28197,7 +28245,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 ]);
                 break;
 
-                // WORKFLOW OPERATIONS
+            // WORKFLOW OPERATIONS
             case "AlterToDo":
                 addToPayload(opt, ["item", "todoId", "todoListId", "taskData"]);
                 break;
@@ -28236,13 +28284,13 @@ var tooltip = $.widget( "ui.tooltip", {
         if (typeof cachedPromise === "undefined") {
 
             // Finally, make the Ajax call
-            promisesCache[msg] = $.ajax({
+            var p = $.ajax({
                 // The relative URL for the AJAX call
                 url: ajaxURL,
                 // By default, the AJAX calls are asynchronous.  You can specify false to require a synchronous call.
                 async: opt.async,
                 // Before sending the msg, need to send the request header
-                beforeSend: function(xhr) {
+                beforeSend: function (xhr) {
                     // If we need to pass the SOAPAction, do so
                     if (WSops[opt.operation][1]) {
                         xhr.setRequestHeader("SOAPAction", SOAPAction);
@@ -28256,7 +28304,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 dataType: "xml",
                 // and this is its content type
                 contentType: "text/xml;charset='utf-8'",
-                complete: function(xData, Status) {
+                complete: function (xData, Status) {
                     // When the call is complete, call the completefunc if there is one
                     if ($.isFunction(opt.completefunc)) {
                         opt.completefunc(xData, Status);
@@ -28264,14 +28312,22 @@ var tooltip = $.widget( "ui.tooltip", {
                     }
                 }
             });
+            if(opt.cacheXML) {
+                promisesCache[msg] = p;
+            }
 
             // Return the promise
-            return promisesCache[msg];
+            return p;
 
         } else {
+
             // Call the completefunc if there is one
             if ($.isFunction(opt.completefunc)) {
-                opt.completefunc(cachedPromise, null);
+//                opt.completefunc(cachedPromise, null);
+                cachedPromise.done(function(data, status, jqXHR){
+                    opt.completefunc(jqXHR, status);
+                });
+
             }
             // Return the cached promise
             return cachedPromise;
@@ -28290,7 +28346,7 @@ var tooltip = $.widget( "ui.tooltip", {
         makeViewDefault: false, // true to make the view the default view for the list
 
         // For operations requiring CAML, these options will override any abstractions
-        CAMLViewName: "", // View name in CAML format.
+        viewName: "", // View name in CAML format.
         CAMLQuery: "", // Query in CAML format
         CAMLViewFields: "", // View fields in CAML format
         CAMLRowLimit: 0, // Row limit as a string representation of an integer
@@ -28325,7 +28381,7 @@ var tooltip = $.widget( "ui.tooltip", {
 
     // Function to determine the current Web's URL.  We need this for successful Ajax calls.
     // The function is also available as a public function.
-    $.fn.SPServices.SPGetCurrentSite = function() {
+    $.fn.SPServices.SPGetCurrentSite = function () {
 
         // We've already determined the current site...
         if (currentContext.thisSite.length > 0) {
@@ -28345,7 +28401,7 @@ var tooltip = $.widget( "ui.tooltip", {
             data: msg,
             dataType: "xml",
             contentType: "text/xml;charset=\"utf-8\"",
-            complete: function(xData) {
+            complete: function (xData) {
                 currentContext.thisSite = $(xData.responseXML).find("WebUrlFromPageUrlResult").text();
             }
         });
@@ -28356,7 +28412,7 @@ var tooltip = $.widget( "ui.tooltip", {
 
     // Function to set up cascading dropdowns on a SharePoint form
     // (Newform.aspx, EditForm.aspx, or any other customized form.)
-    $.fn.SPServices.SPCascadeDropdowns = function(options) {
+    $.fn.SPServices.SPCascadeDropdowns = function (options) {
 
         var opt = $.extend({}, {
             relationshipWebURL: "", // [Optional] The name of the Web (site) which contains the relationships list
@@ -28370,7 +28426,7 @@ var tooltip = $.widget( "ui.tooltip", {
             listName: $().SPServices.SPListNameFromUrl(options), // The list the form is working with. This is useful if the form is not in the list context.
             CAMLQuery: "", // [Optional] For power users, this CAML fragment will be Anded with the default query on the relationshipList
             CAMLQueryOptions: "<QueryOptions><IncludeMandatoryColumns>FALSE</IncludeMandatoryColumns></QueryOptions>", // [Optional] For power users, ability to specify Query Options
-            promptText: "", // [DEPRECATED] Text to use as prompt. If included, {0} will be replaced with the value of childColumn. IOrignal value "Choose {0}..."
+            promptText: "", // [DEPRECATED] Text to use as prompt. If included, {0} will be replaced with the value of childColumn. Original value "Choose {0}..."
             noneText: "(None)", // [Optional] Text to use for the (None) selection. Provided for non-English language support.
             simpleChild: false, // [Optional] If set to true and childColumn is a complex dropdown, convert it to a simple dropdown
             selectSingleOption: false, // [Optional] If set to true and there is only a single child option, select it
@@ -28404,6 +28460,7 @@ var tooltip = $.widget( "ui.tooltip", {
         // If requested and the childColumn is a complex dropdown, convert to a simple dropdown
         if (opt.simpleChild === true && childSelect.Type === dropdownType.complex) {
             $().SPServices.SPComplexToSimpleDropdown({
+                listName: opt.listName,
                 columnName: opt.childColumn
             });
             // Set the childSelect to reference the new simple dropdown
@@ -28420,11 +28477,11 @@ var tooltip = $.widget( "ui.tooltip", {
             async: false,
             cacheXML: true,
             listName: opt.listName,
-            completefunc: function(xData) {
-                $(xData.responseXML).find("Fields").each(function() {
-                    $(this).find("Field[DisplayName='" + opt.childColumn + "']").each(function() {
+            completefunc: function (xData) {
+                $(xData.responseXML).find("Fields").each(function () {
+                    $(this).find("Field[DisplayName='" + opt.childColumn + "']").each(function () {
                         // Determine whether childColumn is Required
-                        childColumnRequired = ($(this).attr("Required") === "TRUE") ? true : false;
+                        childColumnRequired = ($(this).attr("Required") === "TRUE");
                         childColumnStatic = $(this).attr("StaticName");
                         // Stop looking; we're done
                         return false;
@@ -28457,33 +28514,33 @@ var tooltip = $.widget( "ui.tooltip", {
             switch (parentSelect.Type) {
                 // Plain old select
                 case dropdownType.simple:
-                    parentSelect.Obj.bind("change", function() {
-                        cascadeDropdown(opt.parentColumn, parentSelect);
+                    parentSelect.Obj.bind("change", function () {
+                        cascadeDropdown(parentSelect);
                     });
                     break;
-                    // Input / Select hybrid
+                // Input / Select hybrid
                 case dropdownType.complex:
                     // Bind to any change on the hidden input element
-                    parentSelect.optHid.bind("propertychange", function() {
-                        cascadeDropdown(opt.parentColumn, parentSelect);
+                    parentSelect.optHid.bind("propertychange", function () {
+                        cascadeDropdown(parentSelect);
                     });
                     break;
-                    // Multi-select hybrid
+                // Multi-select hybrid
                 case dropdownType.multiSelect:
                     // Handle the dblclick on the candidate select
-                    $(parentSelect.master.candidateControl).bind("dblclick", function() {
-                        cascadeDropdown(opt.parentColumn, parentSelect);
+                    $(parentSelect.master.candidateControl).bind("dblclick", function () {
+                        cascadeDropdown(parentSelect);
                     });
                     // Handle the dblclick on the selected values
-                    $(parentSelect.master.resultControl).bind("dblclick", function() {
-                        cascadeDropdown(opt.parentColumn, parentSelect);
+                    $(parentSelect.master.resultControl).bind("dblclick", function () {
+                        cascadeDropdown(parentSelect);
                     });
                     // Handle button clicks
-                    $(parentSelect.master.addControl).bind("click", function() {
-                        cascadeDropdown(opt.parentColumn, parentSelect);
+                    $(parentSelect.master.addControl).bind("click", function () {
+                        cascadeDropdown(parentSelect);
                     });
-                    $(parentSelect.master.removeControl).bind("click", function() {
-                        cascadeDropdown(opt.parentColumn, parentSelect);
+                    $(parentSelect.master.removeControl).bind("click", function () {
+                        cascadeDropdown(parentSelect);
                     });
                     break;
                 default:
@@ -28491,11 +28548,11 @@ var tooltip = $.widget( "ui.tooltip", {
             }
         }
         // Fire the change to set the initially allowable values
-        cascadeDropdown(opt.parentColumn, parentSelect);
+        cascadeDropdown(parentSelect);
 
     }; // End $.fn.SPServices.SPCascadeDropdowns
 
-    function cascadeDropdown(parentColumn, parentSelect) {
+    function cascadeDropdown(parentSelect) {
         var choices = "";
         var parentSelectSelected;
         var childSelectSelected = null;
@@ -28506,7 +28563,7 @@ var tooltip = $.widget( "ui.tooltip", {
 
         // Filter each child column
         var childColumns = parentSelect.Obj.data("SPCascadeDropdownsChildColumns");
-        $(childColumns).each(function() {
+        $(childColumns).each(function () {
 
             // Break out the data objects for this child column
             var opt = this.opt;
@@ -28521,7 +28578,7 @@ var tooltip = $.widget( "ui.tooltip", {
             // the number of Web Service calls when the parentSelect.Type = dropdownType.complex or dropdownType.multiSelect, as there are multiple propertychanges
             // which don't require any action.  The attribute will be unique per child column in case there are
             // multiple children for a given parent.
-            var allParentSelections = parentSelectSelected.join(";#");
+            var allParentSelections = parentSelectSelected.join(spDelim);
             if (parentSelect.Obj.data("SPCascadeDropdown_Selected_" + childColumnStatic) === allParentSelections) {
                 return;
             }
@@ -28545,17 +28602,17 @@ var tooltip = $.widget( "ui.tooltip", {
             } else if (parentSelectSelected.length === 1) {
                 // Only one value is selected
                 camlQuery += "<Eq><FieldRef Name='" + opt.relationshipListParentColumn +
-                    (opt.matchOnId ? "' LookupId='True'/><Value Type='Integer'>" : "'/><Value Type='Text'>") +
-                    escapeColumnValue(parentSelectSelected[0]) + "</Value></Eq>";
+                (opt.matchOnId ? "' LookupId='True'/><Value Type='Integer'>" : "'/><Value Type='Text'>") +
+                escapeColumnValue(parentSelectSelected[0]) + "</Value></Eq>";
             } else {
-                var compound = (parentSelectSelected.length > 2) ? true : false;
+                var compound = (parentSelectSelected.length > 2);
                 for (i = 0; i < (parentSelectSelected.length - 1); i++) {
                     camlQuery += "<Or>";
                 }
                 for (i = 0; i < parentSelectSelected.length; i++) {
                     camlQuery += "<Eq><FieldRef Name='" + opt.relationshipListParentColumn +
-                        (opt.matchOnId ? "' LookupId='True'/><Value Type='Integer'>" : "'/><Value Type='Text'>") +
-                        escapeColumnValue(parentSelectSelected[i]) + "</Value></Eq>";
+                    (opt.matchOnId ? "' LookupId='True'/><Value Type='Integer'>" : "'/><Value Type='Text'>") +
+                    escapeColumnValue(parentSelectSelected[i]) + "</Value></Eq>";
                     if (i > 0 && (i < (parentSelectSelected.length - 1)) && compound) {
                         camlQuery += "</Or>";
                     }
@@ -28586,10 +28643,10 @@ var tooltip = $.widget( "ui.tooltip", {
                 CAMLRowLimit: 0,
                 // Even though setting IncludeMandatoryColumns to FALSE doesn't work as the docs describe, it fixes a bug in GetListItems with mandatory multi-selects
                 CAMLQueryOptions: opt.CAMLQueryOptions,
-                completefunc: function(xData) {
+                completefunc: function (xData) {
 
                     // Handle errors
-                    $(xData.responseXML).find("errorstring").each(function() {
+                    $(xData.responseXML).find("errorstring").each(function () {
                         var thisFunction = "SPServices.SPCascadeDropdowns";
                         var errorText = $(this).text();
                         if (opt.debug && errorText === "One or more field types are not installed properly. Go to the list settings page to delete these fields.") {
@@ -28602,7 +28659,7 @@ var tooltip = $.widget( "ui.tooltip", {
                                 "relationshipList: " + opt.relationshipList,
                                 "List not found");
                         }
-                        return;
+
                     });
 
                     // Add an explanatory prompt
@@ -28635,7 +28692,7 @@ var tooltip = $.widget( "ui.tooltip", {
                     numChildOptions = parseFloat($(xData.responseXML).SPFilterNode("rs:data").attr("ItemCount"));
 
                     // Add an option for each child item
-                    $(xData.responseXML).SPFilterNode("z:row").each(function() {
+                    $(xData.responseXML).SPFilterNode("z:row").each(function () {
 
                         var thisOption = {};
 
@@ -28643,7 +28700,7 @@ var tooltip = $.widget( "ui.tooltip", {
                         // else the ID of the relationshipList item
                         var thisValue = $(this).attr("ows_" + opt.relationshipListChildColumn);
 
-                        if (typeof thisValue !== "undefined" && thisValue.indexOf(";#") > 0) {
+                        if (typeof thisValue !== "undefined" && thisValue.indexOf(spDelim) > 0) {
                             thisOption = new SplitIndex(thisValue);
                         } else {
                             thisOption.id = $(this).attr("ows_ID");
@@ -28710,19 +28767,19 @@ var tooltip = $.widget( "ui.tooltip", {
                             childSelect.MultiLookupPickerdata.val(newMultiLookupPickerdata);
 
                             // Clear any prior selections that are no longer valid or aren't selected
-                            $(childSelect.master.resultControl).find("option").each(function() {
+                            $(childSelect.master.resultControl).find("option").each(function () {
                                 var thisSelected = $(this);
                                 thisSelected.prop("selected", true);
-                                $(childSelect.master.candidateControl).find("option[value='" + thisSelected.val() + "']").each(function() {
+                                $(childSelect.master.candidateControl).find("option[value='" + thisSelected.val() + "']").each(function () {
                                     thisSelected.prop("selected", false);
                                 });
                             });
                             GipRemoveSelectedItems(childSelect.master);
 
                             // Hide any options in the candidate list which are already selected
-                            $(childSelect.master.candidateControl).find("option").each(function() {
+                            $(childSelect.master.candidateControl).find("option").each(function () {
                                 var thisSelected = $(this);
-                                $(childSelect.master.resultControl).find("option[value='" + thisSelected.val() + "']").each(function() {
+                                $(childSelect.master.resultControl).find("option[value='" + thisSelected.val() + "']").each(function () {
                                     thisSelected.remove();
                                 });
                             });
@@ -28750,9 +28807,10 @@ var tooltip = $.widget( "ui.tooltip", {
 
 
     // function to convert complex dropdowns to simple dropdowns
-    $.fn.SPServices.SPComplexToSimpleDropdown = function(options) {
+    $.fn.SPServices.SPComplexToSimpleDropdown = function (options) {
 
         var opt = $.extend({}, {
+            listName: $().SPServices.SPListNameFromUrl(), // The list the form is working with. This is useful if the form is not in the list context.
             columnName: "", // The display name of the column in the form
             completefunc: null, // Function to call on completion of rendering the change.
             debug: false // If true, show error messages;if false, run silent
@@ -28772,14 +28830,14 @@ var tooltip = $.widget( "ui.tooltip", {
             return;
         }
 
-        // The available options are stored in the choices attribute of the complex dropdowns's input element...
+        // The available options are stored in the choices attribute of the complex dropdown's input element...
         var choices = $(columnSelect.Obj).attr("choices").split("|");
 
         // We need to know which option is selected already, if any
         var complexSelectSelectedId = columnSelect.optHid.val();
 
         // Build up the simple dropdown, giving it an easy to select id
-        var simpleSelectId = genContainerId("SPComplexToSimpleDropdown", opt.columnName);
+        var simpleSelectId = genContainerId("SPComplexToSimpleDropdown", columnSelect.Obj.attr("title"), opt.listName);
 
         var simpleSelect = "<select id='" + simpleSelectId + "' title='" + opt.columnName + "'>";
         for (i = 0; i < choices.length; i = i + 2) {
@@ -28789,15 +28847,16 @@ var tooltip = $.widget( "ui.tooltip", {
         simpleSelect += "</select>";
 
         // Append the new simple select to the form
-        $(columnSelect.Obj).closest("td").prepend(simpleSelect);
+        columnSelect.Obj.closest("td").prepend(simpleSelect);
+        var simpleSelectObj = $("#" + simpleSelectId);
 
         // Remove the complex dropdown functionality since we don't need it anymore...
-        $(columnSelect.Obj).closest("span").find("img").remove();
+        columnSelect.Obj.closest("span").find("img").remove();
         // ...and hide the input element
-        $(columnSelect.Obj).closest("span").find("input").hide();
+        columnSelect.Obj.closest("span").find("input").hide();
 
         // When the simple select changes...
-        $("#" + simpleSelectId).change(function() {
+        simpleSelectObj.change(function () {
             var thisVal = $(this).val();
             // ...set the optHid input element's value to the valus of the selected option...
             columnSelect.optHid.val(thisVal);
@@ -28805,7 +28864,7 @@ var tooltip = $.widget( "ui.tooltip", {
             $(columnSelect.Obj).val($(this).find("option[value='" + (thisVal !== "0" ? thisVal : "") + "']").html());
         });
         // Trigger a change to ensure that the selected value registers in the complex dropdown
-        $("#" + simpleSelectId).trigger("change");
+        simpleSelectObj.trigger("change");
 
         // If present, call completefunc when all else is done
         if (opt.completefunc !== null) {
@@ -28816,9 +28875,10 @@ var tooltip = $.widget( "ui.tooltip", {
 
 
     // Function to display related information when an option is selected on a form.
-    $.fn.SPServices.SPDisplayRelatedInfo = function(options) {
+    $.fn.SPServices.SPDisplayRelatedInfo = function (options) {
 
         var opt = $.extend({}, {
+            listName: $().SPServices.SPListNameFromUrl(), // The list the form is working with. This is useful if the form is not in the list context.
             columnName: "", // The display name of the column in the form
             relatedWebURL: "", // [Optional] The name of the Web (site) which contains the related list
             relatedList: "", // The name of the list which contains the additional information
@@ -28850,7 +28910,7 @@ var tooltip = $.widget( "ui.tooltip", {
         }
 
         // Generate a unique id for the container
-        divId = genContainerId("SPDisplayRelatedInfo", opt.columnName);
+        divId = genContainerId("SPDisplayRelatedInfo", opt.columnName, opt.listName);
 
         // Get information about the related list and its columns
         $().SPServices({
@@ -28859,12 +28919,12 @@ var tooltip = $.widget( "ui.tooltip", {
             cacheXML: true,
             webURL: opt.relatedWebURL,
             listName: opt.relatedList,
-            completefunc: function(xData) {
+            completefunc: function (xData) {
                 // If debug is on, notify about an error
-                $(xData.responseXML).find("faultcode").each(function() {
+                $(xData.responseXML).find("faultcode").each(function () {
                     if (opt.debug) {
                         errBox(thisFunction, "relatedList: " + opt.relatedList, "List not found");
-                        return;
+
                     }
                 });
                 // Get info about the related list
@@ -28880,18 +28940,18 @@ var tooltip = $.widget( "ui.tooltip", {
         switch (columnSelect.Type) {
             // Plain old select
             case dropdownType.simple:
-                columnSelect.Obj.bind("change", function() {
+                columnSelect.Obj.bind("change", function () {
                     showRelated(opt, divId, relatedListXML, relatedColumnsXML);
                 });
                 break;
-                // Input / Select hybrid
+            // Input / Select hybrid
             case dropdownType.complex:
                 // Bind to any change on the hidden input element
-                columnSelect.optHid.bind("propertychange", function() {
+                columnSelect.optHid.bind("propertychange", function () {
                     showRelated(opt, divId, relatedListXML, relatedColumnsXML);
                 });
                 break;
-                // Multi-select hybrid
+            // Multi-select hybrid
             case dropdownType.multiSelect:
                 if (opt.debug) {
                     errBox(thisFunction, "columnName: " + opt.columnName, "Multi-select columns not supported by this function");
@@ -28907,7 +28967,7 @@ var tooltip = $.widget( "ui.tooltip", {
 
     function showRelated(opt, divId, relatedListXML, relatedColumnsXML) {
 
-        var columnSelectSelected = null;
+        var columnSelectSelected;
         var thisFunction = "SPServices.SPDisplayRelatedInfo";
 
         // Find the column's select (dropdown)
@@ -28944,12 +29004,12 @@ var tooltip = $.widget( "ui.tooltip", {
         var relatedListColumnType = relatedColumnsXML[opt.relatedListColumn].attr("Type");
         if (relatedListColumnType === "Lookup") {
             camlQuery += "<Eq><FieldRef Name='" + opt.relatedListColumn +
-                (opt.matchOnId ? "' LookupId='True'/><Value Type='Integer'>" : "'/><Value Type='Text'>") +
-                escapeColumnValue(columnSelectSelected[0]) + "</Value></Eq>";
+            (opt.matchOnId ? "' LookupId='True'/><Value Type='Integer'>" : "'/><Value Type='Text'>") +
+            escapeColumnValue(columnSelectSelected[0]) + "</Value></Eq>";
         } else {
             camlQuery += "<Eq><FieldRef Name='" +
-                (opt.matchOnId ? "ID' /><Value Type='Counter'>" : opt.relatedListColumn + "'/><Value Type='Text'>") +
-                escapeColumnValue(columnSelectSelected[0]) + "</Value></Eq>";
+            (opt.matchOnId ? "ID' /><Value Type='Counter'>" : opt.relatedListColumn + "'/><Value Type='Text'>") +
+            escapeColumnValue(columnSelectSelected[0]) + "</Value></Eq>";
         }
 
         if (opt.CAMLQuery.length > 0) {
@@ -28972,10 +29032,10 @@ var tooltip = $.widget( "ui.tooltip", {
             CAMLViewFields: "<ViewFields>" + viewFields + "</ViewFields>",
             // Override the default view rowlimit and get all appropriate rows
             CAMLRowLimit: 0,
-            completefunc: function(xData) {
+            completefunc: function (xData) {
 
                 // Handle errors
-                $(xData.responseXML).find("errorstring").each(function() {
+                $(xData.responseXML).find("errorstring").each(function () {
                     var errorText = $(this).text();
                     if (opt.debug && errorText === "One or more field types are not installed properly. Go to the list settings page to delete these fields.") {
                         errBox(thisFunction,
@@ -28986,7 +29046,7 @@ var tooltip = $.widget( "ui.tooltip", {
                             "relatedList: " + opt.relatedList,
                             "List not found");
                     }
-                    return;
+
                 });
 
                 var outString;
@@ -29005,7 +29065,7 @@ var tooltip = $.widget( "ui.tooltip", {
                         }
                         outString += "</tr>";
                         // Add an option for each child item
-                        $(xData.responseXML).SPFilterNode("z:row").each(function() {
+                        $(xData.responseXML).SPFilterNode("z:row").each(function () {
                             outString += "<tr>";
                             for (i = 0; i < opt.relatedColumns.length; i++) {
                                 outString += "<td class='" + opt.rowCSSClass + "'>" + showColumn(relatedListXML, relatedColumnsXML[opt.relatedColumns[i]], $(this).attr("ows_" + opt.relatedColumns[i]), opt) + "</td>";
@@ -29014,10 +29074,10 @@ var tooltip = $.widget( "ui.tooltip", {
                         });
                         outString += "</table>";
                         break;
-                        // list format implemented in v0.5.0. Still table-based, but vertical orientation.
+                    // list format implemented in v0.5.0. Still table-based, but vertical orientation.
                     case "list":
                         outString = "<table>";
-                        $(xData.responseXML).SPFilterNode("z:row").each(function() {
+                        $(xData.responseXML).SPFilterNode("z:row").each(function () {
                             for (i = 0; i < opt.relatedColumns.length; i++) {
                                 if (typeof relatedColumnsXML[opt.relatedColumns[i]] === "undefined" && opt.debug) {
                                     errBox(thisFunction, "columnName: " + opt.relatedColumns[i], "Column not found in relatedList");
@@ -29045,7 +29105,7 @@ var tooltip = $.widget( "ui.tooltip", {
     } // End showRelated
 
     // Function to filter a lookup based dropdown 
-    $.fn.SPServices.SPFilterDropdown = function(options) {
+    $.fn.SPServices.SPFilterDropdown = function (options) {
         var opt = $.extend({}, {
             relationshipWebURL: "", // [Optional] The name of the Web (site) which contains the relationshipList
             relationshipList: "", // The name of the list which contains the lookup values
@@ -29096,11 +29156,11 @@ var tooltip = $.widget( "ui.tooltip", {
             async: false,
             cacheXML: true,
             listName: opt.listName,
-            completefunc: function(xData) {
-                $(xData.responseXML).find("Fields").each(function() {
-                    $(this).find("Field[DisplayName='" + opt.columnName + "']").each(function() {
+            completefunc: function (xData) {
+                $(xData.responseXML).find("Fields").each(function () {
+                    $(this).find("Field[DisplayName='" + opt.columnName + "']").each(function () {
                         // Determine whether columnName is Required
-                        columnColumnRequired = ($(this).attr("Required") === "TRUE") ? true : false;
+                        columnColumnRequired = ($(this).attr("Required") === "TRUE");
                         // Stop looking; we're done
                         return false;
                     });
@@ -29122,10 +29182,10 @@ var tooltip = $.widget( "ui.tooltip", {
             CAMLRowLimit: 0,
             // Even though setting IncludeMandatoryColumns to FALSE doesn't work as the docs describe, it fixes a bug in GetListItems with mandatory multi-selects
             CAMLQueryOptions: opt.CAMLQueryOptions,
-            completefunc: function(xData) {
+            completefunc: function (xData) {
 
                 // Handle errors
-                $(xData.responseXML).find("errorstring").each(function() {
+                $(xData.responseXML).find("errorstring").each(function () {
                     var errorText = $(this).text();
                     if (opt.debug && errorText === "One or more field types are not installed properly. Go to the list settings page to delete these fields.") {
                         errBox(thisFunction,
@@ -29136,7 +29196,7 @@ var tooltip = $.widget( "ui.tooltip", {
                             "relationshipList: " + opt.relationshipList,
                             "List not found");
                     }
-                    return;
+
                 });
 
                 // Add an explanatory prompt
@@ -29166,7 +29226,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 }
 
                 // Add an option for each item
-                $(xData.responseXML).SPFilterNode("z:row").each(function() {
+                $(xData.responseXML).SPFilterNode("z:row").each(function () {
 
                     var thisOption = {};
 
@@ -29174,7 +29234,7 @@ var tooltip = $.widget( "ui.tooltip", {
                     // else the ID of the relationshipList item
                     var thisValue = $(this).attr("ows_" + opt.relationshipListColumn);
 
-                    if (typeof thisValue !== "undefined" && thisValue.indexOf(";#") > 0) {
+                    if (typeof thisValue !== "undefined" && thisValue.indexOf(spDelim) > 0) {
                         thisOption = new SplitIndex(thisValue);
                     } else {
                         thisOption.id = $(this).attr("ows_ID");
@@ -29222,10 +29282,10 @@ var tooltip = $.widget( "ui.tooltip", {
 
                         columnSelect.MultiLookupPickerdata.val(newMultiLookupPickerdata);
                         // Clear any prior selections that are no longer valid
-                        $(columnSelect.master.resultControl).find("option").each(function() {
+                        $(columnSelect.master.resultControl).find("option").each(function () {
                             var thisSelected = $(this);
                             $(this).attr("selected", "selected");
-                            $(columnSelect.master.candidateControl).find("option").each(function() {
+                            $(columnSelect.master.candidateControl).find("option").each(function () {
                                 if ($(this).html() === thisSelected.html()) {
                                     thisSelected.removeAttr("selected");
                                 }
@@ -29233,9 +29293,9 @@ var tooltip = $.widget( "ui.tooltip", {
                         });
                         GipRemoveSelectedItems(columnSelect.master);
                         // Hide any options in the candidate list which are already selected
-                        $(columnSelect.master.candidateControl).find("option").each(function() {
+                        $(columnSelect.master.candidateControl).find("option").each(function () {
                             var thisSelected = $(this);
-                            $(columnSelect.master.resultControl).find("option").each(function() {
+                            $(columnSelect.master.resultControl).find("option").each(function () {
                                 if ($(this).html() === thisSelected.html()) {
                                     thisSelected.remove();
                                 }
@@ -29262,7 +29322,7 @@ var tooltip = $.widget( "ui.tooltip", {
 
 
     // Utility function to show the results of a Web Service call formatted well in the browser.
-    $.fn.SPServices.SPDebugXMLHttpResult = function(options) {
+    $.fn.SPServices.SPDebugXMLHttpResult = function (options) {
 
         var opt = $.extend({}, {
             node: null, // An XMLHttpResult object from an ajax call
@@ -29279,22 +29339,22 @@ var tooltip = $.widget( "ui.tooltip", {
         // DisplayPatterns are a bit unique, so let's handle them differently
         if (opt.node.nodeName === "DisplayPattern") {
             outString += "<tr><td width='100px' style='font-weight:bold;'>" + opt.node.nodeName +
-                "</td><td><textarea readonly='readonly' rows='5' cols='50'>" + opt.node.xml + "</textarea></td></tr>";
+            "</td><td><textarea readonly='readonly' rows='5' cols='50'>" + opt.node.xml + "</textarea></td></tr>";
             // A node which has no children
         } else if (!opt.node.hasChildNodes()) {
             outString += "<tr><td width='100px' style='font-weight:bold;'>" + opt.node.nodeName +
-                "</td><td>" + ((opt.node.nodeValue !== null) ? checkLink(opt.node.nodeValue) : "&nbsp;") + "</td></tr>";
+            "</td><td>" + ((opt.node.nodeValue !== null) ? checkLink(opt.node.nodeValue) : "&nbsp;") + "</td></tr>";
             if (opt.node.attributes) {
                 outString += "<tr><td colspan='99'>" + showAttrs(opt.node) + "</td></tr>";
             }
             // A CDATA_SECTION node
         } else if (opt.node.hasChildNodes() && opt.node.firstChild.nodeType === NODE_CDATA_SECTION) {
             outString += "<tr><td width='100px' style='font-weight:bold;'>" + opt.node.nodeName +
-                "</td><td><textarea readonly='readonly' rows='5' cols='50'>" + opt.node.parentNode.text + "</textarea></td></tr>";
+            "</td><td><textarea readonly='readonly' rows='5' cols='50'>" + opt.node.parentNode.text + "</textarea></td></tr>";
             // A TEXT node
         } else if (opt.node.hasChildNodes() && opt.node.firstChild.nodeType === NODE_TEXT) {
             outString += "<tr><td width='100px' style='font-weight:bold;'>" + opt.node.nodeName +
-                "</td><td>" + checkLink(opt.node.firstChild.nodeValue) + "</td></tr>";
+            "</td><td>" + checkLink(opt.node.firstChild.nodeValue) + "</td></tr>";
             // Handle child nodes
         } else {
             outString += "<tr><td width='100px' style='font-weight:bold;' colspan='99'>" + opt.node.nodeName + "</td></tr>";
@@ -29317,7 +29377,7 @@ var tooltip = $.widget( "ui.tooltip", {
     }; // End $.fn.SPServices.SPDebugXMLHttpResult
 
     // Function which returns the account name for the current user in DOMAIN\username format
-    $.fn.SPServices.SPGetCurrentUser = function(options) {
+    $.fn.SPServices.SPGetCurrentUser = function (options) {
 
         var opt = $.extend({}, {
             webURL: "", // URL of the target Site Collection.  If not specified, the current Web is used.
@@ -29343,8 +29403,8 @@ var tooltip = $.widget( "ui.tooltip", {
             async: false,
             // Force parameter forces redirection to a page that displays the information as stored in the UserInfo table rather than My Site.
             // Adding the extra Query String parameter with the current date/time forces the server to view this as a new request.
-            url: thisWeb + "/_layouts/userdisp.aspx?Force=True&" + new Date().getTime(),
-            complete: function(xData) {
+            url: ((thisWeb === "/") ? "" : thisWeb) + "/_layouts/userdisp.aspx?Force=True&" + new Date().getTime(),
+            complete: function (xData) {
                 thisUserDisp = xData;
             }
         });
@@ -29361,7 +29421,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 } else {
                     thisTextValue = RegExp("FieldInternalName=\"" + opt.fieldName + "\"", "gi");
                 }
-                $(thisUserDisp.responseText).find("table.ms-formtable td[id^='SPField']").each(function() {
+                $(thisUserDisp.responseText).find("table.ms-formtable td[id^='SPField']").each(function () {
                     if (thisTextValue.test($(this).html())) {
                         // Each fieldtype contains a different data type, as indicated by the id
                         switch ($(this).attr("id")) {
@@ -29374,7 +29434,7 @@ var tooltip = $.widget( "ui.tooltip", {
                             case "SPFieldURL":
                                 thisField = $(this).find("img").attr("src");
                                 break;
-                                // Just in case
+                            // Just in case
                             default:
                                 thisField = $(this).text();
                                 break;
@@ -29400,7 +29460,7 @@ var tooltip = $.widget( "ui.tooltip", {
     // which allows them to add a new value to the Lookup list.
     // Based on http://blog.mastykarz.nl/extending-lookup-fields-add-new-item-option/
     // by Waldek Mastykarz
-    $.fn.SPServices.SPLookupAddNew = function(options) {
+    $.fn.SPServices.SPLookupAddNew = function (options) {
 
         var opt = $.extend({}, {
             lookupColumn: "", // The display name of the Lookup column
@@ -29431,8 +29491,8 @@ var tooltip = $.widget( "ui.tooltip", {
             async: false,
             cacheXML: true,
             listName: $().SPServices.SPListNameFromUrl(),
-            completefunc: function(xData) {
-                $(xData.responseXML).find("Field[DisplayName='" + opt.lookupColumn + "']").each(function() {
+            completefunc: function (xData) {
+                $(xData.responseXML).find("Field[DisplayName='" + opt.lookupColumn + "']").each(function () {
                     lookupColumnStaticName = $(this).attr("StaticName");
                     // Use GetList for the Lookup column's list to determine the list's URL
                     $().SPServices({
@@ -29440,8 +29500,8 @@ var tooltip = $.widget( "ui.tooltip", {
                         async: false,
                         cacheXML: true,
                         listName: $(this).attr("List"),
-                        completefunc: function(xData) {
-                            $(xData.responseXML).find("List").each(function() {
+                        completefunc: function (xData) {
+                            $(xData.responseXML).find("List").each(function () {
                                 lookupListUrl = $(this).attr("WebFullUrl");
                                 // Need to handle when list is in the root site
                                 lookupListUrl = lookupListUrl !== SLASH ? lookupListUrl + SLASH : lookupListUrl;
@@ -29465,8 +29525,8 @@ var tooltip = $.widget( "ui.tooltip", {
             var newHref = lookupListUrl + newUrl;
             // If requested, open the link in a new window and if requested, pass the ContentTypeID
             newHref += opt.newWindow ?
-                ((opt.ContentTypeID.length > 0) ? "?ContentTypeID=" + opt.ContentTypeID : "") + "' target='_blank'" :
-                "?" + ((opt.ContentTypeID.length > 0) ? "ContentTypeID=" + opt.ContentTypeID + "&" : "") + "Source=" + escapeUrl(location.href) + "'";
+            ((opt.ContentTypeID.length > 0) ? "?ContentTypeID=" + opt.ContentTypeID : "") + "' target='_blank'" :
+            "?" + ((opt.ContentTypeID.length > 0) ? "ContentTypeID=" + opt.ContentTypeID + "&" : "") + "Source=" + escapeUrl(location.href) + "'";
             var newLink = "<div id='SPLookupAddNew_" + lookupColumnStaticName + "'>" + "<a href='" + newHref + ">" + opt.promptText.replace(/\{0\}/g, opt.lookupColumn) + "</a></div>";
             // Append the link to the Lookup columns's formbody table cell
             $(lookupSelect.Obj).parents("td.ms-formbody").append(newLink);
@@ -29482,7 +29542,7 @@ var tooltip = $.widget( "ui.tooltip", {
 
     // Function to return the ID of the last item created on a list by a specific user. Useful for maintaining parent/child relationships
     // between list forms
-    $.fn.SPServices.SPGetLastItemId = function(options) {
+    $.fn.SPServices.SPGetLastItemId = function (options) {
 
         var opt = $.extend({}, {
             webURL: "", // URL of the target Web.  If not specified, the current Web is used.
@@ -29498,8 +29558,8 @@ var tooltip = $.widget( "ui.tooltip", {
             webURL: opt.webURL,
             async: false,
             userLoginName: (opt.userAccount !== "") ? opt.userAccount : $().SPServices.SPGetCurrentUser(),
-            completefunc: function(xData) {
-                $(xData.responseXML).find("User").each(function() {
+            completefunc: function (xData) {
+                $(xData.responseXML).find("User").each(function () {
                     userId = $(this).attr("ID");
                 });
             }
@@ -29526,8 +29586,8 @@ var tooltip = $.widget( "ui.tooltip", {
             CAMLViewFields: "<ViewFields><FieldRef Name='ID'/></ViewFields>",
             CAMLRowLimit: 1,
             CAMLQueryOptions: "<QueryOptions><ViewAttributes Scope='Recursive' /></QueryOptions>",
-            completefunc: function(xData) {
-                $(xData.responseXML).SPFilterNode("z:row").each(function() {
+            completefunc: function (xData) {
+                $(xData.responseXML).SPFilterNode("z:row").each(function () {
                     lastId = $(this).attr("ows_ID");
                 });
             }
@@ -29536,7 +29596,7 @@ var tooltip = $.widget( "ui.tooltip", {
     }; // End $.fn.SPServices.SPGetLastItemId
 
     // Function which checks to see if the value for a column on the form is unique in the list.
-    $.fn.SPServices.SPRequireUnique = function(options) {
+    $.fn.SPServices.SPRequireUnique = function (options) {
 
         var opt = $.extend({}, {
             columnStaticName: "Title", // Name of the column
@@ -29564,10 +29624,10 @@ var tooltip = $.widget( "ui.tooltip", {
             listName: currentContext.thisList,
             columnStaticName: opt.columnStaticName
         });
-        var columnObj = $("input[Title='" + columnDisplayName + "']");
-        $(columnObj).parent().append(firstMsg);
+        var columnObj = findFormField(columnDisplayName).find("input[Title^='" + columnDisplayName + "']");
+        columnObj.parent().append(firstMsg);
 
-        $(columnObj).blur(function() {
+        columnObj.blur(function () {
             var columnValueIDs = [];
             // Get the columnDisplayName's value
             var columnValue = $(this).val();
@@ -29586,9 +29646,9 @@ var tooltip = $.widget( "ui.tooltip", {
                 CAMLViewFields: "<ViewFields><FieldRef Name='ID' /><FieldRef Name='" + opt.columnStaticName + "' /></ViewFields>",
                 // Override the default view rowlimit and get all appropriate rows
                 CAMLRowLimit: 0,
-                completefunc: function(xData) {
+                completefunc: function (xData) {
                     var testValue = opt.ignoreCase ? columnValue.toUpperCase() : columnValue;
-                    $(xData.responseXML).SPFilterNode("z:row").each(function() {
+                    $(xData.responseXML).SPFilterNode("z:row").each(function () {
                         var thisValue = opt.ignoreCase ? $(this).attr("ows_" + opt.columnStaticName).toUpperCase() : $(this).attr("ows_" + opt.columnStaticName);
                         // If this value already exists in columnStaticName and it's not the current item, then save the ID in the array
                         if ((testValue === thisValue) && ($(this).attr("ows_ID") !== thisID)) {
@@ -29598,14 +29658,15 @@ var tooltip = $.widget( "ui.tooltip", {
                 }
             });
             var newMsg = opt.initMsg;
-            $("span#SPRequireUnique" + opt.columnStaticName).html(newMsg).attr("class", opt.initMsgCSSClass);
+            var msgContainer = $("#SPRequireUnique" + opt.columnStaticName);
+            msgContainer.html(newMsg).attr("class", opt.initMsgCSSClass);
 
             $("input[value='OK']:disabled, input[value='Save']:disabled").removeAttr("disabled");
             if (columnValueIDs.length > 0) {
                 newMsg = opt.errMsg;
-                $("span#SPRequireUnique" + opt.columnStaticName).html(newMsg).attr("class", opt.errMsgCSSClass);
+                msgContainer.html(newMsg).attr("class", opt.errMsgCSSClass);
                 if (opt.duplicateAction === 1) {
-                    $("input[Title='" + opt.columnDisplayName + "']").focus();
+                    columnObj.focus();
                     $("input[value='OK'], input[value='Save']").attr("disabled", "disabled");
                 }
                 if (opt.showDupes) {
@@ -29625,7 +29686,7 @@ var tooltip = $.widget( "ui.tooltip", {
     }; // End $.fn.SPServices.SPRequireUnique
 
     // This function returns the DisplayName for a column based on the StaticName.
-    $.fn.SPServices.SPGetDisplayFromStatic = function(options) {
+    $.fn.SPServices.SPGetDisplayFromStatic = function (options) {
 
         var opt = $.extend({}, {
             webURL: "", // URL of the target Web.  If not specified, the current Web is used.
@@ -29644,7 +29705,7 @@ var tooltip = $.widget( "ui.tooltip", {
             cacheXML: true,
             webURL: opt.webURL,
             listName: opt.listName,
-            completefunc: function(xData) {
+            completefunc: function (xData) {
                 if (nameCount > 1) {
                     for (i = 0; i < nameCount; i++) {
                         displayNames[opt.columnStaticNames[i]] = $(xData.responseXML).find("Field[StaticName='" + opt.columnStaticNames[i] + "']").attr("DisplayName");
@@ -29660,7 +29721,7 @@ var tooltip = $.widget( "ui.tooltip", {
     }; // End $.fn.SPServices.SPGetDisplayFromStatic
 
     // This function returns the StaticName for a column based on the DisplayName.
-    $.fn.SPServices.SPGetStaticFromDisplay = function(options) {
+    $.fn.SPServices.SPGetStaticFromDisplay = function (options) {
 
         var opt = $.extend({}, {
             webURL: "", // URL of the target Web.  If not specified, the current Web is used.
@@ -29679,7 +29740,7 @@ var tooltip = $.widget( "ui.tooltip", {
             cacheXML: true,
             webURL: opt.webURL,
             listName: opt.listName,
-            completefunc: function(xData) {
+            completefunc: function (xData) {
                 if (nameCount > 1) {
                     for (i = 0; i < nameCount; i++) {
                         staticNames[opt.columnDisplayNames[i]] = $(xData.responseXML).find("Field[DisplayName='" + opt.columnDisplayNames[i] + "']").attr("StaticName");
@@ -29696,7 +29757,7 @@ var tooltip = $.widget( "ui.tooltip", {
 
     // This function allows you to redirect to a another page from a new item form with the new
     // item's ID. This allows chaining of forms from item creation onward.
-    $.fn.SPServices.SPRedirectWithID = function(options) {
+    $.fn.SPServices.SPRedirectWithID = function (options) {
 
         var opt = $.extend({}, {
             redirectUrl: "", // Page for the redirect
@@ -29717,12 +29778,12 @@ var tooltip = $.widget( "ui.tooltip", {
             lastID = $().SPServices.SPGetLastItemId({
                 listName: currentContext.thisList
             });
-            $("form[name='aspnetForm']").each(function() {
+            $("form[id='aspnetForm']").each(function () {
                 // This page...
                 var thisUrl = (location.href.indexOf("?") > 0) ? location.href.substring(0, location.href.indexOf("?")) : location.href;
                 // ... plus the Source if it exists
                 var thisSource = (typeof queryStringVals.Source === "string") ?
-                    "Source=" + queryStringVals.Source.replace(/\//g, "%2f").replace(/:/g, "%3a") : "";
+                "Source=" + queryStringVals.Source.replace(/\//g, "%2f").replace(/:/g, "%3a") : "";
 
                 var newQS = [];
                 if (typeof QSList !== "undefined") {
@@ -29737,14 +29798,18 @@ var tooltip = $.widget( "ui.tooltip", {
 
                 var newAction = thisUrl +
                     ((newQS.length > 0) ? ("?" + newQS.join("&") + "&") : "?") +
-                // Set the Source to point back to this page with the lastID this user has added
-                "Source=" + thisUrl +
+                        // Set the Source to point back to this page with the lastID this user has added
+                    "Source=" + thisUrl +
                     "?ID=" + lastID +
-                // Pass the original source as RealSource, if present
-                ((thisSource.length > 0) ? ("%26RealSource=" + queryStringVals.Source) : "") +
-                // Pass the override RedirectURL, if present
-                ((typeof queryStringVals.RedirectURL === "string") ? ("%26RedirectURL=" + queryStringVals.RedirectURL) : "");
-                $(this).attr("action", newAction);
+                        // Pass the original source as RealSource, if present
+                    ((thisSource.length > 0) ? ("%26RealSource=" + queryStringVals.Source) : "") +
+                        // Pass the override RedirectURL, if present
+                    ((typeof queryStringVals.RedirectURL === "string") ? ("%26RedirectURL=" + queryStringVals.RedirectURL) : "");
+
+                // Set the new form action
+                setTimeout(function() {
+                    document.forms.aspnetForm.action = newAction;
+                }, 0);
             });
             // If this is the load after the item is saved, wait until the new item has been saved (commits are asynchronous),
             // then do the redirect to redirectUrl with the new lastID, passing along the original Source.
@@ -29758,15 +29823,16 @@ var tooltip = $.widget( "ui.tooltip", {
             // specified in the options (opt.redirectUrl)
             var thisRedirectUrl = (typeof queryStringVals.RedirectURL === "string") ? queryStringVals.RedirectURL : opt.redirectUrl;
             location.href = thisRedirectUrl + "?" + opt.qsParamName + "=" + lastID +
-                ((typeof queryStringVals.RealSource === "string") ? ("&Source=" + queryStringVals.RealSource) : "");
+            ((typeof queryStringVals.RealSource === "string") ? ("&Source=" + queryStringVals.RealSource) : "");
         }
     }; // End $.fn.SPServices.SPRedirectWithID
 
     // The SPSetMultiSelectSizes function sets the sizes of the multi-select boxes for a column on a form automagically
     // based on the values they contain. The function takes into account the fontSize, fontFamily, fontWeight, etc., in its algorithm.
-    $.fn.SPServices.SPSetMultiSelectSizes = function(options) {
+    $.fn.SPServices.SPSetMultiSelectSizes = function (options) {
 
         var opt = $.extend({}, {
+            listName: $().SPServices.SPListNameFromUrl(), // The list the form is working with. This is useful if the form is not in the list context.
             multiSelectColumn: "",
             minWidth: 0,
             maxWidth: 0,
@@ -29790,7 +29856,7 @@ var tooltip = $.widget( "ui.tooltip", {
 
         // Create a temporary clone of the select to use to determine the appropriate width settings.
         // We'll append it to the end of the enclosing span.
-        var cloneId = genContainerId("SPSetMultiSelectSizes", opt.multiSelectColumn);
+        var cloneId = genContainerId("SPSetMultiSelectSizes", opt.multiSelectColumn, opt.listName);
         var cloneObj = $("<select id='" + cloneId + "' ></select>").appendTo(thisMultiSelect.container);
         cloneObj.css({
             "width": "auto", // We want the clone to resize its width based on the contents
@@ -29799,11 +29865,11 @@ var tooltip = $.widget( "ui.tooltip", {
         });
 
         // Add all the values to the cloned select.  First the left (possible values) select...
-        $(thisMultiSelect.master.candidateControl).find("option").each(function() {
+        $(thisMultiSelect.master.candidateControl).find("option").each(function () {
             cloneObj.append("<option value='" + $(this).html() + "'>" + $(this).html() + "</option>");
         });
         // ...then the right (selected values) select (in case some values have already been selected)
-        $(thisMultiSelect.master.resultControl).find("option").each(function() {
+        $(thisMultiSelect.master.resultControl).find("option").each(function () {
             cloneObj.append("<option value='" + $(this).val() + "'>" + $(this).html() + "</option>");
         });
 
@@ -29833,7 +29899,7 @@ var tooltip = $.widget( "ui.tooltip", {
     }; // End $.fn.SPServices.SPSetMultiSelectSizes
 
     // Does an audit of a site's list forms to show where script is in use.
-    $.fn.SPServices.SPScriptAudit = function(options) {
+    $.fn.SPServices.SPScriptAudit = function (options) {
 
         var opt = $.extend({}, {
             webURL: "", // [Optional] The name of the Web (site) to audit
@@ -29858,17 +29924,18 @@ var tooltip = $.widget( "ui.tooltip", {
         // Build the table to contain the results
         $("#" + opt.outputId)
             .append("<table id='SPScriptAudit' width='100%' style='border-collapse: collapse;' border=0 cellSpacing=0 cellPadding=1>" +
-                "<tr>" +
-                "<th></th>" +
-                "<th>List</th>" +
-                "<th>Page Class</th>" +
-                "<th>Page Type</th>" +
-                "<th>Page</th>" +
-                (opt.showSrc ? "<th>Script References</th>" : "") +
-                "</tr>" +
-                "</table>");
+            "<tr>" +
+            "<th></th>" +
+            "<th>List</th>" +
+            "<th>Page Class</th>" +
+            "<th>Page Type</th>" +
+            "<th>Page</th>" +
+            (opt.showSrc ? "<th>Script References</th>" : "") +
+            "</tr>" +
+            "</table>");
         // Apply the CSS class to the headers
-        $("#SPScriptAudit th").attr("class", "ms-vh2-nofilter");
+        var scriptAuditContainer = $("#SPScriptAudit");
+        scriptAuditContainer.find("th").attr("class", "ms-vh2-nofilter");
 
         // Don't bother with the lists if the options don't require them
         if (opt.auditForms || opt.auditViews) {
@@ -29877,8 +29944,8 @@ var tooltip = $.widget( "ui.tooltip", {
                 operation: "GetListCollection",
                 webURL: opt.webURL,
                 async: false, // Need this to be synchronous so we're assured of a valid value
-                completefunc: function(xData) {
-                    $(xData.responseXML).find("List").each(function() {
+                completefunc: function (xData) {
+                    $(xData.responseXML).find("List").each(function () {
                         listXml = $(this);
 
                         // If listName has been specified, then only return results for that list
@@ -29894,14 +29961,14 @@ var tooltip = $.widget( "ui.tooltip", {
                                         webURL: opt.webURL,
                                         listName: listXml.attr("ID"),
                                         async: false, // Need this to be synchronous so we're assured of a valid value
-                                        completefunc: function(xData) {
-                                            $(xData.responseXML).find("ContentType").each(function() {
+                                        completefunc: function (xData) {
+                                            $(xData.responseXML).find("ContentType").each(function () {
                                                 // Don't deal with folders
                                                 if ($(this).attr("ID").substring(0, 6) !== "0x0120") {
                                                     var formUrls = $(this).find("FormUrls");
                                                     for (i = 0; i < formTypes.length; i++) {
                                                         // Look for a customized form...
-                                                        $(formUrls).find(formTypes[i][0]).each(function() {
+                                                        $(formUrls).find(formTypes[i][0]).each(function () {
                                                             SPScriptAuditPage(opt, listXml, "Form", this.nodeName, ((opt.webURL.length > 0) ? opt.webURL : $().SPServices.SPGetCurrentSite()) + SLASH + $(this).text());
                                                             formTypes[i][2] = true;
                                                         });
@@ -29930,8 +29997,8 @@ var tooltip = $.widget( "ui.tooltip", {
                                         webURL: opt.webURL,
                                         listName: listXml.attr("ID"),
                                         async: false, // Need this to be synchronous so we're assured of a valid value
-                                        completefunc: function(xData) {
-                                            $(xData.responseXML).find("View").each(function() {
+                                        completefunc: function (xData) {
+                                            $(xData.responseXML).find("View").each(function () {
                                                 SPScriptAuditPage(opt, listXml, "View", $(this).attr("DisplayName"), $(this).attr("Url"));
                                             });
                                         }
@@ -29964,8 +30031,8 @@ var tooltip = $.widget( "ui.tooltip", {
                     cacheXML: true,
                     webURL: opt.webURL,
                     listName: listsArray[i],
-                    completefunc: function(xData) {
-                        $(xData.responseXML).find("List").each(function() {
+                    completefunc: function (xData) {
+                        $(xData.responseXML).find("List").each(function () {
                             listXml = $(this);
                         });
                     }
@@ -29979,9 +30046,9 @@ var tooltip = $.widget( "ui.tooltip", {
                     CAMLQuery: "<Query><Where><Neq><FieldRef Name='ContentType'/><Value Type='Text'>Folder</Value></Neq></Where></Query>",
                     CAMLViewFields: "<ViewFields><FieldRef Name='Title'/><FieldRef Name='FileRef'/></ViewFields>",
                     CAMLRowLimit: 0,
-                    completefunc: function(xData) {
-                        $(xData.responseXML).SPFilterNode("z:row").each(function() {
-                            var thisPageUrl = $(this).attr("ows_FileRef").split(";#")[1];
+                    completefunc: function (xData) {
+                        $(xData.responseXML).SPFilterNode("z:row").each(function () {
+                            var thisPageUrl = $(this).attr("ows_FileRef").split(spDelim)[1];
                             var thisTitle = $(this).attr("ows_Title");
                             var thisPageType = (typeof thisTitle !== "undefined") ? thisTitle : "";
                             if (thisPageUrl.indexOf(".aspx") > 0) {
@@ -29993,7 +30060,7 @@ var tooltip = $.widget( "ui.tooltip", {
             }
         }
         // Remove progress indicator and make the output pretty by cleaning up the ms-alternating CSS class
-        $("#SPScriptAudit tr[class='ms-alternating']:even").removeAttr("class");
+        scriptAuditContainer.find("tr[class='ms-alternating']:even").removeAttr("class");
     }; // End $.fn.SPServices.SPScriptAudit
 
     // Displays the usage of scripts in a site
@@ -30013,7 +30080,7 @@ var tooltip = $.widget( "ui.tooltip", {
             url: pageUrl,
             dataType: "text",
             async: false,
-            success: function(xData) {
+            success: function (xData) {
 
                 var scriptMatch;
 
@@ -30075,7 +30142,7 @@ var tooltip = $.widget( "ui.tooltip", {
     } // End of function coreScript
 
     // Rearrange radio buttons or checkboxes in a form from vertical to horizontal display to save page real estate
-    $.fn.SPServices.SPArrangeChoices = function(options) {
+    $.fn.SPServices.SPArrangeChoices = function (options) {
 
         var opt = $.extend({}, {
             listName: $().SPServices.SPListNameFromUrl(), // The list name for the current form
@@ -30086,7 +30153,6 @@ var tooltip = $.widget( "ui.tooltip", {
 
         var columnFillInChoice = false;
         var columnOptions = [];
-        var out;
 
         // Get information about columnName from the list to determine if we're allowing fill-in choices
         var thisGetList = $().SPServices({
@@ -30097,73 +30163,78 @@ var tooltip = $.widget( "ui.tooltip", {
         });
 
         // when the promise is available...     
-        thisGetList.done(function() {
-            $(thisGetList.responseXML).find("Field[DisplayName='" + opt.columnName + "']").each(function() {
+        thisGetList.done(function () {
+            $(thisGetList.responseXML).find("Field[DisplayName='" + opt.columnName + "']").each(function () {
                 // Determine whether columnName allows a fill-in choice
-                columnFillInChoice = ($(this).attr("FillInChoice") === "TRUE") ? true : false;
+                columnFillInChoice = ($(this).attr("FillInChoice") === "TRUE");
                 // Stop looking;we're done
                 return false;
             });
 
             var thisFormField = findFormField(opt.columnName);
-
             var totalChoices = $(thisFormField).find("tr").length;
-            var choiceNumber = 0;
             var fillinPrompt;
             var fillinInput;
+
             // Collect all of the choices
-            $(thisFormField).find("tr").each(function() {
-                choiceNumber++;
+            $(thisFormField).find("tr").each(function (choiceNumber) {
                 // If this is the fill-in prompt, save it...
-                if (columnFillInChoice && choiceNumber === (totalChoices - 1)) {
-                    fillinPrompt = $(this).find("td").html();
+                if (columnFillInChoice && choiceNumber === (totalChoices - 2)) {
+                    fillinPrompt = $(this).find("td");
                     // ...or if it is the fill-in input box, save it...
-                } else if (columnFillInChoice && choiceNumber === totalChoices) {
-                    fillinInput = $(this).find("td").html();
+                } else if (columnFillInChoice && choiceNumber === (totalChoices - 1)) {
+                    fillinInput = $(this).find("td");
                     // ...else push into the columnOptions array.
                 } else {
-                    columnOptions.push($(this).html());
+                    columnOptions.push($(this).find("td"));
                 }
             });
-            out = "<TR>";
 
             // If randomize is true, randomly sort the options
             if (opt.randomize) {
                 columnOptions.sort(randOrd);
             }
 
-            // Add all of the options to the out string
+            //Create a new choices table to hold the arranged choices.
+            var newChoiceTable = $("<table cellpadding='0' cellspacing='1'></table>");
+
+            //Iterate over all available choices placing them in the correct position in the new choices table.
             for (i = 0; i < columnOptions.length; i++) {
-                out += columnOptions[i];
                 // If we've already got perRow columnOptions in the row, close off the row
                 if ((i + 1) % opt.perRow === 0) {
-                    out += "</TR><TR>";
+                    newChoiceTable.append("<tr></tr>");
                 }
+                newChoiceTable.find("tr:last").append(columnOptions[i]);
             }
-            out += "</TR>";
 
-            // If we are allowing a fill-in choice, add that option in a separate row at the bottom
+            //Insert fillInChoices section under available choices.
             if (columnFillInChoice) {
-                out += "<TR><TD colspan='99'>" + fillinPrompt + fillinInput + "</TD></TR>";
+                var fillInRow = $("<tr><td colspan='99'><table cellpadding='0' cellspacing='1'><tr></tr></table></td></tr>");
+                fillInRow.find("tr").append(fillinPrompt);
+                fillInRow.find("tr").append(fillinInput);
+                newChoiceTable.append(fillInRow);
             }
 
-            // Remove the existing rows...
-            $(thisFormField).find("tr").remove();
-            // ...and append the out string
-            $(thisFormField).find("table").append(out);
+            //Insert new table before the old choice table so that choices will still line up with header.
+            var choiceTable = $(thisFormField).find("table:first");
+            choiceTable.before(newChoiceTable);
+
+            //Choices table is not removed because validation depends on the table id.
+            choiceTable.hide();
 
         });
 
     }; // End $.fn.SPServices.SPArrangeChoices
 
     // Provide suggested values from a list for in input column based on characters typed
-    $.fn.SPServices.SPAutocomplete = function(options) {
+    $.fn.SPServices.SPAutocomplete = function (options) {
 
         var opt = $.extend({}, {
             webURL: "", // [Optional] The name of the Web (site) which contains the sourceList
             sourceList: "", // The name of the list which contains the values
             sourceColumn: "", // The static name of the column which contains the values
             columnName: "", // The display name of the column in the form
+            listName: $().SPServices.SPListNameFromUrl(), // The list the form is working with. This is useful if the form is not in the list context.
             CAMLQuery: "", // [Optional] For power users, this CAML fragment will be Anded with the default query on the relatedList
             CAMLQueryOptions: "<QueryOptions></QueryOptions>", // [Optional] For power users, allows specifying the CAMLQueryOptions for the GetListItems call
             CAMLRowLimit: 0, // [Optional] Override the default view rowlimit and get all appropriate rows
@@ -30181,7 +30252,7 @@ var tooltip = $.widget( "ui.tooltip", {
         var matchNum;
 
         // Find the input control for the column and save some of its attributes
-        var columnObj = $("input[Title='" + opt.columnName + "']");
+        var columnObj = findFormField(opt.columnName).find("input[Title^='" + opt.columnName + "']");
         columnObj.css("position", "");
         var columnObjColor = columnObj.css("color");
         var columnObjWidth = columnObj.css("width");
@@ -30198,20 +30269,21 @@ var tooltip = $.widget( "ui.tooltip", {
         columnObj.wrap("<div>");
 
         // Create a div to contain the matching values and add it to the DOM
-        var containerId = genContainerId("SPAutocomplete", opt.columnName);
+        var containerId = genContainerId("SPAutocomplete", opt.columnName, opt.listName);
         columnObj.after("<div><ul id='" + containerId + "' style='width:" + columnObjWidth + ";display:none;padding:2px;border:1px solid #2A1FAA;background-color:#FFF;position:absolute;z-index:40;margin:0'></div>");
 
         // Set the width to match the width of the input control
-        $("#" + containerId).css("width", columnObjWidth);
+        var containerObj = $("#" + containerId);
+        containerObj.css("width", columnObjWidth);
 
         // Handle keypresses
-        $(columnObj).keyup(function() {
+        $(columnObj).keyup(function () {
 
             // Get the column's value
             var columnValue = $(this).val();
 
             // Hide the container while we're working on it
-            $("#" + containerId).hide();
+            containerObj.hide();
 
             // Have enough characters been typed yet?
             if (columnValue.length < opt.numChars) {
@@ -30249,25 +30321,25 @@ var tooltip = $.widget( "ui.tooltip", {
                 CAMLQueryOptions: opt.CAMLQueryOptions,
                 CAMLViewFields: "<ViewFields><FieldRef Name='" + opt.sourceColumn + "' /></ViewFields>",
                 CAMLRowLimit: opt.CAMLRowLimit,
-                completefunc: function(xData) {
+                completefunc: function (xData) {
                     // Handle upper/lower case if ignoreCase = true
                     var testValue = opt.ignoreCase ? columnValue.toUpperCase() : columnValue;
                     // See which values match and add the ones that do to matchArray
-                    $(xData.responseXML).SPFilterNode("z:row").each(function() {
+                    $(xData.responseXML).SPFilterNode("z:row").each(function () {
                         var thisValue = $(this).attr("ows_" + opt.sourceColumn);
                         var thisValueTest = opt.ignoreCase ? $(this).attr("ows_" + opt.sourceColumn).toUpperCase() : $(this).attr("ows_" + opt.sourceColumn);
                         // Make sure we have a match...
                         if (opt.filterType === "Contains") {
                             var firstMatch = thisValueTest.indexOf(testValue);
                             if ((firstMatch >= 0) &&
-                                // ...and that the match is not already in the array if we want uniqueness
+                                    // ...and that the match is not already in the array if we want uniqueness
                                 (!opt.uniqueVals || ($.inArray(thisValue, matchArray) === -1))) {
                                 matchArray.push($(this).attr("ows_" + opt.sourceColumn));
                             }
                         } else {
                             // Handles normal case, which is BeginsWith and and other unknown values
                             if (testValue === thisValueTest.substr(0, testValue.length) &&
-                                // ...and that the match is not already in the array if we want uniqueness
+                                    // ...and that the match is not already in the array if we want uniqueness
                                 (!opt.uniqueVals || ($.inArray(thisValue, matchArray) === -1))) {
                                 matchArray.push($(this).attr("ows_" + opt.sourceColumn));
                             }
@@ -30300,19 +30372,19 @@ var tooltip = $.widget( "ui.tooltip", {
             }
 
             // Add all the list elements to the containerId container
-            $("#" + containerId).html(out);
+            containerObj.html(out);
             // Set up hehavior for the available values in the list element
-            $("#" + containerId + " li").click(function() {
+            $("#" + containerId + " li").click(function () {
                 $("#" + containerId).fadeOut(opt.slideUpSpeed);
                 columnObj.val($(this).text());
-            }).mouseover(function() {
+            }).mouseover(function () {
                 var mouseoverCss = {
                     "cursor": "hand",
                     "color": "#ffffff",
                     "background": "#3399ff"
                 };
                 $(this).css(mouseoverCss);
-            }).mouseout(function() {
+            }).mouseout(function () {
                 var mouseoutCss = {
                     "cursor": "inherit",
                     "color": columnObjColor,
@@ -30334,7 +30406,7 @@ var tooltip = $.widget( "ui.tooltip", {
     // Get the Query String parameters and their values and return in an array
     // Includes code from http://www.developerdrive.com/2013/08/turning-the-querystring-into-a-json-object-using-javascript/
     // Simplified in 2014.01 using this code
-    $.fn.SPServices.SPGetQueryString = function(options) {
+    $.fn.SPServices.SPGetQueryString = function (options) {
 
         var opt = $.extend({}, {
             lowercase: false // If true, parameter names will be converted to lowercase
@@ -30356,7 +30428,7 @@ var tooltip = $.widget( "ui.tooltip", {
 
     // Get the current list's GUID (ID) from the current URL.  Use of this function only makes sense if we're in a list's context,
     // and we assume that we are calling it from an aspx page which is a form or view for the list.
-    $.fn.SPServices.SPListNameFromUrl = function(options) {
+    $.fn.SPServices.SPListNameFromUrl = function (options) {
 
         var opt = $.extend({}, {
             listName: "" // [Optional] Pass in the name or GUID of a list if you are not in its context. e.g., on a Web Part pages in the Pages library
@@ -30367,7 +30439,7 @@ var tooltip = $.widget( "ui.tooltip", {
             currentContext.thisList = opt.listName;
             return currentContext.thisList;
             // Do we already know the current list?
-        } else if (currentContext.thisList.length > 0) {
+        } else if (currentContext.thisList !== undefined && currentContext.thisList.length > 0) {
             return currentContext.thisList;
         }
 
@@ -30380,8 +30452,8 @@ var tooltip = $.widget( "ui.tooltip", {
         $().SPServices({
             operation: "GetListCollection",
             async: false,
-            completefunc: function(xData) {
-                $(xData.responseXML).find("List").each(function() {
+            completefunc: function (xData) {
+                $(xData.responseXML).find("List").each(function () {
                     var defaultViewUrl = $(this).attr("DefaultViewUrl");
                     var listCollList = defaultViewUrl.substring(0, defaultViewUrl.lastIndexOf(SLASH) + 1).toUpperCase();
                     if (listPath.indexOf(listCollList) > 0) {
@@ -30398,7 +30470,7 @@ var tooltip = $.widget( "ui.tooltip", {
     }; // End $.fn.SPServices.SPListNameFromUrl
 
     // SPUpdateMultipleListItems allows you to update multiple items in a list based upon some common characteristic or metadata criteria.
-    $.fn.SPServices.SPUpdateMultipleListItems = function(options) {
+    $.fn.SPServices.SPUpdateMultipleListItems = function (options) {
 
         var opt = $.extend({}, {
             webURL: "", // [Optional] URL of the target Web.  If not specified, the current Web is used.
@@ -30422,11 +30494,11 @@ var tooltip = $.widget( "ui.tooltip", {
             listName: opt.listName,
             CAMLQuery: opt.CAMLQuery,
             CAMLQueryOptions: "<QueryOptions><ViewAttributes Scope='Recursive' /></QueryOptions>",
-            completefunc: function(xData) {
-                $(xData.responseXML).SPFilterNode("z:row").each(function() {
+            completefunc: function (xData) {
+                $(xData.responseXML).SPFilterNode("z:row").each(function () {
                     itemsToUpdate.push($(this).attr("ows_ID"));
                     var fileRef = $(this).attr("ows_FileRef");
-                    fileRef = "/" + fileRef.substring(fileRef.indexOf(";#") + 2);
+                    fileRef = "/" + fileRef.substring(fileRef.indexOf(spDelim) + 2);
                     documentsToUpdate.push(fileRef);
                 });
             }
@@ -30454,7 +30526,7 @@ var tooltip = $.widget( "ui.tooltip", {
             webURL: opt.webURL,
             listName: opt.listName,
             updates: batch,
-            completefunc: function(xData) {
+            completefunc: function (xData) {
                 // If present, call completefunc when all else is done
                 if (opt.completefunc !== null) {
                     opt.completefunc(xData);
@@ -30465,12 +30537,12 @@ var tooltip = $.widget( "ui.tooltip", {
     }; // End $.fn.SPServices.SPUpdateMultipleListItems
 
     // SPGetListItemsJson retrieves items from a list in JSON format
-    $.fn.SPServices.SPGetListItemsJson = function(options) {
+    $.fn.SPServices.SPGetListItemsJson = function (options) {
 
         var opt = $.extend({}, {
             webURL: "", // [Optional] URL of the target Web.  If not specified, the current Web is used.
             listName: "",
-            CAMLViewName: "",
+            viewName: "",
             CAMLQuery: "",
             CAMLViewFields: "",
             CAMLRowLimit: "",
@@ -30480,7 +30552,7 @@ var tooltip = $.widget( "ui.tooltip", {
             mapping: null, // If provided, use this mapping rather than creating one automagically from the list schema
             mappingOverrides: null, // Pass in specific column overrides here
             debug: false // If true, show error messages;if false, run silent
-        }, options);
+        }, $().SPServices.defaults, options);
 
         var newChangeToken;
         var thisListJsonMapping = {};
@@ -30492,7 +30564,7 @@ var tooltip = $.widget( "ui.tooltip", {
             operation: "GetListItemChangesSinceToken",
             webURL: opt.webURL,
             listName: opt.listName,
-            CAMLViewName: opt.CAMLViewName,
+            viewName: opt.viewName,
             CAMLQuery: opt.CAMLQuery,
             CAMLViewFields: opt.CAMLViewFields,
             CAMLRowLimit: opt.CAMLRowLimit,
@@ -30501,7 +30573,7 @@ var tooltip = $.widget( "ui.tooltip", {
             contains: opt.contains
         });
 
-        thisData.done(function() {
+        thisData.done(function () {
 
             var mappingKey = "SPGetListItemsJson" + opt.webURL + opt.listName;
 
@@ -30512,13 +30584,13 @@ var tooltip = $.widget( "ui.tooltip", {
             newChangeToken = responseXml.find("Changes").attr("LastChangeToken");
 
             // Some of the existing items may have been deleted
-            responseXml.find("listitems Changes Id[ChangeType='Delete']").each(function() {
+            responseXml.find("listitems Changes Id[ChangeType='Delete']").each(function () {
                 deletedIds.push($(this).text());
             });
 
             if (opt.mapping === null) {
                 // Automagically create the mapping
-                responseXml.find("List > Fields > Field").each(function() {
+                responseXml.find("List > Fields > Field").each(function () {
                     var thisField = $(this);
                     var thisType = thisField.attr("Type");
                     // Only work with known column types
@@ -30572,7 +30644,7 @@ var tooltip = $.widget( "ui.tooltip", {
     }; // End $.fn.SPServices.SPUpdateMultipleListItems
 
     // Convert a JavaScript date to the ISO 8601 format required by SharePoint to update list items
-    $.fn.SPServices.SPConvertDateToISO = function(options) {
+    $.fn.SPServices.SPConvertDateToISO = function (options) {
 
         var opt = $.extend({}, {
             dateToConvert: new Date(), // The JavaScript date we'd like to convert. If no date is passed, the function returns the current date/time
@@ -30596,15 +30668,15 @@ var tooltip = $.widget( "ui.tooltip", {
     // This method for finding specific nodes in the returned XML was developed by Steve Workman. See his blog post
     // http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000/
     // for performance details.
-    $.fn.SPFilterNode = function(name) {
-        return this.find('*').filter(function() {
+    $.fn.SPFilterNode = function (name) {
+        return this.find('*').filter(function () {
             return this.nodeName === name;
         });
     }; // End $.fn.SPFilterNode
 
     // This function converts an XML node set to JSON
     // Initial implementation focuses only on GetListItems
-    $.fn.SPXmlToJson = function(options) {
+    $.fn.SPXmlToJson = function (options) {
 
         var opt = $.extend({}, {
             mapping: {}, // columnName: mappedName: "mappedName", objectType: "objectType"
@@ -30616,13 +30688,13 @@ var tooltip = $.widget( "ui.tooltip", {
         var attrNum;
         var jsonObject = [];
 
-        this.each(function() {
+        this.each(function () {
             var row = {};
             var rowAttrs = this.attributes;
 
             if (!opt.sparse) {
                 // Bring back all mapped columns, even those with no value
-                $.each(opt.mapping, function() {
+                $.each(opt.mapping, function () {
                     row[this.mappedName] = "";
                 });
             }
@@ -30654,7 +30726,7 @@ var tooltip = $.widget( "ui.tooltip", {
 
         switch (objectType) {
             case "Text":
-                colValue = stringToJsonObject(v);
+                colValue = v;
                 break;
             case "DateTime":
             case "datetime": // For calculated columns, stored as datetime;#value
@@ -30694,21 +30766,20 @@ var tooltip = $.widget( "ui.tooltip", {
                 colValue = calcToJsonObject(v);
                 break;
             case "Attachments":
-                colValue = lookupToJsonObject(v);
+                colValue = attachmentsToJsonObject(v);
+                break;
+            case "URL":
+                colValue = urlToJsonObject(v);
                 break;
             case "JSON":
                 colValue = jsonToJsonObject(v); // Special case for text JSON stored in text columns
                 break;
             default:
                 // All other objectTypes will be simple strings
-                colValue = stringToJsonObject(v);
+                colValue = v;
                 break;
         }
         return colValue;
-    }
-
-    function stringToJsonObject(s) {
-        return s;
     }
 
     function intToJsonObject(s) {
@@ -30720,8 +30791,7 @@ var tooltip = $.widget( "ui.tooltip", {
     }
 
     function booleanToJsonObject(s) {
-        var out = s === "0" ? false : true;
-        return out;
+        return s !== "0";
     }
 
     function dateToJsonObject(s) {
@@ -30730,8 +30800,7 @@ var tooltip = $.widget( "ui.tooltip", {
         var d = dt[0].split("-");
         var t = dt[1].split(":");
         var t3 = t[2].split("Z");
-        var date = new Date(d[0], (d[1] - 1), d[2], t[0], t[1], t3[0]);
-        return date;
+        return new Date(d[0], (d[1] - 1), d[2], t[0], t[1], t3[0]);
     }
 
     function userToJsonObject(s) {
@@ -30763,9 +30832,9 @@ var tooltip = $.widget( "ui.tooltip", {
             return null;
         } else {
             var thisUserMultiObject = [];
-            var thisUserMulti = s.split(";#");
+            var thisUserMulti = s.split(spDelim);
             for (i = 0; i < thisUserMulti.length; i = i + 2) {
-                var thisUser = userToJsonObject(thisUserMulti[i] + ";#" + thisUserMulti[i + 1]);
+                var thisUser = userToJsonObject(thisUserMulti[i] + spDelim + thisUserMulti[i + 1]);
                 thisUserMultiObject.push(thisUser);
             }
             return thisUserMultiObject;
@@ -30776,10 +30845,10 @@ var tooltip = $.widget( "ui.tooltip", {
         if (s.length === 0) {
             return null;
         } else {
-            var thisLookup = new SplitIndex(s);
+            var thisLookup = s.split(spDelim);
             return {
-                lookupId: thisLookup.id,
-                lookupValue: thisLookup.value
+                lookupId: thisLookup[0],
+                lookupValue: thisLookup[1]
             };
         }
     }
@@ -30789,9 +30858,9 @@ var tooltip = $.widget( "ui.tooltip", {
             return null;
         } else {
             var thisLookupMultiObject = [];
-            var thisLookupMulti = s.split(";#");
+            var thisLookupMulti = s.split(spDelim);
             for (i = 0; i < thisLookupMulti.length; i = i + 2) {
-                var thisLookup = lookupToJsonObject(thisLookupMulti[i] + ";#" + thisLookupMulti[i + 1]);
+                var thisLookup = lookupToJsonObject(thisLookupMulti[i] + spDelim + thisLookupMulti[i + 1]);
                 thisLookupMultiObject.push(thisLookup);
             }
             return thisLookupMultiObject;
@@ -30803,7 +30872,7 @@ var tooltip = $.widget( "ui.tooltip", {
             return null;
         } else {
             var thisChoiceMultiObject = [];
-            var thisChoiceMulti = s.split(";#");
+            var thisChoiceMulti = s.split(spDelim);
             for (i = 0; i < thisChoiceMulti.length; i++) {
                 if (thisChoiceMulti[i].length !== 0) {
                     thisChoiceMultiObject.push(thisChoiceMulti[i]);
@@ -30813,11 +30882,48 @@ var tooltip = $.widget( "ui.tooltip", {
         }
     }
 
+    function attachmentsToJsonObject(s) {
+        if (s.length === 0) {
+            return null;
+        } else if (s === "0" || s === "1") {
+            return s;
+        } else {
+            var thisObject = [];
+            var thisString = s.split(spDelim);
+            for (i = 0; i < thisString.length; i++) {
+                if (thisString[i].length !== 0) {
+                    var fileName = thisString[i];
+                    if (thisString[i].lastIndexOf("/") !== -1) {
+                        var tokens = thisString[i].split("/");
+                        fileName = tokens[tokens.length - 1];
+                    }
+                    thisObject.push({
+                        attachment: thisString[i],
+                        fileName: fileName
+                    });
+                }
+            }
+            return thisObject;
+        }
+    }
+
+    function urlToJsonObject(s) {
+        if (s.length === 0) {
+            return null;
+        } else {
+            var thisUrl = s.split(", ");
+            return {
+                Url: thisUrl[0],
+                Description: thisUrl[1]
+            };
+        }
+    }
+
     function calcToJsonObject(s) {
         if (s.length === 0) {
             return null;
         } else {
-            var thisCalc = s.split(";#");
+            var thisCalc = s.split(spDelim);
             // The first value will be the calculated column value type, the second will be the value
             return attrToJson(thisCalc[1], thisCalc[0]);
         }
@@ -30837,7 +30943,7 @@ var tooltip = $.widget( "ui.tooltip", {
     //   contents - The element which contains the current value
     //   currentValue - The current value if it is set
     //   checkNames - The Check Names image (in case you'd like to click it at some point)
-    $.fn.SPServices.SPFindPeoplePicker = function(options) {
+    $.fn.SPServices.SPFindPeoplePicker = function (options) {
 
         var opt = $.extend({}, {
             peoplePickerDisplayName: "", // The displayName of the People Picker on the form
@@ -30845,7 +30951,7 @@ var tooltip = $.widget( "ui.tooltip", {
             checkNames: true // If set to true, the Check Names image will be clicked to resolve the names
         }, options);
 
-        var thisRow = $("nobr").filter(function() {
+        var thisRow = $("nobr").filter(function () {
             // Ensures we get a match whether or not the People Picker is required (if required, the nobr contains a span also)
             return $(this).contents().eq(0).text() === opt.peoplePickerDisplayName;
         }).closest("tr");
@@ -30868,7 +30974,7 @@ var tooltip = $.widget( "ui.tooltip", {
         var dictionaryEntries = [];
 
         // IE
-        thisContents.children("span").each(function() {
+        thisContents.children("span").each(function () {
 
             // Grab the entity data
             var thisData = $(this).find("div[data]").attr("data");
@@ -30880,10 +30986,9 @@ var tooltip = $.widget( "ui.tooltip", {
                 var arrayOfDictionaryEntry = $.parseXML(thisData);
                 var $xml = $(arrayOfDictionaryEntry);
 
-                $xml.find("DictionaryEntry").each(function() {
+                $xml.find("DictionaryEntry").each(function () {
                     var key = $(this).find("Key").text();
-                    var value = $(this).find("Value").text();
-                    dictionaryEntry[key] = value;
+                    dictionaryEntry[key] = $(this).find("Value").text();
                 });
                 dictionaryEntries.push(dictionaryEntry);
                 // For other browsers, we'll call GetUserInfo to get the data
@@ -30893,14 +30998,12 @@ var tooltip = $.widget( "ui.tooltip", {
                     async: false,
                     cacheXML: true,
                     userLoginName: $(this).attr("title"),
-                    completefunc: function(xData) {
+                    completefunc: function (xData) {
 
-                        $(xData.responseXML).find("User").each(function() {
+                        $(xData.responseXML).find("User").each(function () {
 
-                            $.each(this.attributes, function(i, attrib) {
-                                var key = attrib.name;
-                                var value = attrib.value;
-                                dictionaryEntry[key] = value;
+                            $.each(this.attributes, function (i, attrib) {
+                                dictionaryEntry[attrib.name] = attrib.value;
                             });
                             dictionaryEntries.push(dictionaryEntry);
                         });
@@ -30916,10 +31019,47 @@ var tooltip = $.widget( "ui.tooltip", {
             checkNames: thisCheckNames,
             dictionaryEntries: dictionaryEntries
         };
-    };
+    }; // End $.fn.SPServices.SPFindPeoplePicker
+
+    // Mistakenly released previously outside the SPServices namespace. This takes care of offering both.
+    $.fn.SPFindPeoplePicker = function (options) {
+        return $().SPServices.SPFindPeoplePicker(options);
+    }; // End $.fn.SPFindPeoplePicker
+
+    // Find an MMS Picker in the page
+    // Returns references to:
+    //   terms - The aaray of terms as value/guid pairs
+    $.fn.SPServices.SPFindMMSPicker = function (options) {
+
+        var opt = $.extend({}, {
+            MMSDisplayName: "" // The displayName of the MMS Picker on the form
+        }, options);
+
+        var thisTerms = [];
+
+        // Find the div for the column which contains the entered data values
+        var thisDiv = $("div[title='" + opt.MMSDisplayName + "']");
+        var thisHiddenInput = thisDiv.closest("td").find("input[type='hidden']");
+        var thisTermArray = thisHiddenInput.val().split(";");
+
+        for (var i = 0; i < thisTermArray.length; i++) {
+            var thisOne = thisTermArray[i].split("|");
+            thisTerms.push({
+                value: thisOne[0],
+                guid: thisOne[1]
+            });
+
+        }
+
+        return {
+            terms: thisTerms
+        };
+
+    }; // End $.fn.SPServices.SPFindMMSPicker
+
 
     // Return the current version of SPServices as a string
-    $.fn.SPServices.Version = function() {
+    $.fn.SPServices.Version = function () {
 
         return VERSION;
 
@@ -30930,7 +31070,7 @@ var tooltip = $.widget( "ui.tooltip", {
     // S = Simple (select)
     // C = Compound (input + select hybrid)
     // M = Multi-select (select hybrid)
-    $.fn.SPServices.SPDropdownCtl = function(options) {
+    $.fn.SPServices.SPDropdownCtl = function (options) {
 
         var opt = $.extend({}, {
             displayName: "" // The displayName of the column on the form
@@ -30963,7 +31103,7 @@ var tooltip = $.widget( "ui.tooltip", {
             // Multi-select: This will find the multi-select column control on a Russian site (and perhaps others) where the Title looks like '????????? ????????: Column Name'
         } else if ((columnObj.Obj = $("select[ID$='SelectCandidate'][Title$=': " + opt.displayName + "']")).length === 1) {
             columnObj.Type = dropdownType.multiSelect;
-            // Multi-select: This will find the multi-select column control on a German site (and perhaps others) where the Title looks like 'M�gliche Werte f�r &quot;Column name&quot;.'
+            // Multi-select: This will find the multi-select column control on a German site (and perhaps others) where the Title looks like 'Mögliche Werte für &quot;Column name&quot;.'
         } else if ((columnObj.Obj = $("select[ID$='SelectCandidate'][Title$='\"" + opt.displayName + "\".']")).length === 1) {
             columnObj.Type = dropdownType.multiSelect;
             // Multi-select: This will find the multi-select column control on a Italian site (and perhaps others) where the Title looks like "Valori possibili Column name"
@@ -30979,7 +31119,7 @@ var tooltip = $.widget( "ui.tooltip", {
         if (columnObj.Type === null) {
             var fieldContainer = findFormField(opt.displayName);
             if (fieldContainer !== undefined) {
-                var fieldSelect = fieldContainer.find("select[title^='" + opt.displayName + "'][id$='_Lookup']");
+                var fieldSelect = fieldContainer.find("select[title^='" + opt.displayName + " '][id$='_Lookup']");
 
                 if (fieldSelect && fieldSelect.length === 1) {
                     columnObj.Type = dropdownType.simple;
@@ -30997,7 +31137,7 @@ var tooltip = $.widget( "ui.tooltip", {
             var addButtonId = columnObj.container.find("[id$='AddButton']").attr("id");
             columnObj.master =
                 window[addButtonId.replace(/AddButton/, multiLookupPrefix + "_m")] || // SharePoint 2007
-            window[addButtonId.replace(/AddButton/, multiLookupPrefix2013 + "_m")]; // SharePoint 2013
+                window[addButtonId.replace(/AddButton/, multiLookupPrefix2013 + "_m")]; // SharePoint 2013
         }
 
         return columnObj;
@@ -31010,14 +31150,17 @@ var tooltip = $.widget( "ui.tooltip", {
     // See: http://johnliu.net/blog/2012/2/3/sharepoint-javascript-current-page-context-info.html
     function SPServicesContext() {
 
+        // The SharePoint variables only give us a relative path. to match the result from WebUrlFromPageUrl, we need to add the protocol, host, and (if present) port.
+        var siteRoot = location.protocol + "//" + location.host + (location.port !== "" ? location.port : "");
+
         // SharePoint 2010 gives us a context variable
         if (typeof _spPageContextInfo !== "undefined") {
-            this.thisSite = _spPageContextInfo.webServerRelativeUrl;
+            this.thisSite = siteRoot + _spPageContextInfo.webServerRelativeUrl;
             this.thisList = _spPageContextInfo.pageListId;
             this.thisUserId = _spPageContextInfo.userId;
             // In SharePoint 2007, we know the UserID only
         } else {
-            this.thisSite = (typeof L_Menu_BaseUrl !== "undefined") ? L_Menu_BaseUrl : "";
+            this.thisSite = (typeof L_Menu_BaseUrl !== "undefined") ? siteRoot + L_Menu_BaseUrl : "";
             this.thisList = "";
             this.thisUserId = (typeof _spUserId !== "undefined") ? _spUserId : undefined;
         }
@@ -31052,14 +31195,14 @@ var tooltip = $.widget( "ui.tooltip", {
                     // URL as hyperlink
                     case "Hyperlink":
                         outString = "<a href='" + columnValue.substring(0, columnValue.search(",")) + "'>" +
-                            columnValue.substring(columnValue.search(",") + 1) + "</a>";
+                        columnValue.substring(columnValue.search(",") + 1) + "</a>";
                         break;
-                        // URL as image
+                    // URL as image
                     case "Image":
                         outString = "<img alt='" + columnValue.substring(columnValue.search(",") + 1) +
-                            "' src='" + columnValue.substring(0, columnValue.search(",")) + "'/>";
+                        "' src='" + columnValue.substring(0, columnValue.search(",")) + "'/>";
                         break;
-                        // Just in case
+                    // Just in case
                     default:
                         outString = columnValue;
                         break;
@@ -31067,16 +31210,16 @@ var tooltip = $.widget( "ui.tooltip", {
                 break;
             case "User":
             case "UserMulti":
-                var userMultiValues = columnValue.split(";#");
+                var userMultiValues = columnValue.split(spDelim);
                 for (i = 0; i < userMultiValues.length; i = i + 2) {
                     outArray.push("<a href='/_layouts/userdisp.aspx?ID=" + userMultiValues[i] +
-                        "&Source=" + escapeUrl(location.href) + "'>" +
-                        userMultiValues[i + 1] + "</a>");
+                    "&Source=" + escapeUrl(location.href) + "'>" +
+                    userMultiValues[i + 1] + "</a>");
                 }
                 outString = outArray.join(", ");
                 break;
             case "Calculated":
-                var calcColumn = columnValue.split(";#");
+                var calcColumn = columnValue.split(spDelim);
                 outString = calcColumn[1];
                 break;
             case "Number":
@@ -31096,24 +31239,24 @@ var tooltip = $.widget( "ui.tooltip", {
                     case "FileRef":
                         // Get the display form URL for the lookup source list
                         dispUrl = listXML.attr("BaseType") === "1" ? listXML.attr("RootFolder") + SLASH + "Forms/DispForm.aspx" :
-                            listXML.attr("RootFolder") + SLASH + "DispForm.aspx";
+                        listXML.attr("RootFolder") + SLASH + "DispForm.aspx";
                         outString = "<a href='" + dispUrl +
-                            "?ID=" + columnValue.substring(0, columnValue.search(";#")) + "&RootFolder=*&Source=" + escapeUrl(location.href) + "'>" +
-                            columnValue.substring(columnValue.search(";#") + 2) + "</a>";
+                        "?ID=" + columnValue.substring(0, columnValue.search(spDelim)) + "&RootFolder=*&Source=" + escapeUrl(location.href) + "'>" +
+                        columnValue.substring(columnValue.search(spDelim) + 2) + "</a>";
                         break;
                     case "FileDirRef":
                         // Get the display form URL for the lookup source list
-                        dispUrl = SLASH + columnValue.substring(columnValue.search(";#") + 2);
+                        dispUrl = SLASH + columnValue.substring(columnValue.search(spDelim) + 2);
                         outString = "<a href='" + dispUrl + "'>" +
-                            columnValue.substring(columnValue.search(";#") + 2) + "</a>";
+                        columnValue.substring(columnValue.search(spDelim) + 2) + "</a>";
                         break;
-                        // Any other lookup column
+                    // Any other lookup column
                     default:
                         // Get the display form URL for the lookup source list
                         dispUrl = getListFormUrl(columnXML.attr("List"), "DisplayForm");
                         outString = "<a href='" + opt.relatedWebURL + SLASH + dispUrl +
-                            "?ID=" + columnValue.substring(0, columnValue.search(";#")) + "&RootFolder=*&Source=" + escapeUrl(location.href) + "'>" +
-                            columnValue.substring(columnValue.search(";#") + 2) + "</a>";
+                        "?ID=" + columnValue.substring(0, columnValue.search(spDelim)) + "&RootFolder=*&Source=" + escapeUrl(location.href) + "'>" +
+                        columnValue.substring(columnValue.search(spDelim) + 2) + "</a>";
                         break;
                 }
                 break;
@@ -31123,17 +31266,17 @@ var tooltip = $.widget( "ui.tooltip", {
                 // Show all the values as links to the items, separated by commas
                 outString = "";
                 if (columnValue.length > 0) {
-                    var lookupMultiValues = columnValue.split(";#");
+                    var lookupMultiValues = columnValue.split(spDelim);
                     for (i = 0; i < lookupMultiValues.length / 2; i++) {
                         outArray.push("<a href='" + webUrl + SLASH + dispUrl +
-                            "?ID=" + lookupMultiValues[i * 2] + "&RootFolder=*&Source=" + escapeUrl(location.href) + "'>" +
-                            lookupMultiValues[(i * 2) + 1] + "</a>");
+                        "?ID=" + lookupMultiValues[i * 2] + "&RootFolder=*&Source=" + escapeUrl(location.href) + "'>" +
+                        lookupMultiValues[(i * 2) + 1] + "</a>");
                     }
                 }
                 outString = outArray.join(", ");
                 break;
             case "File":
-                fileName = columnValue.substring(columnValue.search(";#") + 2);
+                fileName = columnValue.substring(columnValue.search(spDelim) + 2);
                 outString = "<a href='" + listXML.attr("RootFolder") + SLASH + fileName + "'>" + fileName + "</a>";
                 break;
             case "Counter":
@@ -31158,7 +31301,7 @@ var tooltip = $.widget( "ui.tooltip", {
         var out = "<table class='ms-vb' width='100%'>";
         for (i = 0; i < node.attributes.length; i++) {
             out += "<tr><td width='10px' style='font-weight:bold;'>" + i + "</td><td width='100px'>" +
-                node.attributes.item(i).nodeName + "</td><td>" + checkLink(node.attributes.item(i).nodeValue) + "</td></tr>";
+            node.attributes.item(i).nodeName + "</td><td>" + checkLink(node.attributes.item(i).nodeValue) + "</td></tr>";
         }
         out += "</table>";
         return out;
@@ -31186,7 +31329,7 @@ var tooltip = $.widget( "ui.tooltip", {
                 }
                 break;
             case dropdownType.multiSelect:
-                $(columnSelect.master.resultControl).find("option").each(function() {
+                $(columnSelect.master.resultControl).find("option").each(function () {
                     if (matchOnId) {
                         columnSelectSelected.push($(this).val());
                     } else {
@@ -31214,27 +31357,29 @@ var tooltip = $.widget( "ui.tooltip", {
     function modalBox(msg) {
         var boxCSS = "position:absolute;width:300px;height:150px;padding:10px;background-color:#000000;color:#ffffff;z-index:30;font-family:'Arial';font-size:12px;display:none;";
         $("#aspnetForm").parent().append("<div id='SPServices_msgBox' style=" + boxCSS + ">" + msg);
-        var height = $("#SPServices_msgBox").height();
-        var width = $("#SPServices_msgBox").width();
+        var msgBoxObj = $("#SPServices_msgBox");
+        var height = msgBoxObj.height();
+        var width = msgBoxObj.width();
         var leftVal = ($(window).width() / 2) - (width / 2) + "px";
         var topVal = ($(window).height() / 2) - (height / 2) - 100 + "px";
-        $("#SPServices_msgBox").css({
+        msgBoxObj.css({
             border: '5px #C02000 solid',
             left: leftVal,
             top: topVal
-        }).show().fadeTo("slow", 0.75).click(function() {
-            $(this).fadeOut("3000", function() {
+        }).show().fadeTo("slow", 0.75).click(function () {
+            $(this).fadeOut("3000", function () {
                 $(this).remove();
             });
         });
     } // End of function modalBox
 
     // Generate a unique id for a containing div using the function name and the column display name
-    function genContainerId(funcname, columnName) {
+    function genContainerId(funcname, columnName, listName) {
+        var l = listName !== undefined ? listName : $().SPServices.SPListNameFromUrl();
         return funcname + "_" + $().SPServices.SPGetStaticFromDisplay({
-            listName: $().SPServices.SPListNameFromUrl(),
-            columnDisplayName: columnName
-        });
+                listName: l,
+                columnDisplayName: columnName
+            });
     } // End of function genContainerId
 
     // Get the URL for a specified form for a list
@@ -31245,7 +31390,7 @@ var tooltip = $.widget( "ui.tooltip", {
             operation: "GetFormCollection",
             async: false,
             listName: l,
-            completefunc: function(xData) {
+            completefunc: function (xData) {
                 u = $(xData.responseXML).find("Form[Type='" + f + "']").attr("Url");
             }
         });
@@ -31291,7 +31436,7 @@ var tooltip = $.widget( "ui.tooltip", {
         // There's no easy way to find one of these columns; we'll look for the comment with the columnName
         var searchText = RegExp("FieldName=\"" + columnName.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&") + "\"", "gi");
         // Loop through all of the ms-formbody table cells
-        $("td.ms-formbody, td.ms-formbodysurvey").each(function() {
+        $("td.ms-formbody, td.ms-formbodysurvey").each(function () {
             // Check for the right comment
             if (searchText.test($(this).html())) {
                 thisFormBody = $(this);
@@ -31347,17 +31492,18 @@ var tooltip = $.widget( "ui.tooltip", {
     };
 
     function encodeXml(string) {
-        return string.replace(/([\&"<>])/g, function(str, item) {
+        return string.replace(/([\&"<>])/g, function (str, item) {
             return xml_special_to_escaped_one_map[item];
         });
     }
 
     function decodeXml(string) {
         return string.replace(/(&quot;|&lt;|&gt;|&amp;)/g,
-            function(str, item) {
+            function (str, item) {
                 return escaped_one_to_xml_special_map[item];
             });
     }
+
     /* Taken from http://dracoblue.net/dev/encodedecode-special-xml-characters-in-javascript/155/ */
 
     // Escape column values
@@ -31376,7 +31522,7 @@ var tooltip = $.widget( "ui.tooltip", {
 
     // Split values like 1;#value into id and value                             
     function SplitIndex(s) {
-        var spl = s.split(";#");
+        var spl = s.split(spDelim);
         this.id = spl[0];
         this.value = spl[1];
     }
@@ -31386,7 +31532,7 @@ var tooltip = $.widget( "ui.tooltip", {
     }
 
     // James Padolsey's Regex Selector for jQuery http://james.padolsey.com/javascript/regex-selector-for-jquery/
-    $.expr[':'].regex = function(elem, index, match) {
+    $.expr[':'].regex = function (elem, index, match) {
         var matchParams = match[3].split(','),
             validLabels = /^(data|css):/,
             attr = {

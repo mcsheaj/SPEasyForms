@@ -413,7 +413,7 @@
             height: 85px;
             font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
             overflow: hidden;
-            z-index: 110;
+            z-index: 1;
             position: absolute;
             border-bottom: 1px solid lightgray;
             background-color: #fcfcfc;
@@ -848,7 +848,7 @@
                     Copyright 2005, 2014 <a href='http://jquery.org' target='_blank' class='speasyforms-aboutlink'>jQuery Foundation, Inc.</a> and other contributors, Licensed MIT 
                 </p>
                 <p>
-                    <a href='http://spservices.codeplex.com' target='_blank' class='speasyforms-aboutlink'>SPServices v2015.01</a><br />
+                    <a href='http://spservices.codeplex.com' target='_blank' class='speasyforms-aboutlink'>SPServices v2014.02</a><br />
                     Copyright (c) 2009-2013 <a href='http://www.sympraxisconsulting.com' target='_blank' class='speasyforms-aboutlink'>Sympraxis Consulting LLC</a>, written by 
                     <a href='http://sympmarc.com/' target='_blank' class='speasyforms-aboutlink'>Marc Anderson</a>, Licensed MIT
                 </p>
