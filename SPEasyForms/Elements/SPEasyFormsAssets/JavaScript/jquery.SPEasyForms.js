@@ -408,7 +408,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 445);
             }
             else {
-                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 405);
+                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 460);
             }
             $(window).resize(function () {
                 $("div.speasyforms-panel").height($(window).height() - bannerHeight);
@@ -416,7 +416,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 445);
                 }
                 else {
-                    $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 405);
+                    $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 460);
                 }
             });
             $('#spEasyFormsRibbon').show();

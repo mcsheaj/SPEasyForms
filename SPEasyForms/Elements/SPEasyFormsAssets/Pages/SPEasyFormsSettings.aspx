@@ -76,7 +76,6 @@
             overflow-x: hidden;
             overflow-y: scroll;
             background: #eee;
-            position: fixed;
             float: left;
         }
 
@@ -612,15 +611,22 @@
         }
 
         #spEasyFormsContent {
-            position: fixed;
+            float: left;
             overflow-y: scroll;
             overflow-x: hidden;
-            padding-right: 15px;
+            padding-right: 10px;
+            margin-left: 410px;
+            position: fixed;
         }
 
         #s4-titlerow {
             padding-bottom: 0;
         }
+
+        #s4-bodyContainer {
+            padding-bottom: 0;
+        }
+
     </style>
 </asp:Content>
 <asp:Content ContentPlaceHolderID='PlaceHolderMiniConsole' runat='server'>
@@ -631,39 +637,28 @@
 </asp:Content>
 <asp:Content ContentPlaceHolderID='PlaceHolderMain' runat='server'>
     <div id='spEasyFormsBusyScreen'></div>
-    <div id='spEasyFormsOuterDiv'>
-        <table id='spEasyFormsEditor' class='speasyforms-editor'>
-            <tr class='speasyforms-editor'>
-                <td class='speasyforms-editor speasyforms-panel'>
-                    <div class='speasyforms-panel'>
-                        <table id='spEasyFormsContainerTable' class='speasyforms-sortablecontainers'>
-                            <tbody class='speasyforms-sortablecontainers'></tbody>
-                        </table>
-                    </div>
-                </td>
-                <td class='speasyforms-editor speasyforms-form'>
-                    <div id='spEasyFormsContent'>
-                        <div id='tabs-min'>
-                            <div id='tabs-min-form' class='tabs-min'>
-                                <table class='ms-formtable' style='margin-top: 8px;' border='0'></table>
-                            </div>
-                            <div id='tabs-min-visibility' class='tabs-min' style='display: none'></div>
-                            <div id='tabs-min-adapters' class='tabs-min' style='display: none'>
-                                <table id='spEasyFormsAdapterTable' class='speasyforms-adapters'>
-                                    <tr>
-                                        <th>Display Name</th>
-                                        <th class='speasyforms-hidden' style='display: none'>Internal Name</th>
-                                        <th>Adapter Type</th>
-                                        <th>Additional Settings</th>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
+    <div id='spEasyFormsPanel' class='speasyforms-panel'>
+        <table id='spEasyFormsContainerTable' class='speasyforms-sortablecontainers'>
+            <tbody class='speasyforms-sortablecontainers'></tbody>
         </table>
-        <br />
+    </div>
+    <div id='spEasyFormsContent' class='speasyforms-content'>
+        <div id='tabs-min'>
+            <div id='tabs-min-form' class='tabs-min'>
+                <table class='ms-formtable' style='margin-top: 8px;' border='0'></table>
+            </div>
+            <div id='tabs-min-visibility' class='tabs-min' style='display: none'></div>
+            <div id='tabs-min-adapters' class='tabs-min' style='display: none'>
+                <table id='spEasyFormsAdapterTable' class='speasyforms-adapters'>
+                    <tr>
+                        <th>Display Name</th>
+                        <th class='speasyforms-hidden' style='display: none'>Internal Name</th>
+                        <th>Adapter Type</th>
+                        <th>Additional Settings</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
     <div id='spEasyFormsTextareaDiv'>
         <h3>JSON Configuration:</h3>
@@ -728,14 +723,16 @@
                 <div class="speasyforms-img speasyforms-visimg"></div>
                 <div class='speasyforms-buttontext'>
                     Conditional
-                    <br />Visibility
+                    <br />
+                    Visibility
                 </div>
             </div>
             <div id='spEasyFormsFieldAdaptersButton' class='speasyforms-buttonouterdiv'>
                 <div class="speasyforms-img speasyforms-adaptimg"></div>
                 <div class='speasyforms-buttontext'>
                     Field
-                    <br />Adapters
+                    <br />
+                    Adapters
                 </div>
             </div>
             <div class='speasyforms-buttoncontainer'>
