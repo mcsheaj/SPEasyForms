@@ -71,26 +71,6 @@
             }
             $("#tabs-min-adapters").append("<br /><br />");
 
-            $("tr.speasyforms-sortablefields").each(function () {
-                var tds = $(this).find("td");
-                if (tds.length > 2) {
-                    var internalName = $(this).find("td")[1].innerHTML;
-                    var type = $(this).find("td")[2].innerHTML;
-                    opt.supportedTypes = adapterCollection.supportedTypes(opt);
-                    if ($.inArray(type, opt.supportedTypes) >= 0) {
-                        $(this).append(
-                            "<td class='speasyforms-adapter'><button id='" +
-                            internalName +
-                            "Adapter' class='speasyforms-containerbtn " +
-                            "speasyforms-adapter' data-spfieldtype='" +
-                            type + "'>" +
-                            "Configure Field Control Adapter</button></td>");
-                    } else {
-                        $(this).append("<td class='speasyforms-blank'>&nbsp;</td>");
-                    }
-                }
-            });
-
             $("#adapterTypeDialog").dialog({
                 modal: true,
                 autoOpen: false,
@@ -112,19 +92,6 @@
                         $("#adapterTypeDialog").dialog("close");
                     }
                 }
-            });
-
-            $("button.speasyforms-adapter").button({
-                icons: {
-                    primary: "ui-icon-shuffle"
-                },
-                text: false
-            }).click(function () {
-                opt.button = this;
-                opt.fieldName = opt.button.id.replace("Adapter", "");
-                opt.spFieldType = $.spEasyForms.containerCollection.rows[opt.fieldName].spFieldType;
-                adapterCollection.launchDialog(opt);
-                return false;
             });
 
             if ($("#spEasyFormsAdapterTable tr.speasyforms-fieldmissing").length > 0 && opt.verbose) {
@@ -152,6 +119,7 @@
                 opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
                 delete opt.currentConfig.adapters.def[internalName];
                 $.spEasyForms.configManager.set(opt);
+                opt.refresh = $.spEasyForms.refresh.adapters;
                 $.spEasyForms.containerCollection.toEditor(opt);
                 return false;
             });

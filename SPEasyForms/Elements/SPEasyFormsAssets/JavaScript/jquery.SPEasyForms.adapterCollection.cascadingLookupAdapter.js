@@ -55,6 +55,7 @@
                                 }
                                 $.spEasyForms.configManager.set(opt);
                                 $('#cascadingLookupAdapterDialog').dialog("close");
+                                opt.refresh = $.spEasyForms.refresh.adapters;
                                 $.spEasyForms.containerCollection.toEditor(opt);
                             } else {
                                 adapterCollection.validateRequired({
@@ -95,6 +96,7 @@
                                         $("#cascadingLookupChildSelect").val();
                                     $.spEasyForms.configManager.set(opt);
                                     $('#cascadingLookupAdapterDialog').dialog("close");
+                                    opt.refresh = $.spEasyForms.refresh.adapters;
                                     $.spEasyForms.containerCollection.toEditor(opt);
                                 }
                             }

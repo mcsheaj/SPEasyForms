@@ -86,6 +86,7 @@
                             };
                             opt.adapters[result.columnNameInternal] = result;
                             $.spEasyForms.configManager.set(opt);
+                            opt.refresh = $.spEasyForms.refresh.adapters;
                             containerCollection.toEditor(opt);
                         }
                         $('#addStarRatingAdapterDialog').dialog("close");
@@ -98,6 +99,7 @@
                             $.spEasyForms.configManager.set(opt);
                         }
                         $('#addStarRatingAdapterDialog').dialog("close");
+                        opt.refresh = $.spEasyForms.refresh.adapters;
                         containerCollection.toEditor(opt);
                         return false;
                     }

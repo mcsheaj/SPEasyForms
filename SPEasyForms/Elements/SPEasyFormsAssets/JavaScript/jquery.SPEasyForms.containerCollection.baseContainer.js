@@ -29,71 +29,37 @@
          * more field collections.
          *
          * @param {object} options = {
-         *     parentId {string} - the id of the outer div for the container
-         *     index {string} - one up index of the container, use to create unique ids
-         *     rows [object] - array of objects representing rows in the form
-         *     layout {object} - object representing the configuration for this container
+         *     currentContainer - the jQuery node to which this container should add itself
+         *     currentContainerLayout {object} - object representing the configuration for this container
          * }
          *********************************************************************/
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var parent = opt.id;
-            var index = opt.index;
-            var layout = opt.currentContainerLayout;
             var result = [];
 
-            $.each(layout.fieldCollections, function (idx, fieldCollection) {
-                var tableId = "spEasyFormsSortableFields" + index + "" + idx;
-                var table = "";
+            var currentContainerList = $("<ol>");
+            opt.currentContainer.append(currentContainerList);
+            $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
+                if (!fieldCollection.name) {
+                    fieldCollection.name = fieldCollection.containerType;
+                }
+                opt.currentContainerLayout = fieldCollection;
+                opt.currentContainerParent = currentContainerList;
+                opt.currentContainer = containerCollection.appendContainer(opt);
+                fieldCollection.index = opt.currentContainer.attr("data-containerindex");
 
-                $.each(fieldCollection.fields, function (fieldIdx, field) {
-                    opt.row = containerCollection.rows[field.fieldInternalName];
-                    if (opt.row === undefined) {
-                        opt.row = {
-                            displayName: field.fieldInternalName,
-                            internalName: field.fieldInternalName,
-                            spFieldType: field.fieldInternalName,
-                            value: "",
-                            row: $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'></h3></td><td class='ms-formbody'></td></tr>"),
-                            fieldMissing: true
-                        };
+                var implementation = $.spEasyForms.utilities.jsCase(fieldCollection.containerType);
+                if (implementation in containerCollection.containerImplementations) {
+                    var impl = containerCollection.containerImplementations[implementation];
+                    if (typeof (impl.toEditor) === 'function') {
+                        opt.currentContainerParent = opt.currentContainer;
+                        var tmp = impl.toEditor(opt);
+                        $.merge(opt.fieldsInUse, tmp);
                     }
-                    table += containerCollection.createFieldRow(opt);
-                    result.push(field.fieldInternalName);
-                });
-
-                opt.trs = table;
-                opt.id = tableId;
-                opt.name = fieldCollection.name;
-                opt.tableIndex = idx;
-                table = containerCollection.createFieldCollection(opt);
-                $("#" + parent).append(table);
+                }
             });
 
             this.wireDialogEvents(opt);
-
-            var header = this.fieldCollectionsDlgTitle;
-            var prompt = this.fieldCollectionsDlgPrompt;
-            if ($("#" + parent + "AddFieldCollections").length === 0) {
-                $("#" + parent + "Delete").parent().prepend(
-                    '<button id="' + parent +
-                    'AddFieldCollections" title="Add Field Collections" ' +
-                    'class="speasyforms-containerbtn">Add Field Collections</button>');
-
-                $('#' + parent + 'AddFieldCollections').button({
-                    icons: {
-                        primary: "ui-icon-plusthick"
-                    },
-                    text: false
-                }).click(function () {
-                    $("#addFieldCollectionNames2").val("");
-                    $("#addFieldCollectionsContainerId").val(index);
-                    $("#addFieldCollectionsToContainerDialog").attr("title", header);
-                    $("label[for='addFieldCollectionNames2']").text(prompt);
-                    $("#addFieldCollectionsToContainerDialog").dialog('open');
-                    return false;
-                });
-            }
 
             return result;
         },
@@ -106,25 +72,27 @@
         toLayout: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = {
-                containerType: opt.containerType,
-                index: $(opt.container).attr("data-containerIndex"),
+                name: $(opt.container).attr("data-containername"),
+                containerType: $(opt.container).attr("data-containertype"),
+                index: $(opt.container).attr("data-containerindex"),
                 fieldCollections: []
             };
-            var tables = $(opt.container).find("table.speasyforms-sortablefields");
-            $.each(tables, function (index, table) {
-                var fieldCollection = {
-                    name: $(table).prev().
-                    find("h3.speasyforms-sortablefields").text()
+            var containers = $(opt.container).children("ol").children("li");
+            $.each(containers, function (index, current) {
+                var child = {
+                    name: $(current).attr("data-containername"),
+                    containerType: $(current).attr("data-containertype"),
+                    index: $(current).attr("data-containerindex"),
+                    fields: []
                 };
-                fieldCollection.fields = [];
-                var trs = $(table).find("tr:not(:first)");
-                $.each(trs, function (idx, tr) {
-                    var tds = $(tr).find("td");
-                    fieldCollection.fields.push({
-                        fieldInternalName: $(tds[1]).text()
-                    });
-                });
-                result.fieldCollections.push(fieldCollection);
+
+                var impl = $.spEasyForms.utilities.jsCase($(current).attr("data-containertype"));
+                if (impl in containerCollection.containerImplementations) {
+                    opt.container = current;
+                    child = containerCollection.containerImplementations[impl].toLayout(opt);
+                }
+
+                result.fieldCollections.push(child);
             });
             return result;
         },
@@ -134,11 +102,33 @@
          *********************************************************************/
         settings: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            $("#addFieldCollectionNames").val("");
+
             this.wireDialogEvents(opt);
-            $("#addMultiGroupContainerDialog").attr("title", this.fieldCollectionsDlgTitle);
-            $("label[for='addFieldCollectionNames']").text(this.fieldCollectionsDlgPrompt);
-            $("#addMultiGroupContainerDialog").dialog("open");
+
+            $("#settingsCollectionNames").show().val("");
+            $("#settingsCollectionNames").attr("title", this.fieldCollectionsDlgTitle);
+            $("label[for='settingsCollectionNames']").show().text(this.fieldCollectionsDlgPrompt);
+
+            if (!opt.currentContainerLayout) {
+                // setup for new 
+                $("#containerSettingsDialog").dialog("option", "title", "Add Container");
+                $("#settingsContainerName").val("");
+                $("#settingsContainerId").val("");
+                $("#settingsContainerType").val(opt.containerType);
+            }
+            else {
+                // or setup for edit
+                $("#containerSettingsDialog").dialog("option", "title", "Edit Container");
+                $("#settingsContainerName").val(opt.currentContainerLayout.name);
+                $("#settingsContainerId").val(opt.currentContainerLayout.index);
+                $("#settingsContainerType").val(opt.currentContainerLayout.containerType);
+                if (opt.currentContainerLayout.containerType === "FieldCollection") {
+                    $("#settingsCollectionNames").hide();
+                    $("label[for='settingsCollectionNames']").hide();
+                }
+            }
+
+            $("#containerSettingsDialog").dialog("open");
         },
 
         /*********************************************************************
@@ -148,21 +138,27 @@
         wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            var configureTabsOpts = {
+            var containerSettingsOpts = {
                 width: 450,
                 modal: true,
                 buttons: {
                     "Ok": function () {
-                        if ($("#addFieldCollectionNames").val().length > 0) {
-                            var groupNames = $("#addFieldCollectionNames").val().split('\n');
+                        if ($("#settingsContainerId").val().length === 0) {
                             var newLayout = {
-                                containerType: $("#addMultiGroupContainerType").val(),
+                                name: $("#settingsContainerName").val(),
+                                containerType: $("#settingsContainerType").val(),
                                 fieldCollections: []
                             };
+                            if (!newLayout.name) {
+                                newLayout.name = newLayout.containerType;
+                            }
+
+                            var groupNames = $("#settingsCollectionNames").val().split('\n');
                             $.each($(groupNames), function (idx, name) {
                                 if (name.trim().length > 0) {
                                     newLayout.fieldCollections.push({
                                         name: name,
+                                        containerType: "FieldCollection",
                                         fields: []
                                     });
                                 }
@@ -170,63 +166,63 @@
                             opt.currentConfig = $.spEasyForms.configManager.get(opt);
                             opt.currentConfig.layout.def.push(newLayout);
                             $.spEasyForms.configManager.set(opt);
-                            containerCollection.toEditor(opt);
-                            $("#addMultiGroupContainerDialog").dialog("close");
-                        } else {
-                            $("#addMultiGroupContainerError").html(
-                                "* You must enter at least one tab name.");
+
+                            opt.currentContainerLayout = newLayout;
+                            opt.currentContainerParent = $(".speasyforms-panel ol.speasyforms-nestedsortable");
+                            opt.currentContainer = containerCollection.appendContainer(opt);
+                            newLayout.index = opt.currentContainer.attr("data-containerindex");
+
+                            var name = $.spEasyForms.utilities.jsCase(newLayout.containerType);
+                            if (name in containerCollection.containerImplementations) {
+                                var impl = containerCollection.containerImplementations[name];
+                                if (typeof (impl.toEditor) === 'function') {
+                                    impl.toEditor(opt);
+                                }
+                            }
                         }
-                        return false;
-                    },
-                    "Cancel": function () {
-                        $("#addMultiGroupContainerDialog").dialog("close");
-                        return false;
-                    }
-                },
-                autoOpen: false
-            };
-
-            $("#addMultiGroupContainerDialog").dialog(configureTabsOpts);
-
-            var addTabsOpts = {
-                width: 450,
-                modal: true,
-                buttons: {
-                    "Ok": function () {
-                        if ($("#addFieldCollectionNames2").val().length > 0) {
-                            var tabNames = $("#addFieldCollectionNames2").val().split('\n');
-                            var index = $("#addFieldCollectionsContainerId").val();
-                            var nextFieldCollectionIndex = $("#spEasyFormsContainer" +
-                                index +
-                                " table.speasyforms-sortablefields").length;
-                            $.each(tabNames, function (idx, name) {
-                                opt.trs = "";
-                                opt.id = "spEasyFormsSortableFields" + index +
-                                    "" + nextFieldCollectionIndex++;
-                                opt.name = name;
-                                opt.tableIndex = idx;
-                                var table = containerCollection.createFieldCollection(opt);
-                                $("#spEasyFormsContainer" + index).append(table);
+                        else {
+                            var index = $("#settingsContainerId").val();
+                            var container = $("#spEasyFormsContainer" + index);
+                            if ($("#settingsContainerName").val().length > 0) {
+                                container.attr("data-containername", $("#settingsContainerName").val());
+                                container.find(".speasyforms-itemtitle:first").text($("#settingsContainerName").val());
+                            }
+                            var groupNames = $("#settingsCollectionNames").val().split('\n');
+                            $.each($(groupNames), function (idx, name) {
+                                if (name.trim().length > 0) {
+                                    opt.currentContainerLayout = {
+                                        name: name.trim(),
+                                        containerType: "FieldCollection",
+                                        fields: []
+                                    };
+                                    var table = containerCollection.createFieldCollection(opt);
+                                    if (container.find("ol").length === 0) {
+                                        container.append("<ol>");
+                                    }
+                                    opt.currentContainerParent = container.find("ol");
+                                    var newItem = containerCollection.appendContainer(opt);
+                                    newItem.find(".speasyforms-itemtitle").html(opt.currentContainerLayout.name);
+                                    newItem.find(".speasyforms-nestedsortable-content").append(table);
+                                }
                             });
                             opt.currentConfig = containerCollection.toConfig(opt);
                             $.spEasyForms.configManager.set(opt);
-                            containerCollection.toEditor(opt);
-                            $("#addFieldCollectionsToContainerDialog").dialog("close");
-                        } else {
-                            $("#addFieldCollectionsToContainerDialogError").html(
-                                "* You must enter at least one field collection name.");
                         }
+
+                        opt.refresh = $.spEasyForms.refresh.form;
+                        containerCollection.toEditor(opt);
+                        $("#containerSettingsDialog").dialog("close");
                         return false;
                     },
                     "Cancel": function () {
-                        $("#addFieldCollectionsToContainerDialog").dialog("close");
+                        $("#containerSettingsDialog").dialog("close");
                         return false;
                     }
                 },
                 autoOpen: false
             };
 
-            $("#addFieldCollectionsToContainerDialog").dialog(addTabsOpts);
+            $("#containerSettingsDialog").dialog(containerSettingsOpts);
         },
 
         appendRow: function (options) {
@@ -247,7 +243,7 @@
                                 "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
                         } else {
                             opt.rowInfo.row.find("td.ms-formbody").prepend(
-                                "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.text() + "</nobr></h3>");
+                                "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
                         }
                         tdh.attr("data-transformHidden", "true").hide();
                     }
@@ -267,17 +263,22 @@
         */
         appendFieldCollection: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            $("#" + opt.parentElement).append("<table role='presentation' width='100%' id='" + opt.collectionType + "Table" + opt.collectionIndex +
-                "' class='" + opt.tableClass + "' cellspacing='5'></table>");
-            opt.table = $("#" + opt.collectionType + "Table" + opt.collectionIndex);
-            $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
-                opt.rowInfo = containerCollection.rows[field.fieldInternalName];
-                if ($.spEasyForms.baseContainer.appendRow(opt)) {
-                    opt.result.push(field.fieldInternalName);
+            if (!opt.fieldCollection.containerType) {
+                opt.fieldCollection.containerType = "FieldCollection";
+            }
+            if (!opt.fieldCollection.name) {
+                opt.fieldCollection.name = opt.fieldCollection.containerType;
+            }
+            var name = $.spEasyForms.utilities.jsCase(opt.fieldCollection.containerType);
+            if (name in containerCollection.containerImplementations) {
+                impl = containerCollection.containerImplementations[name];
+                if (typeof (impl.transform) === "function") {
+                    opt.currentContainerLayout = opt.fieldCollection;
+                    opt.currentContainerParent = opt.parentElement;
+                    $.merge(opt.result, impl.transform(opt));
                 }
-            });
+            }
         }
-
     };
 
 })(spefjQuery);

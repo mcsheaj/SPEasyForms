@@ -124,7 +124,7 @@
                                 opt.input = $(this.responseText);
                                 var rows = $.spEasyForms.sharePointFieldRows.init(opt);
                                 $.each(rows, function(idx, row) {
-                                    var prop = row.internalName[0].toLowerCase() + row.internalName.substring(1);
+                                    var prop = $.spEasyForms.utilities.jsCase(row.internalName); 
                                     currentContext.userInformation[prop] = row.row.find("td[id^='SPField']").text().trim();
                                 });
                             }
@@ -200,8 +200,7 @@
                         opt.input = $(xData.responseText);
                         var rows = $.spEasyForms.sharePointFieldRows.init(opt);
                         $.each(rows, function(idx, row) {
-                            var prop = row.internalName[0].toLowerCase() +
-                                row.internalName.substring(1);
+                            var prop = $.spEasyForms.utilities.jsCase(row.internalName); 
                             currentContext.userInformation[prop] =
                                 row.row.find("td[id^='SPField']").text().trim();
                         });
@@ -253,7 +252,7 @@
                             function() {
                                 var name = $(this).find("Name").text().replace(
                                     "SPS-", "");
-                                name = name[0].toLowerCase() + name.substring(1);
+                                name = $.spEasyForms.utilities.jsCase(name); 
                                 user[name] = $(this).find("Value").text();
                             });
                     }

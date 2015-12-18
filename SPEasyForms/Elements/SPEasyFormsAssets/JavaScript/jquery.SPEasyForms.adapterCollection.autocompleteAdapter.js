@@ -74,12 +74,14 @@
                                 opt.adapters[result.columnNameInternal] = result;
                                 $.spEasyForms.configManager.set(opt);
                                 $('#autocompleteAdapterDialog').dialog("close");
+                                opt.refresh = $.spEasyForms.refresh.adapters;
                                 $.spEasyForms.containerCollection.toEditor(opt);
                             }
                         } else {
                             if ($("#autoCompleteHiddenFieldName").val() in opt.adapters) {
                                 delete opt.adapters[$("#autoCompleteHiddenFieldName").val()];
                                 $.spEasyForms.configManager.set(opt);
+                                opt.refresh = $.spEasyForms.refresh.adapters;
                                 $.spEasyForms.containerCollection.toEditor(opt);
                             }
                             $('#autocompleteAdapterDialog').dialog("close");

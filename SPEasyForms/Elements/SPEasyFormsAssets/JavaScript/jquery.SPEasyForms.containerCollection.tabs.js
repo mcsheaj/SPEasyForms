@@ -23,43 +23,54 @@
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.result = [];
-            var divId = "spEasyFormsTabDiv" + opt.index;
-            var divClass = "speasyforms-tabs speasyforms-tabs" + opt.index;
-            var listId = "spEasyFormsTabList" + opt.index;
-            var listClass = "speasyforms-tablist speasyforms-tablist" + opt.index;
-            var containerDiv = $("#" + opt.containerId);
-            containerDiv.append("<div id='" + divId + "' class='" + divClass +
-                "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
+
+            var divId = "spEasyFormsTabDiv" + opt.currentContainerLayout.index;
+            var divClass = "speasyforms-container speasyforms-tabs";
+            var listId = "spEasyFormsTabList" + opt.currentContainerLayout.index;
+            var listClass = "speasyforms-tablist";
+
+            var div = $("<div/>", { "id": divId, "class": divClass });
+            var list = $("<ul/>", { "id": listId, "class": listClass });
+            div.append(list);
+            opt.currentContainerParent.append(div);
+
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                opt.collectionIndex = opt.index + "" + idx;
-                opt.parentElement = "spEasyFormsTabsDiv" + opt.collectionIndex;
-                opt.labelId = "spEasyFormsTabsLabel" + opt.collectionIndex;
+                opt.collectionIndex = opt.currentContainerLayout.index + "_" + idx;
+                opt.parentElement = $("<div/>", { "id": "spEasyFormsTabsDiv" + opt.collectionIndex, "class": divClass });
                 opt.collectionType = "tab";
                 opt.fieldCollection = fieldCollection;
-                opt.tableClass = "speasyforms-tabs";
+                opt.tableClass = divClass;
 
-                var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.collectionIndex +
-                    " ui-state-default ui-corner-top";
-                $("#" + listId).append("<li id='" + opt.labelId + "' class='" + itemClass +
-                    "' role='tab' aria-controls='" + opt.parentElement + "' tabindex='0'><a href='#" + opt.parentElement + "'>" +
-                    fieldCollection.name + "</a></li>");
-                $("#" + divId).append(
-                    "<div id='" + opt.parentElement + "' aria-labelledby='" + opt.labelId + "' " +
-                    "' class='ui-tabs-panel ui-widget-content ui-corner-bottom' role='tabpanel'>");
+                var li = $("<li/>", { "id": "spEasyFormsTabsLabel" + opt.collectionIndex, "class": divClass });
+                li.append($("<a/>", { "href": "#" + "spEasyFormsTabsDiv" + opt.collectionIndex }).text(fieldCollection.name));
+                list.append(li);
+
+                div.append(opt.parentElement);
 
                 $.spEasyForms.baseContainer.appendFieldCollection(opt);
             });
-            $("#" + divId).tabs({
+
+            div.tabs({
                 beforeLoad: function (e, ui) {
                     ui.jqXHR.abort();
+                },
+                create: function (e, ui) {
+                    $(this).children("div").hide();
+                    $(this).children(".speasyforms-tabs:first").show();
+                },
+                activate: function (e, ui) {
+                    var id = ui.newTab.context.hash;
+                    $(id).parent().children("div").hide();
+                    $(id).show();
                 }
             });
+
             return opt.result;
         },
 
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.divId = "spEasyFormsTabDiv" + opt.index;
+            opt.divId = "spEasyFormsTabDiv" + opt.currentContainerLayout.index;
             var shown = 0;
             $("#" + opt.divId + " table.speasyforms-tabs").each(function () {
                 var index = $(this).parent()[0].id.replace("spEasyFormsTabsDiv", "");
@@ -70,10 +81,7 @@
                             var nextIndex = $(this).parent().next()[0].id.replace("spEasyFormsTabsDiv", "");
                             if ($("#spEasyFormsTabsLabel" + nextIndex).length > 0) {
                                 $("#" + opt.divId).tabs({
-                                    active: $("#spEasyFormsTabsLabel" + nextIndex).index(),
-                                    beforeLoad: function (e, ui) {
-                                        ui.jqXHR.abort();
-                                    }
+                                    active: $("#spEasyFormsTabsLabel" + nextIndex).index()
                                 });
                             }
                         }
@@ -94,11 +102,11 @@
 
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.divId = "spEasyFormsTabDiv" + opt.index;
+            opt.divId = "spEasyFormsTabDiv" + opt.currentContainerLayout.index;
             var selected = false;
-            $("#spEasyFormsTabDiv" + opt.index).find("table.speasyforms-tabs").each(function (idx, tab) {
+            $("#spEasyFormsTabDiv" + opt.currentContainerLayout.index).find("table.speasyforms-tabs").each(function (idx, tab) {
                 if ($(tab).find(".ms-formbody span.ms-formvalidation").length > 0) {
-                    var anchor = $("a[href$='#spEasyFormsTabsDiv" + opt.index + "" + idx + "']");
+                    var anchor = $("a[href$='#spEasyFormsTabsDiv" + opt.currentContainerLayout.index + "_" + idx + "']");
                     anchor.addClass("speasyforms-tabvalidationerror");
                     if (!selected) {
                         selected = true;
@@ -110,7 +118,7 @@
                         });
                     }
                 } else {
-                    $("a[href$='#spEasyFormsTabsDiv" + opt.index + "" + idx + "']").
+                    $("a[href$='#spEasyFormsTabsDiv" + opt.currentContainerLayout.index + "_" + idx + "']").
                     removeClass("speasyforms-tabvalidationerror");
                 }
             });

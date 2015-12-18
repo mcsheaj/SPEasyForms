@@ -23,20 +23,28 @@
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.result = [];
-            var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
+
+            var outerTableId = "spEasyFormsColumnsOuterTable" + opt.currentContainerLayout.index;
             var outerTableClass = "speasyforms-container speasyforms-columns";
-            $("#" + opt.containerId).append("<table role='presentation' id='" + outerTableId +
-                "' class='" + outerTableClass + "'><tr id='" + outerTableId + "Row'></tr></table>");
+
+            var table = $("<table/>", {
+                "role": "presentation",
+                "id": outerTableId,
+                "class": outerTableClass
+            });
+            var tableRow = $("<tr/>", { "id": outerTableId + "Row" });
+            table.append(tableRow);
+            opt.currentContainerParent.append(table);
 
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                opt.collectionIndex = opt.index + "" + idx;
-                opt.parentElement = "spEasyFormsColumnCell" + opt.collectionIndex;
+                opt.collectionIndex = opt.currentContainerLayout.index + "_" + idx;
+                opt.parentElement = $("<td/>", { "id": "spEasyFormsColumnsCell" + opt.collectionIndex });
                 opt.collectionType = "columns";
                 opt.fieldCollection = fieldCollection;
                 opt.tableClass = "speasyforms-columncell";
                 opt.headerOnTop = true;
 
-                $("#" + outerTableId + "Row").append("<td id='" + opt.parentElement + "'></td>");
+                tableRow.append(opt.parentElement);
 
                 $.spEasyForms.baseContainer.appendFieldCollection(opt);
             });
@@ -48,7 +56,7 @@
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.tables = [];
             $.each(opt.currentContainerLayout.fieldCollections, function (idx) {
-                opt.collectionIndex = opt.index + "" + idx;
+                opt.collectionIndex = opt.currentContainerLayout.index + "_" + idx;
                 opt.tables.push("columnsTable" + opt.collectionIndex);
             });
             this.evenUpTableRows(opt);

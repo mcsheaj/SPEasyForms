@@ -12,6 +12,11 @@
     />
     <CustomAction
        Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery-ui.nestedsortable.js"
+       Sequence="57158"
+    />
+    <CustomAction
+       Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.SPServices.js"
        Sequence="57161"
     />

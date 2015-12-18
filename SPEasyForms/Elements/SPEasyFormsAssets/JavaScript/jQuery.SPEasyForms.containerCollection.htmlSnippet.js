@@ -19,8 +19,8 @@
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (opt.currentContainerLayout.contents) {
-                $("#" + opt.containerId).append("<span class='speasyforms-htmlsnippet'>" +
-                    opt.currentContainerLayout.contents + "</span>");
+                opt.currentContainerParent.append(
+                    $("<span/>", { "class": "speasyforms-container speasyforms-htmlsnippet" }).html(opt.currentContainerLayout.contents));
             }
             return [];
         },
@@ -31,6 +31,7 @@
         // an opportunity to do validation tasks prior to committing an item
         preSaveItem: function () { },
 
+        // TBD need to update from here down for new design
         // draw the container in the properties pane of the settings page from the JSON
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -78,7 +79,7 @@
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = {
                 containerType: opt.containerType,
-                index: $(opt.container).attr("data-containerIndex"),
+                index: $(opt.container).attr("data-containerindex"),
                 contents: $(opt.container).find("textarea").val()
             };
             return result;
@@ -176,6 +177,7 @@
                 opt.currentConfig.layout.def.push(newLayout);
             }
             $.spEasyForms.configManager.set(opt);
+            opt.refresh = $.spEasyForms.refresh.form;
             containerCollection.toEditor(opt);
             $("#configureSnippetDialog").dialog("close");
         }

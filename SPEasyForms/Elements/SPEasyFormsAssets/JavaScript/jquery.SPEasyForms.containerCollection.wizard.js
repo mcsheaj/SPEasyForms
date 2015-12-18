@@ -15,6 +15,8 @@
 
     var wizard = {
         containerType: "Wizard",
+        fieldCollectionsDlgTitle: "Enter the names of the wizard pages, one per line",
+        fieldCollectionsDlgPrompt: "Page Names (one per line):",
         visibileRow: "tr:not([data-visibilityhidden='true']) td.ms-formbody",
 
         // transform the current form based on the configuration of this container
@@ -23,33 +25,47 @@
             opt.result = [];
 
             // create a div to hold the container
-            opt.divId = "spEasyFormsWizardDiv" + opt.index;
-            $("#" + opt.containerId).append("<div id=" + opt.divId +
-                " class='speasyforms-wizard-outer ui-widget-content" +
-                " ui-corner-all' style='margin: 10px;' role='tablist'></div>");
-            opt.outerDiv = $("#" + opt.divId);
+            opt.divId = "spEasyFormsWizardDiv" + opt.currentContainerLayout.index;
+            opt.outerDiv = $("<div/>", { 
+                "id": opt.divId,
+                "class": "speasyforms-container speasyforms-wizard-outer ui-widget-content ui-corner-all",
+                "style": "margin: 10px;",
+                "role": "tablist"});
+            opt.currentContainerParent.append(opt.outerDiv);
 
             // loop through field collections adding them as headers/tables to the container div
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
                 // create a header and a div to hold the current field collection
-                opt.collectionIndex = opt.index + "" + idx;
+                opt.collectionIndex = opt.currentContainerLayout.index + "_" + idx;
                 opt.tableClass = "speasyforms-wizard";
-                opt.outerDiv.append("<h3 id='page" + opt.collectionIndex +
-                    "' class='" + opt.tableClass + "' style='padding: 5px;' role='tab' aria-controls='pageContent" + opt.collectionIndex + "'>" +
-                    fieldCollection.name + "</h3>" +
-                    "<div id='pageContent" + opt.collectionIndex + "' aria-labelledby='page" + opt.collectionIndex + "' " +
-                    "class='speasyforms-wizard' style='padding: 10px' role='tabpanel'>" +
-                    "</div>");
+
+                var header = $("<h3/>", {
+                    "id": "page" + opt.collectionIndex,
+                    "class": opt.tableClass,
+                    "style": "padding: 5px",
+                    "role": "tab",
+                    "aria-controls": "pageContent" + opt.collectionIndex
+                }).text(fieldCollection.name);
+                opt.outerDiv.append(header);
+
+                var contentDiv = $("<div/>", {
+                    "id": "pageContent" + opt.collectionIndex,
+                    "aria-labelledby": "page" + opt.collectionIndex,
+                    "class": "speasyforms-wizard",
+                    "style": "padding: 10px",
+                    "role": "tabpanel"
+                });
+                opt.outerDiv.append(contentDiv);
 
                 // add a table to the div with the fields in the field collection
                 opt.collectionType = "page";
-                opt.parentElement = "pageContent" + opt.collectionIndex;
+                opt.parentElement = contentDiv;
                 opt.fieldCollection = fieldCollection;
                 opt.headerOnTop = true;
                 $.spEasyForms.baseContainer.appendFieldCollection(opt);
 
                 // apply styles from the jquery ui accordion
-                $("#page" + opt.collectionIndex).addClass(
+                contentDiv.addClass(
                     "ui-accordion-header ui-helper-reset ui-state-default" +
                     " ui-corner-all ui-accordion-icons");
             });
@@ -64,12 +80,12 @@
         // second stage transform, this is called after visibility rules and adapters are applied
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var headerSelector = "#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected";
+            var headerSelector = "#spEasyFormsWizardDiv" + opt.currentContainerLayout.index + " h3.speasyforms-wizard-selected";
             if ($(headerSelector).length === 0) {
                 // calculate the width and height of the pages
                 var width = 400;
                 var height = 100;
-                var tableSelector = "#spEasyFormsWizardDiv" + opt.index + " table.speasyforms-wizard";
+                var tableSelector = "#spEasyFormsWizardDiv" + opt.currentContainerLayout.index + " table.speasyforms-wizard";
                 $(tableSelector).each(function () {
                     if ($(this).closest("div").width() > width) {
                         width = $(this).closest("div").width();
@@ -82,10 +98,10 @@
                 // and show the selected page
                 $(tableSelector).each(function () {
                     $(this).closest("div").width(width).height(height); // set height/width
-                    var selectedHeaderSelector = "#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected";
+                    var selectedHeaderSelector = "#spEasyFormsWizardDiv" + opt.currentContainerLayout.index + " h3.speasyforms-wizard-selected";
                     if ($(selectedHeaderSelector).length === 0) {
                         if ($(this).find(wizard.visibileRow).length > 0) {
-                            wizard.select($(this).closest("div").prev(), $("#spEasyFormsWizardDiv" + opt.index));
+                            wizard.select($(this).closest("div").prev(), $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index));
                         }
                     }
                 });
@@ -97,11 +113,11 @@
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             // check if there are validation errors on the container
-            var errorSelector = "#spEasyFormsWizardDiv" + opt.index + " span.ms-formvalidation";
+            var errorSelector = "#spEasyFormsWizardDiv" + opt.currentContainerLayout.index + " span.ms-formvalidation";
             var error = $(errorSelector + ":first");
             if (error.length > 0) {
                 // if so, select and show the first page with validation errors
-                this.select(error.closest("div").prev(), $("#spEasyFormsWizardDiv" + opt.index));
+                this.select(error.closest("div").prev(), $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index));
             }
             wizard.setNextPrevVisibility(opt);
         },
@@ -150,14 +166,14 @@
 
             // handle previous click event
             $("#" + opt.divId + "Previous").button().click(function () {
-                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected");
+                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index + " h3.speasyforms-wizard-selected");
                 wizard.selectPrevious(opt);
                 return false;
             });
 
             // handle next click event
             $("#" + opt.divId + "Next").button().click(function () {
-                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected");
+                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index + " h3.speasyforms-wizard-selected");
                 wizard.selectNext(opt);
                 return false;
             });
@@ -231,7 +247,7 @@
         // is a VISIBLE next or previous page.
         setNextPrevVisibility: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index +
+            opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index +
                 " h3.speasyforms-wizard-selected");
             var tmp = this.getPrevious(opt);
             if (!tmp || tmp.length === 0) {

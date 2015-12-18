@@ -267,7 +267,6 @@
             if (!this.initialized) {
                 this.wireDialogEvents(opt);
             }
-            this.wireButtonEvents(opt);
             this.drawRuleTableTab(opt);
             this.initialized = true;
 
@@ -510,6 +509,7 @@
                 opt.currentConfig.visibility.def[opt.fieldName].splice(opt.index, 1);
                 $.spEasyForms.configManager.set(opt);
                 visibilityRuleCollection.drawRuleTable(opt);
+                opt.refresh = $.spEasyForms.refresh.visibility;
                 $.spEasyForms.containerCollection.toEditor(opt);
             });
 
@@ -577,6 +577,7 @@
                         opt.currentConfig = visibilityRuleCollection.toConfig(opt);
                         $.spEasyForms.configManager.set(opt);
                         visibilityRuleCollection.drawRuleTable(opt);
+                        opt.refresh = $.spEasyForms.refresh.visibility;
                         $.spEasyForms.containerCollection.toEditor(opt);
                         event.handled = true;
                     }
@@ -633,6 +634,7 @@
                             $('#addVisibilityRuleDialog').dialog("close");
                             $("#conditonalVisibilityRulesDialog").dialog("open");
                             visibilityRuleCollection.drawRuleTable(opt);
+                            opt.refresh = $.spEasyForms.refresh.visibility;
                             $.spEasyForms.containerCollection.toEditor(opt);
                         }
                         return false;
@@ -706,43 +708,6 @@
                 autocomplete("option", "source", visibilityRuleCollection.siteGroups.sort()).
                 focus();
                 $(this).parent().remove();
-            });
-        },
-
-        /*********************************************************************
-         * Wire the add rule button and make the rules sortable.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
-        wireButtonEvents: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            $("tr.speasyforms-sortablefields").each(function () {
-                var tds = $(this).find("td");
-                if (tds.length > 0) {
-                    var internalName = $(this).find("td")[1].innerHTML;
-                    $(this).append(
-                        "<td class='speasyforms-conditionalvisibility'><button id='" +
-                        internalName +
-                        "ConditionalVisibility' class='speasyforms-containerbtn " +
-                        "speasyforms-conditionalvisibility'>" +
-                        "Edit Conditional Visibility</button></td>");
-                }
-            });
-
-            $("button.speasyforms-conditionalvisibility").button({
-                icons: {
-                    primary: "ui-icon-key"
-                },
-                text: false
-            }).click(function () {
-                opt.currentConfig = $.spEasyForms.configManager.get(opt);
-                opt.fieldName = this.id.replace("ConditionalVisibility", "");
-                visibilityRuleCollection.launchDialog(opt);
-                $(".tabs-min").hide();
-                $("#tabs-min-visibility").show();
-                return false;
             });
         },
 

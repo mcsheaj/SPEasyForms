@@ -119,6 +119,7 @@
     <Content Include="Elements\SPEasyFormsAssets\Help\speasyforms_help.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.nestedsortable.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.starRatingAdapter.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jQuery.SPEasyForms.containerCollection.htmlSnippet.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" />

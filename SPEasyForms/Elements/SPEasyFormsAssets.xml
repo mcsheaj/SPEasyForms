@@ -96,6 +96,7 @@
     <Module Name="SPEasyFormsAssetsJavaScript" Url="Style Library/SPEasyFormsAssets/2015.01/JavaScript">
         <File Path="SPEasyFormsAssets\jquery.js" Url="jquery.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui.js" Url="jquery-ui.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui.js" Url="jquery-ui.nestedsortable.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPServices.js" Url="jquery.SPServices.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\ssw.js" Url="ssw.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery_SPEasyForms.min.js" Url="jquery.SPEasyForms.min.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

@@ -17,34 +17,41 @@
     ////////////////////////////////////////////////////////////////////////////
     var accordion = {
         containerType: "Accordion",
-        fieldCollectionsDlgTitle: "Enter the names of the accordion content areas, one per line",
-        fieldCollectionsDlgPrompt: "Content Area Names (one per line):",
+        fieldCollectionsDlgTitle: "Enter the names of the accordion pages, one per line",
+        fieldCollectionsDlgPrompt: "Page Names (one per line):",
 
+        /*
+        opt.currentContainerLayout
+        opt.currentContainerParent
+        */
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.result = [];
-            var divId = "spEasyFormsAccordionDiv" + opt.index;
-            var divClass =
-                "speasyforms-container speasyforms-accordion speasyforms-accordion" +
-                opt.index;
-            $("#" + opt.containerId).append("<div id='" + divId + "' class='" +
-                divClass + "'></div>");
+            var divId = "spEasyFormsAccordionDiv" + opt.currentContainerLayout.index;
+            var divClass = "speasyforms-container speasyforms-accordion";
+
+            var div = $("<div/>", { "id": divId, "class": divClass });
+            opt.currentContainerParent.append(div);
+
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                opt.collectionIndex = opt.index + "" + idx;
-                opt.parentElement = "spEasyFormsAccordionDiv" + opt.collectionIndex;
+                opt.collectionIndex = opt.currentContainerLayout.index + "_" + idx;
+                opt.parentElement = $("<div/>", { "id": opt.parentElement });
                 opt.collectionType = "accordion";
                 opt.fieldCollection = fieldCollection;
                 opt.tableClass = "speasyforms-accordion";
 
-                var headerId = "spEasyFormsAccordionHeader" + opt.collectionIndex;
-                $("#" + divId).append("<h3 id='" + headerId + "' class='" +
-                    opt.tableClass + "'>" + fieldCollection.name + "</h3>");
-                $("#" + divId).append(
-                    "<div id='" + opt.parentElement + "'></div>");
+                var header = $("<h3>", {
+                    "id": "spEasyFormsAccordionHeader" + opt.collectionIndex,
+                    "class": opt.tableClass
+                }).text(fieldCollection.name);
+
+                div.append(header);
+                div.append(opt.parentElement);
 
                 $.spEasyForms.baseContainer.appendFieldCollection(opt);
             });
-            $("#" + divId).accordion({
+
+            div.accordion({
                 heightStyle: "content",
                 active: false,
                 collapsible: true
@@ -55,7 +62,7 @@
 
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var divId = "spEasyFormsAccordionDiv" + opt.index;
+            var divId = "spEasyFormsAccordionDiv" + opt.currentContainerLayout.index;
             $("#" + divId + " table.speasyforms-accordion").each(function () {
                 var index = $(this)[0].id.replace("accordionTable", "");
                 if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
@@ -70,11 +77,11 @@
         
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var divId = "spEasyFormsAccordionDiv" + opt.index;
+            var divId = "spEasyFormsAccordionDiv" + opt.currentContainerLayout.index;
             var selected = false;
             $("#" + divId).find("table.speasyforms-accordion").each(function (idx, content) {
                 if ($(content).find(".ms-formbody span.ms-formvalidation").length > 0) {
-                    $("#spEasyFormsAccordionHeader" + opt.index + "" + idx).
+                    $("#spEasyFormsAccordionHeader" + opt.currentContainerLayout.index + "_" + idx).
                     addClass("speasyforms-accordionvalidationerror");
                     if (!selected) {
                         $("#" + divId).accordion({
@@ -85,7 +92,7 @@
                         selected = true;
                     }
                 } else {
-                    $("#spEasyFormsAccordionHeader" + opt.index + "" + idx).
+                    $("#spEasyFormsAccordionHeader" + opt.currentContainerLayout.index + "_" + idx).
                     removeClass("speasyforms-accordionvalidationerror");
                 }
             });

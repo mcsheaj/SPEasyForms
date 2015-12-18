@@ -34,6 +34,7 @@
 
         <ElementFile Location="SPEasyFormsAssets\jquery.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui.nestedsortable.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPServices.js" />
         <ElementFile Location="SPEasyFormsAssets\ssw.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.cleditor.js" />

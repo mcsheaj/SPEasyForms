@@ -166,6 +166,7 @@
                                 }
                                 $.spEasyForms.configManager.set(opt);
                                 $("#" + opt.relationship.dialogDiv).dialog("close");
+                                opt.refresh = $.spEasyForms.refresh.adapters;
                                 $.spEasyForms.containerCollection.toEditor(opt);
                             } else {
                                 var adapter = {};
@@ -194,6 +195,7 @@
                                 }
                                 $.spEasyForms.configManager.set(opt);
                                 $("#" + opt.relationship.dialogDiv).dialog("close");
+                                opt.refresh = $.spEasyForms.refresh.adapters;
                                 $.spEasyForms.containerCollection.toEditor(opt);
                             }
                             return false;

@@ -42,7 +42,9 @@
             padding: 0;
             margin: 20px;
             width: 100%;
-            /* hack fix for 2010 */
+            /* 
+            hack fix for 2010 
+            */
         }
 
         .ui-accordion .ui-accordion-content {
@@ -68,6 +70,7 @@
 
         #s4-bodyContainer {
             overflow-x: hidden;
+            padding-bottom: 0;
         }
 
         div.speasyforms-panel {
@@ -171,8 +174,7 @@
             background-color: #cdc0b0;
         }
 
-        th.speasyforms-name {
-            width: 100px;
+        th.speasyforms-fieldcell {
             font-size: .8em;
         }
 
@@ -200,9 +202,13 @@
 
         table.speasyforms-fieldstitle,
         table.speasyforms-sortablefields {
-            width: 375px;
+            width: 95%;
             margin-left: auto;
             margin-right: auto;
+        }
+
+        table.speasyforms-columncell {
+            width: 95%;
         }
 
         table.speasyforms-sortablerules {
@@ -221,9 +227,6 @@
                 cursor: move !important;
                 background: lightyellow !important;
             }
-
-        table.speasyforms-sortablecontainers {
-        }
 
         td.speasyforms-sortablecontainers {
             border: 1px solid lightblue !important;
@@ -246,13 +249,6 @@
             min-width: 0;
         }
 
-        td.speasyforms-conditionalvisibility,
-        td.speasyforms-visibilityrulebutton {
-            margin: 0;
-            padding: 0;
-            width: 1px;
-        }
-
         div.speasyforms-entitypicker {
             border: 1px solid gray;
             width: 500px;
@@ -272,10 +268,17 @@
             width: 90%;
         }
 
-        td.speasyforms-conditionalvisibility,
+        td.speasyforms-visibility,
         td.speasyforms-adapter {
-            background: #ddd;
+            margin: 0;
+            padding: 0;
             width: 1px;
+            background: #ddd;
+        }
+
+        td.speasyforms-visibility:hover,
+        td.speasyforms-adapter:hover {
+            background: #eee;
         }
 
         td.speasyforms-visibilityrulebutton {
@@ -354,10 +357,7 @@
         .speasyforms-adapterdetails {
             border: 1px solid darkgrey;
             width: 90%;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            margin-right: auto;
-            margin-left: auto;
+            margin: 10px 10px auto auto;
         }
 
         table.speasyforms-credits {
@@ -537,11 +537,11 @@
         }
 
         .speasyforms-exportimg {
-            background-position: 64px 0;
+            background-position: 32px 0;
         }
 
         .speasyforms-importimg {
-            background-position: 32px 0;
+            background-position: 64px 0;
         }
 
         .speasyforms-aboutimg {
@@ -623,10 +623,105 @@
             padding-bottom: 0;
         }
 
-        #s4-bodyContainer {
-            padding-bottom: 0;
+        ol {
+            padding-left: 20px;
         }
 
+        .speasyforms-nestedsortable-error {
+            background: #fbe3e4;
+            border-color: transparent;
+        }
+
+        ol.speasyforms-nestedsortable {
+            font-size: 13px;
+            font-family: Freesans, sans-serif;
+            padding: 5px 3px 0 3px;
+            margin: 0;
+        }
+
+            ol.speasyforms-nestedsortable,
+            ol.speasyforms-nestedsortable ol {
+                list-style-type: none;
+            }
+
+        .speasyforms-nestedsortable li {
+            border: 1px solid #d4d4d4;
+            border-color: #D4D4D4 #D4D4D4 #BCBCBC;
+        }
+
+            .speasyforms-nestedsortable li div {
+                cursor: move;
+                background-color: #ccc;
+            }
+
+        div.speasyforms-menudiv {
+                margin: 0;
+                padding: 2px;
+        }
+
+        div.speasyforms-nestedsortable-content {
+                margin: 0;
+                padding: 5px;
+        }
+
+        li.speasyforms-nestedsortable-collapsed.speasyforms-nestedsortable-hovering div {
+            border-color: #999;
+        }
+
+        .speasyforms-nestedsortable li.speasyforms-nestedsortable-collapsed > ol {
+            display: none;
+        }
+
+        .speasyforms-nestedsortable li.speasyforms-nestedsortable-branch > div > .disclose {
+            display: inline-block;
+        }
+
+        .speasyforms-nestedsortable span.ui-icon {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+        }
+
+        .speasyforms-itemtitle {
+            font-size: 16px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+
+        .speasyforms-nestedsortable-status {
+            cursor: pointer;
+        }
+
+        .speasyforms-nestedsortable-edit,
+        .speasyforms-nestedsortable-delete {
+            float: right;
+            cursor: pointer;
+        }
+
+        td.speasyforms-icon-visibility:hover,
+        td.speasyforms-icon-adapter:hover {
+            cursor: pointer;
+        }
+
+        .speasyforms-placeholder {
+            outline: 1px dashed #4183C4;
+        }
+
+        td.speasyforms-icon-visibility,
+        td.speasyforms-icon-adapter {
+            background-color: #ccc;
+        }
+
+        td.speasyforms-icon-visibility:hover,
+        td.speasyforms-icon-adapter:hover,
+        span.speasyforms-nestedsortable-edit:hover,
+        span.speasyforms-nestedsortable-delete:hover {
+            background-color: #e2face;
+        }
+
+        table.ms-formtable {
+            width: 600px;
+        }
     </style>
 </asp:Content>
 <asp:Content ContentPlaceHolderID='PlaceHolderMiniConsole' runat='server'>
@@ -638,9 +733,8 @@
 <asp:Content ContentPlaceHolderID='PlaceHolderMain' runat='server'>
     <div id='spEasyFormsBusyScreen'></div>
     <div id='spEasyFormsPanel' class='speasyforms-panel'>
-        <table id='spEasyFormsContainerTable' class='speasyforms-sortablecontainers'>
-            <tbody class='speasyforms-sortablecontainers'></tbody>
-        </table>
+        <ol class="speasyforms-nestedsortable ui-corner-all">
+        </ol>
     </div>
     <div id='spEasyFormsContent' class='speasyforms-content'>
         <div id='tabs-min'>
@@ -820,7 +914,7 @@
                     <b>Version: 2015.01</b>
                 </p>
                 <h2>The MIT License (MIT)</h2>
-                <p>Copyright (c) 2014 Joe McShea</p>
+                <p>Copyright (c) 2014-2015 Joe McShea</p>
                 <p>
                     Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
                     merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -850,6 +944,10 @@
                     <a href='http://sympmarc.com/' target='_blank' class='speasyforms-aboutlink'>Marc Anderson</a>, Licensed MIT
                 </p>
                 <p>
+                    <a href='https://github.com/ilikenwf/nestedSortable' target='_blank' class='speasyforms-aboutlink'>jQuery UI Nested Sortable v2.0</a><br />
+                    Copyright (c) 2010-2013 <a href='http://mjsarfatti.com/' target='_blank' class='speasyforms-aboutlink'>Manuele J Sarfatti</a>, Licensed MIT
+                </p>
+                <p>
                     <a href='https://github.com/molily/javascript-client-side-session-storage' target='_blank' class='speasyforms-aboutlink'>Session Storage Wrapper</a><br />
                     written by Mathias Schaefer, Licensed Public Domain
                 </p>
@@ -871,17 +969,13 @@
             <input type='text' id='fieldCollectionName' name='fieldCollectionNames' />
             <input type='hidden' id='editFieldCollectionContainerId' value='' />
         </div>
-        <div id='addMultiGroupContainerDialog' class='speasyforms-dialogdiv' title='Add Container'>
-            <label for='addFieldCollectionNames'>Field Collection Names (one per line):</label>
-            <textarea id='addFieldCollectionNames' rows='5' cols='50'></textarea>
-            <input type='hidden' id='addMultiGroupContainerType' value='' />
-            <div id='addMultiGroupContainerError' class='speasyforms-error'></div>
-        </div>
-        <div id='addFieldCollectionsToContainerDialog' class='speasyforms-dialogdiv' title='Add Field Collections'>
-            <label for='addFieldCollectionNames2'>Field Collection Names (one per line):</label>
-            <textarea id='addFieldCollectionNames2' rows='5' cols='50'></textarea>
-            <input type='hidden' id='addFieldCollectionsContainerId' value='' />
-            <div id='addFieldCollectionsToContainerDialogError' class='speasyforms-error'></div>
+        <div id='containerSettingsDialog' class='speasyforms-dialogdiv' title='Add Container'>
+            <label for='settingsContainerName'>Name:</label>
+            <input type='text' id='settingsContainerName' name='settingsContainerName' /><br />
+            <label for='settingsCollectionNames'>Field Collection Names (one per line):</label>
+            <textarea id='settingsCollectionNames' rows='5' cols='50'></textarea>
+            <input type='hidden' id='settingsContainerType' value='' />
+            <input type='hidden' id='settingsContainerId' value='' />
         </div>
         <div id='conditonalVisibilityRulesDialog' class='speasyforms-dialogdiv' title='Conditional Visibility'>
             <input type='hidden' id='conditionalVisibilityField' name='conditionalVisibilityField' value='' />
@@ -1091,6 +1185,68 @@
             </span>
             <textarea id='importedJson' rows='25' cols='80'></textarea>
         </div>
+    </div>
+    <div id='spEasyFormsTemplates' style='display:none'>
+        <ol style='list-style-type: none'>
+            <li class="speasyforms-nestedsortable-container ui-corner-all">
+                <div class="speasyforms-menudiv ui-accordion-header ui-state-default ui-corner-all">
+                    <span class="speasyforms-nestedsortable-status ui-icon  ui-icon-triangle-1-s"></span>
+                    <span>
+                        <span class="speasyforms-itemtitle"></span>
+                        <span class="speasyforms-nestedsortable-delete ui-icon ui-icon-closethick"></span>
+                        <span class="speasyforms-nestedsortable-edit ui-icon ui-icon-gear"></span>
+                    </span>
+                </div>
+            </li>
+            <li class="speasyforms-nestedsortable-fieldcollection ui-corner-all speasyforms-nestedsortable-nochildren speasyforms-nestedsortable-needsparent">
+                <div class="speasyforms-menudiv ui-accordion-header ui-state-default ui-corner-all">
+                    <span class="speasyforms-nestedsortable-status ui-icon  ui-icon-triangle-1-s"></span>
+                    <span>
+                        <span class="speasyforms-itemtitle"></span>
+                        <span class="speasyforms-nestedsortable-delete ui-icon ui-icon-closethick"></span>
+                        <span class="speasyforms-nestedsortable-edit ui-icon ui-icon-gear"></span>
+                    </span>
+                </div>
+                <div class="speasyforms-nestedsortable-content">
+                </div>
+            </li>
+            <li class="speasyforms-nestedsortable-defaultform speasyforms-nestedsortable-noparent speasyforms-nestedsortable-nochildren ui-corner-all">
+                <div class="speasyforms-menudiv ui-accordion-header ui-state-default ui-corner-all">
+                    <span class="speasyforms-nestedsortable-status ui-icon  ui-icon-triangle-1-s"></span>
+                    <span>
+                        <span class="speasyforms-itemtitle"></span>
+                    </span>
+                </div>
+                <div class="speasyforms-nestedsortable-content">
+                </div>
+            </li>
+        </ol>
+        <table class="speasyforms-sortablefields speasyforms-fieldtabletemplate">
+            <tbody class="speasyforms-sortablefields">
+                <tr>
+                    <th class="speasyforms-fieldcell">Display Name</th>
+                    <th class="speasyforms-fieldcell speasyforms-hidden">Internal Name</th>
+                    <th class="speasyforms-fieldcell speasyforms-fieldtype">Field Type</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <tbody>
+                <tr class="speasyforms-sortablefields speasyforms-fieldrowtemplate">
+                    <td class="speasyforms-sortablefields speasyforms-fieldname"></td>
+                    <td class="speasyforms-sortablefields speasyforms-fieldinternal speasyforms-hidden"></td>
+                    <td class="speasyforms-sortablefields speasyforms-fieldtype"></td>
+                    <td class="speasyforms-icon-visibility">
+                        <span class="speasyforms-icon-visibility ui-icon ui-icon-key"></span>
+                    </td>
+                    <td class="speasyforms-icon-adapter">
+                        <span class="speasyforms-icon-adapter ui-icon ui-icon-wrench"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <style type="text/css">
         #DeltaPageStatusBar {

@@ -20,6 +20,7 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.min.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery-ui.js
+..\Elements\SPEasyFormsAssets\JavaScript\jquery-ui.nestedsortable.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPServices.js
 ..\Elements\SPEasyFormsAssets\JavaScript\ssw.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.js
