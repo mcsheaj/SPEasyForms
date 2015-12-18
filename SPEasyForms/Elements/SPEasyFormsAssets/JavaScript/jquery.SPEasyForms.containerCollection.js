@@ -14,7 +14,8 @@
         visibility: 2,
         adapters: 4,
         containers: 8,
-        all: 15
+        panel: 16,
+        all: 31
     };
     var refresh = $.spEasyForms.refresh;
 
@@ -152,7 +153,7 @@
                 this.initConditionalFieldChoices(opt);
             }
 
-            if (!this.initialized || opt.refresh === refresh.all) {
+            if (!this.initialized || opt.refresh === refresh.panel) {
                 $("ol.speasyforms-nestedsortable").empty();
 
                 this.initContainers(opt);
@@ -834,27 +835,6 @@
                 }
             });
             $("#chooseContainerDialog").dialog(chooseContainerOpts);
-
-            // dialog to edit the name of a field collection
-            var editFieldsTableOpts = {
-                modal: true,
-                buttons: {
-                    "Save": function () {
-                        $("#" + $("#editFieldCollectionContainerId").val()).
-                        html($("#fieldCollectionName").val());
-                        opt.currentConfig = containerCollection.toConfig(opt);
-                        $.spEasyForms.configManager.set(opt);
-                        opt.refresh = refresh.all;
-                        containerCollection.toEditor(opt);
-                        $("#editFieldCollectionDialog").dialog("close");
-                    },
-                    "Cancel": function () {
-                        $("#editFieldCollectionDialog").dialog("close");
-                    }
-                },
-                autoOpen: false
-            };
-            $('#editFieldCollectionDialog').dialog(editFieldsTableOpts);
 
             // save confirmation dialog
             var importOpts = {

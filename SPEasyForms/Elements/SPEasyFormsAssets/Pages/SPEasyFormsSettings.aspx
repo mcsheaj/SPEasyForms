@@ -964,11 +964,6 @@
             </select>
             <div id='chooseContainerError' class='speasyforms-error'>&nbsp;</div>
         </div>
-        <div id='editFieldCollectionDialog' class='speasyforms-dialogdiv' title='Edit Field Collection Name'>
-            <label for='fieldCollectionName'>Name</label>
-            <input type='text' id='fieldCollectionName' name='fieldCollectionNames' />
-            <input type='hidden' id='editFieldCollectionContainerId' value='' />
-        </div>
         <div id='containerSettingsDialog' class='speasyforms-dialogdiv' title='Add Container'>
             <label for='settingsContainerName'>Name:</label>
             <input type='text' id='settingsContainerName' name='settingsContainerName' /><br />

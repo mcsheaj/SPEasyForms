@@ -54,7 +54,7 @@
                     if (typeof (opt.impl.toEditor) === 'function') {
                         opt.currentContainerParent = opt.currentContainer;
                         var tmp = opt.impl.toEditor(opt);
-                        $.merge(opt.fieldsInUse, tmp);
+                        $.merge(result, tmp);
                     }
                 }
             });
@@ -168,7 +168,7 @@
                             $.spEasyForms.configManager.set(opt);
 
                             opt.currentContainerLayout = newLayout;
-                            opt.currentContainerParent = $(".speasyforms-panel ol.speasyforms-nestedsortable");
+                            opt.currentContainerParent = $(".speasyforms-panel").children("ol.speasyforms-nestedsortable");
 
                             var name = $.spEasyForms.utilities.jsCase(newLayout.containerType);
                             if (name in containerCollection.containerImplementations) {
@@ -199,7 +199,7 @@
                                     if (container.find("ol").length === 0) {
                                         container.append("<ol>");
                                     }
-                                    opt.currentContainerParent = container.find("ol");
+                                    opt.currentContainerParent = container.children("ol");
                                     opt.impl = $.spEasyForms.fieldCollection;
                                     var newItem = containerCollection.appendContainer(opt);
                                     newItem.find(".speasyforms-itemtitle").html(opt.currentContainerLayout.name);
