@@ -45,15 +45,15 @@
                 }
                 opt.currentContainerLayout = fieldCollection;
                 opt.currentContainerParent = currentContainerList;
-                opt.currentContainer = containerCollection.appendContainer(opt);
-                fieldCollection.index = opt.currentContainer.attr("data-containerindex");
 
                 var implementation = $.spEasyForms.utilities.jsCase(fieldCollection.containerType);
                 if (implementation in containerCollection.containerImplementations) {
-                    var impl = containerCollection.containerImplementations[implementation];
-                    if (typeof (impl.toEditor) === 'function') {
+                    opt.impl = containerCollection.containerImplementations[implementation];
+                    opt.currentContainer = containerCollection.appendContainer(opt);
+                    fieldCollection.index = opt.currentContainer.attr("data-containerindex");
+                    if (typeof (opt.impl.toEditor) === 'function') {
                         opt.currentContainerParent = opt.currentContainer;
-                        var tmp = impl.toEditor(opt);
+                        var tmp = opt.impl.toEditor(opt);
                         $.merge(opt.fieldsInUse, tmp);
                     }
                 }
@@ -169,14 +169,14 @@
 
                             opt.currentContainerLayout = newLayout;
                             opt.currentContainerParent = $(".speasyforms-panel ol.speasyforms-nestedsortable");
-                            opt.currentContainer = containerCollection.appendContainer(opt);
-                            newLayout.index = opt.currentContainer.attr("data-containerindex");
 
                             var name = $.spEasyForms.utilities.jsCase(newLayout.containerType);
                             if (name in containerCollection.containerImplementations) {
-                                var impl = containerCollection.containerImplementations[name];
-                                if (typeof (impl.toEditor) === 'function') {
-                                    impl.toEditor(opt);
+                                opt.impl = containerCollection.containerImplementations[name];
+                                opt.currentContainer = containerCollection.appendContainer(opt);
+                                newLayout.index = opt.currentContainer.attr("data-containerindex");
+                                if (typeof (opt.impl.toEditor) === 'function') {
+                                    opt.impl.toEditor(opt);
                                 }
                             }
                         }
@@ -200,6 +200,7 @@
                                         container.append("<ol>");
                                     }
                                     opt.currentContainerParent = container.find("ol");
+                                    opt.impl = $.spEasyForms.fieldCollection;
                                     var newItem = containerCollection.appendContainer(opt);
                                     newItem.find(".speasyforms-itemtitle").html(opt.currentContainerLayout.name);
                                     newItem.find(".speasyforms-nestedsortable-content").append(table);

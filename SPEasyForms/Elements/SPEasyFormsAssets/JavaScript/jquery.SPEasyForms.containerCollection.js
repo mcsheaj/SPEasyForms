@@ -64,9 +64,17 @@
                     name = $.spEasyForms.utilities.jsCase(layout.containerType);
                     if (name in containerCollection.containerImplementations) {
                         impl = containerCollection.containerImplementations[name];
+                        var parent = (opt.prepend ? pre : post);
+                        if (layout.containerType !== $.spEasyForms.defaultFormContainer.containerType) {
+                            var div = $("<div/>", { "class": "speasyforms-container" });
+                            parent.append(div);
+                            opt.currentContainerParent = div;
+                        }
+                        else {
+                            opt.currentContainerParent = parent;
+                        }
                         if (typeof (impl.transform) === "function") {
                             opt.currentContainerLayout = layout;
-                            opt.currentContainerParent = (opt.prepend ? pre : post);
                             $.merge(fieldsInUse, impl.transform(opt));
                         }
                         if (layout.containerType === $.spEasyForms.defaultFormContainer.containerType) {
@@ -349,6 +357,7 @@
                 }
                 opt.currentContainerLayout = layout;
                 opt.currentContainerParent = $(".speasyforms-panel ol.speasyforms-nestedsortable");
+                opt.impl = containerCollection.containerImplementations[$.spEasyForms.utilities.jsCase(opt.currentContainerLayout.containerType)];
                 opt.currentContainer = containerCollection.appendContainer(opt);
                 layout.index = opt.currentContainer.attr("data-containerindex");
 

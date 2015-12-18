@@ -25,7 +25,7 @@
             opt.result = [];
 
             var divId = "spEasyFormsTabDiv" + opt.currentContainerLayout.index;
-            var divClass = "speasyforms-container speasyforms-tabs";
+            var divClass = "speasyforms-tabs";
             var listId = "spEasyFormsTabList" + opt.currentContainerLayout.index;
             var listClass = "speasyforms-tablist";
 
@@ -63,6 +63,12 @@
                     $(id).parent().children("div").hide();
                     $(id).show();
                 }
+            });
+
+            div.on("mouseup", "a.ui-tabs-anchor", function () {
+                div.tabs({
+                    active: $(this).parent().index()
+                });
             });
 
             return opt.result;

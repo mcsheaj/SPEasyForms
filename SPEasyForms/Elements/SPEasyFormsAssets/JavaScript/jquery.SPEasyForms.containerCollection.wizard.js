@@ -28,7 +28,7 @@
             opt.divId = "spEasyFormsWizardDiv" + opt.currentContainerLayout.index;
             opt.outerDiv = $("<div/>", { 
                 "id": opt.divId,
-                "class": "speasyforms-container speasyforms-wizard-outer ui-widget-content ui-corner-all",
+                "class": "speasyforms-wizard-outer ui-widget-content ui-corner-all",
                 "style": "margin: 10px;",
                 "role": "tablist"});
             opt.currentContainerParent.append(opt.outerDiv);

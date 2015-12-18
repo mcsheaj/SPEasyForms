@@ -14,15 +14,16 @@
     $.spEasyForms.fieldCollection = {
         containerType: "FieldCollection",
         cannotBeAdded: true,
+        noChildren: true,
+        needsParent: true,
 
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = [];
-
             opt.table = $("<table/>", {
                 "role": "presentation",
                 "id": opt.collectionType + "Table" + opt.collectionIndex,
-                "class": "speasyforms-fieldcollection speasyforms-container " + opt.tableClass,
+                "class": "speasyforms-fieldcollection " + opt.tableClass,
                 "cellspacing": "5"
             });
             opt.parentElement.append(opt.table);
@@ -93,6 +94,8 @@
     $.spEasyForms.defaultFormContainer = {
         containerType: "DefaultForm",
         cannotBeAdded: true,
+        noChildren: true,
+        noParent: true,
 
         transform: function () {
             return [];

@@ -1197,6 +1197,8 @@
                         <span class="speasyforms-nestedsortable-edit ui-icon ui-icon-gear"></span>
                     </span>
                 </div>
+                <div class="speasyforms-nestedsortable-content">
+                </div>
             </li>
             <li class="speasyforms-nestedsortable-fieldcollection ui-corner-all speasyforms-nestedsortable-nochildren speasyforms-nestedsortable-needsparent">
                 <div class="speasyforms-menudiv ui-accordion-header ui-state-default ui-corner-all">

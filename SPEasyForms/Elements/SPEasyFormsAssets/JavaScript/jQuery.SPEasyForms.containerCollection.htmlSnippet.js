@@ -14,13 +14,14 @@
 
     $.spEasyForms.containerCollection.containerImplementations.htmlSnippet = {
         containerType: "HtmlSnippet",
+        noChildren: true,
 
         // transform the current form based on the configuration of this container
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (opt.currentContainerLayout.contents) {
                 opt.currentContainerParent.append(
-                    $("<span/>", { "class": "speasyforms-container speasyforms-htmlsnippet" }).html(opt.currentContainerLayout.contents));
+                    $("<span/>", { "class": "speasyforms-htmlsnippet" }).html(opt.currentContainerLayout.contents));
             }
             return [];
         },

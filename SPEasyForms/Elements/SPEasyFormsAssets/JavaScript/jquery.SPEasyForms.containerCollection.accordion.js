@@ -28,7 +28,7 @@
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.result = [];
             var divId = "spEasyFormsAccordionDiv" + opt.currentContainerLayout.index;
-            var divClass = "speasyforms-container speasyforms-accordion";
+            var divClass = "speasyforms-accordion";
 
             var div = $("<div/>", { "id": divId, "class": divClass });
             opt.currentContainerParent.append(div);
@@ -54,9 +54,27 @@
             div.accordion({
                 heightStyle: "content",
                 active: false,
-                collapsible: true
+                collapsible: true,
+                activate: function (e, ui) {
+                    e.preventDefault();
+                }
             });
 
+            div.on("mouseup", "h3.speasyforms-accordion", function () {
+                div.find("h3.speasyforms-accordion").
+                    removeClass("ui-accordion-header-active").
+                    removeClass("ui-state-active").
+                    removeClass("ui-corner-top").
+                    addClass("ui-corner-all");
+                div.find(".ui-accordion-content").hide();
+
+                $(this).
+                    addClass("ui-accordion-header-active").
+                    addClass("ui-state-active").
+                    addClass("ui-corner-top").
+                    removeClass("ui-corner-all");
+                $(this).next().show();
+            });
             return opt.result;
         },
 

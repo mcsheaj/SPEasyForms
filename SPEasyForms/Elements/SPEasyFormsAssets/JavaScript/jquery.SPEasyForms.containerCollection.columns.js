@@ -25,7 +25,7 @@
             opt.result = [];
 
             var outerTableId = "spEasyFormsColumnsOuterTable" + opt.currentContainerLayout.index;
-            var outerTableClass = "speasyforms-container speasyforms-columns";
+            var outerTableClass = "speasyforms-columns";
 
             var table = $("<table/>", {
                 "role": "presentation",
