@@ -26,7 +26,7 @@
                 "class": "speasyforms-fieldcollection " + opt.tableClass,
                 "cellspacing": "5"
             });
-            opt.parentElement.append(opt.table);
+            opt.currentContainerParent.append(opt.table);
 
             $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
                 opt.rowInfo = containerCollection.rows[field.fieldInternalName];
@@ -35,6 +35,10 @@
                 }
             });
             return result;
+        },
+
+        postTransform: function(options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
         },
 
         toEditor: function (options) {
@@ -59,6 +63,9 @@
             });
 
             opt.currentContainer.find(".speasyforms-itemtitle").html(opt.currentContainerLayout.name);
+            if (opt.currentContainerLayout.name !== opt.currentContainerLayout.containerType) {
+                opt.currentContainer.find(".speasyforms-itemtype").html("&nbsp;[" + opt.currentContainerLayout.containerType + "]");
+            }
             opt.currentContainer.find(".speasyforms-nestedsortable-content").append(table);
 
             return result;

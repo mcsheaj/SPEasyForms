@@ -151,11 +151,6 @@
             display: none;
         }
 
-        .speasyforms-container {
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-
         .speasyforms-json {
             border: 1px solid lightblue;
         }
@@ -1188,11 +1183,10 @@
                     <span class="speasyforms-nestedsortable-status ui-icon  ui-icon-triangle-1-s"></span>
                     <span>
                         <span class="speasyforms-itemtitle"></span>
+                        <span class="speasyforms-itemtype"></span>
                         <span class="speasyforms-nestedsortable-delete ui-icon ui-icon-closethick"></span>
                         <span class="speasyforms-nestedsortable-edit ui-icon ui-icon-gear"></span>
                     </span>
-                </div>
-                <div class="speasyforms-nestedsortable-content">
                 </div>
             </li>
             <li class="speasyforms-nestedsortable-fieldcollection ui-corner-all speasyforms-nestedsortable-nochildren speasyforms-nestedsortable-needsparent">
@@ -1200,6 +1194,7 @@
                     <span class="speasyforms-nestedsortable-status ui-icon  ui-icon-triangle-1-s"></span>
                     <span>
                         <span class="speasyforms-itemtitle"></span>
+                        <span class="speasyforms-itemtype"></span>
                         <span class="speasyforms-nestedsortable-delete ui-icon ui-icon-closethick"></span>
                         <span class="speasyforms-nestedsortable-edit ui-icon ui-icon-gear"></span>
                     </span>
@@ -1212,6 +1207,7 @@
                     <span class="speasyforms-nestedsortable-status ui-icon  ui-icon-triangle-1-s"></span>
                     <span>
                         <span class="speasyforms-itemtitle"></span>
+                        <span class="speasyforms-itemtype"></span>
                     </span>
                 </div>
                 <div class="speasyforms-nestedsortable-content">

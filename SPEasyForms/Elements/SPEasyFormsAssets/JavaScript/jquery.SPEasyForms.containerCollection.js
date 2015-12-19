@@ -67,7 +67,12 @@
                         impl = containerCollection.containerImplementations[name];
                         var parent = (opt.prepend ? pre : post);
                         if (layout.containerType !== $.spEasyForms.defaultFormContainer.containerType) {
-                            var div = $("<div/>", { "class": "speasyforms-container" });
+                            var div = $("<div/>", {
+                                "class": "speasyforms-container",
+                                "data-containerindex": layout.index,
+                                "data-containertype": layout.containerType,
+                                "data-containername": layout.name
+                            });
                             parent.append(div);
                             opt.currentContainerParent = div;
                         }
@@ -107,7 +112,6 @@
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            /*
             function postTransformHelper(layout) {
                 if (layout.fieldCollections) {
                     $.each(layout.fieldCollections, function (i, l) {
@@ -128,7 +132,6 @@
             $.each(opt.currentConfig.layout.def, function (index, layout) {
                 postTransformHelper(layout);
             });
-            */
         },
 
         /*********************************************************************
@@ -882,7 +885,10 @@
             template.attr("data-containertype", opt.currentContainerLayout.containerType);
             template.attr("data-containername", opt.currentContainerLayout.name);
             template.find(".speasyforms-itemtitle").html(opt.currentContainerLayout.name);
-
+            if (opt.currentContainerLayout.name !== opt.currentContainerLayout.containerType) {
+                template.find(".speasyforms-itemtype").html("&nbsp;[" + opt.currentContainerLayout.containerType + "]");
+            }
+ 
             return template;
         },
 

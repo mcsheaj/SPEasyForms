@@ -203,6 +203,9 @@
                                     opt.impl = $.spEasyForms.fieldCollection;
                                     var newItem = containerCollection.appendContainer(opt);
                                     newItem.find(".speasyforms-itemtitle").html(opt.currentContainerLayout.name);
+                                    if (opt.currentContainerLayout.name !== opt.currentContainerLayout.containerType) {
+                                        newItem.find(".speasyforms-itemtype").html("&nbsp;[" + opt.currentContainerLayout.containerType + "]");
+                                    }
                                     newItem.find(".speasyforms-nestedsortable-content").append(table);
                                 }
                             });
@@ -275,7 +278,14 @@
                 impl = containerCollection.containerImplementations[name];
                 if (typeof (impl.transform) === "function") {
                     opt.currentContainerLayout = opt.fieldCollection;
-                    opt.currentContainerParent = opt.parentElement;
+                    var div = $("<div/>", {
+                        "class": "speasyforms-container",
+                        "data-containerindex": opt.currentContainerLayout.index,
+                        "data-containertype": opt.currentContainerLayout.containerType,
+                        "data-containername": opt.currentContainerLayout.name
+                    });
+                    opt.parentElement.append(div);
+                    opt.currentContainerParent = div;
                     $.merge(opt.result, impl.transform(opt));
                 }
             }
