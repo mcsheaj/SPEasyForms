@@ -37,40 +37,17 @@
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            htmlSnippet.initDialog(opt);
+            var div = $("<div/>", { "class": "speasyforms-nestedsortable-content ui-sortable-handle" });
+            var span = $("<span/>", { "class": "speasyforms-htmlsnippet" });
+            span.html(opt.currentContainerLayout.contents.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
+            div.append(span);
 
-            // add a button to edit the snippet if not already present
-            if ($("#" + opt.id + "EditSnippet" + opt.index).length === 0) {
-                $("#" + opt.id).find(".speasyforms-buttoncell").prepend(
-                    '<button id="' + opt.id + "EditSnippet" + opt.index +
-                    '" title="Edit HTML Snippet" ' +
-                    'class="speasyforms-containerbtn">Edit HTML Snippet</button>');
-
-                $('#' + opt.id + "EditSnippet" + opt.index).button({
-                    icons: {
-                        primary: "ui-icon-gear"
-                    },
-                    text: false
-                }).click(function () {
-                    $("#snippetContents").val(opt.currentContainerLayout.contents);
-                    $("#snippetContainerIndex").val($("#" + opt.id).attr("data-containerindex"));
-                    $("#configureSnippetDialog").find("iframe").contents().find("body").html(
-                        opt.currentContainerLayout.contents.replace(/<(?=\/?script)/ig, "&lt;"));
-                    if ($("#snippetContents").is(":visible")) {
-                        $("#configureSnippetDialog").find("iframe").hide();
-                    }
-                    htmlSnippet.settings(opt);
-                    return false;
-                });
-            }
+            var textarea = $("<textarea/>", { "class": "speasyforms-htmlsnippet", "style": "display:none" });
+            textarea.val(opt.currentContainerLayout.contents);
+            div.append(textarea);
 
             // put contents in a text area show the contents stripping out any scripts
-            $("#" + opt.id).append("<span class='speasyforms-sortablefields'>" +
-                opt.currentContainerLayout.contents.replace(
-                /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') + "</span>" +
-			    "<textarea  id='snippetContents" + opt.index +
-                "' rows='15' cols='80' style='display:none'>" +
-                opt.currentContainerLayout.contents + "</textarea>");
+            opt.currentContainer.append(div);
 
             return [];
         },
@@ -79,9 +56,10 @@
         toLayout: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = {
-                containerType: opt.containerType,
+                name: $(opt.container).attr("data-containername"),
+                containerType: $(opt.container).attr("data-containertype"),
                 index: $(opt.container).attr("data-containerindex"),
-                contents: $(opt.container).find("textarea").val()
+                contents: $(opt.container).find("textarea.speasyforms-htmlsnippet").val()
             };
             return result;
         },
@@ -89,46 +67,102 @@
         // launch a dialog to configue this container on the settings page 
         settings: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            if (!opt.containerIndex) {
+
+            if (!opt.currentContainerLayout) {
                 $("#snippetContents").val("");
             }
-            htmlSnippet.initDialog(opt);
-            $("#configureSnippetDialog").dialog("open");
-        },
+            else {
+                $("#snippetContents").val(opt.currentContainerLayout.contents);
+            }
 
-        // initialize the dialog with the snippet editor
-        initDialog: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
             if ($("#spEasyFormsContainerDialogs").find("#configureSnippetDialog").length === 0) {
                 $("#spEasyFormsContainerDialogs").append(
                     "<div id='configureSnippetDialog' class='speasyforms-dialogdiv' title='HTML Snippet Container'>" +
-                    "<textarea  id='snippetContents' rows='15' cols='80'></textarea>" +
-                    "<input type='hidden' name='snippetContainerIndex' id='snippetContainerIndex' value='" +
-                    (opt.containerIndex ? opt.containerIndex : '') + "'/>" +
+                    "<div style='margin-bottom:10px'>Name: <input name='snippetName' id='snippetName' type='text'></input></div>" +
+                    "<textarea  id='snippetContents' rows='15' cols='80'>" +
+                    (opt.currentContainerLayout ? opt.currentContainerLayout.contents : '') +
+                    "</textarea>" +
+                    "<span style='display:none' id='snippetContainerId'></span>" +
                     "</div>");
-                var configureSnippetOpts = {
-                    width: 830,
-                    modal: true,
-                    open: function () {
-                        htmlSnippet.initRTE();
-                    },
-                    buttons: {
-                        "Ok": function () {
-                            htmlSnippet.addOrUpdateSnippet(opt);
-                            $("#snippetContainerIndex").val("");
-                            return false;
-                        },
-                        "Cancel": function () {
-                            $("#configureSnippetDialog").dialog("close");
-                            $("#snippetContainerIndex").val("");
-                            return false;
-                        }
-                    },
-                    autoOpen: false,
-                    resizable: false
-                };
-                $("#configureSnippetDialog").dialog(configureSnippetOpts);
             }
+
+            var configureSnippetOpts = {
+                width: 830,
+                modal: true,
+                open: function () {
+                    htmlSnippet.initRTE();
+                },
+                buttons: {
+                    "Ok": function () {
+                        var containerIndex = $("#snippetContainerId").text();
+                        if (containerIndex.length > 0) {
+                            var container = $("li.speasyforms-nestedsortable-container[data-containerindex='" + containerIndex + "']");
+                            var span = container.find("span.speasyforms-htmlsnippet");
+                            var contents = $("#snippetContents").val();
+                            span.html(contents.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
+                            container.find("textarea.speasyforms-htmlsnippet").val(contents);
+                            var name = $("#snippetName").val();
+                            if (name.length > 0) {
+                                container.attr("data-containername", name);
+                                container.find(".speasyforms-itemtitle").text(name);
+                                if (name !== container.attr("data-containertype")) {
+                                    container.find(".speasyforms-itemtype").text("[HtmlSnippet]");
+                                }
+                            }
+                        }
+                        else {
+                            opt.currentContainerParent = $(".speasyforms-panel ol.speasyforms-nestedsortable");
+                            opt.currentContainerLayout = {
+                                name: ($("#snippetName").val().length > 0 ? $("#snippetName").val() : "HtmlSnippet"),
+                                containerType: "HtmlSnippet",
+                                contents: $("#snippetContents").val()
+                            };
+                            opt.impl = htmlSnippet;
+                            opt.currentContainer = containerCollection.appendContainer(opt);
+                            opt.currentContainerLayout = opt.currentContainer.attr("data-containerindex");
+
+                            var div = $("<div/>", { "class": "speasyforms-nestedsortable-content ui-sortable-handle" });
+                            var span = $("<span/>", { "class": "speasyforms-htmlsnippet" });
+                            span.html($("#snippetContents").val().replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
+                            div.append(span);
+
+                            var textarea = $("<textarea/>", { "class": "speasyforms-htmlsnippet", "style": "display:none" });
+                            textarea.val($("#snippetContents").val());
+                            div.append(textarea);
+
+                            // put contents in a text area show the contents stripping out any scripts
+                            opt.currentContainer.append(div);
+
+                        }
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        $.spEasyForms.configManager.set(opt);
+                        opt.refresh = $.spEasyForms.refresh.form;
+                        containerCollection.toEditor(opt);
+                        $("#configureSnippetDialog").dialog("close");
+                        return false;
+                    },
+                    "Cancel": function () {
+                        $("#configureSnippetDialog").dialog("close");
+                        return false;
+                    }
+                },
+                autoOpen: false,
+                resizable: false
+            };
+            $("#configureSnippetDialog").dialog(configureSnippetOpts);
+
+            if (opt.currentContainerLayout) {
+                $("#snippetContainerId").text(opt.currentContainerLayout.index);
+                $("#snippetName").val(opt.currentContainerLayout.name);
+            }
+            else {
+                $("#snippetContainerId").text("");
+                $("#snippetName").val("");
+            }
+
+            $("#configureSnippetDialog").dialog("open");
+            $("#snippetContents").hide();
+            $("div[buttonname='source']").css({ "background-color": "transparent" });
         },
 
         // initialize the text area in the dialog with cleditor
@@ -156,31 +190,6 @@
                 ed[0].refresh(ed);
             }
             $(".cleditorToolbar").height(25);
-        },
-
-        // callback for the OK button
-        addOrUpdateSnippet: function (opt) {
-            opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            var containerIndex = $("#snippetContainerIndex").val();
-            if (containerIndex) {
-                $.each(opt.currentConfig.layout.def, function (idx, container) {
-                    if (container.index.toString() === containerIndex.toString()) {
-                        container.contents = $("#snippetContents").val();
-                        return false;
-                    }
-                });
-            }
-            else {
-                var newLayout = {
-                    containerType: htmlSnippet.containerType,
-                    contents: $("#snippetContents").val()
-                };
-                opt.currentConfig.layout.def.push(newLayout);
-            }
-            $.spEasyForms.configManager.set(opt);
-            opt.refresh = $.spEasyForms.refresh.form;
-            containerCollection.toEditor(opt);
-            $("#configureSnippetDialog").dialog("close");
         }
     };
     var htmlSnippet = $.spEasyForms.containerCollection.containerImplementations.htmlSnippet;

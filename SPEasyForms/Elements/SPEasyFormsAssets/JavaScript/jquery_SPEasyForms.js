@@ -26971,6 +26971,911 @@ var tooltip = $.widget( "ui.tooltip", {
 
 }));
 
+///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery-ui.nestedsortable.js
+/*
+ * jQuery UI Nested Sortable
+ * v 2.0 / 29 oct 2012
+ * http://mjsarfatti.com/sandbox/nestedSortable
+ *
+ * Depends on:
+ *	 jquery.ui.sortable.js 1.10+
+ *
+ * Copyright (c) 2010-2013 Manuele J Sarfatti
+ * Licensed under the MIT License
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+(function (factory) {
+    "use strict";
+
+    var define = window.define;
+
+    if (typeof define === "function" && define.amd) {
+
+        // AMD. Register as an anonymous module.
+        define([
+			"jquery",
+			"jquery-ui/sortable"
+        ], factory);
+    } else {
+
+        // Browser globals
+        factory(jQuery);
+    }
+}(function ($) {
+    "use strict";
+
+    function isOverAxis(x, reference, size) {
+        return (x > reference) && (x < (reference + size));
+    }
+
+    $.widget("mjs.nestedSortable", $.extend({}, $.ui.sortable.prototype, {
+
+        options: {
+            disableParentChange: false,
+            doNotClear: false,
+            expandOnHover: 700,
+            isAllowed: function () { return true; },
+            isTree: false,
+            listType: "ol",
+            maxLevels: 0,
+            protectRoot: false,
+            rootID: null,
+            rtl: false,
+            startCollapsed: false,
+            tabSize: 20,
+
+            branchClass: "mjs-nestedSortable-branch",
+            collapsedClass: "mjs-nestedSortable-collapsed",
+            disableNestingClass: "mjs-nestedSortable-no-nesting",
+            errorClass: "mjs-nestedSortable-error",
+            expandedClass: "mjs-nestedSortable-expanded",
+            hoveringClass: "mjs-nestedSortable-hovering",
+            leafClass: "mjs-nestedSortable-leaf",
+            disabledClass: "mjs-nestedSortable-disabled"
+        },
+
+        _create: function () {
+            var self = this,
+				err;
+
+            this.element.data("ui-sortable", this.element.data("mjs-nestedSortable"));
+
+            // mjs - prevent browser from freezing if the HTML is not correct
+            if (!this.element.is(this.options.listType)) {
+                err = "nestedSortable: " +
+					"Please check that the listType option is set to your actual list type";
+
+                throw new Error(err);
+            }
+
+            // if we have a tree with expanding/collapsing functionality,
+            // force 'intersect' tolerance method
+            if (this.options.isTree && this.options.expandOnHover) {
+                this.options.tolerance = "intersect";
+            }
+
+            $.ui.sortable.prototype._create.apply(this, arguments);
+
+            // prepare the tree by applying the right classes
+            // (the CSS is responsible for actual hide/show functionality)
+            if (this.options.isTree) {
+                $(this.items).each(function () {
+                    var $li = this.item,
+						hasCollapsedClass = $li.hasClass(self.options.collapsedClass),
+						hasExpandedClass = $li.hasClass(self.options.expandedClass);
+
+                    if ($li.children(self.options.listType).length) {
+                        $li.addClass(self.options.branchClass);
+                        // expand/collapse class only if they have children
+
+                        if (!hasCollapsedClass && !hasExpandedClass) {
+                            if (self.options.startCollapsed) {
+                                $li.addClass(self.options.collapsedClass);
+                            } else {
+                                $li.addClass(self.options.expandedClass);
+                            }
+                        }
+                    } else {
+                        $li.addClass(self.options.leafClass);
+                    }
+                });
+            }
+        },
+
+        _destroy: function () {
+            this.element
+				.removeData("mjs-nestedSortable")
+				.removeData("ui-sortable");
+            return $.ui.sortable.prototype._destroy.apply(this, arguments);
+        },
+
+        _mouseDrag: function (event) {
+            var i,
+				item,
+				itemElement,
+				intersection,
+				self = this,
+				o = this.options,
+				scrolled = false,
+				$document = $(document),
+				previousTopOffset,
+				parentItem,
+				level,
+				childLevels,
+				itemAfter,
+				itemBefore,
+				newList,
+				method,
+				a,
+				previousItem,
+				nextItem,
+				helperIsNotSibling;
+
+            //Compute the helpers position
+            this.position = this._generatePosition(event);
+            this.positionAbs = this._convertPositionTo("absolute");
+
+            if (!this.lastPositionAbs) {
+                this.lastPositionAbs = this.positionAbs;
+            }
+
+            //Do scrolling
+            if (this.options.scroll) {
+                if (this.scrollParent[0] !== document && this.scrollParent[0].tagName !== "HTML") {
+
+                    if (
+						(
+							this.overflowOffset.top +
+							this.scrollParent[0].offsetHeight
+						) -
+						event.pageY <
+						o.scrollSensitivity
+					) {
+                        scrolled = this.scrollParent.scrollTop() + o.scrollSpeed;
+                        this.scrollParent.scrollTop(scrolled);
+                    } else if (
+						event.pageY -
+						this.overflowOffset.top <
+						o.scrollSensitivity
+					) {
+                        scrolled = this.scrollParent.scrollTop() - o.scrollSpeed;
+                        this.scrollParent.scrollTop(scrolled);
+                    }
+
+                    if (
+						(
+							this.overflowOffset.left +
+							this.scrollParent[0].offsetWidth
+						) -
+						event.pageX <
+						o.scrollSensitivity
+					) {
+                        scrolled = this.scrollParent.scrollLeft() + o.scrollSpeed;
+                        this.scrollParent.scrollLeft(scrolled);
+                    } else if (
+						event.pageX -
+						this.overflowOffset.left <
+						o.scrollSensitivity
+					) {
+                        scrolled = this.scrollParent.scrollLeft() - o.scrollSpeed;
+                        this.scrollParent.scrollLeft(scrolled);
+                    }
+
+                } else {
+
+                    if (
+						event.pageY -
+						$document.scrollTop() <
+						o.scrollSensitivity
+					) {
+                        scrolled = $document.scrollTop() - o.scrollSpeed;
+                        $document.scrollTop(scrolled);
+                    } else if (
+						$(window).height() -
+						(
+							event.pageY -
+							$document.scrollTop()
+						) <
+						o.scrollSensitivity
+					) {
+                        scrolled = $document.scrollTop() + o.scrollSpeed;
+                        $document.scrollTop(scrolled);
+                    }
+
+                    if (
+						event.pageX -
+						$document.scrollLeft() <
+						o.scrollSensitivity
+					) {
+                        scrolled = $document.scrollLeft() - o.scrollSpeed;
+                        $document.scrollLeft(scrolled);
+                    } else if (
+						$(window).width() -
+						(
+							event.pageX -
+							$document.scrollLeft()
+						) <
+						o.scrollSensitivity
+					) {
+                        scrolled = $document.scrollLeft() + o.scrollSpeed;
+                        $document.scrollLeft(scrolled);
+                    }
+
+                }
+
+                if (scrolled !== false && $.ui.ddmanager && !o.dropBehaviour) {
+                    $.ui.ddmanager.prepareOffsets(this, event);
+                }
+            }
+
+            //Regenerate the absolute position used for position checks
+            this.positionAbs = this._convertPositionTo("absolute");
+
+            // mjs - find the top offset before rearrangement,
+            previousTopOffset = this.placeholder.offset().top;
+
+            //Set the helper position
+            if (!this.options.axis || this.options.axis !== "y") {
+                this.helper[0].style.left = this.position.left + "px";
+            }
+            if (!this.options.axis || this.options.axis !== "x") {
+                this.helper[0].style.top = (this.position.top) + "px";
+            }
+
+            // mjs - check and reset hovering state at each cycle
+            this.hovering = this.hovering ? this.hovering : null;
+            this.mouseentered = this.mouseentered ? this.mouseentered : false;
+
+            // mjs - let's start caching some variables
+            (function () {
+                var _parentItem = this.placeholder.parent().parent();
+                if (_parentItem && _parentItem.closest(".ui-sortable").length) {
+                    parentItem = _parentItem;
+                }
+            }.call(this));
+
+            level = this._getLevel(this.placeholder);
+            childLevels = this._getChildLevels(this.helper);
+            newList = document.createElement(o.listType);
+
+            //Rearrange
+            for (i = this.items.length - 1; i >= 0; i--) {
+
+                //Cache variables and intersection, continue if no intersection
+                item = this.items[i];
+                itemElement = item.item[0];
+                intersection = this._intersectsWithPointer(item);
+                if (!intersection) {
+                    continue;
+                }
+
+                // Only put the placeholder inside the current Container, skip all
+                // items form other containers. This works because when moving
+                // an item from one container to another the
+                // currentContainer is switched before the placeholder is moved.
+                //
+                // Without this moving items in "sub-sortables" can cause the placeholder to jitter
+                // beetween the outer and inner container.
+                if (item.instance !== this.currentContainer) {
+                    continue;
+                }
+
+                // No action if intersected item is disabled
+                // and the element above or below in the direction we're going is also disabled
+                if (itemElement.className.indexOf(o.disabledClass) !== -1) {
+                    // Note: intersection hardcoded direction values from
+                    // jquery.ui.sortable.js:_intersectsWithPointer
+                    if (intersection === 2) {
+                        // Going down
+                        itemAfter = this.items[i + 1];
+                        if (itemAfter && itemAfter.item.hasClass(o.disabledClass)) {
+                            continue;
+                        }
+
+                    } else if (intersection === 1) {
+                        // Going up
+                        itemBefore = this.items[i - 1];
+                        if (itemBefore && itemBefore.item.hasClass(o.disabledClass)) {
+                            continue;
+                        }
+                    }
+                }
+
+                method = intersection === 1 ? "next" : "prev";
+
+                // cannot intersect with itself
+                // no useless actions that have been done before
+                // no action if the item moved is the parent of the item checked
+                if (itemElement !== this.currentItem[0] &&
+					this.placeholder[method]()[0] !== itemElement &&
+					!$.contains(this.placeholder[0], itemElement) &&
+					(
+						this.options.type === "semi-dynamic" ?
+							!$.contains(this.element[0], itemElement) :
+							true
+					)
+				) {
+
+                    // mjs - we are intersecting an element:
+                    // trigger the mouseenter event and store this state
+                    if (!this.mouseentered) {
+                        $(itemElement).mouseenter();
+                        this.mouseentered = true;
+                    }
+
+                    // mjs - if the element has children and they are hidden,
+                    // show them after a delay (CSS responsible)
+                    if (o.isTree && $(itemElement).hasClass(o.collapsedClass) && o.expandOnHover) {
+                        if (!this.hovering) {
+                            $(itemElement).addClass(o.hoveringClass);
+                            this.hovering = window.setTimeout(function () {
+                                $(itemElement)
+									.removeClass(o.collapsedClass)
+									.addClass(o.expandedClass);
+
+                                self.refreshPositions();
+                                self._trigger("expand", event, self._uiHash());
+                            }, o.expandOnHover);
+                        }
+                    }
+
+                    this.direction = intersection === 1 ? "down" : "up";
+
+                    // mjs - rearrange the elements and reset timeouts and hovering state
+                    if (this.options.tolerance === "pointer" || this._intersectsWithSides(item)) {
+                        $(itemElement).mouseleave();
+                        this.mouseentered = false;
+                        $(itemElement).removeClass(o.hoveringClass);
+                        if (this.hovering) {
+                            window.clearTimeout(this.hovering);
+                        }
+                        this.hovering = null;
+
+                        // mjs - do not switch container if
+                        // it's a root item and 'protectRoot' is true
+                        // or if it's not a root item but we are trying to make it root
+                        if (o.protectRoot &&
+							!(
+								this.currentItem[0].parentNode === this.element[0] &&
+                            // it's a root item
+								itemElement.parentNode !== this.element[0]
+                            // it's intersecting a non-root item
+							)
+						) {
+                            if (this.currentItem[0].parentNode !== this.element[0] &&
+								itemElement.parentNode === this.element[0]
+							) {
+
+                                if (!$(itemElement).children(o.listType).length) {
+                                    itemElement.appendChild(newList);
+                                    if (o.isTree) {
+                                        $(itemElement)
+											.removeClass(o.leafClass)
+											.addClass(o.branchClass + " " + o.expandedClass);
+                                    }
+                                }
+
+                                if (this.direction === "down") {
+                                    a = $(itemElement).prev().children(o.listType);
+                                } else {
+                                    a = $(itemElement).children(o.listType);
+                                }
+
+                                if (a[0] !== undefined) {
+                                    this._rearrange(event, null, a);
+                                }
+
+                            } else {
+                                this._rearrange(event, item);
+                            }
+                        } else if (!o.protectRoot) {
+                            this._rearrange(event, item);
+                        }
+                    } else {
+                        break;
+                    }
+
+                    // Clear emtpy ul's/ol's
+                    this._clearEmpty(itemElement);
+
+                    this._trigger("change", event, this._uiHash());
+                    break;
+                }
+            }
+
+            // mjs - to find the previous sibling in the list,
+            // keep backtracking until we hit a valid list item.
+            (function () {
+                var _previousItem = this.placeholder.prev();
+                if (_previousItem.length) {
+                    previousItem = _previousItem;
+                } else {
+                    previousItem = null;
+                }
+            }.call(this));
+
+            if (previousItem != null) {
+                while (
+					previousItem[0].nodeName.toLowerCase() !== "li" ||
+					previousItem[0].className.indexOf(o.disabledClass) !== -1 ||
+					previousItem[0] === this.currentItem[0] ||
+					previousItem[0] === this.helper[0]
+				) {
+                    if (previousItem[0].previousSibling) {
+                        previousItem = $(previousItem[0].previousSibling);
+                    } else {
+                        previousItem = null;
+                        break;
+                    }
+                }
+            }
+
+            // mjs - to find the next sibling in the list,
+            // keep stepping forward until we hit a valid list item.
+            (function () {
+                var _nextItem = this.placeholder.next();
+                if (_nextItem.length) {
+                    nextItem = _nextItem;
+                } else {
+                    nextItem = null;
+                }
+            }.call(this));
+
+            if (nextItem != null) {
+                while (
+					nextItem[0].nodeName.toLowerCase() !== "li" ||
+					nextItem[0].className.indexOf(o.disabledClass) !== -1 ||
+					nextItem[0] === this.currentItem[0] ||
+					nextItem[0] === this.helper[0]
+				) {
+                    if (nextItem[0].nextSibling) {
+                        nextItem = $(nextItem[0].nextSibling);
+                    } else {
+                        nextItem = null;
+                        break;
+                    }
+                }
+            }
+
+            this.beyondMaxLevels = 0;
+
+            // mjs - if the item is moved to the left, send it one level up
+            // but only if it's at the bottom of the list
+            if (parentItem != null &&
+				nextItem == null &&
+				!(o.protectRoot && parentItem[0].parentNode == this.element[0]) &&
+				(
+					o.rtl &&
+					(
+						this.positionAbs.left +
+						this.helper.outerWidth() > parentItem.offset().left +
+						parentItem.outerWidth()
+					) ||
+					!o.rtl && (this.positionAbs.left < parentItem.offset().left)
+				)
+			) {
+
+                parentItem.after(this.placeholder[0]);
+                helperIsNotSibling = !parentItem
+											.children(o.listItem)
+											.children("li:visible:not(.ui-sortable-helper)")
+											.length;
+                if (o.isTree && helperIsNotSibling) {
+                    parentItem
+						.removeClass(this.options.branchClass + " " + this.options.expandedClass)
+						.addClass(this.options.leafClass);
+                }
+                if (typeof parentItem !== 'undefined')
+                    this._clearEmpty(parentItem[0]);
+                this._trigger("change", event, this._uiHash());
+                // mjs - if the item is below a sibling and is moved to the right,
+                // make it a child of that sibling
+            } else if (previousItem != null &&
+				!previousItem.hasClass(o.disableNestingClass) &&
+				(
+					previousItem.children(o.listType).length &&
+					previousItem.children(o.listType).is(":visible") ||
+					!previousItem.children(o.listType).length
+				) &&
+				!(o.protectRoot && this.currentItem[0].parentNode === this.element[0]) &&
+				(
+					o.rtl &&
+					(
+						this.positionAbs.left +
+						this.helper.outerWidth() <
+						previousItem.offset().left +
+						previousItem.outerWidth() -
+						o.tabSize
+					) ||
+					!o.rtl &&
+					(this.positionAbs.left > previousItem.offset().left + o.tabSize)
+				)
+			) {
+
+                this._isAllowed(previousItem, level, level + childLevels + 1);
+
+                if (!previousItem.children(o.listType).length) {
+                    previousItem[0].appendChild(newList);
+                    if (o.isTree) {
+                        previousItem
+							.removeClass(o.leafClass)
+							.addClass(o.branchClass + " " + o.expandedClass);
+                    }
+                }
+
+                // mjs - if this item is being moved from the top, add it to the top of the list.
+                if (previousTopOffset && (previousTopOffset <= previousItem.offset().top)) {
+                    previousItem.children(o.listType).prepend(this.placeholder);
+                } else {
+                    // mjs - otherwise, add it to the bottom of the list.
+                    previousItem.children(o.listType)[0].appendChild(this.placeholder[0]);
+                }
+                if (typeof parentItem !== 'undefined')
+                    this._clearEmpty(parentItem[0]);
+                this._trigger("change", event, this._uiHash());
+            } else {
+                this._isAllowed(parentItem, level, level + childLevels);
+            }
+
+            //Post events to containers
+            this._contactContainers(event);
+
+            //Interconnect with droppables
+            if ($.ui.ddmanager) {
+                $.ui.ddmanager.drag(this, event);
+            }
+
+            //Call callbacks
+            this._trigger("sort", event, this._uiHash());
+
+            this.lastPositionAbs = this.positionAbs;
+            return false;
+
+        },
+
+        _mouseStop: function (event) {
+            // mjs - if the item is in a position not allowed, send it back
+            if (this.beyondMaxLevels) {
+
+                this.placeholder.removeClass(this.options.errorClass);
+
+                if (this.domPosition.prev) {
+                    $(this.domPosition.prev).after(this.placeholder);
+                } else {
+                    $(this.domPosition.parent).prepend(this.placeholder);
+                }
+
+                this._trigger("revert", event, this._uiHash());
+
+            }
+
+            // mjs - clear the hovering timeout, just to be sure
+            $("." + this.options.hoveringClass)
+				.mouseleave()
+				.removeClass(this.options.hoveringClass);
+
+            this.mouseentered = false;
+            if (this.hovering) {
+                window.clearTimeout(this.hovering);
+            }
+            this.hovering = null;
+
+            this._relocate_event = event;
+            this._pid_current = $(this.domPosition.parent).parent().attr("id");
+            this._sort_current = this.domPosition.prev ? $(this.domPosition.prev).next().index() : 0;
+            $.ui.sortable.prototype._mouseStop.apply(this, arguments); //asybnchronous execution, @see _clear for the relocate event.
+        },
+
+        // mjs - this function is slightly modified
+        // to make it easier to hover over a collapsed element and have it expand
+        _intersectsWithSides: function (item) {
+
+            var half = this.options.isTree ? .8 : .5,
+				isOverBottomHalf = isOverAxis(
+					this.positionAbs.top + this.offset.click.top,
+					item.top + (item.height * half),
+					item.height
+				),
+				isOverTopHalf = isOverAxis(
+					this.positionAbs.top + this.offset.click.top,
+					item.top - (item.height * half),
+					item.height
+				),
+				isOverRightHalf = isOverAxis(
+					this.positionAbs.left + this.offset.click.left,
+					item.left + (item.width / 2),
+					item.width
+				),
+				verticalDirection = this._getDragVerticalDirection(),
+				horizontalDirection = this._getDragHorizontalDirection();
+
+            if (this.floating && horizontalDirection) {
+                return (
+					(horizontalDirection === "right" && isOverRightHalf) ||
+					(horizontalDirection === "left" && !isOverRightHalf)
+				);
+            } else {
+                return verticalDirection && (
+					(verticalDirection === "down" && isOverBottomHalf) ||
+					(verticalDirection === "up" && isOverTopHalf)
+				);
+            }
+
+        },
+
+        _contactContainers: function () {
+
+            if (this.options.protectRoot && this.currentItem[0].parentNode === this.element[0]) {
+                return;
+            }
+
+            $.ui.sortable.prototype._contactContainers.apply(this, arguments);
+
+        },
+
+        _clear: function () {
+            var i,
+				item;
+
+            $.ui.sortable.prototype._clear.apply(this, arguments);
+
+            //relocate event
+            if (!(this._pid_current === this._uiHash().item.parent().parent().attr("id") &&
+				this._sort_current === this._uiHash().item.index())) {
+                this._trigger("relocate", this._relocate_event, this._uiHash());
+            }
+
+            // mjs - clean last empty ul/ol
+            for (i = this.items.length - 1; i >= 0; i--) {
+                item = this.items[i].item[0];
+                this._clearEmpty(item);
+            }
+
+        },
+
+        serialize: function (options) {
+
+            var o = $.extend({}, this.options, options),
+				items = this._getItemsAsjQuery(o && o.connected),
+				str = [];
+
+            $(items).each(function () {
+                var res = ($(o.item || this).attr(o.attribute || "id") || "")
+						.match(o.expression || (/(.+)[-=_](.+)/)),
+					pid = ($(o.item || this).parent(o.listType)
+						.parent(o.items)
+						.attr(o.attribute || "id") || "")
+						.match(o.expression || (/(.+)[-=_](.+)/));
+
+                if (res) {
+                    str.push(
+						(
+							(o.key || res[1]) +
+							"[" +
+							(o.key && o.expression ? res[1] : res[2]) + "]"
+						) +
+						"=" +
+						(pid ? (o.key && o.expression ? pid[1] : pid[2]) : o.rootID));
+                }
+            });
+
+            if (!str.length && o.key) {
+                str.push(o.key + "=");
+            }
+
+            return str.join("&");
+
+        },
+
+        toHierarchy: function (options) {
+
+            var o = $.extend({}, this.options, options),
+				ret = [];
+
+            $(this.element).children(o.items).each(function () {
+                var level = _recursiveItems(this);
+                ret.push(level);
+            });
+
+            return ret;
+
+            function _recursiveItems(item) {
+                var id = ($(item).attr(o.attribute || "id") || "").match(o.expression || (/(.+)[-=_](.+)/)),
+					currentItem;
+                if (id) {
+                    currentItem = {
+                        "id": id[2]
+                    };
+
+                    if ($(item).children(o.listType).children(o.items).length > 0) {
+                        currentItem.children = [];
+                        $(item).children(o.listType).children(o.items).each(function () {
+                            var level = _recursiveItems(this);
+                            currentItem.children.push(level);
+                        });
+                    }
+                    return currentItem;
+                }
+            }
+        },
+
+        toArray: function (options) {
+
+            var o = $.extend({}, this.options, options),
+				sDepth = o.startDepthCount || 0,
+				ret = [],
+				left = 1;
+
+            if (!o.excludeRoot) {
+                ret.push({
+                    "item_id": o.rootID,
+                    "parent_id": null,
+                    "depth": sDepth,
+                    "left": left,
+                    "right": ($(o.items, this.element).length + 1) * 2
+                });
+                left++;
+            }
+
+            $(this.element).children(o.items).each(function () {
+                left = _recursiveArray(this, sDepth + 1, left);
+            });
+
+            ret = ret.sort(function (a, b) { return (a.left - b.left); });
+
+            return ret;
+
+            function _recursiveArray(item, depth, _left) {
+
+                var right = _left + 1,
+					id,
+					pid,
+					parentItem;
+
+                if ($(item).children(o.listType).children(o.items).length > 0) {
+                    depth++;
+                    $(item).children(o.listType).children(o.items).each(function () {
+                        right = _recursiveArray($(this), depth, right);
+                    });
+                    depth--;
+                }
+
+                id = ($(item).attr(o.attribute || "id")).match(o.expression || (/(.+)[-=_](.+)/));
+
+                if (depth === sDepth + 1) {
+                    pid = o.rootID;
+                } else {
+                    parentItem = ($(item).parent(o.listType)
+											.parent(o.items)
+											.attr(o.attribute || "id"))
+											.match(o.expression || (/(.+)[-=_](.+)/));
+                    pid = parentItem[2];
+                }
+
+                if (id) {
+                    ret.push({
+                        "item_id": id[2],
+                        "parent_id": pid,
+                        "depth": depth,
+                        "left": _left,
+                        "right": right
+                    });
+                }
+
+                _left = right + 1;
+                return _left;
+            }
+
+        },
+
+        _clearEmpty: function (item) {
+            function replaceClass(elem, search, replace, swap) {
+                if (swap) {
+                    search = [replace, replace = search][0];
+                }
+
+                $(elem).removeClass(search).addClass(replace);
+            }
+
+            var o = this.options,
+				childrenList = $(item).children(o.listType),
+				hasChildren = childrenList.is(':not(:empty)');
+
+            var doNotClear =
+				o.doNotClear ||
+				hasChildren ||
+				o.protectRoot && $(item)[0] === this.element[0];
+
+            if (o.isTree) {
+                replaceClass(item, o.branchClass, o.leafClass, doNotClear);
+
+                if (doNotClear && hasChildren) {
+                    replaceClass(item, o.collapsedClass, o.expandedClass);
+                }
+            }
+
+            if (!doNotClear) {
+                childrenList.remove();
+            }
+        },
+
+        _getLevel: function (item) {
+
+            var level = 1,
+				list;
+
+            if (this.options.listType) {
+                list = item.closest(this.options.listType);
+                while (list && list.length > 0 && !list.is(".ui-sortable")) {
+                    level++;
+                    list = list.parent().closest(this.options.listType);
+                }
+            }
+
+            return level;
+        },
+
+        _getChildLevels: function (parent, depth) {
+            var self = this,
+				o = this.options,
+				result = 0;
+            depth = depth || 0;
+
+            $(parent).children(o.listType).children(o.items).each(function (index, child) {
+                result = Math.max(self._getChildLevels(child, depth + 1), result);
+            });
+
+            return depth ? result + 1 : result;
+        },
+
+        _isAllowed: function (parentItem, level, levels) {
+            var o = this.options,
+				// this takes into account the maxLevels set to the recipient list
+				maxLevels = this
+					.placeholder
+					.closest(".ui-sortable")
+					.nestedSortable("option", "maxLevels"),
+
+				// Check if the parent has changed to prevent it, when o.disableParentChange is true
+				oldParent = this.currentItem.parent().parent(),
+				disabledByParentchange = o.disableParentChange && (
+					//From somewhere to somewhere else, except the root
+					typeof parentItem !== 'undefined' && !oldParent.is(parentItem) ||
+					typeof parentItem === 'undefined' && oldParent.is("li")	//From somewhere to the root
+				);
+            // mjs - is the root protected?
+            // mjs - are we nesting too deep?
+            if (
+				disabledByParentchange ||
+				!o.isAllowed(this.placeholder, parentItem, this.currentItem)
+			) {
+                this.placeholder.addClass(o.errorClass);
+                if (maxLevels < levels && maxLevels !== 0) {
+                    this.beyondMaxLevels = levels - maxLevels;
+                } else {
+                    this.beyondMaxLevels = 1;
+                }
+            } else {
+                if (maxLevels < levels && maxLevels !== 0) {
+                    this.placeholder.addClass(o.errorClass);
+                    this.beyondMaxLevels = levels - maxLevels;
+                } else {
+                    this.placeholder.removeClass(o.errorClass);
+                    this.beyondMaxLevels = 0;
+                }
+            }
+        }
+
+    }));
+
+    $.mjs.nestedSortable.prototype.options = $.extend(
+		{},
+		$.ui.sortable.prototype.options,
+		$.mjs.nestedSortable.prototype.options
+	);
+}));
+
+
 ///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPServices.js
 /*
  * SPServices - Work with SharePoint's Web Services using jQuery
@@ -32099,7 +33004,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 }
 /* jshint +W098 */
 
-(function($, undefined) {
+(function ($, undefined) {
+
+    if (SPClientTemplates && SPClientTemplates.TemplateManager && SPClientTemplates.TemplateManager.RegisterTemplateOverrides) {
+        SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
+            OnPreRender: function (ctx) {
+                if ($("body").attr("data-speasyforms-formhidden") !== "true") {
+                    $("body").attr("data-speasyforms-formhidden", "true").append("<style type='text/css'>.ms-formtable { display: none; }</style>");
+                }
+            }
+        });
+    }
 
     if (!Object.keys) {
         Object.keys = function (obj) {
@@ -32456,6 +33371,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 delete $.spEasyForms.containerCollection.rows;
                 delete $.spEasyForms.sharePointContext.formCache;
                 opt.contentTypeChanged = true;
+                opt.refresh = $.spEasyForms.refresh.all;
                 $.spEasyForms.containerCollection.toEditor(opt);
             });
             $.spEasyForms.containerCollection.toEditor(opt);
@@ -32848,6 +33764,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 }
                                 $.spEasyForms.configManager.set(opt);
                                 $("#" + opt.relationship.dialogDiv).dialog("close");
+                                opt.refresh = $.spEasyForms.refresh.adapters;
                                 $.spEasyForms.containerCollection.toEditor(opt);
                             } else {
                                 var adapter = {};
@@ -32876,6 +33793,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 }
                                 $.spEasyForms.configManager.set(opt);
                                 $("#" + opt.relationship.dialogDiv).dialog("close");
+                                opt.refresh = $.spEasyForms.refresh.adapters;
                                 $.spEasyForms.containerCollection.toEditor(opt);
                             }
                             return false;
@@ -33175,7 +34093,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 opt.input = $(this.responseText);
                                 var rows = $.spEasyForms.sharePointFieldRows.init(opt);
                                 $.each(rows, function(idx, row) {
-                                    var prop = row.internalName[0].toLowerCase() + row.internalName.substring(1);
+                                    var prop = $.spEasyForms.utilities.jsCase(row.internalName); 
                                     currentContext.userInformation[prop] = row.row.find("td[id^='SPField']").text().trim();
                                 });
                             }
@@ -33251,8 +34169,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         opt.input = $(xData.responseText);
                         var rows = $.spEasyForms.sharePointFieldRows.init(opt);
                         $.each(rows, function(idx, row) {
-                            var prop = row.internalName[0].toLowerCase() +
-                                row.internalName.substring(1);
+                            var prop = $.spEasyForms.utilities.jsCase(row.internalName); 
                             currentContext.userInformation[prop] =
                                 row.row.find("td[id^='SPField']").text().trim();
                         });
@@ -33304,7 +34221,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             function() {
                                 var name = $(this).find("Name").text().replace(
                                     "SPS-", "");
-                                name = name[0].toLowerCase() + name.substring(1);
+                                name = $.spEasyForms.utilities.jsCase(name); 
                                 user[name] = $(this).find("Value").text();
                             });
                     }
@@ -34753,6 +35670,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /* global spefjQuery, SPClientForms */
 (function ($, undefined) {
 
+    $.spEasyForms.refresh = {
+        form: 1,
+        visibility: 2,
+        adapters: 4,
+        containers: 8,
+        panel: 16,
+        all: 31
+    };
+    var refresh = $.spEasyForms.refresh;
+
     ////////////////////////////////////////////////////////////////////////////
     // Compound container representing the array of containers for a layout. This
     // container handles the layout for the default form, and also controls when
@@ -34779,11 +35706,93 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var fieldsInUse = [];
 
+            this.initRows(opt);
+
+            // if it looks like a form, apply transforms
+            if (Object.keys(containerCollection.rows).length > 0) {
+                $("#spEasyFormsContainersPre").remove();
+                $("#spEasyFormsContainersPost").remove();
+
+                var pre = $("<div/>", { "id": "spEasyFormsContainersPre" });
+                var post = $("<div/>", { "id": "spEasyFormsContainersPost" });
+
+                pre.insertBefore("table.ms-formtable");
+                post.insertAfter("table.ms-formtable");
+
+                opt.currentConfig = $.spEasyForms.configManager.get(opt);
+                opt.prepend = true;
+                var name, impl;
+                $.each(opt.currentConfig.layout.def, function (index, layout) {
+                    name = $.spEasyForms.utilities.jsCase(layout.containerType);
+                    if (name in containerCollection.containerImplementations) {
+                        impl = containerCollection.containerImplementations[name];
+                        var parent = (opt.prepend ? pre : post);
+                        if (layout.containerType !== $.spEasyForms.defaultFormContainer.containerType) {
+                            var div = $("<div/>", {
+                                "class": "speasyforms-container",
+                                "data-containerindex": layout.index,
+                                "data-containertype": layout.containerType,
+                                "data-containername": layout.name
+                            });
+                            parent.append(div);
+                            opt.currentContainerParent = div;
+                        }
+                        else {
+                            opt.currentContainerParent = parent;
+                        }
+                        if (typeof (impl.transform) === "function") {
+                            opt.currentContainerLayout = layout;
+                            $.merge(fieldsInUse, impl.transform(opt));
+                        }
+                        if (layout.containerType === $.spEasyForms.defaultFormContainer.containerType) {
+                            opt.prepend = false;
+                        }
+                    }
+                });
+
+                if (window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
+                    $.spEasyForms.visibilityRuleCollection.transform(opt);
+                    $.spEasyForms.adapterCollection.transform(opt);
+                }
+
+                this.postTransform(opt);
+
+                this.highlightValidationErrors(opt);
+            }
+
             return fieldsInUse;
         },
 
+        /*********************************************************************
+         * Call each containers postTransform method, after all containers have
+         * completed transform, to perform final steps like hiding empty containers
+         * or parts of containers. This has to be done post transform, because
+         * visibility rules may have made a container/part 'empty' after it was
+         * transformed.
+         *********************************************************************/
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
+
+            function postTransformHelper(layout) {
+                if (layout.fieldCollections) {
+                    $.each(layout.fieldCollections, function (i, l) {
+                         postTransformHelper(l);
+                    });
+                }
+
+                var name = $.spEasyForms.utilities.jsCase(layout.containerType);
+                if (name in containerCollection.containerImplementations) {
+                    var impl = containerCollection.containerImplementations[name];
+                    if (typeof (impl.postTransform) === 'function') {
+                        opt.currentContainerLayout = layout;
+                        impl.postTransform(opt);
+                    }
+                }
+            }
+
+            $.each(opt.currentConfig.layout.def, function (index, layout) {
+                postTransformHelper(layout);
+            });
         },
 
         /*********************************************************************
@@ -34800,14 +35809,43 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            this.initializeRows(opt);
+            this.initRows(opt);
 
             if (!this.initialized) {
                 this.wireRibbonButtonEvents(opt);
                 this.wireDialogEvents(opt);
                 this.initConditionalFieldChoices(opt);
-                this.initContainers(opt);
             }
+
+            if (!this.initialized || opt.refresh === refresh.panel) {
+                $("ol.speasyforms-nestedsortable").empty();
+
+                this.initContainers(opt);
+
+                if (this.nextContainerIndex > 2) {
+                    var item = $("ol.speasyforms-nestedsortable").find('li');
+                    var statusIcon = item.children(".speasyforms-menudiv").find('.speasyforms-nestedsortable-status');
+                    item.children('ol').hide();
+                    item.children('.speasyforms-nestedsortable-content').hide();
+                    statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e');
+                }
+            }
+
+            if (!this.initialized || opt.refresh & refresh.form) {
+                this.transform(opt);
+                this.wireContainerEvents(opt);
+            }
+
+            if (!this.initialized || opt.refresh & refresh.visibility) {
+                $.spEasyForms.visibilityRuleCollection.toEditor(opt);
+            }
+
+            if (!this.initialized || opt.refresh & refresh.adapters) {
+                $.spEasyForms.adapterCollection.toEditor(opt);
+            }
+
+            $(".speasyforms-panel").show();
+            $(".speasyforms-content").show();
 
             this.initialized = true;
         },
@@ -34820,7 +35858,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         toConfig: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var containers = $("ol.speasyforms-nestedsortable").children();
             var result = $.spEasyForms.configManager.get(opt);
+            result.layout = {
+                def: []
+            };
+            $.each(containers, function (idx, container) {
+                var type = $(container).attr("data-containertype");
+                var impl = $.spEasyForms.utilities.jsCase(type);
+                if (impl in containerCollection.containerImplementations) {
+                    opt.container = container;
+                    result.layout.def.push(
+                        containerCollection.containerImplementations[impl].toLayout(opt));
+                }
+            });
             return result;
         },
 
@@ -34834,89 +35885,70 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         preSaveItem: function () {
             var opt = $.extend({}, $.spEasyForms.defaults);
+
+            if (!$.spEasyForms.adapterCollection.preSaveItem(opt)) {
+                this.highlightValidationErrors(opt);
+                return false;
+            }
+
+            if (typeof (SPClientForms) !== 'undefined' &&
+                typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
+                typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
+                if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
+                    this.highlightValidationErrors(opt);
+                    return false;
+                }
+            }
+
             return true;
         },
 
+
+        /*********************************************************************
+         * Helper to iterate containers and call their preSaveItem methods.
+         *********************************************************************/
         highlightValidationErrors: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var result = true;
+            var config = $.spEasyForms.configManager.get(opt);
+            var containerType, impl;
+
+            function highlightValidationErrorsHelper(layout) {
+                if (layout.fieldCollections) {
+                    $.each(layout.fieldCollections, function (i, l) {
+                        highlightValidationErrorsHelper(l);
+                    });
+                }
+
+                containerType = $.spEasyForms.utilities.jsCase(layout.containerType);
+                if (containerType in containerCollection.containerImplementations) {
+                    impl = containerCollection.containerImplementations[containerType];
+                    if (typeof (impl.preSaveItem) === 'function') {
+                        opt.currentContainerLayout = layout;
+                        result = result && impl.preSaveItem(opt);
+                    }
+                }
+            }
+
+            $.each(config.layout.def, function (index, current) {
+                containerType = $.spEasyForms.utilities.jsCase(current.containerType);
+                if (containerType in containerCollection.containerImplementations) {
+                    impl = containerCollection.containerImplementations[containerType];
+                    if (typeof (impl.preSaveItem) === 'function') {
+                        opt.currentContainerLayout = current;
+                        result = result && impl.preSaveItem(opt);
+                    }
+                }
+            });
+
             return result;
         },
 
         /*********************************************************************
-         * Loop through the layouts and call the implementation's toEditor function.
-         *
-         * @returns {object} - an array of all internal field names that are already
-         *     on one of the editors.
+         * This adds a row to the ms-formtable for each field that would appear
+         * in a real edit form.
          *********************************************************************/
-        initContainers: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var defaultFormContainer;
-            var defaultFormLayout;
-
-            opt.fieldsInUse = [];
-            $.each(opt.currentConfig.layout.def, function (index, layout) {
-                try {
-                    opt.title = (layout.title ? layout.title : layout.containerType);
-                    opt.currentContainerLayout = layout;
-                    opt.currentContainerParent = $(".speasyforms-panel ol.speasyforms-nestedsortable");
-                    opt.currentContainer = containerCollection.appendContainer(opt);
-                    layout.index = opt.currentContainer.attr("data-containerindex");
-
-                    if (layout.containerType === $.spEasyForms.defaultFormContainer.containerType) {
-                        defaultFormContainer = opt.currentContainer;
-                        defaultFormLayout = opt.currentContainerLayout;
-                    }
-                    else {
-                        var implementation = layout.containerType[0].toLowerCase() +
-                            layout.containerType.substring(1);
-                        if (implementation in containerCollection.containerImplementations) {
-                            var impl = containerCollection.containerImplementations[implementation];
-                            if (typeof (impl.toEditor) === 'function') {
-                                var tmp = impl.toEditor(opt);
-                                $.merge(opt.fieldsInUse, tmp);
-                            }
-                        }
-                    }
-                }
-                catch(e) {}
-            });
-
-            if (!opt.verbose) {
-                $("#" + opt.id).find("tr.speasyforms-fieldmissing").hide();
-            }
-
-            opt.currentContainer = defaultFormContainer;
-            opt.currentContainerLayout = defaultFormLayout;
-            $.spEasyForms.defaultFormContainer.toEditor(opt);
-
-            return opt.fieldsInUse;
-        },
-
-        initConditionalFieldChoices: function () {
-            var fields = {};
-            $.each(Object.keys(containerCollection.rows), function (idx, name) {
-                fields[containerCollection.rows[name].displayName] = containerCollection.rows[name];
-            });
-            $.each(Object.keys(fields).sort(), function (idx, displayName) {
-                var name = fields[displayName].internalName;
-                if (name !== $.spEasyForms.defaultFormContainer.containerType) {
-                    $(".speasyforms-conditionalfield").append(
-                        '<option value="' + name + '">' + displayName + '</option>');
-                }
-            });
-
-            $.each(Object.keys($.spEasyForms.visibilityRuleCollection.stateHandlers), function (idx, name) {
-                $("#addVisibilityRuleState").append("<option>" + $.spEasyForms.utilities.titleCase(name) + "</option>");
-            });
-
-            $.each(Object.keys($.spEasyForms.visibilityRuleCollection.comparisonOperators), function (idx, name) {
-                $(".speasyforms-conditionaltype").append("<option>" + $.spEasyForms.utilities.titleCase(name) + "</option>");
-            });
-
-            $(".speasyforms-conditionalvalue[value='']").not(":first").parent().hide();
-        },
-
-        initializeRows: function (options) {
+        initRows: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var currentContentType = $("#spEasyFormsContentTypeSelect").val();
             if (window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
@@ -34925,7 +35957,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             else if (!containerCollection.rows || Object.keys(containerCollection.rows).length === 0) {
                 if (!containerCollection.currentCt || containerCollection.currentCt !== currentContentType) {
                     containerCollection.currentCt = currentContentType;
-                    if (containerCollection.currentCt in containerCollection.rowCache) {
+                    if (containerCollection.currentCt in containerCollection.initRows) {
                         containerCollection.rows = containerCollection.rowCache[containerCollection.currentCt];
                     }
                 }
@@ -34965,13 +35997,93 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
             // undo changes to the row that might have been applied by the transforms,
             // since they may have moved.
-            $.each(containerCollection.rows, function (i, currentRow) {
-                currentRow.row.find("*[data-transformAdded='true']").remove();
-                currentRow.row.find("*[data-transformHidden='true']").
+            $.each(containerCollection.rows, function (i, current) {
+                current.row.find("*[data-transformAdded='true']").remove();
+                current.row.find("*[data-transformHidden='true']").
                 attr("data-transformHidden", "false").show();
+                current.row.detach().appendTo($("table.ms-formtable"));
             });
             containerCollection.rowCache[containerCollection.currentCt] = containerCollection.rows;
             return containerCollection.rows;
+        },
+
+        /*********************************************************************
+         * Loop through the layouts and call the implementation's toEditor function.
+         *
+         * @returns {object} - an array of all internal field names that are already
+         *     on one of the editors.
+         *********************************************************************/
+        initContainers: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var defaultFormContainer;
+            var defaultFormLayout;
+
+            opt.fieldsInUse = [];
+            $.each(opt.currentConfig.layout.def, function (index, layout) {
+                if (!layout.name) {
+                    layout.name = layout.containerType;
+                }
+                opt.currentContainerLayout = layout;
+                opt.currentContainerParent = $(".speasyforms-panel ol.speasyforms-nestedsortable");
+                opt.impl = containerCollection.containerImplementations[$.spEasyForms.utilities.jsCase(opt.currentContainerLayout.containerType)];
+                opt.currentContainer = containerCollection.appendContainer(opt);
+                layout.index = opt.currentContainer.attr("data-containerindex");
+
+                if (layout.containerType === $.spEasyForms.defaultFormContainer.containerType) {
+                    defaultFormContainer = opt.currentContainer;
+                    defaultFormLayout = opt.currentContainerLayout;
+                }
+                else {
+                    containerCollection.initContainer(opt);
+                }
+            });
+
+            if (!opt.verbose) {
+                $("#" + opt.id).find("tr.speasyforms-fieldmissing").hide();
+            }
+
+            opt.currentContainer = defaultFormContainer;
+            opt.currentContainerLayout = defaultFormLayout;
+            $.spEasyForms.defaultFormContainer.toEditor(opt);
+
+            return opt.fieldsInUse;
+        },
+
+        initContainer: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var name = $.spEasyForms.utilities.jsCase(opt.currentContainerLayout.containerType);
+            if (name in containerCollection.containerImplementations) {
+                var impl = containerCollection.containerImplementations[name];
+                if (typeof (impl.toEditor) === 'function') {
+                    var tmp = impl.toEditor(opt);
+                    $.merge(opt.fieldsInUse, tmp);
+                }
+            }
+        },
+
+        // TBD move this to visibility rules collection
+        initConditionalFieldChoices: function (options) {
+            var fields = {};
+            $.each(Object.keys(containerCollection.rows), function (idx, name) {
+                fields[containerCollection.rows[name].displayName] = containerCollection.rows[name];
+            });
+            $.each(Object.keys(fields).sort(), function (idx, displayName) {
+                var name = fields[displayName].internalName;
+                if (name !== $.spEasyForms.defaultFormContainer.containerType) {
+                    $(".speasyforms-conditionalfield").append(
+                        '<option value="' + name + '">' + displayName + '</option>');
+                }
+            });
+
+            $.each(Object.keys($.spEasyForms.visibilityRuleCollection.stateHandlers), function (idx, name) {
+                $("#addVisibilityRuleState").append("<option>" + $.spEasyForms.utilities.titleCase(name) + "</option>");
+            });
+
+            $.each(Object.keys($.spEasyForms.visibilityRuleCollection.comparisonOperators), function (idx, name) {
+                $(".speasyforms-conditionaltype").append("<option>" + $.spEasyForms.utilities.titleCase(name) + "</option>");
+            });
+
+            $(".speasyforms-conditionalvalue[value='']").not(":first").parent().hide();
         },
 
         /*********************************************************************
@@ -34987,130 +36099,170 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 items: "> tr:not(:first)",
                 helper: "clone",
                 zIndex: 990,
-                start: function () {
-                    top = $("div.speasyforms-panel").scrollTop();
-                },
-                stop: function () {
-                    $("div.speasyforms-panel").scrollTop(top);
-                },
                 update: function (event) {
                     if (!event.handled) {
                         opt.currentConfig = containerCollection.toConfig(opt);
                         $.spEasyForms.configManager.set(opt);
+                        opt.refresh = refresh.form;
                         containerCollection.toEditor(opt);
                         event.handled = true;
                     }
-                    return false;
                 }
             });
 
             // make the containers in the editor sortable
-            $("tbody.speasyforms-sortablecontainers").sortable({
-                connectWith: ".speasyforms-sortablecontainers",
-                items: "> tr",
-                helper: "clone",
-                zIndex: 90,
+            $('ol.speasyforms-nestedsortable').nestedSortable({
+                forcePlaceholderSize: true,
+                handle: 'div',
+                helper: 'clone',
+                items: 'li',
+                opacity: .4,
+                placeholder: 'speasyforms-placeholder',
+                revert: 250,
+                tabSize: 20,
+                tolerance: 'pointer',
+                toleranceElement: '> div',
+                maxLevels: 5,
+                isTree: true,
+                expandOnHover: 700,
+                startCollapsed: false,
+                branchClass: "speasyforms-nestedsortable-branch",
+                collapsedClass: "speasyforms-nestedsortable-collapsed",
+                disableNestingClass: "speasyforms-nestedsortable-no-nesting",
+                errorClass: "speasyforms-nestedsortable-error",
+                expandedClass: "speasyforms-nestedsortable-expanded",
+                hoveringClass: "speasyforms-nestedsortable-hovering",
+                leafClass: "speasyforms-nestedsortable-leaf",
+                disabledClass: "speasyforms-nestedsortable-disabled",
+                isAllowed: function (placeholder, parent, current) {
+                    if (current.hasClass("speasyforms-nestedsortable-nomove")) {
+                        return false;
+                    }
+                    else if (parent && parent.hasClass("speasyforms-nestedsortable-nochildren")) {
+                        return false;
+                    }
+                    else if (!parent && current.hasClass("speasyforms-nestedsortable-needsparent")) {
+                        return false;
+                    }
+                    else if (parent && current.hasClass("speasyforms-nestedsortable-noparent") && !parent.hasClass("speasyforms-nestedsortable")) {
+                        return false;
+                    }
+                    return true;
+                },
                 update: function (event) {
                     if (!event.handled) {
                         opt.currentConfig = containerCollection.toConfig(opt);
                         $.spEasyForms.configManager.set(opt);
+                        opt.refresh = refresh.form;
                         containerCollection.toEditor(opt);
                         event.handled = true;
                     }
-                },
-                start: function (event, ui) {
-                    ui.placeholder.height("100px");
                 }
             });
 
-            // make the field tables individually collapsible
-            $("h3.speasyforms-sortablefields").dblclick(function (e) {
-                if (e.handled !== true) {
-                    var i, j;
-                    if ($(this).next().length === 0) {
-                        $(this).closest("table").next().toggle();
-                        i = $(this).closest("table").closest("td").attr("data-containerIndex");
-                        j = $(this).closest("table").next().attr("data-tableIndex");
-                        if ($(this).closest("table").next().css("display") === "none") {
-                            containerCollection.hiddenObjects[i + "_" + j] = {
-                                primaryIndex: i,
-                                secondaryIndex: j
-                            };
-                        } else if (i + "_" + j in containerCollection.hiddenObjects) {
-                            delete containerCollection.hiddenObjects[i + "_" + j];
-                        }
-                    } else {
-                        $(this).next().toggle();
-                        i = $(this).closest("td").attr("data-containerIndex");
-                        j = $(this).next().attr("data-tableIndex");
-                        if ($(this).next().css("display") === "none") {
-                            containerCollection.hiddenObjects[i + "_" + j] = {
-                                primaryIndex: i,
-                                secondaryIndex: j
-                            };
-                        } else if (i + "_" + j in containerCollection.hiddenObjects) {
-                            delete containerCollection.hiddenObjects[i + "_" + j];
-                        }
+            $('.speasyforms-nestedsortable-delete').attr('title', 'Click to delete container.');
+            $('.speasyforms-nestedsortable-edit').attr('title', 'Click to edit container.');
+            $('td.speasyforms-icon-visibility').attr('title', 'Click to add or modify visibility rules.');
+            $('td.speasyforms-icon-adapter').attr('title', 'Click to add or remove a field control adapter.');
+
+            if (!this.initialized) {
+                // make the containers individually collapsible
+                function toggleContainer() {
+                    var item = $(this).closest('li');
+                    var statusIcon = item.children(".speasyforms-menudiv").find('.speasyforms-nestedsortable-status');
+                    item.children('ol').toggle();
+                    item.children('.speasyforms-nestedsortable-content').toggle();
+                    if (statusIcon.hasClass('ui-icon-triangle-1-s')) {
+                        statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e')
                     }
-                    e.handled = true;
-                } else {
-                    $(this).unbind(e);
-                }
-                return false;
-            });
-
-            // make the containers individually collapsible
-            $("td.speasyforms-sortablecontainers").dblclick(function (e) {
-                if (e.handled !== true) {
-                    $('#' + this.id + ' .speasyforms-sortablefields:not(.speasyforms-hidden):not(.speasyforms-fieldmissing)').toggle();
-                    var k = $('#' + this.id).attr("data-containerIndex");
-                    if ($('#' + this.id + ' .speasyforms-sortablefields')
-                        .css("display") === "none") {
-                        containerCollection.hiddenObjects[k] = {
-                            primaryIndex: k
-                        };
-                    } else if (k in containerCollection.hiddenObjects) {
-                        delete containerCollection.hiddenObjects[k];
+                    else {
+                        statusIcon.removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s')
                     }
-
-                    e.handled = true;
-                } else {
-                    $(this).unbind(e);
                 }
-            });
+                function toggleContainerAndChildren() {
+                    var item = $(this).closest('li');
+                    var statusIcon = item.find('.speasyforms-nestedsortable-status');
+                    if (item.children(".speasyforms-menudiv").find('.speasyforms-nestedsortable-status').hasClass('ui-icon-triangle-1-s')) {
+                        statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e')
+                        item.find('ol').hide();
+                        item.find('.speasyforms-nestedsortable-content').hide();
+                    }
+                    else {
+                        item.find('ol').show();
+                        item.find('.speasyforms-nestedsortable-content').show();
+                        statusIcon.removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s')
+                    }
+                }
+                $("ol.speasyforms-nestedsortable").on("click", "span.speasyforms-nestedsortable-status", toggleContainer)
+                $("ol.speasyforms-nestedsortable").on("dblclick", "div.speasyforms-menudiv", toggleContainerAndChildren)
 
-            // wire the edit buttons for each field collection
-            $(".speasyforms-editfields").button({
-                icons: {
-                    primary: "ui-icon-gear"
-                },
-                text: false
-            }).click(function () {
-                var headerId = $(this).closest("tr").find(
-                    "h3.speasyforms-sortablefields")[0].id;
-                $("#fieldCollectionName").val($("#" + headerId).text());
-                $("#editFieldCollectionContainerId").val(headerId);
-                $('#editFieldCollectionDialog').dialog('open');
-                return false;
-            });
+                // wire the edit buttons for each field collection
+                $("ol.speasyforms-nestedsortable").on("click", "span.speasyforms-nestedsortable-edit", function () {
+                    var container = $(this).closest("li");
+                    var index = container.attr("data-containerindex");
+                    opt.currentConfig = containerCollection.toConfig(opt);
+                    $.each($(opt.currentConfig.layout.def), function (idx, layout) {
+                        if (layout.index === index) {
+                            opt.currentContainerLayout = layout;
+                            return false;
+                        }
+                    });
+                    var implname = $.spEasyForms.utilities.jsCase(opt.currentContainerLayout.containerType);
+                    if (implname in containerCollection.containerImplementations) {
+                        var impl = containerCollection.containerImplementations[implname];
+                        impl.settings(opt);
+                    }
+                    else {
+                        $.spEasyForms.baseContainer.settings(opt);
+                    }
+                });
 
-            // wire the delete buttons for each field collection
-            $(".speasyforms-deletefields").button({
-                icons: {
-                    primary: "ui-icon-closethick"
-                },
-                text: false
-            }).click(function () {
-                $(this).closest("div").remove();
-                opt.currentConfig = containerCollection.toConfig(opt);
-                $.spEasyForms.configManager.set(opt);
-                containerCollection.toEditor(opt);
-                return false;
-            });
+                // wire the delete buttons for each field collection
+                $("ol.speasyforms-nestedsortable").on("click", "span.speasyforms-nestedsortable-delete", function () {
+                    $(this).closest("li").find("tr.speasyforms-sortablefields").each(function () {
+                        $("li.speasyforms-nestedsortable-defaultform table.speasyforms-sortablefields").append(this);
+                    });
+                    $(this).closest("li").remove();
+                    opt.currentConfig = containerCollection.toConfig(opt);
+                    $.spEasyForms.configManager.set(opt);
+                    opt.refresh = refresh.form;
+                    containerCollection.toEditor(opt);
+                });
+
+                $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-visibility", function (e) {
+                    opt.currentConfig = $.spEasyForms.configManager.get(opt);
+                    opt.fieldName = $(this).closest("tr").find(".speasyforms-fieldinternal").text();
+                    $.spEasyForms.visibilityRuleCollection.launchDialog(opt);
+                    $(".tabs-min").hide();
+                    $("#tabs-min-visibility").show();
+                });
+
+                $("#tabs-min-visibility").on("dblclick", "td.speasyforms-staticrules", function (e) {
+                    opt.currentConfig = $.spEasyForms.configManager.get(opt);
+                    opt.fieldName = $(this).closest("tr").children(".speasyforms-hidden").text();
+                    $.spEasyForms.visibilityRuleCollection.launchDialog(opt);
+                });
+
+                $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-adapter", function (e) {
+                    opt.currentConfig = $.spEasyForms.configManager.get(opt);
+                    opt.fieldName = $(this).closest("tr").find(".speasyforms-fieldinternal").text();
+                    opt.spFieldType = $(this).closest("tr").find(".speasyforms-fieldtype").text();
+                    $.spEasyForms.adapterCollection.launchDialog(opt);
+                    $(".tabs-min").hide();
+                    $("#tabs-min-adapters").show();
+                });
+
+                $("#tabs-min-adapters").on("dblclick", "td.speasyforms-adapter-static", function (e) {
+                    opt.currentConfig = $.spEasyForms.configManager.get(opt);
+                    opt.fieldName = $(this).closest("tr").children(".speasyforms-hidden").text();
+                    opt.spFieldType = containerCollection.rows[opt.fieldName].spFieldType;
+                    $.spEasyForms.adapterCollection.launchDialog(opt);
+                });
+            }
         },
 
         /*********************************************************************
-         * Wire the top/bottom button bar events.
+         * Wire the button events for the ribbon buttons.
          *********************************************************************/
         wireRibbonButtonEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -35164,6 +36316,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         $("#spEasyFormsUndoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
                     }
 
+                    opt.refresh = refresh.all;
                     containerCollection.toEditor(opt);
                     event.handled = true;
                 }
@@ -35182,6 +36335,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         $("#spEasyFormsRedoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
                     }
 
+                    opt.refresh = refresh.all;
                     containerCollection.toEditor(opt);
                     event.handled = true;
                 }
@@ -35189,32 +36343,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             // wire the expand buttons
             $("#spEasyFormsExpandButton").click(function (event) {
-                if (!event.handled) {
-                    containerCollection.hiddenObjects = [];
-                    if (opt.verbose) {
-                        $('.speasyforms-sortablefields:not(.speasyforms-hidden)').show();
-                    }
-                    else {
-                        $('.speasyforms-sortablefields:not(.speasyforms-hidden):not(.speasyforms-fieldmissing)').show();
-                    }
-                    event.handled = true;
-                }
-                return false;
+                var item = $("ol.speasyforms-nestedsortable").find('li');
+                var statusIcon = item.children(".speasyforms-menudiv").find('.speasyforms-nestedsortable-status');
+                item.children('ol').show();
+                item.children('.speasyforms-nestedsortable-content').show();
+                statusIcon.removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
             });
 
             // wire the collapse buttons
             $("#spEasyFormsCollapseButton").click(function () {
-                $("td.speasyforms-sortablecontainers").each(function (event) {
-                    if (!event.handled) {
-                        var containerIndex = $(this).attr("data-containerIndex");
-                        containerCollection.hiddenObjects[containerIndex] = {
-                            primaryIndex: containerIndex
-                        };
-                        event.handled = true;
-                    }
-                });
-                $('.speasyforms-sortablefields').hide();
-                return false;
+                var item = $("ol.speasyforms-nestedsortable").find('li');
+                var statusIcon = item.children(".speasyforms-menudiv").find('.speasyforms-nestedsortable-status');
+                item.children('ol').hide();
+                item.children('.speasyforms-nestedsortable-content').hide();
+                statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e');
             });
 
             // wire the form button
@@ -35319,6 +36461,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
+            var maxHeight = $(window.top).height() - 50;
             var aboutOpts = {
                 modal: true,
                 buttons: {
@@ -35327,7 +36470,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 },
                 autoOpen: false,
-                width: 800
+                width: 800,
+                height: (maxHeight > 900 ? 900 : maxHeight),
+                open: function (event, ui) {
+                    var max = $(window.top).height() - 50;
+                    $("#spEasyFormsAboutDialog").dialog({ height: (max > 900 ? 900 : max) });
+                }
             };
             $("#spEasyFormsAboutDialog").dialog(aboutOpts);
 
@@ -35338,12 +36486,11 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "Add": function () {
                         if ($("#containerType").val().length > 0) {
                             $("#chooseContainerDialog").dialog("close");
-                            var implname = $("#containerType").val()[0].toLowerCase() +
-                                $("#containerType").val().substring(1);
+                            var implname = $.spEasyForms.utilities.jsCase($("#containerType").val());
                             if (implname in containerCollection.containerImplementations) {
                                 var impl = containerCollection.containerImplementations[implname];
                                 opt.containerType = $("#containerType").val();
-                                $("#addMultiGroupContainerType").val(opt.containerType);
+                                $("#settingsContainerType").val(opt.containerType);
                                 impl.settings(opt);
                             }
                         } else {
@@ -35364,7 +36511,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }));
             $.each(containerCollection.containerImplementations, function (index) {
                 var containerType = containerCollection.containerImplementations[index].containerType;
-                if (containerType !== $.spEasyForms.defaultFormContainer.containerType) {
+                if (!containerCollection.containerImplementations[index].cannotBeAdded) {
                     $("#containerType").append($('<option>', {
                         text: containerType,
                         value: containerType
@@ -35382,6 +36529,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         html($("#fieldCollectionName").val());
                         opt.currentConfig = containerCollection.toConfig(opt);
                         $.spEasyForms.configManager.set(opt);
+                        opt.refresh = refresh.all;
                         containerCollection.toEditor(opt);
                         $("#editFieldCollectionDialog").dialog("close");
                     },
@@ -35402,6 +36550,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         opt.currentConfig = $.spEasyForms.utilities.parseJSON($("#importedJson").val());
                         $.spEasyForms.sharePointContext.fixAdapterListReferences(opt);
                         $.spEasyForms.configManager.set(opt);
+                        opt.refresh = refresh.all;
                         containerCollection.toEditor(opt);
                         $("#importConfigurationDialog").dialog("close");
                     }
@@ -35415,21 +36564,43 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * Utility function to create a uniform container div for a given editor.
          *
          * @param {object} options - {
-         *    containerType {string} - the type of container
-         *    title: {string} - usually the container implementation, it's
-         *        displayed as the header for the editor.
+         *    currentContainerLayout {object} - the layout
+         *    currentContainerParent: {object} - the jQuery node to which this
+         *        container should be attached.
          * }
          *********************************************************************/
         appendContainer: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            var template = $($("#spEasyFormsTemplates .speasyforms-nestedsortable-container").parent().html());
+            var template = $("#spEasyFormsTemplates .speasyforms-nestedsortable-container").clone()
+            if (!opt.currentContainerLayout.containerType || opt.currentContainerLayout.containerType === "FieldCollection") {
+                opt.currentContainerLayout.containerType = "FieldCollection";
+                template = $("#spEasyFormsTemplates .speasyforms-nestedsortable-fieldcollection").clone();
+            }
+            else if (opt.currentContainerLayout.containerType === $.spEasyForms.defaultFormContainer.containerType) {
+                template = $("#spEasyFormsTemplates .speasyforms-nestedsortable-defaultform").clone();
+            }
+
+            if (opt.impl && opt.impl.noChildren) {
+                template.addClass("speasyforms-nestedsortable-nochildren");
+            }
+            else if (opt.impl && opt.impl.needsParent) {
+                template.addClass("speasyforms-nestedsortable-needsparent");
+            }
+            else if (opt.impl && opt.impl.noParent) {
+                template.addClass("speasyforms-nestedsortable-noparent");
+            }
+
             opt.currentContainerParent.append(template);
             template.attr("id", "spEasyFormsContainer" + this.nextContainerIndex);
             template.attr("data-containerindex", this.nextContainerIndex++);
-            template.attr("data-containertype", opt.containerType);
-            template.find(".speasyforms-itemtitle").html(opt.title);
-
+            template.attr("data-containertype", opt.currentContainerLayout.containerType);
+            template.attr("data-containername", opt.currentContainerLayout.name);
+            template.find(".speasyforms-itemtitle").html(opt.currentContainerLayout.name);
+            if (opt.currentContainerLayout.name !== opt.currentContainerLayout.containerType) {
+                template.find(".speasyforms-itemtype").html("&nbsp;[" + opt.currentContainerLayout.containerType + "]");
+            }
+ 
             return template;
         },
 
@@ -35445,53 +36616,27 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         createFieldRow: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var r = opt.row;
-            var klass = "speasyforms-sortablefields";
+
+            var tr = $($("#spEasyFormsTemplates .speasyforms-fieldrowtemplate").clone());
+
             if (r.fieldMissing) {
-                klass += " speasyforms-fieldmissing";
+                tr.addClass("speasyforms-fieldmissing");
             }
-            var tr = "<tr class='" + klass + "'" +
-                "title='" + (r.fieldMissing ? "This field was not found in the form and may have been deleted." : "") + "'>" +
-                "<td class='" + klass + "'>" + r.displayName + "</td>" +
-                "<td class='" + klass + " speasyforms-hidden' style='display:none'>" + r.internalName + "</td>" +
-                "<td class='" + klass + "'>" + r.spFieldType + "</td>" +
-                "</tr>";
+
+            tr.find(".speasyforms-fieldname").html(r.displayName);
+            tr.find(".speasyforms-fieldinternal").html(r.internalName);
+            tr.find(".speasyforms-fieldtype").html(r.spFieldType);
+
             return tr;
         },
 
         /*********************************************************************
          * Utility function to construct the HTML the table representing a field
          * group.
-         *
-         * @param {object} options - {
-         *    trs {string} - the HTML for all of the table rows for the table
-         *    name {string} - the name of the field collection used for the header
-         *    id {string} - the element id for the table
-         *    tableIndex {string} - an immutable table index that is assigned
-         *        to a table the first time it is created (generally tables.length
-         *        for the tables within the current editor/container, but it really
-         *        doesn't matter as long as it doesn't change); this is needed
-         *        to uniquely identify tables as their containers move around,
-         *        for instance for the hiddenObjects array.
-         * }
          *********************************************************************/
         createFieldCollection: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var name = (opt.name !== undefined ? opt.name : "");
-            var id = (opt.id !== undefined ?
-                opt.id : Math.floor(Math.random() * 1000) + 1);
-
-            var result = "<table id='" + id +
-                "' class='speasyforms-sortablefields' " +
-                "cellPadding='0' cellSpacing='3' data-tableIndex='" +
-                opt.tableIndex + "'>" +
-                "<tbody class='speasyforms-sortablefields'><tr>" +
-                "<th class='speasyforms-name'>Display Name</th>" +
-                "<th class='speasyforms-name speasyforms-hidden' style='display:none'>Internal Name</th>" +
-                "<th class='speasyforms-name'>Field Type</th></tr>" + opt.trs +
-                "</tbody></table>";
-
-            return "<div id='" + opt.id +
-                "Div' class='speasyforms-sortablefields'>" + result + "</div>";
+            var result = $("#spEasyFormsTemplates .speasyforms-fieldtabletemplate").clone();
+            return result;
         }
     };
     var containerCollection = $.spEasyForms.containerCollection;
@@ -35517,39 +36662,35 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.defaultFormContainer = {
         containerType: "DefaultForm",
-        
-        transform: function() {
+        cannotBeAdded: true,
+        noChildren: true,
+        noParent: true,
+
+        transform: function () {
             return [];
         },
-        
-        toEditor: function(options) {
+
+        toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var table = "";
-            $(".ms-formtable tr").remove();
-            $.each(containerCollection.rows, function(fieldIdx, row) {
+
+            var table = containerCollection.createFieldCollection(opt);
+            $.each(containerCollection.rows, function (fieldIdx, row) {
                 if ($.inArray(fieldIdx, opt.fieldsInUse) < 0) {
-                    var tmp = containerCollection.createFieldRow({
-                        row: row
-                    });
-                    if (tmp.indexOf("speasyforms-fieldmissing") < 0) {
-                        table += tmp;
-                        $(".ms-formtable").append(row.row);
-                    }
+                    table.append(containerCollection.createFieldRow({ row: row }));
+                    $(".ms-formtable").append(row.row);
                 }
             });
-            $("#" + opt.id).append(containerCollection.createFieldCollection({
-                trs: table,
-                id: "spEasyFormsFormTable",
-                name: "",
-                tableIndex: "d"
-            }));
+
+            var div = $("<div>", { "class": "speasyforms-nestedsortable-content" });
+            div.append(table);
+            opt.currentContainer.append(div);
         },
-        
-        toLayout: function(options) {
+
+        toLayout: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             return {
                 containerType: this.containerType,
-                index: $(opt.container).attr("data-containerIndex")
+                index: $(opt.container).attr("data-containerindex")
             };
         }
     };
@@ -35590,76 +36731,37 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * more field collections.
          *
          * @param {object} options = {
-         *     parentId {string} - the id of the outer div for the container
-         *     index {string} - one up index of the container, use to create unique ids
-         *     rows [object] - array of objects representing rows in the form
-         *     layout {object} - object representing the configuration for this container
+         *     currentContainer - the jQuery node to which this container should add itself
+         *     currentContainerLayout {object} - object representing the configuration for this container
          * }
          *********************************************************************/
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = [];
 
-            var currentContainerList = $("<ol>", { "class": "speasyforms-nestedsortable-inner ui-corner-all" });
+            var currentContainerList = $("<ol>");
             opt.currentContainer.append(currentContainerList);
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                var tableId = opt.currentContainer.attr("id") + "_" + idx;
-                var table = "";
+                if (!fieldCollection.name) {
+                    fieldCollection.name = fieldCollection.containerType;
+                }
+                opt.currentContainerLayout = fieldCollection;
+                opt.currentContainerParent = currentContainerList;
 
-                $.each(fieldCollection.fields, function (fieldIdx, field) {
-                    opt.row = containerCollection.rows[field.fieldInternalName];
-                    if (opt.row === undefined) {
-                        opt.row = {
-                            displayName: field.fieldInternalName,
-                            internalName: field.fieldInternalName,
-                            spFieldType: field.fieldInternalName,
-                            value: "",
-                            row: $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'></h3></td><td class='ms-formbody'></td></tr>"),
-                            fieldMissing: true
-                        };
+                var implementation = $.spEasyForms.utilities.jsCase(fieldCollection.containerType);
+                if (implementation in containerCollection.containerImplementations) {
+                    opt.impl = containerCollection.containerImplementations[implementation];
+                    opt.currentContainer = containerCollection.appendContainer(opt);
+                    fieldCollection.index = opt.currentContainer.attr("data-containerindex");
+                    if (typeof (opt.impl.toEditor) === 'function') {
+                        opt.currentContainerParent = opt.currentContainer;
+                        var tmp = opt.impl.toEditor(opt);
+                        $.merge(result, tmp);
                     }
-                    table += containerCollection.createFieldRow(opt);
-                    result.push(field.fieldInternalName);
-                });
-
-                opt.trs = table;
-                opt.id = tableId;
-                opt.name = fieldCollection.name;
-                opt.tableIndex = idx;
-                table = containerCollection.createFieldCollection(opt);
-
-                var newItem = $($("#spEasyFormsTemplates .speasyforms-nestedsortable-fieldcollection").parent().html());
-                currentContainerList.append(newItem);
-                newItem.find(".speasyforms-itemtitle").html(fieldCollection.name);
-                newItem.find(".speasyforms-nestedsortable-content").html(table);
+                }
             });
 
             this.wireDialogEvents(opt);
-
-            /*
-            var header = this.fieldCollectionsDlgTitle;
-            var prompt = this.fieldCollectionsDlgPrompt;
-            if ($("#" + parent + "AddFieldCollections").length === 0) {
-                $("#" + parent + "Delete").parent().prepend(
-                    '<button id="' + parent +
-                    'AddFieldCollections" title="Add Field Collections" ' +
-                    'class="speasyforms-containerbtn">Add Field Collections</button>');
-
-                $('#' + parent + 'AddFieldCollections').button({
-                    icons: {
-                        primary: "ui-icon-plusthick"
-                    },
-                    text: false
-                }).click(function () {
-                    $("#addFieldCollectionNames2").val("");
-                    $("#addFieldCollectionsContainerId").val(index);
-                    $("#addFieldCollectionsToContainerDialog").attr("title", header);
-                    $("label[for='addFieldCollectionNames2']").text(prompt);
-                    $("#addFieldCollectionsToContainerDialog").dialog('open');
-                    return false;
-                });
-            }
-            */
 
             return result;
         },
@@ -35672,25 +36774,27 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         toLayout: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = {
-                containerType: opt.containerType,
-                index: $(opt.container).attr("data-containerIndex"),
+                name: $(opt.container).attr("data-containername"),
+                containerType: $(opt.container).attr("data-containertype"),
+                index: $(opt.container).attr("data-containerindex"),
                 fieldCollections: []
             };
-            var tables = $(opt.container).find("table.speasyforms-sortablefields");
-            $.each(tables, function (index, table) {
-                var fieldCollection = {
-                    name: $(table).prev().
-                    find("h3.speasyforms-sortablefields").text()
+            var containers = $(opt.container).children("ol").children("li");
+            $.each(containers, function (index, current) {
+                var child = {
+                    name: $(current).attr("data-containername"),
+                    containerType: $(current).attr("data-containertype"),
+                    index: $(current).attr("data-containerindex"),
+                    fields: []
                 };
-                fieldCollection.fields = [];
-                var trs = $(table).find("tr:not(:first)");
-                $.each(trs, function (idx, tr) {
-                    var tds = $(tr).find("td");
-                    fieldCollection.fields.push({
-                        fieldInternalName: $(tds[1]).text()
-                    });
-                });
-                result.fieldCollections.push(fieldCollection);
+
+                var impl = $.spEasyForms.utilities.jsCase($(current).attr("data-containertype"));
+                if (impl in containerCollection.containerImplementations) {
+                    opt.container = current;
+                    child = containerCollection.containerImplementations[impl].toLayout(opt);
+                }
+
+                result.fieldCollections.push(child);
             });
             return result;
         },
@@ -35700,11 +36804,33 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *********************************************************************/
         settings: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            $("#addFieldCollectionNames").val("");
+
             this.wireDialogEvents(opt);
-            $("#addMultiGroupContainerDialog").attr("title", this.fieldCollectionsDlgTitle);
-            $("label[for='addFieldCollectionNames']").text(this.fieldCollectionsDlgPrompt);
-            $("#addMultiGroupContainerDialog").dialog("open");
+
+            $("#settingsCollectionNames").show().val("");
+            $("#settingsCollectionNames").attr("title", this.fieldCollectionsDlgTitle);
+            $("label[for='settingsCollectionNames']").show().text(this.fieldCollectionsDlgPrompt);
+
+            if (!opt.currentContainerLayout) {
+                // setup for new 
+                $("#containerSettingsDialog").dialog("option", "title", "Add Container");
+                $("#settingsContainerName").val("");
+                $("#settingsContainerId").val("");
+                $("#settingsContainerType").val(opt.containerType);
+            }
+            else {
+                // or setup for edit
+                $("#containerSettingsDialog").dialog("option", "title", "Edit Container");
+                $("#settingsContainerName").val(opt.currentContainerLayout.name);
+                $("#settingsContainerId").val(opt.currentContainerLayout.index);
+                $("#settingsContainerType").val(opt.currentContainerLayout.containerType);
+                if (opt.currentContainerLayout.containerType === "FieldCollection") {
+                    $("#settingsCollectionNames").hide();
+                    $("label[for='settingsCollectionNames']").hide();
+                }
+            }
+
+            $("#containerSettingsDialog").dialog("open");
         },
 
         /*********************************************************************
@@ -35714,21 +36840,27 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            var configureTabsOpts = {
+            var containerSettingsOpts = {
                 width: 450,
                 modal: true,
                 buttons: {
                     "Ok": function () {
-                        if ($("#addFieldCollectionNames").val().length > 0) {
-                            var groupNames = $("#addFieldCollectionNames").val().split('\n');
+                        if ($("#settingsContainerId").val().length === 0) {
                             var newLayout = {
-                                containerType: $("#addMultiGroupContainerType").val(),
+                                name: $("#settingsContainerName").val(),
+                                containerType: $("#settingsContainerType").val(),
                                 fieldCollections: []
                             };
+                            if (!newLayout.name) {
+                                newLayout.name = newLayout.containerType;
+                            }
+
+                            var groupNames = $("#settingsCollectionNames").val().split('\n');
                             $.each($(groupNames), function (idx, name) {
                                 if (name.trim().length > 0) {
                                     newLayout.fieldCollections.push({
                                         name: name,
+                                        containerType: "FieldCollection",
                                         fields: []
                                     });
                                 }
@@ -35736,63 +36868,74 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             opt.currentConfig = $.spEasyForms.configManager.get(opt);
                             opt.currentConfig.layout.def.push(newLayout);
                             $.spEasyForms.configManager.set(opt);
-                            containerCollection.toEditor(opt);
-                            $("#addMultiGroupContainerDialog").dialog("close");
-                        } else {
-                            $("#addMultiGroupContainerError").html(
-                                "* You must enter at least one tab name.");
+
+                            opt.currentContainerLayout = newLayout;
+                            opt.currentContainerParent = $(".speasyforms-panel").children("ol.speasyforms-nestedsortable");
+
+                            var name = $.spEasyForms.utilities.jsCase(newLayout.containerType);
+                            if (name in containerCollection.containerImplementations) {
+                                opt.impl = containerCollection.containerImplementations[name];
+                                opt.currentContainer = containerCollection.appendContainer(opt);
+                                newLayout.index = opt.currentContainer.attr("data-containerindex");
+                                if (typeof (opt.impl.toEditor) === 'function') {
+                                    opt.impl.toEditor(opt);
+                                }
+                            }
                         }
-                        return false;
-                    },
-                    "Cancel": function () {
-                        $("#addMultiGroupContainerDialog").dialog("close");
-                        return false;
-                    }
-                },
-                autoOpen: false
-            };
-
-            $("#addMultiGroupContainerDialog").dialog(configureTabsOpts);
-
-            var addTabsOpts = {
-                width: 450,
-                modal: true,
-                buttons: {
-                    "Ok": function () {
-                        if ($("#addFieldCollectionNames2").val().length > 0) {
-                            var tabNames = $("#addFieldCollectionNames2").val().split('\n');
-                            var index = $("#addFieldCollectionsContainerId").val();
-                            var nextFieldCollectionIndex = $("#spEasyFormsContainer" +
-                                index +
-                                " table.speasyforms-sortablefields").length;
-                            $.each(tabNames, function (idx, name) {
-                                opt.trs = "";
-                                opt.id = "spEasyFormsSortableFields" + index +
-                                    "" + nextFieldCollectionIndex++;
-                                opt.name = name;
-                                opt.tableIndex = idx;
-                                var table = containerCollection.createFieldCollection(opt);
-                                $("#spEasyFormsContainer" + index).append(table);
+                        else {
+                            var index = $("#settingsContainerId").val();
+                            var container = $("#spEasyFormsContainer" + index);
+                            if ($("#settingsContainerName").val().length > 0) {
+                                opt.currentContainerLayout.name = $("#settingsContainerName").val();
+                                if (opt.currentContainerLayout.name.length === 0) {
+                                    opt.currentContainerLayout.name = opt.currentContainerLayout.containerType;
+                                }
+                                container.attr("data-containername", opt.currentContainerLayout.name);
+                                container.find(".speasyforms-itemtitle:first").text(opt.currentContainerLayout.name);
+                                if (opt.currentContainerLayout.name != opt.currentContainerLayout.containerType) {
+                                    container.find(".speasyforms-itemtype:first").text(opt.currentContainerLayout.containerType);
+                                }
+                            }
+                            var groupNames = $("#settingsCollectionNames").val().split('\n');
+                            $.each($(groupNames), function (idx, name) {
+                                if (name.trim().length > 0) {
+                                    opt.currentContainerLayout = {
+                                        name: name.trim(),
+                                        containerType: "FieldCollection",
+                                        fields: []
+                                    };
+                                    var table = containerCollection.createFieldCollection(opt);
+                                    if (container.find("ol").length === 0) {
+                                        container.append("<ol>");
+                                    }
+                                    opt.currentContainerParent = container.children("ol");
+                                    opt.impl = $.spEasyForms.fieldCollection;
+                                    var newItem = containerCollection.appendContainer(opt);
+                                    newItem.find(".speasyforms-itemtitle").html(opt.currentContainerLayout.name);
+                                    if (opt.currentContainerLayout.name !== opt.currentContainerLayout.containerType) {
+                                        newItem.find(".speasyforms-itemtype").html("&nbsp;[" + opt.currentContainerLayout.containerType + "]");
+                                    }
+                                    newItem.find(".speasyforms-nestedsortable-content").append(table);
+                                }
                             });
                             opt.currentConfig = containerCollection.toConfig(opt);
                             $.spEasyForms.configManager.set(opt);
-                            containerCollection.toEditor(opt);
-                            $("#addFieldCollectionsToContainerDialog").dialog("close");
-                        } else {
-                            $("#addFieldCollectionsToContainerDialogError").html(
-                                "* You must enter at least one field collection name.");
                         }
+
+                        opt.refresh = $.spEasyForms.refresh.form;
+                        containerCollection.toEditor(opt);
+                        $("#containerSettingsDialog").dialog("close");
                         return false;
                     },
                     "Cancel": function () {
-                        $("#addFieldCollectionsToContainerDialog").dialog("close");
+                        $("#containerSettingsDialog").dialog("close");
                         return false;
                     }
                 },
                 autoOpen: false
             };
 
-            $("#addFieldCollectionsToContainerDialog").dialog(addTabsOpts);
+            $("#containerSettingsDialog").dialog(containerSettingsOpts);
         },
 
         appendRow: function (options) {
@@ -35813,7 +36956,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
                         } else {
                             opt.rowInfo.row.find("td.ms-formbody").prepend(
-                                "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.text() + "</nobr></h3>");
+                                "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
                         }
                         tdh.attr("data-transformHidden", "true").hide();
                     }
@@ -35833,18 +36976,121 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         */
         appendFieldCollection: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            $("#" + opt.parentElement).append("<table role='presentation' width='100%' id='" + opt.collectionType + "Table" + opt.collectionIndex +
-                "' class='" + opt.tableClass + "' cellspacing='5'></table>");
-            opt.table = $("#" + opt.collectionType + "Table" + opt.collectionIndex);
+            if (!opt.fieldCollection.containerType) {
+                opt.fieldCollection.containerType = "FieldCollection";
+            }
+            if (!opt.fieldCollection.name) {
+                opt.fieldCollection.name = opt.fieldCollection.containerType;
+            }
+            var name = $.spEasyForms.utilities.jsCase(opt.fieldCollection.containerType);
+            if (name in containerCollection.containerImplementations) {
+                impl = containerCollection.containerImplementations[name];
+                if (typeof (impl.transform) === "function") {
+                    opt.currentContainerLayout = opt.fieldCollection;
+                    var div = $("<div/>", {
+                        "class": "speasyforms-container",
+                        "data-containerindex": opt.currentContainerLayout.index,
+                        "data-containertype": opt.currentContainerLayout.containerType,
+                        "data-containername": opt.currentContainerLayout.name
+                    });
+                    opt.parentElement.append(div);
+                    opt.currentContainerParent = div;
+                    $.merge(opt.result, impl.transform(opt));
+                }
+            }
+        }
+    };
+
+    $.spEasyForms.fieldCollection = {
+        containerType: "FieldCollection",
+        cannotBeAdded: true,
+        noChildren: true,
+        needsParent: true,
+
+        transform: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var result = [];
+            opt.table = $("<table/>", {
+                "role": "presentation",
+                "id": opt.collectionType + "Table" + opt.collectionIndex,
+                "class": "speasyforms-fieldcollection " + opt.tableClass,
+                "cellspacing": "5"
+            });
+            opt.currentContainerParent.append(opt.table);
+
             $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
                 opt.rowInfo = containerCollection.rows[field.fieldInternalName];
                 if ($.spEasyForms.baseContainer.appendRow(opt)) {
-                    opt.result.push(field.fieldInternalName);
+                    result.push(field.fieldInternalName);
                 }
             });
-        }
+            return result;
+        },
 
+        postTransform: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
+            if (container.find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
+                container.attr("data-speasyformsempty", "1").hide();
+            }
+            else {
+                container.attr("data-speasyformsempty", "0").show();
+            }
+        },
+
+        toEditor: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var result = [];
+            var table = containerCollection.createFieldCollection(opt);
+
+            $.each(opt.currentContainerLayout.fields, function (fieldIdx, field) {
+                opt.row = containerCollection.rows[field.fieldInternalName];
+                if (opt.row === undefined) {
+                    opt.row = {
+                        displayName: field.fieldInternalName,
+                        internalName: field.fieldInternalName,
+                        spFieldType: field.fieldInternalName,
+                        value: "",
+                        row: $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'></h3></td><td class='ms-formbody'></td></tr>"),
+                        fieldMissing: true
+                    };
+                }
+                table.append(containerCollection.createFieldRow(opt));
+                result.push(field.fieldInternalName);
+            });
+
+            opt.currentContainer.find(".speasyforms-itemtitle").html(opt.currentContainerLayout.name);
+            if (opt.currentContainerLayout.name !== opt.currentContainerLayout.containerType) {
+                opt.currentContainer.find(".speasyforms-itemtype").html("&nbsp;[" + opt.currentContainerLayout.containerType + "]");
+            }
+            opt.currentContainer.find(".speasyforms-nestedsortable-content").append(table);
+
+            return result;
+        },
+
+        toLayout: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var trs = $(opt.container).find("tr:not(:first)");
+
+            var result = {
+                name: $(opt.container).attr("data-containername"),
+                containerType: $(opt.container).attr("data-containertype"),
+                index: $(opt.container).attr("data-containerindex"),
+                fields: []
+            };
+
+            $.each(trs, function (idx, tr) {
+                var tds = $(tr).find("td");
+                result.fields.push({
+                    fieldInternalName: $(tds[1]).text()
+                });
+            });
+
+            return result;
+        }
     };
+    var fieldCollection = $.extend({}, $.spEasyForms.baseContainer, $.spEasyForms.fieldCollection);
+    containerCollection.containerImplementations.fieldCollection = fieldCollection;
 
 })(spefjQuery);
 
@@ -35869,64 +37115,99 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     ////////////////////////////////////////////////////////////////////////////
     var accordion = {
         containerType: "Accordion",
-        fieldCollectionsDlgTitle: "Enter the names of the accordion content areas, one per line",
-        fieldCollectionsDlgPrompt: "Content Area Names (one per line):",
+        fieldCollectionsDlgTitle: "Enter the names of the accordion pages, one per line",
+        fieldCollectionsDlgPrompt: "Page Names (one per line):",
 
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.result = [];
-            var divId = "spEasyFormsAccordionDiv" + opt.index;
-            var divClass =
-                "speasyforms-container speasyforms-accordion speasyforms-accordion" +
-                opt.index;
-            $("#" + opt.containerId).append("<div id='" + divId + "' class='" +
-                divClass + "'></div>");
+            var divId = "spEasyFormsAccordionDiv" + opt.currentContainerLayout.index;
+            var divClass = "speasyforms-accordion";
+
+            var div = $("<div/>", { "id": divId, "class": divClass });
+            opt.currentContainerParent.append(div);
+
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                opt.collectionIndex = opt.index + "_" + idx;
-                opt.parentElement = "spEasyFormsAccordionDiv" + opt.collectionIndex;
+                opt.collectionIndex = opt.currentContainerLayout.index + "_" + idx;
+                opt.parentElement = $("<div/>", { "id": opt.parentElement });
                 opt.collectionType = "accordion";
                 opt.fieldCollection = fieldCollection;
                 opt.tableClass = "speasyforms-accordion";
 
-                var headerId = "spEasyFormsAccordionHeader" + opt.collectionIndex;
-                $("#" + divId).append("<h3 id='" + headerId + "' class='" +
-                    opt.tableClass + "'>" + fieldCollection.name + "</h3>");
-                $("#" + divId).append(
-                    "<div id='" + opt.parentElement + "'></div>");
+                var header = $("<h3>", {
+                    "id": "spEasyFormsAccordionHeader" + opt.collectionIndex,
+                    "class": opt.tableClass
+                }).text(fieldCollection.name);
+
+                div.append(header);
+                div.append(opt.parentElement);
 
                 $.spEasyForms.baseContainer.appendFieldCollection(opt);
             });
-            $("#" + divId).accordion({
+
+            div.accordion({
                 heightStyle: "content",
                 active: false,
-                collapsible: true
+                collapsible: true,
+                activate: function (e, ui) {
+                    e.preventDefault();
+                }
             });
 
+            div.on("mouseup", "h3.speasyforms-accordion", function () {
+                div.find("h3.speasyforms-accordion").
+                    removeClass("ui-accordion-header-active").
+                    removeClass("ui-state-active").
+                    removeClass("ui-corner-top").
+                    addClass("ui-corner-all");
+                div.find(".ui-accordion-content").hide();
+
+                $(this).
+                    addClass("ui-accordion-header-active").
+                    addClass("ui-state-active").
+                    addClass("ui-corner-top").
+                    removeClass("ui-corner-all");
+                $(this).next().show();
+            });
             return opt.result;
         },
 
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var divId = "spEasyFormsAccordionDiv" + opt.index;
-            $("#" + divId + " table.speasyforms-accordion").each(function () {
-                var index = $(this)[0].id.replace("accordionTable", "");
-                if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
-                    $("#spEasyFormsAccordionHeader" + index).hide();
-                    $("#spEasyFormsAccordionHeader" + index).next().hide();
+            var index = opt.currentContainerLayout.index;
+            var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
+            var accordion = container.children("div.speasyforms-accordion");
+            var headers = accordion.children("h3.ui-accordion-header");
+            var content = accordion.children("div.ui-accordion-content ");
+            var allHidden = true;
+            for (var idx = 0; idx < content.length; idx++) {
+                var subContainer = $(content[idx]).children(".speasyforms-container");
+                if (subContainer.attr("data-speasyformsempty") === "1") {
+                    var active = accordion.accordion("option", "active");
+                    if (active == idx) {
+                        accordion.accordion({ active: idx + 1 });
+                    }
+                    $(headers[idx]).hide();
                 }
                 else {
-                    $("#spEasyFormsAccordionHeader" + index).show();
+                    allHidden = false;
                 }
-            });
+            }
+            if (allHidden) {
+                container.attr("data-speasyformsempty", "1").hide();
+            }
+            else {
+                container.attr("data-speasyformsempty", "0").show();
+            }
         },
         
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var divId = "spEasyFormsAccordionDiv" + opt.index;
+            var divId = "spEasyFormsAccordionDiv" + opt.currentContainerLayout.index;
             var selected = false;
             $("#" + divId).find("table.speasyforms-accordion").each(function (idx, content) {
                 if ($(content).find(".ms-formbody span.ms-formvalidation").length > 0) {
-                    $("#spEasyFormsAccordionHeader" + opt.index + "_" + idx).
+                    $("#spEasyFormsAccordionHeader" + opt.currentContainerLayout.index + "_" + idx).
                     addClass("speasyforms-accordionvalidationerror");
                     if (!selected) {
                         $("#" + divId).accordion({
@@ -35937,7 +37218,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         selected = true;
                     }
                 } else {
-                    $("#spEasyFormsAccordionHeader" + opt.index + "_" + idx).
+                    $("#spEasyFormsAccordionHeader" + opt.currentContainerLayout.index + "_" + idx).
                     removeClass("speasyforms-accordionvalidationerror");
                 }
             });
@@ -35975,20 +37256,28 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.result = [];
-            var outerTableId = "spEasyFormsColumnsOuterTable" + opt.index;
-            var outerTableClass = "speasyforms-container speasyforms-columns";
-            $("#" + opt.containerId).append("<table role='presentation' id='" + outerTableId +
-                "' class='" + outerTableClass + "'><tr id='" + outerTableId + "Row'></tr></table>");
+
+            var outerTableId = "spEasyFormsColumnsOuterTable" + opt.currentContainerLayout.index;
+            var outerTableClass = "speasyforms-columns";
+
+            var table = $("<table/>", {
+                "role": "presentation",
+                "id": outerTableId,
+                "class": outerTableClass
+            });
+            var tableRow = $("<tr/>", { "id": outerTableId + "Row" });
+            table.append(tableRow);
+            opt.currentContainerParent.append(table);
 
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                opt.collectionIndex = opt.index + "_" + idx;
-                opt.parentElement = "spEasyFormsColumnCell" + opt.collectionIndex;
+                opt.collectionIndex = opt.currentContainerLayout.index + "_" + idx;
+                opt.parentElement = $("<td/>", { "id": "spEasyFormsColumnsCell" + opt.collectionIndex });
                 opt.collectionType = "columns";
                 opt.fieldCollection = fieldCollection;
                 opt.tableClass = "speasyforms-columncell";
                 opt.headerOnTop = true;
 
-                $("#" + outerTableId + "Row").append("<td id='" + opt.parentElement + "'></td>");
+                tableRow.append(opt.parentElement);
 
                 $.spEasyForms.baseContainer.appendFieldCollection(opt);
             });
@@ -35998,12 +37287,23 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.tables = [];
-            $.each(opt.currentContainerLayout.fieldCollections, function (idx) {
-                opt.collectionIndex = opt.index + "_" + idx;
-                opt.tables.push("columnsTable" + opt.collectionIndex);
-            });
-            this.evenUpTableRows(opt);
+            var index = opt.currentContainerLayout.index;
+            var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
+            var allHidden = true;
+            for (var idx = 0; idx < opt.currentContainerLayout.fieldCollections.length; idx++) {
+                var id = "#spEasyFormsColumnsCell" + index + "_" + idx;
+                if ($(id).children("div.speasyforms-container").attr("data-speasyformsempty") !== "1") {
+                    allHidden = false;
+                    break;
+                }
+            }
+            if (allHidden) {
+                container.attr("data-speasyformsempty", "1").hide();
+            }
+            else {
+                container.attr("data-speasyformsempty", "0").show();
+                this.evenUpTableRows(opt);
+            }
         },
 
         evenUpTableRows: function (options) {
@@ -36071,82 +37371,91 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.result = [];
-            var divId = "spEasyFormsTabDiv" + opt.index;
-            var divClass = "speasyforms-tabs speasyforms-tabs" + opt.index;
-            var listId = "spEasyFormsTabList" + opt.index;
-            var listClass = "speasyforms-tablist speasyforms-tablist" + opt.index;
-            var containerDiv = $("#" + opt.containerId);
-            containerDiv.append("<div id='" + divId + "' class='" + divClass +
-                "'><ul id='" + listId + "' class='" + listClass + "'></ul></div>");
+
+            var divId = "spEasyFormsTabDiv" + opt.currentContainerLayout.index;
+            var divClass = "speasyforms-tabs";
+            var listId = "spEasyFormsTabList" + opt.currentContainerLayout.index;
+            var listClass = "speasyforms-tablist";
+
+            var div = $("<div/>", { "id": divId, "class": divClass });
+            var list = $("<ul/>", { "id": listId, "class": listClass });
+            div.append(list);
+            opt.currentContainerParent.append(div);
+
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                opt.collectionIndex = opt.index + "_" + idx;
-                opt.parentElement = "spEasyFormsTabsDiv" + opt.collectionIndex;
-                opt.labelId = "spEasyFormsTabsLabel" + opt.collectionIndex;
+                opt.collectionIndex = opt.currentContainerLayout.index + "_" + idx;
+                opt.parentElement = $("<div/>", { "id": "spEasyFormsTabsDiv" + opt.collectionIndex, "class": divClass });
                 opt.collectionType = "tab";
                 opt.fieldCollection = fieldCollection;
-                opt.tableClass = "speasyforms-tabs";
+                opt.tableClass = divClass;
 
-                var itemClass = "speasyforms-tabs speasyforms-tabs" + opt.collectionIndex +
-                    " ui-state-default ui-corner-top";
-                $("#" + listId).append("<li id='" + opt.labelId + "' class='" + itemClass +
-                    "' role='tab' aria-controls='" + opt.parentElement + "' tabindex='0'><a href='#" + opt.parentElement + "'>" +
-                    fieldCollection.name + "</a></li>");
-                $("#" + divId).append(
-                    "<div id='" + opt.parentElement + "' aria-labelledby='" + opt.labelId + "' " +
-                    "' class='ui-tabs-panel ui-widget-content ui-corner-bottom' role='tabpanel'>");
+                var li = $("<li/>", { "id": "spEasyFormsTabsLabel" + opt.collectionIndex, "class": divClass });
+                li.append($("<a/>", { "href": "#" + "spEasyFormsTabsDiv" + opt.collectionIndex }).text(fieldCollection.name));
+                list.append(li);
+
+                div.append(opt.parentElement);
 
                 $.spEasyForms.baseContainer.appendFieldCollection(opt);
             });
-            $("#" + divId).tabs({
+
+            div.tabs({
                 beforeLoad: function (e, ui) {
                     ui.jqXHR.abort();
+                },
+                create: function (e, ui) {
+                    $(this).children("div").hide();
+                    $(this).children(".speasyforms-tabs:first").show();
+                },
+                activate: function (e, ui) {
+                    var id = ui.newTab.context.hash;
+                    $(id).parent().children("div").hide();
+                    $(id).show();
                 }
             });
+
+            div.on("mouseup", "a.ui-tabs-anchor", function () {
+                div.tabs({
+                    active: $(this).parent().index()
+                });
+            });
+
             return opt.result;
         },
 
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.divId = "spEasyFormsTabDiv" + opt.index;
-            var shown = 0;
-            $("#" + opt.divId + " table.speasyforms-tabs").each(function () {
-                var index = $(this).parent()[0].id.replace("spEasyFormsTabsDiv", "");
-                if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
-                    $("#spEasyFormsTabsLabel" + index).hide();
-                    if ($(this).parent().css("display") !== "none") {
-                        if ($(this).parent().next().length > 0) {
-                            var nextIndex = $(this).parent().next()[0].id.replace("spEasyFormsTabsDiv", "");
-                            if ($("#spEasyFormsTabsLabel" + nextIndex).length > 0) {
-                                $("#" + opt.divId).tabs({
-                                    active: $("#spEasyFormsTabsLabel" + nextIndex).index(),
-                                    beforeLoad: function (e, ui) {
-                                        ui.jqXHR.abort();
-                                    }
-                                });
-                            }
-                        }
+            var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
+            var tabs = container.children("div.speasyforms-tabs");
+            var subContainers = tabs.children("div.speasyforms-tabs").children("div.speasyforms-container");
+            var listItems = tabs.children("ul").children("li");
+            var allHidden = true;
+            for (var idx = 0; idx < subContainers.length; idx++) {
+                if ($(subContainers[idx]).attr("data-speasyformsempty") === "1") {
+                    var active = tabs.tabs("option", "active");
+                    if (active == idx) {
+                        tabs.tabs({ active: idx + 1 });
                     }
+                    $(listItems[idx]).hide();
                 }
                 else {
-                    shown++;
-                    $("#spEasyFormsTabsLabel" + index).show();
+                    allHidden = false;
                 }
-            });
-            if (shown === 0) {
-                $("#" + opt.divId).hide();
+            }
+            if (allHidden) {
+                container.attr("data-speasyformsempty", "1").hide();
             }
             else {
-                $("#" + opt.divId).show();
+                container.attr("data-speasyformsempty", "0").show();
             }
         },
 
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.divId = "spEasyFormsTabDiv" + opt.index;
+            opt.divId = "spEasyFormsTabDiv" + opt.currentContainerLayout.index;
             var selected = false;
-            $("#spEasyFormsTabDiv" + opt.index).find("table.speasyforms-tabs").each(function (idx, tab) {
+            $("#spEasyFormsTabDiv" + opt.currentContainerLayout.index).find("table.speasyforms-tabs").each(function (idx, tab) {
                 if ($(tab).find(".ms-formbody span.ms-formvalidation").length > 0) {
-                    var anchor = $("a[href$='#spEasyFormsTabsDiv" + opt.index + "_" + idx + "']");
+                    var anchor = $("a[href$='#spEasyFormsTabsDiv" + opt.currentContainerLayout.index + "_" + idx + "']");
                     anchor.addClass("speasyforms-tabvalidationerror");
                     if (!selected) {
                         selected = true;
@@ -36158,7 +37467,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         });
                     }
                 } else {
-                    $("a[href$='#spEasyFormsTabsDiv" + opt.index + "_" + idx + "']").
+                    $("a[href$='#spEasyFormsTabsDiv" + opt.currentContainerLayout.index + "_" + idx + "']").
                     removeClass("speasyforms-tabvalidationerror");
                 }
             });
@@ -36187,13 +37496,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
     $.spEasyForms.containerCollection.containerImplementations.htmlSnippet = {
         containerType: "HtmlSnippet",
+        noChildren: true,
 
         // transform the current form based on the configuration of this container
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (opt.currentContainerLayout.contents) {
-                $("#" + opt.containerId).append("<span class='speasyforms-htmlsnippet'>" +
-                    opt.currentContainerLayout.contents + "</span>");
+                opt.currentContainerParent.append(
+                    $("<span/>", { "class": "speasyforms-htmlsnippet" }).html(opt.currentContainerLayout.contents));
             }
             return [];
         },
@@ -36204,44 +37514,22 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         // an opportunity to do validation tasks prior to committing an item
         preSaveItem: function () { },
 
+        // TBD need to update from here down for new design
         // draw the container in the properties pane of the settings page from the JSON
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            htmlSnippet.initDialog(opt);
+            var div = $("<div/>", { "class": "speasyforms-nestedsortable-content ui-sortable-handle" });
+            var span = $("<span/>", { "class": "speasyforms-htmlsnippet" });
+            span.html(opt.currentContainerLayout.contents.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
+            div.append(span);
 
-            // add a button to edit the snippet if not already present
-            if ($("#" + opt.id + "EditSnippet" + opt.index).length === 0) {
-                $("#" + opt.id).find(".speasyforms-buttoncell").prepend(
-                    '<button id="' + opt.id + "EditSnippet" + opt.index +
-                    '" title="Edit HTML Snippet" ' +
-                    'class="speasyforms-containerbtn">Edit HTML Snippet</button>');
-
-                $('#' + opt.id + "EditSnippet" + opt.index).button({
-                    icons: {
-                        primary: "ui-icon-gear"
-                    },
-                    text: false
-                }).click(function () {
-                    $("#snippetContents").val(opt.currentContainerLayout.contents);
-                    $("#snippetContainerIndex").val($("#" + opt.id).attr("data-containerindex"));
-                    $("#configureSnippetDialog").find("iframe").contents().find("body").html(
-                        opt.currentContainerLayout.contents.replace(/<(?=\/?script)/ig, "&lt;"));
-                    if ($("#snippetContents").is(":visible")) {
-                        $("#configureSnippetDialog").find("iframe").hide();
-                    }
-                    htmlSnippet.settings(opt);
-                    return false;
-                });
-            }
+            var textarea = $("<textarea/>", { "class": "speasyforms-htmlsnippet", "style": "display:none" });
+            textarea.val(opt.currentContainerLayout.contents);
+            div.append(textarea);
 
             // put contents in a text area show the contents stripping out any scripts
-            $("#" + opt.id).append("<span class='speasyforms-sortablefields'>" +
-                opt.currentContainerLayout.contents.replace(
-                /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') + "</span>" +
-			    "<textarea  id='snippetContents" + opt.index +
-                "' rows='15' cols='80' style='display:none'>" +
-                opt.currentContainerLayout.contents + "</textarea>");
+            opt.currentContainer.append(div);
 
             return [];
         },
@@ -36250,9 +37538,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         toLayout: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = {
-                containerType: opt.containerType,
-                index: $(opt.container).attr("data-containerIndex"),
-                contents: $(opt.container).find("textarea").val()
+                name: $(opt.container).attr("data-containername"),
+                containerType: $(opt.container).attr("data-containertype"),
+                index: $(opt.container).attr("data-containerindex"),
+                contents: $(opt.container).find("textarea.speasyforms-htmlsnippet").val()
             };
             return result;
         },
@@ -36260,46 +37549,102 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         // launch a dialog to configue this container on the settings page 
         settings: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            if (!opt.containerIndex) {
+
+            if (!opt.currentContainerLayout) {
                 $("#snippetContents").val("");
             }
-            htmlSnippet.initDialog(opt);
-            $("#configureSnippetDialog").dialog("open");
-        },
+            else {
+                $("#snippetContents").val(opt.currentContainerLayout.contents);
+            }
 
-        // initialize the dialog with the snippet editor
-        initDialog: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
             if ($("#spEasyFormsContainerDialogs").find("#configureSnippetDialog").length === 0) {
                 $("#spEasyFormsContainerDialogs").append(
                     "<div id='configureSnippetDialog' class='speasyforms-dialogdiv' title='HTML Snippet Container'>" +
-                    "<textarea  id='snippetContents' rows='15' cols='80'></textarea>" +
-                    "<input type='hidden' name='snippetContainerIndex' id='snippetContainerIndex' value='" +
-                    (opt.containerIndex ? opt.containerIndex : '') + "'/>" +
+                    "<div style='margin-bottom:10px'>Name: <input name='snippetName' id='snippetName' type='text'></input></div>" +
+                    "<textarea  id='snippetContents' rows='15' cols='80'>" +
+                    (opt.currentContainerLayout ? opt.currentContainerLayout.contents : '') +
+                    "</textarea>" +
+                    "<span style='display:none' id='snippetContainerId'></span>" +
                     "</div>");
-                var configureSnippetOpts = {
-                    width: 830,
-                    modal: true,
-                    open: function () {
-                        htmlSnippet.initRTE();
-                    },
-                    buttons: {
-                        "Ok": function () {
-                            htmlSnippet.addOrUpdateSnippet(opt);
-                            $("#snippetContainerIndex").val("");
-                            return false;
-                        },
-                        "Cancel": function () {
-                            $("#configureSnippetDialog").dialog("close");
-                            $("#snippetContainerIndex").val("");
-                            return false;
-                        }
-                    },
-                    autoOpen: false,
-                    resizable: false
-                };
-                $("#configureSnippetDialog").dialog(configureSnippetOpts);
             }
+
+            var configureSnippetOpts = {
+                width: 830,
+                modal: true,
+                open: function () {
+                    htmlSnippet.initRTE();
+                },
+                buttons: {
+                    "Ok": function () {
+                        var containerIndex = $("#snippetContainerId").text();
+                        if (containerIndex.length > 0) {
+                            var container = $("li.speasyforms-nestedsortable-container[data-containerindex='" + containerIndex + "']");
+                            var span = container.find("span.speasyforms-htmlsnippet");
+                            var contents = $("#snippetContents").val();
+                            span.html(contents.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
+                            container.find("textarea.speasyforms-htmlsnippet").val(contents);
+                            var name = $("#snippetName").val();
+                            if (name.length > 0) {
+                                container.attr("data-containername", name);
+                                container.find(".speasyforms-itemtitle").text(name);
+                                if (name !== container.attr("data-containertype")) {
+                                    container.find(".speasyforms-itemtype").text("[HtmlSnippet]");
+                                }
+                            }
+                        }
+                        else {
+                            opt.currentContainerParent = $(".speasyforms-panel ol.speasyforms-nestedsortable");
+                            opt.currentContainerLayout = {
+                                name: ($("#snippetName").val().length > 0 ? $("#snippetName").val() : "HtmlSnippet"),
+                                containerType: "HtmlSnippet",
+                                contents: $("#snippetContents").val()
+                            };
+                            opt.impl = htmlSnippet;
+                            opt.currentContainer = containerCollection.appendContainer(opt);
+                            opt.currentContainerLayout = opt.currentContainer.attr("data-containerindex");
+
+                            var div = $("<div/>", { "class": "speasyforms-nestedsortable-content ui-sortable-handle" });
+                            var span = $("<span/>", { "class": "speasyforms-htmlsnippet" });
+                            span.html($("#snippetContents").val().replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
+                            div.append(span);
+
+                            var textarea = $("<textarea/>", { "class": "speasyforms-htmlsnippet", "style": "display:none" });
+                            textarea.val($("#snippetContents").val());
+                            div.append(textarea);
+
+                            // put contents in a text area show the contents stripping out any scripts
+                            opt.currentContainer.append(div);
+
+                        }
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        $.spEasyForms.configManager.set(opt);
+                        opt.refresh = $.spEasyForms.refresh.form;
+                        containerCollection.toEditor(opt);
+                        $("#configureSnippetDialog").dialog("close");
+                        return false;
+                    },
+                    "Cancel": function () {
+                        $("#configureSnippetDialog").dialog("close");
+                        return false;
+                    }
+                },
+                autoOpen: false,
+                resizable: false
+            };
+            $("#configureSnippetDialog").dialog(configureSnippetOpts);
+
+            if (opt.currentContainerLayout) {
+                $("#snippetContainerId").text(opt.currentContainerLayout.index);
+                $("#snippetName").val(opt.currentContainerLayout.name);
+            }
+            else {
+                $("#snippetContainerId").text("");
+                $("#snippetName").val("");
+            }
+
+            $("#configureSnippetDialog").dialog("open");
+            $("#snippetContents").hide();
+            $("div[buttonname='source']").css({ "background-color": "transparent" });
         },
 
         // initialize the text area in the dialog with cleditor
@@ -36327,301 +37672,11 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 ed[0].refresh(ed);
             }
             $(".cleditorToolbar").height(25);
-        },
-
-        // callback for the OK button
-        addOrUpdateSnippet: function (opt) {
-            opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            var containerIndex = $("#snippetContainerIndex").val();
-            if (containerIndex) {
-                $.each(opt.currentConfig.layout.def, function (idx, container) {
-                    if (container.index.toString() === containerIndex.toString()) {
-                        container.contents = $("#snippetContents").val();
-                        return false;
-                    }
-                });
-            }
-            else {
-                var newLayout = {
-                    containerType: htmlSnippet.containerType,
-                    contents: $("#snippetContents").val()
-                };
-                opt.currentConfig.layout.def.push(newLayout);
-            }
-            $.spEasyForms.configManager.set(opt);
-            containerCollection.toEditor(opt);
-            $("#configureSnippetDialog").dialog("close");
         }
     };
     var htmlSnippet = $.spEasyForms.containerCollection.containerImplementations.htmlSnippet;
 
 })(typeof(spefjQuery) === 'undefined' ? null : spefjQuery);
-///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.wizard.js
-/*
- * SPEasyForms WizardContainer
- *
- * @version 2015.01
- * @copyright 2014-2015 Joe McShea
- * @license under the MIT license:
- *    http://www.opensource.org/licenses/mit-license.php
- */
-
-/* global spefjQuery */
-(function ($, undefined) {
-
-    var containerCollection = $.spEasyForms.containerCollection;
-    var baseContainer = $.spEasyForms.baseContainer;
-
-    var wizard = {
-        containerType: "Wizard",
-        visibileRow: "tr:not([data-visibilityhidden='true']) td.ms-formbody",
-
-        // transform the current form based on the configuration of this container
-        transform: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.result = [];
-
-            // create a div to hold the container
-            opt.divId = "spEasyFormsWizardDiv" + opt.index;
-            $("#" + opt.containerId).append("<div id=" + opt.divId +
-                " class='speasyforms-wizard-outer ui-widget-content" +
-                " ui-corner-all' style='margin: 10px;' role='tablist'></div>");
-            opt.outerDiv = $("#" + opt.divId);
-
-            // loop through field collections adding them as headers/tables to the container div
-            $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
-                // create a header and a div to hold the current field collection
-                opt.collectionIndex = opt.index + "_" + idx;
-                opt.tableClass = "speasyforms-wizard";
-                opt.outerDiv.append("<h3 id='page" + opt.collectionIndex +
-                    "' class='" + opt.tableClass + "' style='padding: 5px;' role='tab' aria-controls='pageContent" + opt.collectionIndex + "'>" +
-                    fieldCollection.name + "</h3>" +
-                    "<div id='pageContent" + opt.collectionIndex + "' aria-labelledby='page" + opt.collectionIndex + "' " +
-                    "class='speasyforms-wizard' style='padding: 10px' role='tabpanel'>" +
-                    "</div>");
-
-                // add a table to the div with the fields in the field collection
-                opt.collectionType = "page";
-                opt.parentElement = "pageContent" + opt.collectionIndex;
-                opt.fieldCollection = fieldCollection;
-                opt.headerOnTop = true;
-                $.spEasyForms.baseContainer.appendFieldCollection(opt);
-
-                // apply styles from the jquery ui accordion
-                $("#page" + opt.collectionIndex).addClass(
-                    "ui-accordion-header ui-helper-reset ui-state-default" +
-                    " ui-corner-all ui-accordion-icons");
-            });
-
-            // create next/previous buttons and wire their click events
-            this.wireButtons(opt);
-
-            // return an array of the fields added to this container
-            return opt.result;
-        },
-
-        // second stage transform, this is called after visibility rules and adapters are applied
-        postTransform: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var headerSelector = "#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected";
-            if ($(headerSelector).length === 0) {
-                // calculate the width and height of the pages
-                var width = 400;
-                var height = 100;
-                var tableSelector = "#spEasyFormsWizardDiv" + opt.index + " table.speasyforms-wizard";
-                $(tableSelector).each(function () {
-                    if ($(this).closest("div").width() > width) {
-                        width = $(this).closest("div").width();
-                    }
-                    if ($(this).closest("div").height() > height) {
-                        height = $(this).closest("div").height();
-                    }
-                });
-                // set the height/width of each page, hide the unselected pages, 
-                // and show the selected page
-                $(tableSelector).each(function () {
-                    $(this).closest("div").width(width).height(height); // set height/width
-                    var selectedHeaderSelector = "#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected";
-                    if ($(selectedHeaderSelector).length === 0) {
-                        if ($(this).find(wizard.visibileRow).length > 0) {
-                            wizard.select($(this).closest("div").prev(), $("#spEasyFormsWizardDiv" + opt.index));
-                        }
-                    }
-                });
-            }
-            this.setNextPrevVisibility(opt);
-        },
-
-        // an opportunity to do validation tasks prior to committing an item
-        preSaveItem: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            // check if there are validation errors on the container
-            var errorSelector = "#spEasyFormsWizardDiv" + opt.index + " span.ms-formvalidation";
-            var error = $(errorSelector + ":first");
-            if (error.length > 0) {
-                // if so, select and show the first page with validation errors
-                this.select(error.closest("div").prev(), $("#spEasyFormsWizardDiv" + opt.index));
-            }
-            wizard.setNextPrevVisibility(opt);
-        },
-
-        // select the content area for the given header
-        select: function (header, outerDiv) {
-            this.deselectall(outerDiv);
-            header.addClass("speasyforms-wizard-selected").attr("aria-selected", "true").attr("aria-hidden", "false").show().
-                next().attr("aria-hidden", "false").attr("aria-expanded", "true").addClass("speasyforms-wizard-selected").show();
-        },
-
-        // deselect the content area for the given header
-        deselect: function (header) {
-            header.removeClass("speasyforms-wizard-selected").attr("aria-selected", "false").attr("aria-hidden", "true").show().
-                next().attr("aria-hidden", "true").attr("aria-expanded", "false").removeClass("speasyforms-wizard-selected").hide();
-        },
-
-        // deselect all content areas
-        deselectall: function (outerDiv) {
-            outerDiv.find("h3.speasyforms-wizard").each(function (idx, h) {
-                var header = $(h);
-                header.removeClass("speasyforms-wizard-selected").attr("aria-selected", "false").attr("aria-hidden", "true").hide();
-                var div = header.next();
-                div.removeClass("speashforms-wizard-selected").attr("aria-expanded", "false").attr("aria-hidden", "true").hide();
-            });
-        },
-
-        // add next and previous buttons and wire up their events
-        wireButtons: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-
-            // append next and previous buttons to the container
-            opt.outerDiv.append("<div  id='" + opt.divId + "Buttons' align='right' " +
-                "style='margin-bottom: 10px; margin-right: 10px; " +
-                "font-size: .9em; font-weight: normal;'>" +
-                "<button id='" + opt.divId + "Previous' title='Previous' " +
-                "class='speasyforms-wizard-prev'>Previous</button>" +
-                "<button id='" + opt.divId + "Next' title='Next' " +
-                "class='speasyforms-wizard-next'>Next</button>" +
-                "</div>");
-            $("#" + opt.divId + "Buttons").append(
-                "<img class='placeholder' align='right' style='display:none;margin:11px;'" +
-                " src='/_layouts/images/blank.gif?rev=38' height='1' width='" +
-                $("#" + opt.divId + "Next").outerWidth() +
-                "' alt='' data-accessibility-nocheck='true'/>");
-
-            // handle previous click event
-            $("#" + opt.divId + "Previous").button().click(function () {
-                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected");
-                wizard.selectPrevious(opt);
-                return false;
-            });
-
-            // handle next click event
-            $("#" + opt.divId + "Next").button().click(function () {
-                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected");
-                wizard.selectNext(opt);
-                return false;
-            });
-        },
-
-        // hide the current page and show the nearest previous page with visible fields
-        selectPrevious: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var prev = this.getPrevious(opt);
-            if (prev) {
-                this.select(prev, $("#" + opt.divId));
-            }
-            wizard.setNextPrevVisibility(opt);
-        },
-
-        // returns the header node for the previous page, or null if there is no previous visible page
-        getPrevious: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var prev = null;
-            if (opt.selectedHeader.prev().prev() && opt.selectedHeader.prev().prev()) {
-                prev = opt.selectedHeader.prev().prev();
-                while (prev && prev.length && prev.next().find(this.visibileRow).length === 0) {
-                    if (prev.prev().prev() && prev.prev().prev()) {
-                        prev = prev.prev().prev();
-                    }
-                    else {
-                        prev = null;
-                    }
-                }
-                if (prev && prev.closest("div").find(this.visibileRow).length === 0) {
-                    prev = null;
-                }
-            }
-            return prev;
-        },
-
-        // hide the current page and show the nearest next page with visible fields
-        selectNext: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var next = this.getNext(opt);
-            if (next) {
-                this.select(next, $("#" + opt.divId));
-            }
-            wizard.setNextPrevVisibility(opt);
-        },
-
-        // returns the header node for the next page, or null if there is no next visible page
-        getNext: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var next = null;
-            if (opt.selectedHeader.next() && opt.selectedHeader.next().next()) {
-                next = opt.selectedHeader.next().next();
-                while (next && next.length &&
-                    next.next().find(this.visibileRow).length === 0) {
-                    if (next.next() && next.next().next()) {
-                        next = next.next().next();
-                    }
-                    else {
-                        next = null;
-                    }
-                }
-                if (next &&
-                    next.closest("div").find(this.visibileRow).length === 0) {
-                    next = null;
-                }
-            }
-            return next;
-        },
-
-        // determine the visibility of the next any previous buttons, based on whether there
-        // is a VISIBLE next or previous page.
-        setNextPrevVisibility: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index +
-                " h3.speasyforms-wizard-selected");
-            var tmp = this.getPrevious(opt);
-            if (!tmp || tmp.length === 0) {
-                opt.selectedHeader.closest("div.speasyforms-wizard-outer").
-                    find(".speasyforms-wizard-prev").hide();
-            }
-            else {
-                opt.selectedHeader.closest("div.speasyforms-wizard-outer").
-                    find(".speasyforms-wizard-prev").show();
-
-            }
-            tmp = this.getNext(opt);
-            if (!tmp || tmp.length === 0) {
-                opt.selectedHeader.closest("div.speasyforms-wizard-outer").
-                    find(".speasyforms-wizard-next").hide();
-                opt.selectedHeader.closest("div.speasyforms-wizard-outer").
-                    find(".placeholder").show();
-            }
-            else {
-                opt.selectedHeader.closest("div.speasyforms-wizard-outer").
-                    find(".speasyforms-wizard-next").show();
-                opt.selectedHeader.closest("div.speasyforms-wizard-outer").
-                    find(".placeholder").hide();
-            }
-        }
-    };
-
-    // extending baseContainer takes care of all functionality for the settings page
-    containerCollection.containerImplementations.wizard = $.extend({}, baseContainer, wizard);
-
-})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
 ///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.visibilityRuleCollection.js
 /*
  * SPEasyForms.visibilityRuleCollection - object to hold and manage all field visibility rules.
@@ -36892,7 +37947,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (!this.initialized) {
                 this.wireDialogEvents(opt);
             }
-            this.wireButtonEvents(opt);
             this.drawRuleTableTab(opt);
             this.initialized = true;
 
@@ -37135,6 +38189,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.currentConfig.visibility.def[opt.fieldName].splice(opt.index, 1);
                 $.spEasyForms.configManager.set(opt);
                 visibilityRuleCollection.drawRuleTable(opt);
+                opt.refresh = $.spEasyForms.refresh.visibility;
                 $.spEasyForms.containerCollection.toEditor(opt);
             });
 
@@ -37202,6 +38257,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         opt.currentConfig = visibilityRuleCollection.toConfig(opt);
                         $.spEasyForms.configManager.set(opt);
                         visibilityRuleCollection.drawRuleTable(opt);
+                        opt.refresh = $.spEasyForms.refresh.visibility;
                         $.spEasyForms.containerCollection.toEditor(opt);
                         event.handled = true;
                     }
@@ -37258,6 +38314,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             $('#addVisibilityRuleDialog').dialog("close");
                             $("#conditonalVisibilityRulesDialog").dialog("open");
                             visibilityRuleCollection.drawRuleTable(opt);
+                            opt.refresh = $.spEasyForms.refresh.visibility;
                             $.spEasyForms.containerCollection.toEditor(opt);
                         }
                         return false;
@@ -37331,43 +38388,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 autocomplete("option", "source", visibilityRuleCollection.siteGroups.sort()).
                 focus();
                 $(this).parent().remove();
-            });
-        },
-
-        /*********************************************************************
-         * Wire the add rule button and make the rules sortable.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
-        wireButtonEvents: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            $("tr.speasyforms-sortablefields").each(function () {
-                var tds = $(this).find("td");
-                if (tds.length > 0) {
-                    var internalName = $(this).find("td")[1].innerHTML;
-                    $(this).append(
-                        "<td class='speasyforms-conditionalvisibility'><button id='" +
-                        internalName +
-                        "ConditionalVisibility' class='speasyforms-containerbtn " +
-                        "speasyforms-conditionalvisibility'>" +
-                        "Edit Conditional Visibility</button></td>");
-                }
-            });
-
-            $("button.speasyforms-conditionalvisibility").button({
-                icons: {
-                    primary: "ui-icon-key"
-                },
-                text: false
-            }).click(function () {
-                opt.currentConfig = $.spEasyForms.configManager.get(opt);
-                opt.fieldName = this.id.replace("ConditionalVisibility", "");
-                visibilityRuleCollection.launchDialog(opt);
-                $(".tabs-min").hide();
-                $("#tabs-min-visibility").show();
-                return false;
             });
         },
 
@@ -37718,62 +38738,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
             $("#tabs-min-adapters").append("<br /><br />");
 
-            $("tr.speasyforms-sortablefields").each(function () {
-                var tds = $(this).find("td");
-                if (tds.length > 2) {
-                    var internalName = $(this).find("td")[1].innerHTML;
-                    var type = $(this).find("td")[2].innerHTML;
-                    opt.supportedTypes = adapterCollection.supportedTypes(opt);
-                    if ($.inArray(type, opt.supportedTypes) >= 0) {
-                        $(this).append(
-                            "<td class='speasyforms-adapter'><button id='" +
-                            internalName +
-                            "Adapter' class='speasyforms-containerbtn " +
-                            "speasyforms-adapter' data-spfieldtype='" +
-                            type + "'>" +
-                            "Configure Field Control Adapter</button></td>");
-                    } else {
-                        $(this).append("<td class='speasyforms-blank'>&nbsp;</td>");
-                    }
-                }
-            });
-
-            $("#adapterTypeDialog").dialog({
-                modal: true,
-                autoOpen: false,
-                width: 400,
-                buttons: {
-                    "Ok": function () {
-                        $("#adapterTypeDialog").dialog("close");
-                        opt.adapterType = $("#adapterType option:selected").text();
-                        $.each(adapterCollection.adapterImplementations, function (idx, impl) {
-                            if (impl.type === opt.adapterType) {
-                                opt.adapterImpl = impl;
-                            }
-                        });
-                        if (opt.adapterImpl) {
-                            opt.adapterImpl.launchDialog(opt);
-                        }
-                    },
-                    "Cancel": function () {
-                        $("#adapterTypeDialog").dialog("close");
-                    }
-                }
-            });
-
-            $("button.speasyforms-adapter").button({
-                icons: {
-                    primary: "ui-icon-shuffle"
-                },
-                text: false
-            }).click(function () {
-                opt.button = this;
-                opt.fieldName = opt.button.id.replace("Adapter", "");
-                opt.spFieldType = $.spEasyForms.containerCollection.rows[opt.fieldName].spFieldType;
-                adapterCollection.launchDialog(opt);
-                return false;
-            });
-
             if ($("#spEasyFormsAdapterTable tr.speasyforms-fieldmissing").length > 0 && opt.verbose) {
                 $("#adapterTab").addClass("speasyforms-fieldmissing");
             }
@@ -37799,6 +38763,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
                 delete opt.currentConfig.adapters.def[internalName];
                 $.spEasyForms.configManager.set(opt);
+                opt.refresh = $.spEasyForms.refresh.adapters;
                 $.spEasyForms.containerCollection.toEditor(opt);
                 return false;
             });
@@ -37806,6 +38771,30 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
         launchDialog: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
+
+            $("#adapterTypeDialog").dialog({
+                modal: true,
+                autoOpen: false,
+                width: 400,
+                buttons: {
+                    "Ok": function () {
+                        $("#adapterTypeDialog").dialog("close");
+                        opt.adapterType = $("#adapterType option:selected").text();
+                        $.each(adapterCollection.adapterImplementations, function (idx, impl) {
+                            if (impl.type === opt.adapterType) {
+                                opt.adapterImpl = impl;
+                            }
+                        });
+                        if (opt.adapterImpl) {
+                            opt.adapterImpl.launchDialog(opt);
+                        }
+                    },
+                    "Cancel": function () {
+                        $("#adapterTypeDialog").dialog("close");
+                    }
+                }
+            });
+
             opt.dialogLaunched = false;
             opt.adapters = opt.currentConfig.adapters.def;
             opt.adapter = undefined;
@@ -38020,12 +39009,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 opt.adapters[result.columnNameInternal] = result;
                                 $.spEasyForms.configManager.set(opt);
                                 $('#autocompleteAdapterDialog').dialog("close");
+                                opt.refresh = $.spEasyForms.refresh.adapters;
                                 $.spEasyForms.containerCollection.toEditor(opt);
                             }
                         } else {
                             if ($("#autoCompleteHiddenFieldName").val() in opt.adapters) {
                                 delete opt.adapters[$("#autoCompleteHiddenFieldName").val()];
                                 $.spEasyForms.configManager.set(opt);
+                                opt.refresh = $.spEasyForms.refresh.adapters;
                                 $.spEasyForms.containerCollection.toEditor(opt);
                             }
                             $('#autocompleteAdapterDialog').dialog("close");
@@ -38180,6 +39171,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 }
                                 $.spEasyForms.configManager.set(opt);
                                 $('#cascadingLookupAdapterDialog').dialog("close");
+                                opt.refresh = $.spEasyForms.refresh.adapters;
                                 $.spEasyForms.containerCollection.toEditor(opt);
                             } else {
                                 adapterCollection.validateRequired({
@@ -38220,6 +39212,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                         $("#cascadingLookupChildSelect").val();
                                     $.spEasyForms.configManager.set(opt);
                                     $('#cascadingLookupAdapterDialog').dialog("close");
+                                    opt.refresh = $.spEasyForms.refresh.adapters;
                                     $.spEasyForms.containerCollection.toEditor(opt);
                                 }
                             }
@@ -38479,6 +39472,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             };
                             opt.adapters[result.columnNameInternal] = result;
                             $.spEasyForms.configManager.set(opt);
+                            opt.refresh = $.spEasyForms.refresh.adapters;
                             containerCollection.toEditor(opt);
                         }
                         $('#addDefaultToCurrentUserDialog').dialog("close");
@@ -38491,7 +39485,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             $.spEasyForms.configManager.set(opt);
                         }
                         $('#addDefaultToCurrentUserDialog').dialog("close");
-                        containerCollection.toEditor(opt);
+                        opt.adaptersChanged = true;
+                        opt.refresh = $.spEasyForms.refresh.adapters;
                         return false;
                     }
                 },
@@ -38693,6 +39688,136 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
     // add adapter to adapter collection
     adapterCollection.adapterImplementations[lookupDetailAdapter.type] = lookupDetailAdapter;
+})(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
+
+///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.starRatingAdapter.js
+/*
+ * $.spEasyForms.starRatingAdapter - an adapter plug-in for SPEasyForms that
+ * can be applied to integer fields and allows users to enter 0-5 stars as the
+ * value by clicking on the stars or a slider-like interface.
+ *
+ * @requires jQuery.SPEasyForms.2015.01 
+ * @copyright 2014-2015 Joe McShea
+ * @license under the MIT license:
+ *    http://www.opensource.org/licenses/mit-license.php
+ */
+
+/* global spefjQuery */
+(function ($, undefined) {
+
+    // shorthand alias for SPEasyForms instances we're going to need
+    var containerCollection = $.spEasyForms.containerCollection;
+    var visibilityRuleCollection = $.spEasyForms.visibilityRuleCollection;
+    var adapterCollection = $.spEasyForms.adapterCollection;
+
+    /* Field control adapter for default to current user on user fields */
+    $.spEasyForms.starRatingAdapter = {
+        type: "Star Rating",
+
+        // return an array of field types to which this adapter can be applied
+        supportedTypes: function () {
+            return ["SPFieldNumber"];
+        },
+
+        // modify a configured field in a new, edit, or display form
+        transform: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if (containerCollection.rows[opt.adapter.columnNameInternal]) {
+                var rowInfo = containerCollection.rows[opt.adapter.columnNameInternal];
+                var value = rowInfo.value ? rowInfo.value : 0;
+
+                if (visibilityRuleCollection.getFormType(opt) === "display") {
+                    if ($("#" + opt.adapter.columnNameInternal + "Stars").length === 0) {
+                        var td = rowInfo.row.find("td.ms-formbody");
+                        var h3 = "<h3 class='ms-standardheader'>" + td.find("h3").html() + "</h3>";
+                        td.html("<div id='" + opt.adapter.columnNameInternal + "Stars' class='speasyforms-stars'>").prepend(h3);
+                        $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (30 * value) + "px");
+                    }
+                }
+                else {
+                    if ($("#" + opt.adapter.columnNameInternal + "Stars").length === 0) {
+                        var input = rowInfo.row.find("input");
+                        input.hide();
+                        input.parent().prepend("<div id='" + opt.adapter.columnNameInternal + "Stars' class='speasyforms-stars'>" +
+                            "<div id='" + opt.adapter.columnNameInternal + "StarsSlider' class='speasyforms-starsslider'></div></div>");
+
+                        $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (30 * value) + "px");
+
+                        $("#" + opt.adapter.columnNameInternal + "StarsSlider").click(function (e) {
+                            var posX = $(this).offset().left;
+                            var stars = Math.floor((e.pageX - posX + 15) / 30);
+                            input.val(stars);
+                            $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (30 * stars) + "px");
+                        });
+                    }
+                }
+            }
+        },
+
+        // initialize dialog box for configuring adapter on the settings page
+        toEditor: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            // add the dialog div to the UI if it is not already there
+            if ($("#addStarRatingAdapterDialog").length === 0) {
+                var txt = "<div id='addStarRatingAdapterDialog' " +
+                    "class='speasyforms-dialogdiv' " +
+                    "title='Star Rating Adapter'>" +
+                    "Would you like to add/remove a Star Rating adapter to " +
+                    "'<span id='starRatingFieldName'></span>'?</div>";
+                $("#spEasyFormsContainerDialogs").append(txt);
+            }
+            // initialize the jQuery UI dialog
+            var starRatingOpts = {
+                modal: true,
+                buttons: {
+                    "Add": function () {
+                        // add an adapter to the adaptes list and redraw the editor
+                        if ($("#starRatingFieldName").text().length > 0) {
+                            var result = {
+                                type: starRatingAdapter.type,
+                                columnNameInternal: $("#starRatingFieldName").text()
+                            };
+                            opt.adapters[result.columnNameInternal] = result;
+                            $.spEasyForms.configManager.set(opt);
+                            opt.refresh = $.spEasyForms.refresh.adapters;
+                            containerCollection.toEditor(opt);
+                        }
+                        $('#addStarRatingAdapterDialog').dialog("close");
+                    },
+                    "Remove": function () {
+                        // remove the adapter from the adaptes list and redraw the editor
+                        if ($("#starRatingFieldName").text().length > 0 &&
+                            $("#starRatingFieldName").text() in opt.adapters) {
+                            delete opt.adapters[$("#starRatingFieldName").text()];
+                            $.spEasyForms.configManager.set(opt);
+                        }
+                        $('#addStarRatingAdapterDialog').dialog("close");
+                        opt.refresh = $.spEasyForms.refresh.adapters;
+                        containerCollection.toEditor(opt);
+                        return false;
+                    }
+                },
+                autoOpen: false,
+                width: 400
+            };
+            $('#addStarRatingAdapterDialog').dialog(starRatingOpts);
+        },
+
+        // launch the adapter dialog box to configure a field
+        launchDialog: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            // initialize the field name in the dialog
+            $("#starRatingFieldName").text(opt.fieldName);
+            // launch the dialog
+            $('#addStarRatingAdapterDialog').dialog("open");
+        }
+    };
+
+    // define shorthand local variable for adapter
+    var starRatingAdapter = $.spEasyForms.starRatingAdapter;
+
+    // add adapter to adapter collection
+    adapterCollection.adapterImplementations[starRatingAdapter.type] = starRatingAdapter;
 })(typeof (spefjQuery) === 'undefined' ? null : spefjQuery);
 
 ///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.js

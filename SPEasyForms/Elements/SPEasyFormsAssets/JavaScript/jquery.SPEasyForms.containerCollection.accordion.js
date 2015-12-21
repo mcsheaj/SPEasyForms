@@ -20,10 +20,6 @@
         fieldCollectionsDlgTitle: "Enter the names of the accordion pages, one per line",
         fieldCollectionsDlgPrompt: "Page Names (one per line):",
 
-        /*
-        opt.currentContainerLayout
-        opt.currentContainerParent
-        */
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.result = [];
@@ -80,17 +76,31 @@
 
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var divId = "spEasyFormsAccordionDiv" + opt.currentContainerLayout.index;
-            $("#" + divId + " table.speasyforms-accordion").each(function () {
-                var index = $(this)[0].id.replace("accordionTable", "");
-                if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
-                    $("#spEasyFormsAccordionHeader" + index).hide();
-                    $("#spEasyFormsAccordionHeader" + index).next().hide();
+            var index = opt.currentContainerLayout.index;
+            var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
+            var accordion = container.children("div.speasyforms-accordion");
+            var headers = accordion.children("h3.ui-accordion-header");
+            var content = accordion.children("div.ui-accordion-content ");
+            var allHidden = true;
+            for (var idx = 0; idx < content.length; idx++) {
+                var subContainer = $(content[idx]).children(".speasyforms-container");
+                if (subContainer.attr("data-speasyformsempty") === "1") {
+                    var active = accordion.accordion("option", "active");
+                    if (active == idx) {
+                        accordion.accordion({ active: idx + 1 });
+                    }
+                    $(headers[idx]).hide();
                 }
                 else {
-                    $("#spEasyFormsAccordionHeader" + index).show();
+                    allHidden = false;
                 }
-            });
+            }
+            if (allHidden) {
+                container.attr("data-speasyformsempty", "1").hide();
+            }
+            else {
+                container.attr("data-speasyformsempty", "0").show();
+            }
         },
         
         preSaveItem: function (options) {

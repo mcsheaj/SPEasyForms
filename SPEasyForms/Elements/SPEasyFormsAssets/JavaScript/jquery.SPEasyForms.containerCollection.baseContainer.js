@@ -184,8 +184,15 @@
                             var index = $("#settingsContainerId").val();
                             var container = $("#spEasyFormsContainer" + index);
                             if ($("#settingsContainerName").val().length > 0) {
-                                container.attr("data-containername", $("#settingsContainerName").val());
-                                container.find(".speasyforms-itemtitle:first").text($("#settingsContainerName").val());
+                                opt.currentContainerLayout.name = $("#settingsContainerName").val();
+                                if (opt.currentContainerLayout.name.length === 0) {
+                                    opt.currentContainerLayout.name = opt.currentContainerLayout.containerType;
+                                }
+                                container.attr("data-containername", opt.currentContainerLayout.name);
+                                container.find(".speasyforms-itemtitle:first").text(opt.currentContainerLayout.name);
+                                if (opt.currentContainerLayout.name != opt.currentContainerLayout.containerType) {
+                                    container.find(".speasyforms-itemtype:first").text(opt.currentContainerLayout.containerType);
+                                }
                             }
                             var groupNames = $("#settingsCollectionNames").val().split('\n');
                             $.each($(groupNames), function (idx, name) {
@@ -291,6 +298,97 @@
             }
         }
     };
+
+    $.spEasyForms.fieldCollection = {
+        containerType: "FieldCollection",
+        cannotBeAdded: true,
+        noChildren: true,
+        needsParent: true,
+
+        transform: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var result = [];
+            opt.table = $("<table/>", {
+                "role": "presentation",
+                "id": opt.collectionType + "Table" + opt.collectionIndex,
+                "class": "speasyforms-fieldcollection " + opt.tableClass,
+                "cellspacing": "5"
+            });
+            opt.currentContainerParent.append(opt.table);
+
+            $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
+                opt.rowInfo = containerCollection.rows[field.fieldInternalName];
+                if ($.spEasyForms.baseContainer.appendRow(opt)) {
+                    result.push(field.fieldInternalName);
+                }
+            });
+            return result;
+        },
+
+        postTransform: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
+            if (container.find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
+                container.attr("data-speasyformsempty", "1").hide();
+            }
+            else {
+                container.attr("data-speasyformsempty", "0").show();
+            }
+        },
+
+        toEditor: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var result = [];
+            var table = containerCollection.createFieldCollection(opt);
+
+            $.each(opt.currentContainerLayout.fields, function (fieldIdx, field) {
+                opt.row = containerCollection.rows[field.fieldInternalName];
+                if (opt.row === undefined) {
+                    opt.row = {
+                        displayName: field.fieldInternalName,
+                        internalName: field.fieldInternalName,
+                        spFieldType: field.fieldInternalName,
+                        value: "",
+                        row: $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'></h3></td><td class='ms-formbody'></td></tr>"),
+                        fieldMissing: true
+                    };
+                }
+                table.append(containerCollection.createFieldRow(opt));
+                result.push(field.fieldInternalName);
+            });
+
+            opt.currentContainer.find(".speasyforms-itemtitle").html(opt.currentContainerLayout.name);
+            if (opt.currentContainerLayout.name !== opt.currentContainerLayout.containerType) {
+                opt.currentContainer.find(".speasyforms-itemtype").html("&nbsp;[" + opt.currentContainerLayout.containerType + "]");
+            }
+            opt.currentContainer.find(".speasyforms-nestedsortable-content").append(table);
+
+            return result;
+        },
+
+        toLayout: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var trs = $(opt.container).find("tr:not(:first)");
+
+            var result = {
+                name: $(opt.container).attr("data-containername"),
+                containerType: $(opt.container).attr("data-containertype"),
+                index: $(opt.container).attr("data-containerindex"),
+                fields: []
+            };
+
+            $.each(trs, function (idx, tr) {
+                var tds = $(tr).find("td");
+                result.fields.push({
+                    fieldInternalName: $(tds[1]).text()
+                });
+            });
+
+            return result;
+        }
+    };
+    var fieldCollection = $.extend({}, $.spEasyForms.baseContainer, $.spEasyForms.fieldCollection);
+    containerCollection.containerImplementations.fieldCollection = fieldCollection;
 
 })(spefjQuery);
 

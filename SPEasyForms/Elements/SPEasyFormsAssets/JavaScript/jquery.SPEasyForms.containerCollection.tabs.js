@@ -76,33 +76,28 @@
 
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.divId = "spEasyFormsTabDiv" + opt.currentContainerLayout.index;
-            var shown = 0;
-            $("#" + opt.divId + " table.speasyforms-tabs").each(function () {
-                var index = $(this).parent()[0].id.replace("spEasyFormsTabsDiv", "");
-                if ($(this).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").length === 0) {
-                    $("#spEasyFormsTabsLabel" + index).hide();
-                    if ($(this).parent().css("display") !== "none") {
-                        if ($(this).parent().next().length > 0) {
-                            var nextIndex = $(this).parent().next()[0].id.replace("spEasyFormsTabsDiv", "");
-                            if ($("#spEasyFormsTabsLabel" + nextIndex).length > 0) {
-                                $("#" + opt.divId).tabs({
-                                    active: $("#spEasyFormsTabsLabel" + nextIndex).index()
-                                });
-                            }
-                        }
+            var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
+            var tabs = container.children("div.speasyforms-tabs");
+            var subContainers = tabs.children("div.speasyforms-tabs").children("div.speasyforms-container");
+            var listItems = tabs.children("ul").children("li");
+            var allHidden = true;
+            for (var idx = 0; idx < subContainers.length; idx++) {
+                if ($(subContainers[idx]).attr("data-speasyformsempty") === "1") {
+                    var active = tabs.tabs("option", "active");
+                    if (active == idx) {
+                        tabs.tabs({ active: idx + 1 });
                     }
+                    $(listItems[idx]).hide();
                 }
                 else {
-                    shown++;
-                    $("#spEasyFormsTabsLabel" + index).show();
+                    allHidden = false;
                 }
-            });
-            if (shown === 0) {
-                $("#" + opt.divId).hide();
+            }
+            if (allHidden) {
+                container.attr("data-speasyformsempty", "1").hide();
             }
             else {
-                $("#" + opt.divId).show();
+                container.attr("data-speasyformsempty", "0").show();
             }
         },
 

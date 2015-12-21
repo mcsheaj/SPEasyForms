@@ -4,7 +4,7 @@
         <!--Determines if the bundle file should be automatically optimized after creation/update.-->
         <minify>true</minify>
         <!--Determin whether to generate/re-generate this bundle on building the solution.-->
-        <runOnBuild>true</runOnBuild>
+        <runOnBuild>false</runOnBuild>
         <!--Specifies a custom subfolder to save files to. By default, compiled output will be placed in the same folder and nested under the original file.-->
         <outputDirectory />
     </settings>
@@ -30,7 +30,6 @@
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.columns.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.tabs.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.htmlSnippet.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.wizard.js</file>
 
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.visibilityRuleCollection.js</file>
 
@@ -39,6 +38,7 @@
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.starRatingAdapter.js</file>
 
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.xhtml.js</file>

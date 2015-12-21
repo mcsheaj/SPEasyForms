@@ -54,12 +54,23 @@
 
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.tables = [];
-            $.each(opt.currentContainerLayout.fieldCollections, function (idx) {
-                opt.collectionIndex = opt.currentContainerLayout.index + "_" + idx;
-                opt.tables.push("columnsTable" + opt.collectionIndex);
-            });
-            this.evenUpTableRows(opt);
+            var index = opt.currentContainerLayout.index;
+            var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
+            var allHidden = true;
+            for (var idx = 0; idx < opt.currentContainerLayout.fieldCollections.length; idx++) {
+                var id = "#spEasyFormsColumnsCell" + index + "_" + idx;
+                if ($(id).children("div.speasyforms-container").attr("data-speasyformsempty") !== "1") {
+                    allHidden = false;
+                    break;
+                }
+            }
+            if (allHidden) {
+                container.attr("data-speasyformsempty", "1").hide();
+            }
+            else {
+                container.attr("data-speasyformsempty", "0").show();
+                this.evenUpTableRows(opt);
+            }
         },
 
         evenUpTableRows: function (options) {

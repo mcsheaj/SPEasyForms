@@ -183,6 +183,9 @@
                 $.spEasyForms.adapterCollection.toEditor(opt);
             }
 
+            $(".speasyforms-panel").show();
+            $(".speasyforms-content").show();
+
             this.initialized = true;
         },
 
@@ -435,14 +438,6 @@
                 items: "> tr:not(:first)",
                 helper: "clone",
                 zIndex: 990,
-                /*
-                start: function () {
-                    top = $("div.speasyforms-panel").scrollTop();
-                },
-                stop: function () {
-                    $("div.speasyforms-panel").scrollTop(top);
-                },
-                */
                 update: function (event) {
                     if (!event.handled) {
                         opt.currentConfig = containerCollection.toConfig(opt);
@@ -543,11 +538,14 @@
                 // wire the edit buttons for each field collection
                 $("ol.speasyforms-nestedsortable").on("click", "span.speasyforms-nestedsortable-edit", function () {
                     var container = $(this).closest("li");
-                    opt.currentContainerLayout = {
-                        name: container.find(".speasyforms-itemtitle:first").text(),
-                        index: container.attr("data-containerindex"),
-                        containerType: container.attr("data-containertype")
-                    };
+                    var index = container.attr("data-containerindex");
+                    opt.currentConfig = containerCollection.toConfig(opt);
+                    $.each($(opt.currentConfig.layout.def), function (idx, layout) {
+                        if (layout.index === index) {
+                            opt.currentContainerLayout = layout;
+                            return false;
+                        }
+                    });
                     var implname = $.spEasyForms.utilities.jsCase(opt.currentContainerLayout.containerType);
                     if (implname in containerCollection.containerImplementations) {
                         var impl = containerCollection.containerImplementations[implname];
@@ -571,11 +569,33 @@
                 });
 
                 $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-visibility", function (e) {
-                    alert("Add Visiblity Rule");
+                    opt.currentConfig = $.spEasyForms.configManager.get(opt);
+                    opt.fieldName = $(this).closest("tr").find(".speasyforms-fieldinternal").text();
+                    $.spEasyForms.visibilityRuleCollection.launchDialog(opt);
+                    $(".tabs-min").hide();
+                    $("#tabs-min-visibility").show();
+                });
+
+                $("#tabs-min-visibility").on("dblclick", "td.speasyforms-staticrules", function (e) {
+                    opt.currentConfig = $.spEasyForms.configManager.get(opt);
+                    opt.fieldName = $(this).closest("tr").children(".speasyforms-hidden").text();
+                    $.spEasyForms.visibilityRuleCollection.launchDialog(opt);
                 });
 
                 $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-adapter", function (e) {
-                    alert("Add Adapter");
+                    opt.currentConfig = $.spEasyForms.configManager.get(opt);
+                    opt.fieldName = $(this).closest("tr").find(".speasyforms-fieldinternal").text();
+                    opt.spFieldType = $(this).closest("tr").find(".speasyforms-fieldtype").text();
+                    $.spEasyForms.adapterCollection.launchDialog(opt);
+                    $(".tabs-min").hide();
+                    $("#tabs-min-adapters").show();
+                });
+
+                $("#tabs-min-adapters").on("dblclick", "td.speasyforms-adapter-static", function (e) {
+                    opt.currentConfig = $.spEasyForms.configManager.get(opt);
+                    opt.fieldName = $(this).closest("tr").children(".speasyforms-hidden").text();
+                    opt.spFieldType = containerCollection.rows[opt.fieldName].spFieldType;
+                    $.spEasyForms.adapterCollection.launchDialog(opt);
                 });
             }
         },
@@ -839,6 +859,27 @@
             });
             $("#chooseContainerDialog").dialog(chooseContainerOpts);
 
+            // dialog to edit the name of a field collection
+            var editFieldsTableOpts = {
+                modal: true,
+                buttons: {
+                    "Save": function () {
+                        $("#" + $("#editFieldCollectionContainerId").val()).
+                        html($("#fieldCollectionName").val());
+                        opt.currentConfig = containerCollection.toConfig(opt);
+                        $.spEasyForms.configManager.set(opt);
+                        opt.refresh = refresh.all;
+                        containerCollection.toEditor(opt);
+                        $("#editFieldCollectionDialog").dialog("close");
+                    },
+                    "Cancel": function () {
+                        $("#editFieldCollectionDialog").dialog("close");
+                    }
+                },
+                autoOpen: false
+            };
+            $('#editFieldCollectionDialog').dialog(editFieldsTableOpts);
+
             // save confirmation dialog
             var importOpts = {
                 modal: true,
@@ -877,6 +918,16 @@
             }
             else if (opt.currentContainerLayout.containerType === $.spEasyForms.defaultFormContainer.containerType) {
                 template = $("#spEasyFormsTemplates .speasyforms-nestedsortable-defaultform").clone();
+            }
+
+            if (opt.impl && opt.impl.noChildren) {
+                template.addClass("speasyforms-nestedsortable-nochildren");
+            }
+            else if (opt.impl && opt.impl.needsParent) {
+                template.addClass("speasyforms-nestedsortable-needsparent");
+            }
+            else if (opt.impl && opt.impl.noParent) {
+                template.addClass("speasyforms-nestedsortable-noparent");
             }
 
             opt.currentContainerParent.append(template);

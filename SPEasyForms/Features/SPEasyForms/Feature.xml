@@ -53,7 +53,6 @@
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.columns.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.tabs.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.htmlSnippet.js" />
-        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.wizard.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.visibilityRuleCollection.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" />

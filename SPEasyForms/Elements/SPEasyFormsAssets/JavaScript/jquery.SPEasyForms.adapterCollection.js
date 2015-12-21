@@ -71,29 +71,6 @@
             }
             $("#tabs-min-adapters").append("<br /><br />");
 
-            $("#adapterTypeDialog").dialog({
-                modal: true,
-                autoOpen: false,
-                width: 400,
-                buttons: {
-                    "Ok": function () {
-                        $("#adapterTypeDialog").dialog("close");
-                        opt.adapterType = $("#adapterType option:selected").text();
-                        $.each(adapterCollection.adapterImplementations, function (idx, impl) {
-                            if (impl.type === opt.adapterType) {
-                                opt.adapterImpl = impl;
-                            }
-                        });
-                        if (opt.adapterImpl) {
-                            opt.adapterImpl.launchDialog(opt);
-                        }
-                    },
-                    "Cancel": function () {
-                        $("#adapterTypeDialog").dialog("close");
-                    }
-                }
-            });
-
             if ($("#spEasyFormsAdapterTable tr.speasyforms-fieldmissing").length > 0 && opt.verbose) {
                 $("#adapterTab").addClass("speasyforms-fieldmissing");
             }
@@ -127,6 +104,30 @@
 
         launchDialog: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
+
+            $("#adapterTypeDialog").dialog({
+                modal: true,
+                autoOpen: false,
+                width: 400,
+                buttons: {
+                    "Ok": function () {
+                        $("#adapterTypeDialog").dialog("close");
+                        opt.adapterType = $("#adapterType option:selected").text();
+                        $.each(adapterCollection.adapterImplementations, function (idx, impl) {
+                            if (impl.type === opt.adapterType) {
+                                opt.adapterImpl = impl;
+                            }
+                        });
+                        if (opt.adapterImpl) {
+                            opt.adapterImpl.launchDialog(opt);
+                        }
+                    },
+                    "Cancel": function () {
+                        $("#adapterTypeDialog").dialog("close");
+                    }
+                }
+            });
+
             opt.dialogLaunched = false;
             opt.adapters = opt.currentConfig.adapters.def;
             opt.adapter = undefined;

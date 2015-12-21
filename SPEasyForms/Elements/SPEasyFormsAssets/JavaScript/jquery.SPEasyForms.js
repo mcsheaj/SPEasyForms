@@ -30,7 +30,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 }
 /* jshint +W098 */
 
-(function($, undefined) {
+(function ($, undefined) {
+
+    if (SPClientTemplates && SPClientTemplates.TemplateManager && SPClientTemplates.TemplateManager.RegisterTemplateOverrides) {
+        SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
+            OnPreRender: function (ctx) {
+                if ($("body").attr("data-speasyforms-formhidden") !== "true") {
+                    $("body").attr("data-speasyforms-formhidden", "true").append("<style type='text/css'>.ms-formtable { display: none; }</style>");
+                }
+            }
+        });
+    }
 
     if (!Object.keys) {
         Object.keys = function (obj) {

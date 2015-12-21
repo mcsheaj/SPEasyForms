@@ -191,6 +191,11 @@
             font-weight: normal;
         }
 
+        .speasyforms-itemtype {
+            font-size: .7em;
+            font-weight: normal;
+        }
+
         table.speasyforms-editor {
             max-width: 1280px;
         }
@@ -278,6 +283,7 @@
 
         td.speasyforms-visibilityrulebutton {
             background: #eee;
+            width: 1px;
         }
 
         td.speasyforms-editor .ui-widget-content.tabs-min {
@@ -717,6 +723,10 @@
         table.ms-formtable {
             width: 600px;
         }
+
+        .speasyforms-panel, .speasyforms-content {
+            display: none;
+        }
     </style>
 </asp:Content>
 <asp:Content ContentPlaceHolderID='PlaceHolderMiniConsole' runat='server'>
@@ -958,6 +968,11 @@
                 <option></option>
             </select>
             <div id='chooseContainerError' class='speasyforms-error'>&nbsp;</div>
+        </div>
+        <div id='editFieldCollectionDialog' class='speasyforms-dialogdiv' title='Edit Field Collection Name'>
+            <label for='fieldCollectionName'>Name</label>
+            <input type='text' id='fieldCollectionName' name='fieldCollectionNames' />
+            <input type='hidden' id='editFieldCollectionContainerId' value='' />
         </div>
         <div id='containerSettingsDialog' class='speasyforms-dialogdiv' title='Add Container'>
             <label for='settingsContainerName'>Name:</label>
