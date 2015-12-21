@@ -54,7 +54,7 @@
                 beforeLoad: function (e, ui) {
                     ui.jqXHR.abort();
                 },
-                create: function (e, ui) {
+                create: function () {
                     $(this).children("div").hide();
                     $(this).children(".speasyforms-tabs:first").show();
                 },
@@ -84,7 +84,7 @@
             for (var idx = 0; idx < subContainers.length; idx++) {
                 if ($(subContainers[idx]).attr("data-speasyformsempty") === "1") {
                     var active = tabs.tabs("option", "active");
-                    if (active == idx) {
+                    if (active === idx) {
                         tabs.tabs({ active: idx + 1 });
                     }
                     $(listItems[idx]).hide();
@@ -103,26 +103,20 @@
 
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.divId = "spEasyFormsTabDiv" + opt.currentContainerLayout.index;
-            var selected = false;
-            $("#spEasyFormsTabDiv" + opt.currentContainerLayout.index).find("table.speasyforms-tabs").each(function (idx, tab) {
-                if ($(tab).find(".ms-formbody span.ms-formvalidation").length > 0) {
-                    var anchor = $("a[href$='#spEasyFormsTabsDiv" + opt.currentContainerLayout.index + "_" + idx + "']");
-                    anchor.addClass("speasyforms-tabvalidationerror");
-                    if (!selected) {
-                        selected = true;
-                        $("#" + opt.divId).tabs({
-                            active: anchor.parent().index(),
-                            beforeLoad: function (e, ui) {
-                                ui.jqXHR.abort();
-                            }
-                        });
+            var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
+            var tabs = container.children("div.speasyforms-tabs");
+            var subContainers = tabs.children("div.speasyforms-tabs").children("div.speasyforms-container");
+            var listItems = tabs.children("ul").children("li");
+            container.attr("data-speasyforms-validationerror", "0");
+            for (var idx = 0; idx < subContainers.length; idx++) {
+                if ($(subContainers[idx]).attr("data-speasyforms-validationerror") === "1") {
+                    if (container.attr("data-speasyforms-validationerror") === "0") {
+                        container.attr("data-speasyforms-validationerror", "1");
+                        tabs.tabs({ active: idx });
                     }
-                } else {
-                    $("a[href$='#spEasyFormsTabsDiv" + opt.currentContainerLayout.index + "_" + idx + "']").
-                    removeClass("speasyforms-tabvalidationerror");
+                    $(listItems[idx]).find("a").addClass("speasyforms-tabvalidationerror");
                 }
-            });
+            }
             return true;
         }
     };

@@ -95,8 +95,6 @@
                 }
 
                 this.postTransform(opt);
-
-                this.highlightValidationErrors(opt);
             }
 
             return fieldsInUse;
@@ -253,9 +251,10 @@
             var containerType, impl;
 
             function highlightValidationErrorsHelper(layout) {
+                var r = true;
                 if (layout.fieldCollections) {
                     $.each(layout.fieldCollections, function (i, l) {
-                        highlightValidationErrorsHelper(l);
+                        r = highlightValidationErrorsHelper(l) && r;
                     });
                 }
 
@@ -264,19 +263,16 @@
                     impl = containerCollection.containerImplementations[containerType];
                     if (typeof (impl.preSaveItem) === 'function') {
                         opt.currentContainerLayout = layout;
-                        result = result && impl.preSaveItem(opt);
+                        result = impl.preSaveItem(opt) && r;
                     }
                 }
+                return r;
             }
 
             $.each(config.layout.def, function (index, current) {
                 containerType = $.spEasyForms.utilities.jsCase(current.containerType);
                 if (containerType in containerCollection.containerImplementations) {
-                    impl = containerCollection.containerImplementations[containerType];
-                    if (typeof (impl.preSaveItem) === 'function') {
-                        opt.currentContainerLayout = current;
-                        result = result && impl.preSaveItem(opt);
-                    }
+                    result = highlightValidationErrorsHelper(current) && result;
                 }
             });
 

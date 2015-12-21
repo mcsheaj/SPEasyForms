@@ -33006,7 +33006,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
 (function ($, undefined) {
 
-    if (SPClientTemplates && SPClientTemplates.TemplateManager && SPClientTemplates.TemplateManager.RegisterTemplateOverrides) {
+    if (typeof(SPClientTemplates) !== 'undefined' && SPClientTemplates.TemplateManager && SPClientTemplates.TemplateManager.RegisterTemplateOverrides) {
         SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
             OnPreRender: function (ctx) {
                 if ($("body").attr("data-speasyforms-formhidden") !== "true") {
@@ -35756,8 +35756,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
 
                 this.postTransform(opt);
-
-                this.highlightValidationErrors(opt);
             }
 
             return fieldsInUse;
@@ -35914,9 +35912,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var containerType, impl;
 
             function highlightValidationErrorsHelper(layout) {
+                var r = true;
                 if (layout.fieldCollections) {
                     $.each(layout.fieldCollections, function (i, l) {
-                        highlightValidationErrorsHelper(l);
+                        r = highlightValidationErrorsHelper(l) && r;
                     });
                 }
 
@@ -35925,19 +35924,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     impl = containerCollection.containerImplementations[containerType];
                     if (typeof (impl.preSaveItem) === 'function') {
                         opt.currentContainerLayout = layout;
-                        result = result && impl.preSaveItem(opt);
+                        result = impl.preSaveItem(opt) && r;
                     }
                 }
+                return r;
             }
 
             $.each(config.layout.def, function (index, current) {
                 containerType = $.spEasyForms.utilities.jsCase(current.containerType);
                 if (containerType in containerCollection.containerImplementations) {
-                    impl = containerCollection.containerImplementations[containerType];
-                    if (typeof (impl.preSaveItem) === 'function') {
-                        opt.currentContainerLayout = current;
-                        result = result && impl.preSaveItem(opt);
-                    }
+                    result = highlightValidationErrorsHelper(current) && result;
                 }
             });
 
@@ -37038,6 +37034,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
         },
 
+        preSaveItem: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
+            if (container.find("span.ms-formvalidation").length > 0) {
+                container.attr("data-speasyforms-validationerror", "1");
+            }
+            else {
+                container.attr("data-speasyforms-validationerror", "0");
+            }
+        },
+
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = [];
@@ -37149,7 +37156,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 heightStyle: "content",
                 active: false,
                 collapsible: true,
-                activate: function (e, ui) {
+                activate: function (e) {
                     e.preventDefault();
                 }
             });
@@ -37184,7 +37191,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 var subContainer = $(content[idx]).children(".speasyforms-container");
                 if (subContainer.attr("data-speasyformsempty") === "1") {
                     var active = accordion.accordion("option", "active");
-                    if (active == idx) {
+                    if (active === idx) {
                         accordion.accordion({ active: idx + 1 });
                     }
                     $(headers[idx]).hide();
@@ -37203,25 +37210,22 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var divId = "spEasyFormsAccordionDiv" + opt.currentContainerLayout.index;
-            var selected = false;
-            $("#" + divId).find("table.speasyforms-accordion").each(function (idx, content) {
-                if ($(content).find(".ms-formbody span.ms-formvalidation").length > 0) {
-                    $("#spEasyFormsAccordionHeader" + opt.currentContainerLayout.index + "_" + idx).
-                    addClass("speasyforms-accordionvalidationerror");
-                    if (!selected) {
-                        $("#" + divId).accordion({
-                            heightStyle: "content",
-                            active: idx,
-                            collapsible: true
-                        });
-                        selected = true;
+            var index = opt.currentContainerLayout.index;
+            var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
+            var accordion = container.children("div.speasyforms-accordion");
+            var headers = accordion.children("h3.ui-accordion-header");
+            var content = accordion.children("div.ui-accordion-content ");
+            container.attr("data-speasyforms-validationerror", "0");
+            for (var idx = 0; idx < content.length; idx++) {
+                var subContainer = $(content[idx]).children(".speasyforms-container");
+                if (subContainer.attr("data-speasyforms-validationerror") === "1") {
+                    if (container.attr("data-speasyforms-validationerror") === "0") {
+                        container.attr("data-speasyforms-validationerror", "1");
+                        accordion.accordion({ active: idx });
                     }
-                } else {
-                    $("#spEasyFormsAccordionHeader" + opt.currentContainerLayout.index + "_" + idx).
-                    removeClass("speasyforms-accordionvalidationerror");
+                    $(headers[idx]).addClass("speasyforms-accordionvalidationerror");
                 }
-            });
+            }
             return true;
         }
     };
@@ -37303,6 +37307,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             else {
                 container.attr("data-speasyformsempty", "0").show();
                 this.evenUpTableRows(opt);
+            }
+        },
+
+        preSaveItem: function(options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var index = opt.currentContainerLayout.index;
+            var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
+            container.attr("data-speasyforms-validationerror", "0");
+            for (var idx = 0; idx < opt.currentContainerLayout.fieldCollections.length; idx++) {
+                var id = "#spEasyFormsColumnsCell" + index + "_" + idx;
+                if ($(id).children("div.speasyforms-container").attr("data-speasyforms-validationerror") === "1") {
+                    container.attr("data-speasyforms-validationerror", "1");
+                    break;
+                }
             }
         },
 
@@ -37402,7 +37420,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 beforeLoad: function (e, ui) {
                     ui.jqXHR.abort();
                 },
-                create: function (e, ui) {
+                create: function () {
                     $(this).children("div").hide();
                     $(this).children(".speasyforms-tabs:first").show();
                 },
@@ -37432,7 +37450,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             for (var idx = 0; idx < subContainers.length; idx++) {
                 if ($(subContainers[idx]).attr("data-speasyformsempty") === "1") {
                     var active = tabs.tabs("option", "active");
-                    if (active == idx) {
+                    if (active === idx) {
                         tabs.tabs({ active: idx + 1 });
                     }
                     $(listItems[idx]).hide();
@@ -37451,26 +37469,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.divId = "spEasyFormsTabDiv" + opt.currentContainerLayout.index;
-            var selected = false;
-            $("#spEasyFormsTabDiv" + opt.currentContainerLayout.index).find("table.speasyforms-tabs").each(function (idx, tab) {
-                if ($(tab).find(".ms-formbody span.ms-formvalidation").length > 0) {
-                    var anchor = $("a[href$='#spEasyFormsTabsDiv" + opt.currentContainerLayout.index + "_" + idx + "']");
-                    anchor.addClass("speasyforms-tabvalidationerror");
-                    if (!selected) {
-                        selected = true;
-                        $("#" + opt.divId).tabs({
-                            active: anchor.parent().index(),
-                            beforeLoad: function (e, ui) {
-                                ui.jqXHR.abort();
-                            }
-                        });
+            var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
+            var tabs = container.children("div.speasyforms-tabs");
+            var subContainers = tabs.children("div.speasyforms-tabs").children("div.speasyforms-container");
+            var listItems = tabs.children("ul").children("li");
+            container.attr("data-speasyforms-validationerror", "0");
+            for (var idx = 0; idx < subContainers.length; idx++) {
+                if ($(subContainers[idx]).attr("data-speasyforms-validationerror") === "1") {
+                    if (container.attr("data-speasyforms-validationerror") === "0") {
+                        container.attr("data-speasyforms-validationerror", "1");
+                        tabs.tabs({ active: idx });
                     }
-                } else {
-                    $("a[href$='#spEasyFormsTabsDiv" + opt.currentContainerLayout.index + "_" + idx + "']").
-                    removeClass("speasyforms-tabvalidationerror");
+                    $(listItems[idx]).find("a").addClass("speasyforms-tabvalidationerror");
                 }
-            });
+            }
             return true;
         }
     };

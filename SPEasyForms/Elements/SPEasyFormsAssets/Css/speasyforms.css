@@ -16,12 +16,12 @@ div.speasyforms-tabs, div.speasyforms-accordion {
     width: 225px;
 }
 table.speasyforms-columns, table.speasyforms-columns h3.ms-standardheader, table.speasyforms-columns td.ms-formbody {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 h3.ms-standardheader, .ms-standardheader {
-    margin-bottom: 0px;
-    padding-bottom: 0px;
+    margin-bottom: 0;
+    padding-bottom: 0;
     font-weight: bold !important;
     color: #666666;
 }
@@ -75,6 +75,11 @@ table.speasyforms-columns td {
     .speasyforms-starsslider .ui-state-default {
         border: none;
         background: transparent;
-        height: 0px;
-        width: 0px;
+        height: 0;
+        width: 0;
     }
+
+.ms-formvalidation {
+    font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;
+    font-size: 1.1em;
+}

@@ -51,7 +51,7 @@
                 heightStyle: "content",
                 active: false,
                 collapsible: true,
-                activate: function (e, ui) {
+                activate: function (e) {
                     e.preventDefault();
                 }
             });
@@ -86,7 +86,7 @@
                 var subContainer = $(content[idx]).children(".speasyforms-container");
                 if (subContainer.attr("data-speasyformsempty") === "1") {
                     var active = accordion.accordion("option", "active");
-                    if (active == idx) {
+                    if (active === idx) {
                         accordion.accordion({ active: idx + 1 });
                     }
                     $(headers[idx]).hide();
@@ -105,25 +105,22 @@
         
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var divId = "spEasyFormsAccordionDiv" + opt.currentContainerLayout.index;
-            var selected = false;
-            $("#" + divId).find("table.speasyforms-accordion").each(function (idx, content) {
-                if ($(content).find(".ms-formbody span.ms-formvalidation").length > 0) {
-                    $("#spEasyFormsAccordionHeader" + opt.currentContainerLayout.index + "_" + idx).
-                    addClass("speasyforms-accordionvalidationerror");
-                    if (!selected) {
-                        $("#" + divId).accordion({
-                            heightStyle: "content",
-                            active: idx,
-                            collapsible: true
-                        });
-                        selected = true;
+            var index = opt.currentContainerLayout.index;
+            var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
+            var accordion = container.children("div.speasyforms-accordion");
+            var headers = accordion.children("h3.ui-accordion-header");
+            var content = accordion.children("div.ui-accordion-content ");
+            container.attr("data-speasyforms-validationerror", "0");
+            for (var idx = 0; idx < content.length; idx++) {
+                var subContainer = $(content[idx]).children(".speasyforms-container");
+                if (subContainer.attr("data-speasyforms-validationerror") === "1") {
+                    if (container.attr("data-speasyforms-validationerror") === "0") {
+                        container.attr("data-speasyforms-validationerror", "1");
+                        accordion.accordion({ active: idx });
                     }
-                } else {
-                    $("#spEasyFormsAccordionHeader" + opt.currentContainerLayout.index + "_" + idx).
-                    removeClass("speasyforms-accordionvalidationerror");
+                    $(headers[idx]).addClass("speasyforms-accordionvalidationerror");
                 }
-            });
+            }
             return true;
         }
     };

@@ -32,7 +32,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
 (function ($, undefined) {
 
-    if (SPClientTemplates && SPClientTemplates.TemplateManager && SPClientTemplates.TemplateManager.RegisterTemplateOverrides) {
+    if (typeof(SPClientTemplates) !== 'undefined' && SPClientTemplates.TemplateManager && SPClientTemplates.TemplateManager.RegisterTemplateOverrides) {
         SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
             OnPreRender: function (ctx) {
                 if ($("body").attr("data-speasyforms-formhidden") !== "true") {
