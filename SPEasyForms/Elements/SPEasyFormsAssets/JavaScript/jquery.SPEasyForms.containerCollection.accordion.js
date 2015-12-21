@@ -70,7 +70,9 @@
                     addClass("ui-corner-top").
                     removeClass("ui-corner-all");
                 $(this).next().show();
+                $.spEasyForms.containerCollection.postTransform(opt);
             });
+            
             return opt.result;
         },
 

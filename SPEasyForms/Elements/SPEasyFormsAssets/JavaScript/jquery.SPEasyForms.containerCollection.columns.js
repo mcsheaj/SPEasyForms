@@ -69,6 +69,7 @@
             }
             else {
                 container.attr("data-speasyformsempty", "0").show();
+                opt.tables = container.find("> table > tbody > tr > td > div > table.speasyforms-fieldcollection")
                 this.evenUpTableRows(opt);
             }
         },
@@ -91,9 +92,8 @@
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var tableRows = [];
             var rowCount = 0;
-            $.each($(opt.tables), function (idx, tableid) {
-                var currentRows = $("#" + tableid).
-                    find("tr:not([data-visibilityhidden='true']) td.ms-formbody").closest("tr");
+            $.each($(opt.tables), function (idx, table) {
+                var currentRows = $(table).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").closest("tr");
                 tableRows.push(currentRows);
                 if (currentRows.length > rowCount) {
                     rowCount = currentRows.length;

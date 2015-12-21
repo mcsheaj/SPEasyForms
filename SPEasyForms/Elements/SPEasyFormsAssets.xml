@@ -94,6 +94,7 @@
         <File Path="SPEasyFormsAssets\Download_060.png" Url="Download_060.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
     <Module Name="SPEasyFormsAssetsJavaScript" Url="Style Library/SPEasyFormsAssets/2015.01/JavaScript">
+        <File Path="SPEasyFormsAssets\MicrosoftAjax.js" Url="MicrosoftAjax.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.js" Url="jquery.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui.js" Url="jquery-ui.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui.js" Url="jquery-ui.nestedsortable.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

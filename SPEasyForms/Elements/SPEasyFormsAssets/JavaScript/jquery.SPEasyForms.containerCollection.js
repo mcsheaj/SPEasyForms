@@ -154,7 +154,7 @@
                 this.initConditionalFieldChoices(opt);
             }
 
-            if (!this.initialized || opt.refresh === refresh.panel) {
+            if (!this.initialized || opt.refresh & refresh.panel) {
                 $("ol.speasyforms-nestedsortable").empty();
 
                 this.initContainers(opt);

@@ -18,6 +18,7 @@ Manifest.xml
 
 .Set DestinationDir="SPEasyForms\SPEasyFormsAssets"
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.min.js
+..\Elements\SPEasyFormsAssets\JavaScript\MicrosoftAjax.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery-ui.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery-ui.nestedsortable.js

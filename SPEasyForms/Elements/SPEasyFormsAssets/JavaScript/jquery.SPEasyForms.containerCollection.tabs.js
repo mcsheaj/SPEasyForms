@@ -62,6 +62,7 @@
                     var id = ui.newTab.context.hash;
                     $(id).parent().children("div").hide();
                     $(id).show();
+                    $.spEasyForms.containerCollection.postTransform(opt);
                 }
             });
 

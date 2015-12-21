@@ -33330,38 +33330,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         toEditor: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            /*
-            if (_spPageContextInfo.webUIVersion === 4) {
-                $("#spEasyFormsContent").css({
-                    position: "static",
-                    "overflow-y": "visible",
-                    "overflow-x": "visible"
-                });
-                $("div.speasyforms-panel").css({
-                    width: "auto",
-                    height: "auto",
-                    position: "static",
-                    "overflow-y": "visible",
-                    "overflow-x": "visible"
-                });
-                $("td.speasyforms-form").css("padding-left", "0px");
-                $(".s4-title-inner").css("display", "none");
-                $(".speasyforms-ribbon").css("position", "fixed");
-                $("#s4-bodyContainer").css("overflow-x", "visible");
-                $(".s4-notdlg").hide();
-                $("#spEasyFormsOuterDiv").css({
-                    "margin-left": "-160px",
-                    "margin-top": "88px"
-                });
-                $("#RibbonContainer").append("<h3 class='speasyforms-breadcrumbs' style='position:fixed;top:0px;color:white;'><a href='" + opt.source + "' style='color:white;'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h3>");
-                $("tr.speasyforms-sortablefields, tr.speasyforms-sortablerules").css("font-size", "0.9em");
-                $("select[id$='DateTimeFieldDateHours']").css("font-size", "8pt");
-                $("select[id$='DateTimeFieldDateMinutes']").css("font-size", "8pt");
-            }
-            else {
-            */
             $("#msCuiTopbar").prepend("<h2 class='speasyforms-breadcrumbs'><a href='" + opt.source + "'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h2>");
-            //}
+            
             $.each(opt.currentListContext.contentTypes.order, function (i, ctid) {
                 if (ctid.indexOf("0x0120") !== 0) {
                     $("#spEasyFormsContentTypeSelect").append("<option value='" +
@@ -33369,6 +33339,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         opt.currentListContext.contentTypes[ctid].name + "</option>");
                 }
             });
+            
             $("#spEasyFormsContentTypeSelect").change(function () {
                 delete $.spEasyForms.containerCollection.rows;
                 delete $.spEasyForms.sharePointContext.formCache;
@@ -33376,37 +33347,23 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.refresh = $.spEasyForms.refresh.all;
                 $.spEasyForms.containerCollection.toEditor(opt);
             });
+            
             $.spEasyForms.containerCollection.toEditor(opt);
+            
             $(window).on("beforeunload", function () {
                 if (!$("#spEasyFormsSaveButton").hasClass("speasyforms-disabled")) {
                     return "You have unsaved changes, are you sure you want to leave the page?";
                 }
             });
-            $.spEasyForms.appendContext(opt);
-            var bannerHeight = 5;
-            /*
-            if (_spPageContextInfo.webUIVersion === 4) {
-                bannerHeight += $("#s4-ribbonrow").height();
-            }
-            else {
-            */
-                bannerHeight += $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height();
-            //}
+            
+            //$.spEasyForms.appendContext(opt);
+            
+            var bannerHeight = $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height() + 30;
             $("div.speasyforms-panel").height($(window).height() - bannerHeight);
-            /*if (_spPageContextInfo.webUIVersion === 4) {
-                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 445);
-            }
-            else {*/
-                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
-            //}
+            $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
             $(window).resize(function () {
                 $("div.speasyforms-panel").height($(window).height() - bannerHeight);
-                /*if (_spPageContextInfo.webUIVersion === 4) {
-                    $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 445);
-                }
-                else {*/
-                    $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
-                //}
+                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
             });
             $('#spEasyFormsRibbon').show();
         },
@@ -34376,6 +34333,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     listCount >= opt.maxListCache) {
                     delete opt.currentContext.listContexts[Object.keys(opt.currentContext.listContexts)[0]];
                 }
+                result.listId = opt.listId;
                 opt.currentContext.listContexts[opt.listId] = result;
                 $.spEasyForms.writeCachedContext(opt);
             }
@@ -34523,18 +34481,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         getConfig: function(options) {
             var opt = $.extend({},  $.spEasyForms.defaults, options);
 
-            if (this.config) {
+            opt.currentContext = this.get(opt);
+            opt.listId = this.getCurrentListId(opt);
+            
+            if (this.config && opt.listId === this.configListId) {
                 return this.config;
             }
 
-            opt.currentContext = this.get(opt);
-            opt.listId = this.getCurrentListId(opt);
             opt.lstContext = this.getListContext(opt);
             if (window.location.href.toLowerCase().indexOf("fiddle") >= 0 &&
                 opt.lstContext.config !== undefined) {
                 opt.currentConfig = opt.lstContext.config;
                 opt.currentConfig = this.layout2Config(opt);
                 this.config = opt.currentConfig;
+                this.configListId = opt.lstContext.listId;
                 return opt.currentConfig;
             }
 
@@ -34577,6 +34537,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             this.fixAdapterListReferences(opt);
 
             this.config = opt.currentConfig;
+            this.configListId = opt.listId;
+            
             return opt.currentConfig;
         },
 
@@ -35819,7 +35781,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 this.initConditionalFieldChoices(opt);
             }
 
-            if (!this.initialized || opt.refresh === refresh.panel) {
+            if (!this.initialized || opt.refresh & refresh.panel) {
                 $("ol.speasyforms-nestedsortable").empty();
 
                 this.initContainers(opt);
@@ -37179,7 +37141,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     addClass("ui-corner-top").
                     removeClass("ui-corner-all");
                 $(this).next().show();
+                $.spEasyForms.containerCollection.postTransform(opt);
             });
+            
             return opt.result;
         },
 
@@ -37310,6 +37274,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
             else {
                 container.attr("data-speasyformsempty", "0").show();
+                opt.tables = container.find("> table > tbody > tr > td > div > table.speasyforms-fieldcollection")
                 this.evenUpTableRows(opt);
             }
         },
@@ -37332,9 +37297,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var tableRows = [];
             var rowCount = 0;
-            $.each($(opt.tables), function (idx, tableid) {
-                var currentRows = $("#" + tableid).
-                    find("tr:not([data-visibilityhidden='true']) td.ms-formbody").closest("tr");
+            $.each($(opt.tables), function (idx, table) {
+                var currentRows = $(table).find("tr:not([data-visibilityhidden='true']) td.ms-formbody").closest("tr");
                 tableRows.push(currentRows);
                 if (currentRows.length > rowCount) {
                     rowCount = currentRows.length;
@@ -37432,6 +37396,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     var id = ui.newTab.context.hash;
                     $(id).parent().children("div").hide();
                     $(id).show();
+                    $.spEasyForms.containerCollection.postTransform(opt);
                 }
             });
 

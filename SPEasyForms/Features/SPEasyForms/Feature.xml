@@ -32,6 +32,7 @@
         <ElementFile Location="SPEasyFormsAssets\ui-icons_d8e7f3_256x240.png" />
         <ElementFile Location="SPEasyFormsAssets\ui-icons_f9bd01_256x240.png" />
 
+        <ElementFile Location="SPEasyFormsAssets\MicrosoftAjax.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui.nestedsortable.js" />

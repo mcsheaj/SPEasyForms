@@ -9,9 +9,7 @@
 <html dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>SPEasyForms Settings</title>
-    <meta name="WebPartPageExpansion" content="full" />
-
-    <script src="https://ajax.aspnetcdn.com/ajax/4.0/1/MicrosoftAjax.js" type="text/javascript"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/4.0/1/MicrosoftAjax.js " type="text/javascript"></script>
     <script src="/_layouts/1033/init.js" type="text/javascript"></script>
     <script src="/_layouts/sp.core.js" type="text/javascript"></script>
     <script src="/_layouts/sp.runtime.js" type="text/javascript"></script>
@@ -617,6 +615,7 @@
             margin:0;
             font-family: "SegoeUI-SemiLight-final","Segoe UI SemiLight","Segoe UI WPC Semilight","Segoe UI",Segoe,Tahoma,Helvetica,Arial,sans-serif;
             font-size: 1.1em;
+            font-weight: normal;
         }
 
             h2.speasyforms-breadcrumbs a,
@@ -680,7 +679,7 @@
             font-size: 13px;
             font-family: Freesans, sans-serif;
             padding: 5px 3px 0 3px;
-            margin: 0;
+            margin: 0 0 10px 0;
         }
 
             ol.speasyforms-nestedsortable,
@@ -799,7 +798,11 @@
         #msCuiTopbar {
             background-color: #eee;
             padding: 3px 10px;
-            height: 24px;
+            height: 27px;
+        }
+
+        .ms-accentText, .ms-accentText:visited {
+            color: #0072c6;
         }
     </style>
 </head>
@@ -974,6 +977,7 @@
         <div id='spEasyFormsContainerDialogs'>
             <div id='spEasyFormsErrorDialog' class='speasyforms-dialogdiv' title=''>
             </div>
+            <div id='spEasyFormsBusyScreen'></div>
             <div id='spEasyFormsInitializationError' style='display: none'>
                 <h3>SPEasyForms Initialization Error</h3>
                 <p>

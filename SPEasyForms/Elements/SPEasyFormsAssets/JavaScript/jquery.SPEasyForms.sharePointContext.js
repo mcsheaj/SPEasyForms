@@ -403,6 +403,7 @@
                     listCount >= opt.maxListCache) {
                     delete opt.currentContext.listContexts[Object.keys(opt.currentContext.listContexts)[0]];
                 }
+                result.listId = opt.listId;
                 opt.currentContext.listContexts[opt.listId] = result;
                 $.spEasyForms.writeCachedContext(opt);
             }
@@ -550,18 +551,20 @@
         getConfig: function(options) {
             var opt = $.extend({},  $.spEasyForms.defaults, options);
 
-            if (this.config) {
+            opt.currentContext = this.get(opt);
+            opt.listId = this.getCurrentListId(opt);
+            
+            if (this.config && opt.listId === this.configListId) {
                 return this.config;
             }
 
-            opt.currentContext = this.get(opt);
-            opt.listId = this.getCurrentListId(opt);
             opt.lstContext = this.getListContext(opt);
             if (window.location.href.toLowerCase().indexOf("fiddle") >= 0 &&
                 opt.lstContext.config !== undefined) {
                 opt.currentConfig = opt.lstContext.config;
                 opt.currentConfig = this.layout2Config(opt);
                 this.config = opt.currentConfig;
+                this.configListId = opt.lstContext.listId;
                 return opt.currentConfig;
             }
 
@@ -604,6 +607,8 @@
             this.fixAdapterListReferences(opt);
 
             this.config = opt.currentConfig;
+            this.configListId = opt.listId;
+            
             return opt.currentConfig;
         },
 

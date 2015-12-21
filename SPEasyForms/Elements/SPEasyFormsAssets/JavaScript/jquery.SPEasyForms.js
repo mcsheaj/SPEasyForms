@@ -356,38 +356,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         toEditor: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            /*
-            if (_spPageContextInfo.webUIVersion === 4) {
-                $("#spEasyFormsContent").css({
-                    position: "static",
-                    "overflow-y": "visible",
-                    "overflow-x": "visible"
-                });
-                $("div.speasyforms-panel").css({
-                    width: "auto",
-                    height: "auto",
-                    position: "static",
-                    "overflow-y": "visible",
-                    "overflow-x": "visible"
-                });
-                $("td.speasyforms-form").css("padding-left", "0px");
-                $(".s4-title-inner").css("display", "none");
-                $(".speasyforms-ribbon").css("position", "fixed");
-                $("#s4-bodyContainer").css("overflow-x", "visible");
-                $(".s4-notdlg").hide();
-                $("#spEasyFormsOuterDiv").css({
-                    "margin-left": "-160px",
-                    "margin-top": "88px"
-                });
-                $("#RibbonContainer").append("<h3 class='speasyforms-breadcrumbs' style='position:fixed;top:0px;color:white;'><a href='" + opt.source + "' style='color:white;'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h3>");
-                $("tr.speasyforms-sortablefields, tr.speasyforms-sortablerules").css("font-size", "0.9em");
-                $("select[id$='DateTimeFieldDateHours']").css("font-size", "8pt");
-                $("select[id$='DateTimeFieldDateMinutes']").css("font-size", "8pt");
-            }
-            else {
-            */
             $("#msCuiTopbar").prepend("<h2 class='speasyforms-breadcrumbs'><a href='" + opt.source + "'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h2>");
-            //}
+            
             $.each(opt.currentListContext.contentTypes.order, function (i, ctid) {
                 if (ctid.indexOf("0x0120") !== 0) {
                     $("#spEasyFormsContentTypeSelect").append("<option value='" +
@@ -395,6 +365,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         opt.currentListContext.contentTypes[ctid].name + "</option>");
                 }
             });
+            
             $("#spEasyFormsContentTypeSelect").change(function () {
                 delete $.spEasyForms.containerCollection.rows;
                 delete $.spEasyForms.sharePointContext.formCache;
@@ -402,37 +373,23 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.refresh = $.spEasyForms.refresh.all;
                 $.spEasyForms.containerCollection.toEditor(opt);
             });
+            
             $.spEasyForms.containerCollection.toEditor(opt);
+            
             $(window).on("beforeunload", function () {
                 if (!$("#spEasyFormsSaveButton").hasClass("speasyforms-disabled")) {
                     return "You have unsaved changes, are you sure you want to leave the page?";
                 }
             });
-            $.spEasyForms.appendContext(opt);
-            var bannerHeight = 5;
-            /*
-            if (_spPageContextInfo.webUIVersion === 4) {
-                bannerHeight += $("#s4-ribbonrow").height();
-            }
-            else {
-            */
-                bannerHeight += $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height();
-            //}
+            
+            //$.spEasyForms.appendContext(opt);
+            
+            var bannerHeight = $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height() + 30;
             $("div.speasyforms-panel").height($(window).height() - bannerHeight);
-            /*if (_spPageContextInfo.webUIVersion === 4) {
-                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 445);
-            }
-            else {*/
-                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
-            //}
+            $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
             $(window).resize(function () {
                 $("div.speasyforms-panel").height($(window).height() - bannerHeight);
-                /*if (_spPageContextInfo.webUIVersion === 4) {
-                    $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 445);
-                }
-                else {*/
-                    $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
-                //}
+                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
             });
             $('#spEasyFormsRibbon').show();
         },
