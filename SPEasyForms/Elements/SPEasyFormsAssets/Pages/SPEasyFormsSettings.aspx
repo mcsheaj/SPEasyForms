@@ -987,7 +987,7 @@
             <div id='spEasyFormsAboutDialog' class='tabs-min' style='display: none' title='About SPEasyForms'>
                 <div class='speasyforms-helptext ui-corner-all'>
                     <p>
-                        <b>Version: 2015.01</b>
+                        <b>Version: 2015.01.beta</b>
                     </p>
                     <h2>The MIT License (MIT)</h2>
                     <p>Copyright (c) 2014-2015 Joe McShea</p>

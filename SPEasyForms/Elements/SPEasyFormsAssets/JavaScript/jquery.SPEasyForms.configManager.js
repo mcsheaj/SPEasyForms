@@ -2,7 +2,7 @@
  * SPEasyForms.configManager - Object that encapsulates getting, setting, and saving the SPEasyForms
  * configuration file for the current list.
  *
- * @requires jQuery.SPEasyForms.2015.01 
+ * @requires jQuery.SPEasyForms.2015.01.beta 
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -227,7 +227,7 @@
                     }
                 };
             }
-            opt.currentConfig.version = "2015.01";
+            opt.currentConfig.version = "2015.01.beta";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig !== oldConfig) {

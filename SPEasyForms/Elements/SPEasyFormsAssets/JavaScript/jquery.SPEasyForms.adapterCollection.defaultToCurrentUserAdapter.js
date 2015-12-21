@@ -3,7 +3,7 @@
  * that creates an adapter for user fields to enter a default value of the current
  * user on new forms.
  *
- * @version 2015.01
+ * @version 2015.01.beta
  * @copyright 2014-2015 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php

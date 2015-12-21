@@ -3,8 +3,8 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2015.01
- * @requires jQuery.SPEasyForms.2015.01 
+ * @version 2015.01.beta
+ * @requires jQuery.SPEasyForms.2015.01.beta 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2015.01 or greater
  * @optional ssw Session Storage Wrapper - Cross Document Transport of
@@ -94,7 +94,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
             initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
-            version: "2015.01"
+            version: "2015.01.beta"
         },
 
         /********************************************************************
@@ -407,7 +407,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (source.indexOf("start.aspx#") >= 0) {
                         source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                     }
-                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01/Pages/SPEasyFormsSettings.aspx") +
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.beta/Pages/SPEasyFormsSettings.aspx") +
                         "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
                         "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
                         "&Source=" + encodeURIComponent(source);
@@ -455,13 +455,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         loadDynamicStyles: function(options) {
             if (options.jQueryUITheme === undefined) {
-                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01/Css/jquery-ui/jquery-ui.css');
+                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui/jquery-ui.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
 
             if (options.css === undefined) {
-                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01/Css/speasyforms.css');
+                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/speasyforms.css');
             }
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
