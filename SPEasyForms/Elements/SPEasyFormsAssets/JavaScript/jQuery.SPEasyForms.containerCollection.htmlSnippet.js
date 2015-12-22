@@ -86,6 +86,7 @@
                     "</div>");
             }
 
+            var span;
             var configureSnippetOpts = {
                 width: 830,
                 modal: true,
@@ -97,7 +98,7 @@
                         var containerIndex = $("#snippetContainerId").text();
                         if (containerIndex.length > 0) {
                             var container = $("li.speasyforms-nestedsortable-container[data-containerindex='" + containerIndex + "']");
-                            var span = container.find("span.speasyforms-htmlsnippet");
+                            span = container.find("span.speasyforms-htmlsnippet");
                             var contents = $("#snippetContents").val();
                             span.html(contents.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
                             container.find("textarea.speasyforms-htmlsnippet").val(contents);
@@ -122,7 +123,7 @@
                             opt.currentContainerLayout = opt.currentContainer.attr("data-containerindex");
 
                             var div = $("<div/>", { "class": "speasyforms-nestedsortable-content ui-sortable-handle" });
-                            var span = $("<span/>", { "class": "speasyforms-htmlsnippet" });
+                            span = $("<span/>", { "class": "speasyforms-htmlsnippet" });
                             span.html($("#snippetContents").val().replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
                             div.append(span);
 

@@ -33105,7 +33105,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         init: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             this.initCacheLibrary(opt);
-            this.loadDynamicStyles(opt);
             opt.callback = spEasyForms.contextReady;
             this.options = opt;
             $("#spEasyFormsBusyScreen").dialog({
@@ -33278,6 +33277,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         transform: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
+            this.loadDynamicStyles(opt);
             // convert all lookups to simple selects, only for 2010 and
             // earlier, from Marc Anderson's SPServices documentation and 
             // attributed to Dan Kline
@@ -33330,6 +33330,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         toEditor: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
+            this.loadDynamicStyles(opt);
             $("#msCuiTopbar").prepend("<h2 class='speasyforms-breadcrumbs'><a href='" + opt.source + "'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h2>");
             
             $.each(opt.currentListContext.contentTypes.order, function (i, ctid) {
@@ -33429,10 +33430,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         loadDynamicStyles: function(options) {
             if (options.jQueryUITheme === undefined) {
-                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui/jquery-ui.css');
+                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-redmond/jquery-ui.css');
             }
+
             $("head").append(
-                '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
+                '<link rel="stylesheet" type="text/css" href="' +options.jQueryUITheme + '">');
+
+
+            if (options.currentConfig.jQueryUITheme) {
+                $("head").append(
+                    '<link rel="stylesheet" type="text/css" href="' + options.currentConfig.jQueryUITheme + '">');
+            }
 
             if (options.css === undefined) {
                 options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/speasyforms.css');
@@ -35769,6 +35777,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *         If ommitted, call the current lists edit form and parse it to get rows.
          * }
          *********************************************************************/
+        /* jshint -W016 */
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -35813,6 +35822,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             this.initialized = true;
         },
+        /* jshint -W016 */
 
         /*********************************************************************
          * Convert the editor properties panel back to a layout, by looping through each
@@ -36024,7 +36034,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         // TBD move this to visibility rules collection
-        initConditionalFieldChoices: function (options) {
+        initConditionalFieldChoices: function () {
             var fields = {};
             $.each(Object.keys(containerCollection.rows), function (idx, name) {
                 fields[containerCollection.rows[name].displayName] = containerCollection.rows[name];
@@ -36054,7 +36064,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         wireContainerEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            var top = 0;
             // make the field rows in the editor sortable
             $("tbody.speasyforms-sortablefields").sortable({
                 connectWith: ".speasyforms-sortablefields",
@@ -36078,7 +36087,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 handle: 'div',
                 helper: 'clone',
                 items: 'li',
-                opacity: .4,
+                opacity: 0.4,
                 placeholder: 'speasyforms-placeholder',
                 revert: 250,
                 tabSize: 20,
@@ -36129,34 +36138,36 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             if (!this.initialized) {
                 // make the containers individually collapsible
-                function toggleContainer() {
+                var toggleContainer = function () {
                     var item = $(this).closest('li');
                     var statusIcon = item.children(".speasyforms-menudiv").find('.speasyforms-nestedsortable-status');
                     item.children('ol').toggle();
                     item.children('.speasyforms-nestedsortable-content').toggle();
                     if (statusIcon.hasClass('ui-icon-triangle-1-s')) {
-                        statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e')
+                        statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e');
                     }
                     else {
-                        statusIcon.removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s')
+                        statusIcon.removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
                     }
-                }
-                function toggleContainerAndChildren() {
+                };
+
+                var toggleContainerAndChildren = function () {
                     var item = $(this).closest('li');
                     var statusIcon = item.find('.speasyforms-nestedsortable-status');
                     if (item.children(".speasyforms-menudiv").find('.speasyforms-nestedsortable-status').hasClass('ui-icon-triangle-1-s')) {
-                        statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e')
+                        statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e');
                         item.find('ol').hide();
                         item.find('.speasyforms-nestedsortable-content').hide();
                     }
                     else {
                         item.find('ol').show();
                         item.find('.speasyforms-nestedsortable-content').show();
-                        statusIcon.removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s')
+                        statusIcon.removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
                     }
-                }
-                $("ol.speasyforms-nestedsortable").on("click", "span.speasyforms-nestedsortable-status", toggleContainer)
-                $("ol.speasyforms-nestedsortable").on("dblclick", "div.speasyforms-menudiv", toggleContainerAndChildren)
+                };
+
+                $("ol.speasyforms-nestedsortable").on("click", "span.speasyforms-nestedsortable-status", toggleContainer);
+                $("ol.speasyforms-nestedsortable").on("dblclick", "div.speasyforms-menudiv", toggleContainerAndChildren);
 
                 // wire the edit buttons for each field collection
                 $("ol.speasyforms-nestedsortable").on("click", "span.speasyforms-nestedsortable-edit", function () {
@@ -36191,7 +36202,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     containerCollection.toEditor(opt);
                 });
 
-                $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-visibility", function (e) {
+                $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-visibility", function () {
                     opt.currentConfig = $.spEasyForms.configManager.get(opt);
                     opt.fieldName = $(this).closest("tr").find(".speasyforms-fieldinternal").text();
                     $.spEasyForms.visibilityRuleCollection.launchDialog(opt);
@@ -36199,13 +36210,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $("#tabs-min-visibility").show();
                 });
 
-                $("#tabs-min-visibility").on("dblclick", "td.speasyforms-staticrules", function (e) {
+                $("#tabs-min-visibility").on("dblclick", "td.speasyforms-staticrules", function () {
                     opt.currentConfig = $.spEasyForms.configManager.get(opt);
                     opt.fieldName = $(this).closest("tr").children(".speasyforms-hidden").text();
                     $.spEasyForms.visibilityRuleCollection.launchDialog(opt);
                 });
 
-                $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-adapter", function (e) {
+                $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-adapter", function () {
                     opt.currentConfig = $.spEasyForms.configManager.get(opt);
                     opt.fieldName = $(this).closest("tr").find(".speasyforms-fieldinternal").text();
                     opt.spFieldType = $(this).closest("tr").find(".speasyforms-fieldtype").text();
@@ -36214,7 +36225,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $("#tabs-min-adapters").show();
                 });
 
-                $("#tabs-min-adapters").on("dblclick", "td.speasyforms-adapter-static", function (e) {
+                $("#tabs-min-adapters").on("dblclick", "td.speasyforms-adapter-static", function () {
                     opt.currentConfig = $.spEasyForms.configManager.get(opt);
                     opt.fieldName = $(this).closest("tr").children(".speasyforms-hidden").text();
                     opt.spFieldType = containerCollection.rows[opt.fieldName].spFieldType;
@@ -36304,7 +36315,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
 
             // wire the expand buttons
-            $("#spEasyFormsExpandButton").click(function (event) {
+            $("#spEasyFormsExpandButton").click(function () {
                 var item = $("ol.speasyforms-nestedsortable").find('li');
                 var statusIcon = item.children(".speasyforms-menudiv").find('.speasyforms-nestedsortable-status');
                 item.children('ol').show();
@@ -36348,6 +36359,50 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
                 return false;
             });
+
+            // wire the settings button
+            $("#spEasyFormsSettingsButton").click(function (event) {
+                if (!event.handled) {
+                    $(".tabs-min").hide();
+                    $("#tabs-min-settings").show();
+                }
+                return false;
+            });
+
+            // wire the theme radio buttons
+            $("input:radio[name='jqueryuitheme']").change(function () {
+                var value = $("input:radio[name='jqueryuitheme']:checked").val();
+                if (value === "gallery") {
+                    $("#selGalleryTheme").show();
+                    $("#inpCustomTheme").hide();
+                }
+                else {
+                    $("#inpCustomTheme").show();
+                    $("#selGalleryTheme").hide();
+                }
+            });
+
+            // wire the theme apply button
+            $("#applyThemeButton").button({
+                label: "Apply Theme"
+            }).click(function (e) {
+                e.preventDefault();
+                var themeType = $("input:radio[name='jqueryuitheme']:checked").val();
+                var theme;
+                if (themeType === "gallery") {
+                    theme = $("#selGalleryTheme").val();
+                    theme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-' + theme + '/jquery-ui.css');
+                }
+                else {
+                    theme = $("#inpCustomTheme").val();
+                }
+                opt.currentConfig = $.spEasyForms.configManager.get(opt);
+                opt.currentConfig.jQueryUITheme = theme;
+                $.spEasyForms.configManager.set(opt);
+                $("head").append('<link rel="stylesheet" type="text/css" href="' + theme + '">');
+                return false;
+            });
+
 
             // wire the clear cache button
             $("#spEasyFormsClearCacheButton").click(function () {
@@ -36400,21 +36455,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $("#importedJson").val("");
                 $("#importConfigurationDialog").dialog('open');
             });
-
-            // wire the async button
-            $("#spEasyFormsInitAsyncBtn").button({
-                icons: {
-                    primary: "ui-icon-shuffle"
-                },
-                label: (opt.initAsync ? 'Initialize Synchronously' : 'Initialize Asynchronously')
-            }).click(function () {
-                if (opt.initAsync) {
-                    window.location.href = window.location.href.replace("&spEasyFormsAsync=true", "");
-                } else {
-                    window.location.href = window.location.href + "&spEasyFormsAsync=false";
-                }
-                return false;
-            });
         },
 
         /*********************************************************************
@@ -36434,7 +36474,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 autoOpen: false,
                 width: 800,
                 height: (maxHeight > 900 ? 900 : maxHeight),
-                open: function (event, ui) {
+                open: function () {
                     var max = $(window.top).height() - 50;
                     $("#spEasyFormsAboutDialog").dialog({ height: (max > 900 ? 900 : max) });
                 }
@@ -36534,7 +36574,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         appendContainer: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            var template = $("#spEasyFormsTemplates .speasyforms-nestedsortable-container").clone()
+            var template = $("#spEasyFormsTemplates .speasyforms-nestedsortable-container").clone();
             if (!opt.currentContainerLayout.containerType || opt.currentContainerLayout.containerType === "FieldCollection") {
                 opt.currentContainerLayout.containerType = "FieldCollection";
                 template = $("#spEasyFormsTemplates .speasyforms-nestedsortable-fieldcollection").clone();
@@ -36596,7 +36636,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * Utility function to construct the HTML the table representing a field
          * group.
          *********************************************************************/
-        createFieldCollection: function (options) {
+        createFieldCollection: function () {
             var result = $("#spEasyFormsTemplates .speasyforms-fieldtabletemplate").clone();
             return result;
         }
@@ -36802,6 +36842,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
+            var groupNames;
             var containerSettingsOpts = {
                 width: 450,
                 modal: true,
@@ -36817,7 +36858,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 newLayout.name = newLayout.containerType;
                             }
 
-                            var groupNames = $("#settingsCollectionNames").val().split('\n');
+                            groupNames = $("#settingsCollectionNames").val().split('\n');
                             $.each($(groupNames), function (idx, name) {
                                 if (name.trim().length > 0) {
                                     newLayout.fieldCollections.push({
@@ -36854,11 +36895,11 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                 }
                                 container.attr("data-containername", opt.currentContainerLayout.name);
                                 container.find(".speasyforms-itemtitle:first").text(opt.currentContainerLayout.name);
-                                if (opt.currentContainerLayout.name != opt.currentContainerLayout.containerType) {
+                                if (opt.currentContainerLayout.name !== opt.currentContainerLayout.containerType) {
                                     container.find(".speasyforms-itemtype:first").text(opt.currentContainerLayout.containerType);
                                 }
                             }
-                            var groupNames = $("#settingsCollectionNames").val().split('\n');
+                            groupNames = $("#settingsCollectionNames").val().split('\n');
                             $.each($(groupNames), function (idx, name) {
                                 if (name.trim().length > 0) {
                                     opt.currentContainerLayout = {
@@ -36946,7 +36987,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
             var name = $.spEasyForms.utilities.jsCase(opt.fieldCollection.containerType);
             if (name in containerCollection.containerImplementations) {
-                impl = containerCollection.containerImplementations[name];
+                var impl = containerCollection.containerImplementations[name];
                 if (typeof (impl.transform) === "function") {
                     opt.currentContainerLayout = opt.fieldCollection;
                     var div = $("<div/>", {
@@ -37274,7 +37315,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
             else {
                 container.attr("data-speasyformsempty", "0").show();
-                opt.tables = container.find("> table > tbody > tr > td > div > table.speasyforms-fieldcollection")
+                opt.tables = container.find("> table > tbody > tr > td > div > table.speasyforms-fieldcollection");
                 this.evenUpTableRows(opt);
             }
         },
@@ -37549,6 +37590,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "</div>");
             }
 
+            var span;
             var configureSnippetOpts = {
                 width: 830,
                 modal: true,
@@ -37560,7 +37602,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         var containerIndex = $("#snippetContainerId").text();
                         if (containerIndex.length > 0) {
                             var container = $("li.speasyforms-nestedsortable-container[data-containerindex='" + containerIndex + "']");
-                            var span = container.find("span.speasyforms-htmlsnippet");
+                            span = container.find("span.speasyforms-htmlsnippet");
                             var contents = $("#snippetContents").val();
                             span.html(contents.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
                             container.find("textarea.speasyforms-htmlsnippet").val(contents);
@@ -37585,7 +37627,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             opt.currentContainerLayout = opt.currentContainer.attr("data-containerindex");
 
                             var div = $("<div/>", { "class": "speasyforms-nestedsortable-content ui-sortable-handle" });
-                            var span = $("<span/>", { "class": "speasyforms-htmlsnippet" });
+                            span = $("<span/>", { "class": "speasyforms-htmlsnippet" });
                             span.html($("#snippetContents").val().replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
                             div.append(span);
 

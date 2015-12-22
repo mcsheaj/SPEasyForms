@@ -69,7 +69,7 @@
             }
             else {
                 container.attr("data-speasyformsempty", "0").show();
-                opt.tables = container.find("> table > tbody > tr > td > div > table.speasyforms-fieldcollection")
+                opt.tables = container.find("> table > tbody > tr > td > div > table.speasyforms-fieldcollection");
                 this.evenUpTableRows(opt);
             }
         },

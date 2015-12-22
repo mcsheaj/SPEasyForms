@@ -142,6 +142,7 @@
          *         If ommitted, call the current lists edit form and parse it to get rows.
          * }
          *********************************************************************/
+        /* jshint -W016 */
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -186,6 +187,7 @@
 
             this.initialized = true;
         },
+        /* jshint -W016 */
 
         /*********************************************************************
          * Convert the editor properties panel back to a layout, by looping through each
@@ -397,7 +399,7 @@
         },
 
         // TBD move this to visibility rules collection
-        initConditionalFieldChoices: function (options) {
+        initConditionalFieldChoices: function () {
             var fields = {};
             $.each(Object.keys(containerCollection.rows), function (idx, name) {
                 fields[containerCollection.rows[name].displayName] = containerCollection.rows[name];
@@ -427,7 +429,6 @@
         wireContainerEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            var top = 0;
             // make the field rows in the editor sortable
             $("tbody.speasyforms-sortablefields").sortable({
                 connectWith: ".speasyforms-sortablefields",
@@ -451,7 +452,7 @@
                 handle: 'div',
                 helper: 'clone',
                 items: 'li',
-                opacity: .4,
+                opacity: 0.4,
                 placeholder: 'speasyforms-placeholder',
                 revert: 250,
                 tabSize: 20,
@@ -502,34 +503,36 @@
 
             if (!this.initialized) {
                 // make the containers individually collapsible
-                function toggleContainer() {
+                var toggleContainer = function () {
                     var item = $(this).closest('li');
                     var statusIcon = item.children(".speasyforms-menudiv").find('.speasyforms-nestedsortable-status');
                     item.children('ol').toggle();
                     item.children('.speasyforms-nestedsortable-content').toggle();
                     if (statusIcon.hasClass('ui-icon-triangle-1-s')) {
-                        statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e')
+                        statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e');
                     }
                     else {
-                        statusIcon.removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s')
+                        statusIcon.removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
                     }
-                }
-                function toggleContainerAndChildren() {
+                };
+
+                var toggleContainerAndChildren = function () {
                     var item = $(this).closest('li');
                     var statusIcon = item.find('.speasyforms-nestedsortable-status');
                     if (item.children(".speasyforms-menudiv").find('.speasyforms-nestedsortable-status').hasClass('ui-icon-triangle-1-s')) {
-                        statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e')
+                        statusIcon.removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e');
                         item.find('ol').hide();
                         item.find('.speasyforms-nestedsortable-content').hide();
                     }
                     else {
                         item.find('ol').show();
                         item.find('.speasyforms-nestedsortable-content').show();
-                        statusIcon.removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s')
+                        statusIcon.removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
                     }
-                }
-                $("ol.speasyforms-nestedsortable").on("click", "span.speasyforms-nestedsortable-status", toggleContainer)
-                $("ol.speasyforms-nestedsortable").on("dblclick", "div.speasyforms-menudiv", toggleContainerAndChildren)
+                };
+
+                $("ol.speasyforms-nestedsortable").on("click", "span.speasyforms-nestedsortable-status", toggleContainer);
+                $("ol.speasyforms-nestedsortable").on("dblclick", "div.speasyforms-menudiv", toggleContainerAndChildren);
 
                 // wire the edit buttons for each field collection
                 $("ol.speasyforms-nestedsortable").on("click", "span.speasyforms-nestedsortable-edit", function () {
@@ -564,7 +567,7 @@
                     containerCollection.toEditor(opt);
                 });
 
-                $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-visibility", function (e) {
+                $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-visibility", function () {
                     opt.currentConfig = $.spEasyForms.configManager.get(opt);
                     opt.fieldName = $(this).closest("tr").find(".speasyforms-fieldinternal").text();
                     $.spEasyForms.visibilityRuleCollection.launchDialog(opt);
@@ -572,13 +575,13 @@
                     $("#tabs-min-visibility").show();
                 });
 
-                $("#tabs-min-visibility").on("dblclick", "td.speasyforms-staticrules", function (e) {
+                $("#tabs-min-visibility").on("dblclick", "td.speasyforms-staticrules", function () {
                     opt.currentConfig = $.spEasyForms.configManager.get(opt);
                     opt.fieldName = $(this).closest("tr").children(".speasyforms-hidden").text();
                     $.spEasyForms.visibilityRuleCollection.launchDialog(opt);
                 });
 
-                $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-adapter", function (e) {
+                $("ol.speasyforms-nestedsortable").on("click", "td.speasyforms-icon-adapter", function () {
                     opt.currentConfig = $.spEasyForms.configManager.get(opt);
                     opt.fieldName = $(this).closest("tr").find(".speasyforms-fieldinternal").text();
                     opt.spFieldType = $(this).closest("tr").find(".speasyforms-fieldtype").text();
@@ -587,7 +590,7 @@
                     $("#tabs-min-adapters").show();
                 });
 
-                $("#tabs-min-adapters").on("dblclick", "td.speasyforms-adapter-static", function (e) {
+                $("#tabs-min-adapters").on("dblclick", "td.speasyforms-adapter-static", function () {
                     opt.currentConfig = $.spEasyForms.configManager.get(opt);
                     opt.fieldName = $(this).closest("tr").children(".speasyforms-hidden").text();
                     opt.spFieldType = containerCollection.rows[opt.fieldName].spFieldType;
@@ -677,7 +680,7 @@
             });
 
             // wire the expand buttons
-            $("#spEasyFormsExpandButton").click(function (event) {
+            $("#spEasyFormsExpandButton").click(function () {
                 var item = $("ol.speasyforms-nestedsortable").find('li');
                 var statusIcon = item.children(".speasyforms-menudiv").find('.speasyforms-nestedsortable-status');
                 item.children('ol').show();
@@ -721,6 +724,50 @@
                 }
                 return false;
             });
+
+            // wire the settings button
+            $("#spEasyFormsSettingsButton").click(function (event) {
+                if (!event.handled) {
+                    $(".tabs-min").hide();
+                    $("#tabs-min-settings").show();
+                }
+                return false;
+            });
+
+            // wire the theme radio buttons
+            $("input:radio[name='jqueryuitheme']").change(function () {
+                var value = $("input:radio[name='jqueryuitheme']:checked").val();
+                if (value === "gallery") {
+                    $("#selGalleryTheme").show();
+                    $("#inpCustomTheme").hide();
+                }
+                else {
+                    $("#inpCustomTheme").show();
+                    $("#selGalleryTheme").hide();
+                }
+            });
+
+            // wire the theme apply button
+            $("#applyThemeButton").button({
+                label: "Apply Theme"
+            }).click(function (e) {
+                e.preventDefault();
+                var themeType = $("input:radio[name='jqueryuitheme']:checked").val();
+                var theme;
+                if (themeType === "gallery") {
+                    theme = $("#selGalleryTheme").val();
+                    theme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-' + theme + '/jquery-ui.css');
+                }
+                else {
+                    theme = $("#inpCustomTheme").val();
+                }
+                opt.currentConfig = $.spEasyForms.configManager.get(opt);
+                opt.currentConfig.jQueryUITheme = theme;
+                $.spEasyForms.configManager.set(opt);
+                $("head").append('<link rel="stylesheet" type="text/css" href="' + theme + '">');
+                return false;
+            });
+
 
             // wire the clear cache button
             $("#spEasyFormsClearCacheButton").click(function () {
@@ -773,21 +820,6 @@
                 $("#importedJson").val("");
                 $("#importConfigurationDialog").dialog('open');
             });
-
-            // wire the async button
-            $("#spEasyFormsInitAsyncBtn").button({
-                icons: {
-                    primary: "ui-icon-shuffle"
-                },
-                label: (opt.initAsync ? 'Initialize Synchronously' : 'Initialize Asynchronously')
-            }).click(function () {
-                if (opt.initAsync) {
-                    window.location.href = window.location.href.replace("&spEasyFormsAsync=true", "");
-                } else {
-                    window.location.href = window.location.href + "&spEasyFormsAsync=false";
-                }
-                return false;
-            });
         },
 
         /*********************************************************************
@@ -807,7 +839,7 @@
                 autoOpen: false,
                 width: 800,
                 height: (maxHeight > 900 ? 900 : maxHeight),
-                open: function (event, ui) {
+                open: function () {
                     var max = $(window.top).height() - 50;
                     $("#spEasyFormsAboutDialog").dialog({ height: (max > 900 ? 900 : max) });
                 }
@@ -907,7 +939,7 @@
         appendContainer: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
-            var template = $("#spEasyFormsTemplates .speasyforms-nestedsortable-container").clone()
+            var template = $("#spEasyFormsTemplates .speasyforms-nestedsortable-container").clone();
             if (!opt.currentContainerLayout.containerType || opt.currentContainerLayout.containerType === "FieldCollection") {
                 opt.currentContainerLayout.containerType = "FieldCollection";
                 template = $("#spEasyFormsTemplates .speasyforms-nestedsortable-fieldcollection").clone();
@@ -969,7 +1001,7 @@
          * Utility function to construct the HTML the table representing a field
          * group.
          *********************************************************************/
-        createFieldCollection: function (options) {
+        createFieldCollection: function () {
             var result = $("#spEasyFormsTemplates .speasyforms-fieldtabletemplate").clone();
             return result;
         }

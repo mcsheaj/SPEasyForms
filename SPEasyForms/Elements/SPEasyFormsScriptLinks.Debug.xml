@@ -12,11 +12,6 @@
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript/jquery-ui.nestedsortable.js"
-       Sequence="57158"
-    />
-    <CustomAction
-       Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript/jquery.SPServices.js"
        Sequence="57161"
     />
@@ -128,11 +123,6 @@
     <CustomAction
        Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript/jQuery.SPEasyForms.containerCollection.htmlSnippet.js"
-       Sequence="57251"
-    />
-    <CustomAction
-       Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript/jQuery.SPEasyForms.containerCollection.wizard.js"
        Sequence="57251"
     />
     <CustomAction

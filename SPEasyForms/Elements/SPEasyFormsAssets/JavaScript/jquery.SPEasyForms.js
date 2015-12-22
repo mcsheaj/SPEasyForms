@@ -131,7 +131,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         init: function(options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             this.initCacheLibrary(opt);
-            this.loadDynamicStyles(opt);
             opt.callback = spEasyForms.contextReady;
             this.options = opt;
             $("#spEasyFormsBusyScreen").dialog({
@@ -304,6 +303,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         transform: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
+            this.loadDynamicStyles(opt);
             // convert all lookups to simple selects, only for 2010 and
             // earlier, from Marc Anderson's SPServices documentation and 
             // attributed to Dan Kline
@@ -356,6 +356,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         toEditor: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
+            this.loadDynamicStyles(opt);
             $("#msCuiTopbar").prepend("<h2 class='speasyforms-breadcrumbs'><a href='" + opt.source + "'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h2>");
             
             $.each(opt.currentListContext.contentTypes.order, function (i, ctid) {
@@ -455,10 +456,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         loadDynamicStyles: function(options) {
             if (options.jQueryUITheme === undefined) {
-                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui/jquery-ui.css');
+                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-redmond/jquery-ui.css');
             }
+
             $("head").append(
-                '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
+                '<link rel="stylesheet" type="text/css" href="' +options.jQueryUITheme + '">');
+
+
+            if (options.currentConfig.jQueryUITheme) {
+                $("head").append(
+                    '<link rel="stylesheet" type="text/css" href="' + options.currentConfig.jQueryUITheme + '">');
+            }
 
             if (options.css === undefined) {
                 options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/speasyforms.css');

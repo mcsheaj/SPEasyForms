@@ -9,7 +9,7 @@
 <html dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>SPEasyForms Settings</title>
-    <script src="https://ajax.aspnetcdn.com/ajax/4.0/1/MicrosoftAjax.js " type="text/javascript"></script>
+    <script src="../JavaScript/MicrosoftAjax.js " type="text/javascript"></script>
     <script src="/_layouts/1033/init.js" type="text/javascript"></script>
     <script src="/_layouts/sp.core.js" type="text/javascript"></script>
     <script src="/_layouts/sp.runtime.js" type="text/javascript"></script>
@@ -66,6 +66,7 @@
             padding: 5px;
             background: white;
             border-spacing: 10px;
+            width: 600px;
         }
 
             table.ms-formtable tr {
@@ -533,63 +534,67 @@
         }
 
         .speasyforms-cancelimg {
-            background-position: 480px 0;
+            background-position: 512px 0;
         }
 
         .speasyforms-addimg {
-            background-position: 448px 0;
+            background-position: 480px 0;
         }
 
         .speasyforms-undoimg {
-            background-position: 416px 0;
+            background-position: 448px 0;
         }
 
         .speasyforms-redoimg {
-            background-position: 384px 0;
-        }
-
-        .speasyforms-expimg {
-            background-position: 255px 0;
-        }
-
-        .speasyforms-colimg {
-            background-position: 224px 0;
-        }
-
-        .speasyforms-clrimg {
-            background-position: 192px 0;
-        }
-
-        .speasyforms-verimg {
-            background-position: 160px 0;
+            background-position: 416px 0;
         }
 
         .speasyforms-formimg {
-            background-position: 352px 0;
+            background-position: 384px 0;
         }
 
         .speasyforms-visimg {
-            background-position: 320px 0;
+            background-position: 352px 0;
         }
 
         .speasyforms-adaptimg {
+            background-position: 320px 0;
+        }
+
+        .speasyforms-expimg {
             background-position: 288px 0;
         }
 
-        .speasyforms-exportimg {
-            background-position: 32px 0;
+        .speasyforms-colimg {
+            background-position: 255px 0;
         }
 
-        .speasyforms-importimg {
-            background-position: 64px 0;
+        .speasyforms-clrimg {
+            background-position: 224px 0;
+        }
+
+        .speasyforms-verimg {
+            background-position: 192px 0;
         }
 
         .speasyforms-aboutimg {
-            background-position: 128px 0;
+            background-position: 160px 0;
         }
 
         .speasyforms-helpimg {
+            background-position: 128px 0;
+        }
+
+        .speasyforms-importimg {
             background-position: 96px 0;
+        }
+
+        .speasyforms-exportimg {
+            background-position: 64px 0;
+        }
+
+        .speasyforms-settingsimg {
+            background-position: 32px 0;
         }
 
         .speasyforms-btnstack {
@@ -611,7 +616,7 @@
 
         h2.speasyforms-breadcrumbs {
             padding: 3px;
-            color: #999;
+            color: #666;
             margin:0;
             font-family: "SegoeUI-SemiLight-final","Segoe UI SemiLight","Segoe UI WPC Semilight","Segoe UI",Segoe,Tahoma,Helvetica,Arial,sans-serif;
             font-size: 1.1em;
@@ -620,7 +625,7 @@
 
             h2.speasyforms-breadcrumbs a,
             h2.speasyforms-breadcrumbs a:visited {
-                color: #999;
+                color: #666;
                 text-decoration: underline;
             }
 
@@ -762,10 +767,6 @@
                 background-color: #e2face;
             }
 
-        table.ms-formtable {
-            width: 600px;
-        }
-
         .speasyforms-panel, .speasyforms-content {
             display: none;
         }
@@ -803,6 +804,13 @@
 
         .ms-accentText, .ms-accentText:visited {
             color: #0072c6;
+        }
+
+        .speasyforms-settingsheader {
+            font-family: "SegoeUI-SemiLight-final","Segoe UI SemiLight","Segoe UI WPC Semilight","Segoe UI",Segoe,Tahoma,Helvetica,Arial,sans-serif;
+            font-size: 1.8em;
+            color: darkslategray;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -878,6 +886,10 @@
                     <br />
                         Adapters
                     </div>
+                </div>
+                <div id='spEasyFormsSettingsButton' class='speasyforms-buttonouterdiv'>
+                    <div class="speasyforms-img speasyforms-settingsimg"></div>
+                    <div class='speasyforms-buttontext'>Settings</div>
                 </div>
                 <div class='speasyforms-buttoncontainer'>
                     <div id='spEasyFormsExpandButton' class='speasyforms-buttonouterdiv-smallimg'>
@@ -965,6 +977,25 @@
                             <th>Additional Settings</th>
                         </tr>
                     </table>
+                </div>
+                <div id='tabs-min-settings' class='tabs-min' style='display: none;'>
+                    <div class='speasyforms-settingsheader'>jQuery UI Theme</div>
+                    <div>
+                        <input type="radio" name="jqueryuitheme" value="gallery" checked="checked"/> Use Gallery Theme 
+                        <input type="radio" name="jqueryuitheme" value="custom"/> Use Custom Theme 
+                    </div>
+                    <div style="margin-top: 10px; margin-bottom: 10px;">
+                        <select id="selGalleryTheme">
+                            <option value="redmond" selected="selected">Redmond</option>
+                            <option value="smoothness">Smoothness</option>
+                            <option value="sunny">Sunny</option>
+                        </select>
+                        <input type="text" id="inpCustomTheme" name="inpCustomTheme" 
+                            value="" title="Enter the full text to a jQuery UI 1.11.x theme." style="display:none; width: 400px;"/>
+                    </div>
+                    <div>
+                        <button id="applyThemeButton">Apply</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1159,8 +1190,7 @@
             <p>
                 <label for='adapterType'>Adapter Type:</label>
                 <select id='adapterType'>
-                    <option>
-                        <option>
+                    <option></option>
                 </select>
             </p>
             </div>

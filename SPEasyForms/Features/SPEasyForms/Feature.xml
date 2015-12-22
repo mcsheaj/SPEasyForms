@@ -13,24 +13,55 @@
 
         <ElementFile Location="SPEasyFormsAssets\speasyforms.css" />
         <ElementFile Location="SPEasyFormsAssets\jquery.cleditor.css" />
-        <ElementFile Location="SPEasyFormsAssets\jquery-ui.css" />
-        <ElementFile Location="SPEasyFormsAssets\jquery.ui.theme.css" />
-
         <ElementFile Location="SPEasyFormsAssets\buttons.png" />
         <ElementFile Location="SPEasyFormsAssets\toolbar.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-bg_glass_75_d0e5f5_1x400.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-bg_glass_85_dfeffc_1x400.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-bg_glass_95_fef1ec_1x400.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-icons_2e83ff_256x240.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-icons_6da8d5_256x240.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-icons_217bc0_256x240.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-icons_469bdd_256x240.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-icons_cd0a0a_256x240.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-icons_d8e7f3_256x240.png" />
-        <ElementFile Location="SPEasyFormsAssets\ui-icons_f9bd01_256x240.png" />
+
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\jquery-ui.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\jquery.ui.theme.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-bg_glass_75_d0e5f5_1x400.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-bg_glass_85_dfeffc_1x400.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-bg_glass_95_fef1ec_1x400.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_2e83ff_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_6da8d5_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_217bc0_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_469bdd_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_cd0a0a_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_d8e7f3_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_f9bd01_256x240.png" />
+
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\jquery-ui.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\jquery-ui.theme.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-bg_glass_55_fbf9ee_1x400.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-bg_glass_65_ffffff_1x400.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-bg_glass_75_dadada_1x400.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-bg_glass_75_e6e6e6_1x400.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-bg_glass_95_fef1ec_1x400.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-icons_222222_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-icons_2e83ff_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-icons_454545_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-icons_888888_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-icons_cd0a0a_256x240.png" />
+
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\jquery-ui.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\jquery-ui.theme.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-bg_diagonals-medium_20_d34d17_40x40.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-bg_gloss-wave_45_817865_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-bg_gloss-wave_60_fece2f_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-bg_gloss-wave_70_ffdd57_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-bg_gloss-wave_90_fff9e5_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-bg_highlight-soft_100_feeebd_1x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-bg_inset-soft_30_ffffff_1x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-icons_3d3d3d_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-icons_bd7b00_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-icons_d19405_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-icons_eb990f_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-icons_ed9f26_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-icons_fadc7a_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\ui-icons_ffe180_256x240.png" />
 
         <ElementFile Location="SPEasyFormsAssets\MicrosoftAjax.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.js" />

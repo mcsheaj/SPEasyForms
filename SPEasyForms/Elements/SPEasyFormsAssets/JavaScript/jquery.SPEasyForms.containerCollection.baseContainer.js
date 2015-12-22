@@ -138,6 +138,7 @@
         wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
+            var groupNames;
             var containerSettingsOpts = {
                 width: 450,
                 modal: true,
@@ -153,7 +154,7 @@
                                 newLayout.name = newLayout.containerType;
                             }
 
-                            var groupNames = $("#settingsCollectionNames").val().split('\n');
+                            groupNames = $("#settingsCollectionNames").val().split('\n');
                             $.each($(groupNames), function (idx, name) {
                                 if (name.trim().length > 0) {
                                     newLayout.fieldCollections.push({
@@ -190,11 +191,11 @@
                                 }
                                 container.attr("data-containername", opt.currentContainerLayout.name);
                                 container.find(".speasyforms-itemtitle:first").text(opt.currentContainerLayout.name);
-                                if (opt.currentContainerLayout.name != opt.currentContainerLayout.containerType) {
+                                if (opt.currentContainerLayout.name !== opt.currentContainerLayout.containerType) {
                                     container.find(".speasyforms-itemtype:first").text(opt.currentContainerLayout.containerType);
                                 }
                             }
-                            var groupNames = $("#settingsCollectionNames").val().split('\n');
+                            groupNames = $("#settingsCollectionNames").val().split('\n');
                             $.each($(groupNames), function (idx, name) {
                                 if (name.trim().length > 0) {
                                     opt.currentContainerLayout = {
@@ -282,7 +283,7 @@
             }
             var name = $.spEasyForms.utilities.jsCase(opt.fieldCollection.containerType);
             if (name in containerCollection.containerImplementations) {
-                impl = containerCollection.containerImplementations[name];
+                var impl = containerCollection.containerImplementations[name];
                 if (typeof (impl.transform) === "function") {
                     opt.currentContainerLayout = opt.fieldCollection;
                     var div = $("<div/>", {
