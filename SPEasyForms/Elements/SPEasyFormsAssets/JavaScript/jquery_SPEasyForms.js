@@ -33433,13 +33433,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-redmond/jquery-ui.css');
             }
 
-            $("head").append(
-                '<link rel="stylesheet" type="text/css" href="' +options.jQueryUITheme + '">');
-
-
             if (options.currentConfig.jQueryUITheme) {
                 $("head").append(
                     '<link rel="stylesheet" type="text/css" href="' + options.currentConfig.jQueryUITheme + '">');
+            }
+            else {
+                $("head").append(
+                    '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
             }
 
             if (options.css === undefined) {

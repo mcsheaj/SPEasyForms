@@ -991,7 +991,7 @@
                             <option value="sunny">Sunny</option>
                         </select>
                         <input type="text" id="inpCustomTheme" name="inpCustomTheme" 
-                            value="" title="Enter the full text to a jQuery UI 1.11.x theme." style="display:none; width: 400px;"/>
+                            value="" title="Enter the full text to a jQuery UI 1.11.x theme." style="display:none; width: 600px;"/>
                     </div>
                     <div>
                         <button id="applyThemeButton">Apply</button>

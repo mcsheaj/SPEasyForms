@@ -46,7 +46,7 @@
     </Module>
     <Module Name="SPEasyFormsAssetsCssSunny" Url="Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-sunny">
         <File Path="SPEasyFormsAssets\jquery-ui-sunny\jquery-ui.css" Url="jquery-ui.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery-ui-sunny\jquery-ui.theme.css" Url="jquery.ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-sunny\jquery-ui.theme.css" Url="jquery-ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
     <Module Name="SPEasyFormsAssetsCssImagesSunny" Url="Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-sunny/images">
         <File Path="SPEasyFormsAssets\jquery-ui-sunny\ui-bg_diagonals-medium_20_d34d17_40x40.png" Url="ui-bg_diagonals-medium_20_d34d17_40x40.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
