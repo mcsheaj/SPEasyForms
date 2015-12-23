@@ -36403,6 +36403,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 return false;
             });
 
+            if (opt.currentConfig.jQueryUITheme) {
+                if (opt.currentConfig.jQueryUITheme.indexOf("/jquery-ui-smoothness/") > 0) {
+                    $("#selGalleryTheme").val("smoothness");
+                }
+                else if (opt.currentConfig.jQueryUITheme.indexOf("/jquery-ui-sunny/") > 0) {
+                    $("#selGalleryTheme").val("sunny");
+                }
+                else if (opt.currentConfig.jQueryUITheme.indexOf("/jquery-ui-redmond/") < 0) {
+                    $("#selGalleryTheme").val("sunny");
+                }
+        }
 
             // wire the clear cache button
             $("#spEasyFormsClearCacheButton").click(function () {

@@ -434,6 +434,7 @@
                 connectWith: ".speasyforms-sortablefields",
                 items: "> tr:not(:first)",
                 helper: "clone",
+                placeholder: "speasyforms-placeholder",
                 zIndex: 990,
                 update: function (event) {
                     if (!event.handled) {
@@ -768,6 +769,20 @@
                 return false;
             });
 
+            if (opt.currentConfig.jQueryUITheme) {
+                if (opt.currentConfig.jQueryUITheme.indexOf("/jquery-ui-smoothness/") > 0) {
+                    $("#selGalleryTheme").val("smoothness");
+                }
+                else if (opt.currentConfig.jQueryUITheme.indexOf("/jquery-ui-sunny/") > 0) {
+                    $("#selGalleryTheme").val("sunny");
+                }
+                else if (opt.currentConfig.jQueryUITheme.indexOf("/jquery-ui-redmond/") < 0) {
+                    $("#inpCustomTheme").val(opt.currentConfig.jQueryUITheme);
+                    $("input:radio[value='custom']").prop("checked", "checked");
+                    $("#inpCustomTheme").show();
+                    $("#selGalleryTheme").hide();
+                }
+            }
 
             // wire the clear cache button
             $("#spEasyFormsClearCacheButton").click(function () {

@@ -32,6 +32,21 @@
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_d8e7f3_256x240.png" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_f9bd01_256x240.png" />
 
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\jquery-ui.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\jquery-ui.theme.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_diagonals-medium_20_d34d17_40x40.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_gloss-wave_45_944c44_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_gloss-wave_60_d7665b_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_gloss-wave_70_c7665b_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_gloss-wave_90_fff9e5_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_highlight-soft_100_fadad7_1x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_inset-soft_30_ffffff_1x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_3d3d3d_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_944c44_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_b6120d_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_c7665b_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_faada5_256x240.png" />
+        
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\jquery-ui.css" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\jquery-ui.theme.css" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-bg_glass_55_fbf9ee_1x400.png" />

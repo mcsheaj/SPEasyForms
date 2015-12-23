@@ -785,14 +785,12 @@
 
         #suitBar {
             height: 46px;
-            background-color: #4183C4;
             padding-left: 10px;
         }
 
         #suitBar a {
             font-family: "SegoeUI-SemiLight-final","Segoe UI SemiLight","Segoe UI WPC Semilight","Segoe UI",Segoe,Tahoma,Helvetica,Arial,sans-serif;
             font-size: 1.8em;
-            color: white;
             text-decoration: none;
         }
 
@@ -815,7 +813,7 @@
     </style>
 </head>
 <body>
-    <div id="suitBar" class=".speasyforms-suitbar"><a href="https://speasyforms.codeplex.com" target="_blank">SPEasyForms</a></div>
+    <div id="suitBar" class="speasyforms-suitbar ui-widget-header ui-state-default"><a href="https://speasyforms.codeplex.com" target="_blank">SPEasyForms</a></div>
     <div id="msCuiTopbar" class=".ms-cui-topBar2"></div>
     <form id="form1" runat="server">
         <div id='spEasyFormsRibbon' class='speasyforms-ribbon'>
@@ -991,7 +989,7 @@
                             <option value="sunny">Sunny</option>
                         </select>
                         <input type="text" id="inpCustomTheme" name="inpCustomTheme" 
-                            value="" title="Enter the full text to a jQuery UI 1.11.x theme." style="display:none; width: 600px;"/>
+                            value="" title="Enter the full text to a jQuery UI 1.11.x theme." style="display:none; width: 700px;"/>
                     </div>
                     <div>
                         <button id="applyThemeButton">Apply</button>

@@ -27,6 +27,24 @@
         <File Path="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_d8e7f3_256x240.png" Url="ui-icons_d8e7f3_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_f9bd01_256x240.png" Url="ui-icons_f9bd01_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
+    <Module Name="SPEasyFormsAssetsCssSalmon" Url="Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-salmon">
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\jquery-ui.css" Url="jquery-ui.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\jquery-ui.theme.css" Url="jquery-ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+    </Module>
+    <Module Name="SPEasyFormsAssetsCssImagesSalmon" Url="Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-salmon/images">
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_diagonals-medium_20_d34d17_40x40.png" Url="ui-bg_diagonals-medium_20_d34d17_40x40.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_gloss-wave_45_944c44_500x100.png" Url="ui-bg_gloss-wave_45_944c44_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_gloss-wave_60_d7665b_500x100.png" Url="ui-bg_gloss-wave_60_d7665b_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_gloss-wave_70_c7665b_500x100.png" Url="ui-bg_gloss-wave_70_c7665b_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_gloss-wave_90_fff9e5_500x100.png" Url="ui-bg_gloss-wave_90_fff9e5_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_highlight-soft_100_fadad7_1x100.png" Url="ui-bg_highlight-soft_100_fadad7_1x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_inset-soft_30_ffffff_1x100.png" Url="ui-bg_inset-soft_30_ffffff_1x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_3d3d3d_256x240.png" Url="ui-icons_3d3d3d_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_944c44_256x240.png" Url="ui-icons_944c44_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_b6120d_256x240.png" Url="ui-icons_b6120d_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_c7665b_256x240.png" Url="ui-icons_c7665b_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_faada5_256x240.png" Url="ui-icons_faada5_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+    </Module>
     <Module Name="SPEasyFormsAssetsCssSmoothness" Url="Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-smoothness">
         <File Path="SPEasyFormsAssets\jquery-ui-smoothness\jquery-ui.css" Url="jquery-ui.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-smoothness\jquery-ui.theme.css" Url="jquery.ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

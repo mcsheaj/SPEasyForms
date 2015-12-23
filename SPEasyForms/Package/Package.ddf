@@ -137,6 +137,23 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_d8e7f3_256x240.png
 ..\Elements\SPEasyFormsAssets\Css\jquery-ui-redmond\images\ui-icons_f9bd01_256x240.png
 
+.Set DestinationDir="SPEasyForms\SPEasyFormsAssets\jquery-ui-salmon"
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\jquery-ui.css
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\jquery-ui.theme.css
+
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-bg_diagonals-medium_20_d34d17_40x40.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-bg_gloss-wave_45_944c44_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-bg_gloss-wave_60_d7665b_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-bg_gloss-wave_70_c7665b_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-bg_gloss-wave_90_fff9e5_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-bg_highlight-soft_100_fadad7_1x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-bg_inset-soft_30_ffffff_1x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-icons_3d3d3d_256x240.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-icons_944c44_256x240.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-icons_b6120d_256x240.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-icons_c7665b_256x240.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-salmon\images\ui-icons_faada5_256x240.png
+
 .Set DestinationDir="SPEasyForms\SPEasyFormsAssets\jquery-ui-smoothness"
 ..\Elements\SPEasyFormsAssets\Css\jquery-ui-smoothness\jquery-ui.css
 ..\Elements\SPEasyFormsAssets\Css\jquery-ui-smoothness\jquery-ui.theme.css

@@ -164,6 +164,15 @@
             $("#configureSnippetDialog").dialog("open");
             $("#snippetContents").hide();
             $("div[buttonname='source']").css({ "background-color": "transparent" });
+            var frame = $("#configureSnippetDialog").find("iframe")[0];
+            if (options.currentConfig.jQueryUITheme) {
+                $("head", frame.contentWindow.document).append(
+                    '<link rel="stylesheet" type="text/css" href="' + options.currentConfig.jQueryUITheme + '">');
+            }
+            else {
+                $("head", frame.contentWindow.document).append(
+                    '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
+            }
         },
 
         // initialize the text area in the dialog with cleditor
