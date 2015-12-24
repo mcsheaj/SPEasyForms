@@ -250,8 +250,12 @@
                             opt.rowInfo.row.find("td.ms-formbody").prepend(
                                 "<div data-transformAdded='true'>&nbsp;</div>");
                         }
+                        var text = tdh.find("nobr").html();
+                        if (typeof (text) === "undefined") {
+                            text = tdh.text();
+                        }
                         opt.rowInfo.row.find("td.ms-formbody").prepend(
-                            "<div><nobr data-transformAdded='true' class='speasyforms-columnheader'>" + tdh.find("nobr").html() + "</nobr></div>");
+                            "<div><nobr data-transformAdded='true' class='speasyforms-columnheader'>" + text + "</nobr></div>");
                         tdh.attr("data-transformHidden", "true").hide();
                     }
                     else {

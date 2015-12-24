@@ -72,6 +72,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             maxWebCache: 6,
             // the maximum number of lists to cache per web
             maxListCache: 10,
+            // the maximum number of containers that can be nested
+            maxNestingLevels: 5,
             // path to the jquery-ui style sheet
             jQueryUITheme: "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-redmond/jquery-ui.css",
             // path to the spEasyForms style sheet
@@ -458,14 +460,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         loadDynamicStyles: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            opt.source = opt.jQueryUITheme
+            opt.source = opt.jQueryUITheme;
             var theme = this.replaceVariables(opt);
 
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + theme + '">');
 
             if (opt.currentConfig.jQueryUITheme) {
-                opt.source = opt.currentConfig.jQueryUITheme
+                opt.source = opt.currentConfig.jQueryUITheme;
                 theme = this.replaceVariables(opt);
                 $("head").append(
                     '<link rel="stylesheet" type="text/css" href="' + theme + '">');

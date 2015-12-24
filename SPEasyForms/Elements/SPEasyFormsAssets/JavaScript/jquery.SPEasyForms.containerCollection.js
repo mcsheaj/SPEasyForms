@@ -336,8 +336,8 @@
             // since they may have moved.
             $.each(containerCollection.rows, function (i, current) {
                 current.row.find("*[data-transformAdded='true']").remove();
-                current.row.find("*[data-transformHidden='true']").
-                attr("data-transformHidden", "false").show();
+                current.row.find("*[data-transformHidden='true']").attr("data-transformHidden", "false").show();
+                current.row.find(".speasyforms-columnheader").removeClass("speasyforms-columnheader").addClass("ms-h3").addClass("ms-standardheader");
                 current.row.detach().appendTo($("table.ms-formtable"));
             });
             containerCollection.rowCache[containerCollection.currentCt] = containerCollection.rows;
@@ -459,7 +459,7 @@
                 tabSize: 20,
                 tolerance: 'pointer',
                 toleranceElement: '> div',
-                maxLevels: 5,
+                maxLevels: opt.maxNestingLevels,
                 isTree: true,
                 expandOnHover: 700,
                 startCollapsed: false,
@@ -776,7 +776,7 @@
                 $.spEasyForms.configManager.set(opt);
 
                 if (theme) {
-                    opt.source = theme
+                    opt.source = theme;
                 }
                 else {
                     opt.source = opt.jQueryUITheme;
@@ -791,7 +791,7 @@
                 if (opt.currentConfig.jQueryUITheme && opt.currentConfig.jQueryUITheme.indexOf("/jquery-ui-" + item.toLowerCase() + "/") > 0) {
                     currentGalleryTheme = item;
                 }
-                $("#selGalleryTheme").append("<option value='" + item.toLowerCase() + "'>" + item + "</option>")
+                $("#selGalleryTheme").append("<option value='" + item.toLowerCase() + "'>" + item + "</option>");
             });
 
             if (currentGalleryTheme) {
@@ -954,7 +954,7 @@
             // save confirmation dialog
             var importOpts = {
                 modal: true,
-                width: 630,
+                width: 670,
                 buttons: {
                     "Ok": function () {
                         opt.currentConfig = $.spEasyForms.utilities.parseJSON($("#importedJson").val());

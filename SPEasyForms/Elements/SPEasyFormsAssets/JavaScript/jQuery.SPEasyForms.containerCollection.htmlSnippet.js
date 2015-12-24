@@ -165,13 +165,15 @@
             $("#snippetContents").hide();
             $("div[buttonname='source']").css({ "background-color": "transparent" });
             var frame = $("#configureSnippetDialog").find("iframe")[0];
-            if (options.currentConfig.jQueryUITheme) {
+            if (opt.currentConfig.jQueryUITheme) {
+                opt.source = opt.currentConfig.jQueryUITheme;
                 $("head", frame.contentWindow.document).append(
-                    '<link rel="stylesheet" type="text/css" href="' + options.currentConfig.jQueryUITheme + '">');
+                    '<link rel="stylesheet" type="text/css" href="' + $.spEasyForms.replaceVariables(opt) + '">');
             }
             else {
+                opt.source = opt.jQueryUITheme;
                 $("head", frame.contentWindow.document).append(
-                    '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
+                    '<link rel="stylesheet" type="text/css" href="' + $.spEasyForms.replaceVariables(opt) + '">');
             }
         },
 

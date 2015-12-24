@@ -267,7 +267,6 @@
 
             tr.speasyforms-sortablefields:hover, tr.speasyforms-sortablerules:hover {
                 cursor: move !important;
-                background: lightyellow !important;
             }
 
         td.speasyforms-sortablecontainers {

@@ -22,7 +22,6 @@ table.speasyforms-columns, table.speasyforms-columns h3.ms-standardheader, table
 .speasyforms-columnheader {
     margin-bottom: 5px;
     padding-bottom: 0;
-    font-weight: bold !important;
 }
 table.speasyforms-columns td {
     vertical-align: top;
