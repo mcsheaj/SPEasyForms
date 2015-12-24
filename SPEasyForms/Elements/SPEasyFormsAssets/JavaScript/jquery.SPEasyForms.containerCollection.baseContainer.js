@@ -250,14 +250,13 @@
                             opt.rowInfo.row.find("td.ms-formbody").prepend(
                                 "<div data-transformAdded='true'>&nbsp;</div>");
                         }
-                        if (tdh.html() === "Content Type") {
-                            opt.rowInfo.row.find("td.ms-formbody").prepend(
-                                "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
-                        } else {
-                            opt.rowInfo.row.find("td.ms-formbody").prepend(
-                                "<h3 data-transformAdded='true' class='ms-standardheader'><nobr>" + tdh.html() + "</nobr></h3>");
-                        }
+                        opt.rowInfo.row.find("td.ms-formbody").prepend(
+                            "<div><nobr data-transformAdded='true' class='speasyforms-columnheader'>" + tdh.find("nobr").html() + "</nobr></div>");
                         tdh.attr("data-transformHidden", "true").hide();
+                    }
+                    else {
+                        opt.rowInfo.row.find("*").removeClass("ms-standardheader").removeClass("ms-h3");
+                        opt.rowInfo.row.find(".ms-formlabel").removeClass("ms-formlabel").addClass("speasyforms-columnheader");
                     }
                     result = true;
                 }

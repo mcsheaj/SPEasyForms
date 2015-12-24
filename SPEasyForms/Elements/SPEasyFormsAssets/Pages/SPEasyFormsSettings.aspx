@@ -22,6 +22,7 @@
     <script src="../JavaScript/ssw.js" type="text/javascript"></script>
 
     <script src="../JavaScript/jquery.SPEasyForms.js" type="text/javascript"></script>
+    <script src="../../SPEasyForms_DefaultSettings.js" type="text/javascript"></script>
 
     <script src="../JavaScript/jquery.SPEasyForms.utilities.js" type="text/javascript"></script>
     <script src="../JavaScript/jquery.SPEasyForms.sharePointContext.js" type="text/javascript"></script>
@@ -382,8 +383,6 @@
 
         td.speasyforms-staticrules,
         td.speasyforms-adapter-static {
-            background-color: #eaf4fd;
-            border: 1px solid darkgrey;
             text-align: left;
         }
 
@@ -979,14 +978,13 @@
                 <div id='tabs-min-settings' class='tabs-min' style='display: none;'>
                     <div class='speasyforms-settingsheader'>jQuery UI Theme</div>
                     <div>
-                        <input type="radio" name="jqueryuitheme" value="gallery" checked="checked"/> Use Gallery Theme 
+                        <input type="radio" name="jqueryuitheme" value="none" checked="checked"/> Use Default Theme 
+                        <input type="radio" name="jqueryuitheme" value="gallery" /> Use Gallery Theme 
                         <input type="radio" name="jqueryuitheme" value="custom"/> Use Custom Theme 
                     </div>
                     <div style="margin-top: 10px; margin-bottom: 10px;">
                         <select id="selGalleryTheme">
-                            <option value="redmond" selected="selected">Redmond</option>
-                            <option value="smoothness">Smoothness</option>
-                            <option value="sunny">Sunny</option>
+                            <option value="">None</option>
                         </select>
                         <input type="text" id="inpCustomTheme" name="inpCustomTheme" 
                             value="" title="Enter the full text to a jQuery UI 1.11.x theme." style="display:none; width: 700px;"/>

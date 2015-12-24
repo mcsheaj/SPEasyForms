@@ -32,7 +32,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
 (function ($, undefined) {
 
-    if (typeof(SPClientTemplates) !== 'undefined' && SPClientTemplates.TemplateManager && SPClientTemplates.TemplateManager.RegisterTemplateOverrides) {
+    if (typeof (SPClientTemplates) !== 'undefined' && SPClientTemplates.TemplateManager && SPClientTemplates.TemplateManager.RegisterTemplateOverrides) {
         SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
             OnPreRender: function (ctx) {
                 if ($("body").attr("data-speasyforms-formhidden") !== "true") {
@@ -59,7 +59,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     }
 
     // cross-page caching object
-    var cache = (typeof(ssw) !== 'undefined' ? ssw.get() : undefined);
+    var cache = (typeof (ssw) !== 'undefined' ? ssw.get() : undefined);
 
     ////////////////////////////////////////////////////////////////////////////
     // Main entry point is init.
@@ -67,15 +67,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     $.spEasyForms = {
         defaults: {
             // use cross-page caching
-            useCache: (typeof(ssw) !== 'undefined' || typeof(ssw_init) !== 'undefined'),
+            useCache: (typeof (ssw) !== 'undefined' || typeof (ssw_init) !== 'undefined'),
             // the maximum number of webs to cache
             maxWebCache: 6,
             // the maximum number of lists to cache per web
             maxListCache: 10,
             // path to the jquery-ui style sheet
-            jQueryUITheme: undefined,
+            jQueryUITheme: "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-redmond/jquery-ui.css",
             // path to the spEasyForms style sheet
-            css: undefined,
+            css: "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/speasyforms.css",
             // selector for an element in a form table row from which row 
             // will be obtained via .closest("tr")
             formBodySelector: "table td.ms-formbody",
@@ -94,7 +94,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
             initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
-            version: "2015.01.beta"
+            version: "2015.01.beta",
+            jQueryUIGallery: ["lilac", "olive", "redmond", "salmon", "smoothness", "sunny"]
         },
 
         /********************************************************************
@@ -102,7 +103,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * supports (currently we do not support Surveys or Discussion Boards,
          * but the list may grow as testing continues).
          ********************************************************************/
-        isConfigurableList: function(options) {
+        isConfigurableList: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             // if we wern't passed a list context, try to get one
             if (!opt.currentListContext) {
@@ -128,7 +129,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *     // see the definition of defaults for options
          * }
          ********************************************************************/
-        init: function(options) {
+        init: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             this.initCacheLibrary(opt);
             opt.callback = spEasyForms.contextReady;
@@ -211,7 +212,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *     // see the definition of defaults for options
          * }
          ********************************************************************/
-        contextReady: function(options) {
+        contextReady: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             try {
                 opt.currentContext = $.spEasyForms.sharePointContext.get(opt);
@@ -224,15 +225,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 if (spEasyForms.isSettingsPage(opt)) {
                     spEasyForms.toEditor(opt);
                 }
-                /***
-                 * If it looks like a transformable form, try to transform it.
-                 ***/
+                    /***
+                     * If it looks like a transformable form, try to transform it.
+                     ***/
                 else if (spEasyForms.isTransformable(opt)) {
                     spEasyForms.transform(opt);
                 }
-                /***
-                 * If it looks like a transformable list settings page, insert an SPEasyForms link.
-                 ***/
+                    /***
+                     * If it looks like a transformable list settings page, insert an SPEasyForms link.
+                     ***/
                 else if (spEasyForms.isConfigurableListSettings(opt)) {
                     spEasyForms.insertSettingsLink(opt);
                 }
@@ -247,7 +248,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * Are we on the OOB list settings page (listedit.aspx) for a list 
          * type that SPEasyForms supports.
          ********************************************************************/
-        isConfigurableListSettings: function(options) {
+        isConfigurableListSettings: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             // if we're not in the context of a configurable list
             if (!spEasyForms.isConfigurableList(opt)) {
@@ -259,7 +260,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         /********************************************************************
          * Are we on the SPEasyForms settings page (SPEassyFormsSettings.aspx).
          ********************************************************************/
-        isSettingsPage: function(options) {
+        isSettingsPage: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             // if we're not in the context of a configurable list
             if (!spEasyForms.isConfigurableList(opt)) {
@@ -275,7 +276,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * Are we on the new, edit, or display form of a list type that
          * SPEasyForms supports.
          ********************************************************************/
-        isTransformable: function(options) {
+        isTransformable: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             // if we're not in the context of a configurable list
             if (!spEasyForms.isConfigurableList(opt)) {
@@ -289,7 +290,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if ($.spEasyForms.visibilityRuleCollection.getFormType(opt) === "new" && window.location.href.toLowerCase().indexOf("&type=1&") >= 0) {
                 return false;
             }
-            // if we're on any other form for a folder
+                // if we're on any other form for a folder
             else if (window.location.href.toLowerCase().indexOf("&contenttypeid=0x0120") >= 0) {
                 return false;
             }
@@ -358,7 +359,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
             this.loadDynamicStyles(opt);
             $("#msCuiTopbar").prepend("<h2 class='speasyforms-breadcrumbs'><a href='" + opt.source + "'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h2>");
-            
+
             $.each(opt.currentListContext.contentTypes.order, function (i, ctid) {
                 if (ctid.indexOf("0x0120") !== 0) {
                     $("#spEasyFormsContentTypeSelect").append("<option value='" +
@@ -366,7 +367,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         opt.currentListContext.contentTypes[ctid].name + "</option>");
                 }
             });
-            
+
             $("#spEasyFormsContentTypeSelect").change(function () {
                 delete $.spEasyForms.containerCollection.rows;
                 delete $.spEasyForms.sharePointContext.formCache;
@@ -374,17 +375,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.refresh = $.spEasyForms.refresh.all;
                 $.spEasyForms.containerCollection.toEditor(opt);
             });
-            
+
             $.spEasyForms.containerCollection.toEditor(opt);
-            
+
             $(window).on("beforeunload", function () {
                 if (!$("#spEasyFormsSaveButton").hasClass("speasyforms-disabled")) {
                     return "You have unsaved changes, are you sure you want to leave the page?";
                 }
             });
-            
+
             //$.spEasyForms.appendContext(opt);
-            
+
             var bannerHeight = $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height() + 30;
             $("div.speasyforms-panel").height($(window).height() - bannerHeight);
             $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
@@ -399,7 +400,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * Add a link to the SPEasyForms settings page to an OOB list settings
          * page (listedit.aspx).
          ********************************************************************/
-        insertSettingsLink: function(opt) {
+        insertSettingsLink: function (opt) {
             var generalSettings = $("td.ms-descriptiontext:contains('description and navigation')").closest("table");
             var permissionsLink = $("a:contains('Permissions for this list')");
             if (permissionsLink.length > 0) {
@@ -434,14 +435,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *     // see the definition of defaults for options
          * }
          ********************************************************************/
-        initCacheLibrary: function(options) {
-            if (typeof(cache) === 'undefined' && options.cache !== undefined) {
+        initCacheLibrary: function (options) {
+            if (typeof (cache) === 'undefined' && options.cache !== undefined) {
                 cache = options.cache;
             }
 
-            if (typeof(ssw) === 'undefined' && typeof(ssw_init) !== 'undefined') {
+            if (typeof (ssw) === 'undefined' && typeof (ssw_init) !== 'undefined') {
                 ssw_init(window, document);
-                if (typeof(cache) === 'undefined') {
+                if (typeof (cache) === 'undefined') {
                     cache = ssw.get();
                 }
             }
@@ -454,25 +455,32 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *     // see the definition of defaults for options
          * }
          ********************************************************************/
-        loadDynamicStyles: function(options) {
-            if (options.jQueryUITheme === undefined) {
-                options.jQueryUITheme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-redmond/jquery-ui.css');
-            }
+        loadDynamicStyles: function (options) {
+            var opt = $.extend({}, spEasyForms.defaults, options);
+            opt.currentConfig = $.spEasyForms.configManager.get(opt);
+            opt.source = opt.jQueryUITheme
+            var theme = this.replaceVariables(opt);
 
-            if (options.currentConfig.jQueryUITheme) {
-                $("head").append(
-                    '<link rel="stylesheet" type="text/css" href="' + options.currentConfig.jQueryUITheme + '">');
-            }
-            else {
-                $("head").append(
-                    '<link rel="stylesheet" type="text/css" href="' + options.jQueryUITheme + '">');
-            }
-
-            if (options.css === undefined) {
-                options.css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/speasyforms.css');
-            }
             $("head").append(
-                '<link rel="stylesheet" type="text/css" href="' + options.css + '">');
+                '<link rel="stylesheet" type="text/css" href="' + theme + '">');
+
+            if (opt.currentConfig.jQueryUITheme) {
+                opt.source = opt.currentConfig.jQueryUITheme
+                theme = this.replaceVariables(opt);
+                $("head").append(
+                    '<link rel="stylesheet" type="text/css" href="' + theme + '">');
+            }
+
+            opt.source = opt.css;
+            theme = this.replaceVariables(opt);
+            $("head").append(
+                '<link rel="stylesheet" type="text/css" href="' + theme + '">');
+        },
+
+        replaceVariables: function (options) {
+            options.source = options.source.replace(/~sitecollection/g, options.currentContext.siteRelativeUrl);
+            options.source = options.source.replace(/~site/g, options.currentContext.webRelativeUrl);
+            return options.source;
         },
 
         /*********************************************************************
@@ -483,7 +491,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *     // see the definition of defaults for options
          * }
          *********************************************************************/
-        clearCachedContext: function(options) {
+        clearCachedContext: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             if (opt.useCache) {
                 cache = {};
@@ -499,9 +507,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *     // see the definition of defaults for options
          * }
          *********************************************************************/
-        writeCachedContext: function(options) {
+        writeCachedContext: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            if (typeof(ssw) !== 'undefined') {
+            if (typeof (ssw) !== 'undefined') {
                 var key = "spEasyForms_spContext_" + opt.currentContext.webRelativeUrl;
                 if (!(key in cache)) {
                     if (Object.keys(cache).length >= opt.maxWebCache) {
@@ -522,7 +530,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *     // see the definition of defaults for options
          * }
          *********************************************************************/
-        readCachedContext: function(options) {
+        readCachedContext: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             if (opt.useCache === true) {
                 var key = "spEasyForms_spContext_";
@@ -542,7 +550,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          *     // see the definition of defaults for options
          * }
          *********************************************************************/
-        appendContext: function() {
+        appendContext: function () {
             /*
             var opt = $.extend({}, spEasyForms.defaults, options);
             if (spEasyForms.defaults.verbose) {

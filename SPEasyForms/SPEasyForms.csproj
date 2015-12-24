@@ -220,10 +220,13 @@
     </Content>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\MicrosoftAjax.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\ssw.js" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\images\SPEasyForms16x16.png" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\menu.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\images\SPEasyForms32x32.png" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+    <Content Include="Elements\SPEasyFormsAssets\SPEasyForms_DefaultSettings.js" />
     <Content Include="Elements\SPEasyFormsCustomActions.xml">
       <SubType>Designer</SubType>
     </Content>

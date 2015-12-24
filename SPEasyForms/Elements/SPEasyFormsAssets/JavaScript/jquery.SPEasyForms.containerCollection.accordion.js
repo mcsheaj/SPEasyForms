@@ -1,4 +1,4 @@
-﻿/*
+﻿-/*
  * SPEasyForms.containerCollection.accordion - Object representing an accordion container.
  *
  * @requires jQuery.SPEasyForms.2015.01.beta 
@@ -56,23 +56,25 @@
                 }
             });
 
-            div.on("mouseup", "h3.speasyforms-accordion", function () {
-                div.find("h3.speasyforms-accordion").
-                    removeClass("ui-accordion-header-active").
-                    removeClass("ui-state-active").
-                    removeClass("ui-corner-top").
-                    addClass("ui-corner-all");
-                div.find(".ui-accordion-content").hide();
+            div.on("mouseup", "h3.speasyforms-accordion", function (e) {
+                if (e.which === 1) {
+                    div.find("h3.speasyforms-accordion").
+                        removeClass("ui-accordion-header-active").
+                        removeClass("ui-state-active").
+                        removeClass("ui-corner-top").
+                        addClass("ui-corner-all");
+                    div.find(".ui-accordion-content").hide();
 
-                $(this).
-                    addClass("ui-accordion-header-active").
-                    addClass("ui-state-active").
-                    addClass("ui-corner-top").
-                    removeClass("ui-corner-all");
-                $(this).next().show();
-                $.spEasyForms.containerCollection.postTransform(opt);
+                    $(this).
+                        addClass("ui-accordion-header-active").
+                        addClass("ui-state-active").
+                        addClass("ui-corner-top").
+                        removeClass("ui-corner-all");
+                    $(this).next().show();
+                    $.spEasyForms.containerCollection.postTransform(opt);
+                }
             });
-            
+
             return opt.result;
         },
 
@@ -104,7 +106,7 @@
                 container.attr("data-speasyformsempty", "0").show();
             }
         },
-        
+
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var index = opt.currentContainerLayout.index;
@@ -126,7 +128,7 @@
             return true;
         }
     };
-    
+
     containerCollection.containerImplementations.accordion = $.extend({}, baseContainer, accordion);
 
 })(spefjQuery);

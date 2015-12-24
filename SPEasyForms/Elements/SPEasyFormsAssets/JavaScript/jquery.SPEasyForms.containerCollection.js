@@ -113,7 +113,7 @@
             function postTransformHelper(layout) {
                 if (layout.fieldCollections) {
                     $.each(layout.fieldCollections, function (i, l) {
-                         postTransformHelper(l);
+                        postTransformHelper(l);
                     });
                 }
 
@@ -742,8 +742,12 @@
                     $("#selGalleryTheme").show();
                     $("#inpCustomTheme").hide();
                 }
-                else {
+                else if (value === "custom") {
                     $("#inpCustomTheme").show();
+                    $("#selGalleryTheme").hide();
+                }
+                else {
+                    $("#inpCustomTheme").hide();
                     $("#selGalleryTheme").hide();
                 }
             });
@@ -755,33 +759,57 @@
                 e.preventDefault();
                 var themeType = $("input:radio[name='jqueryuitheme']:checked").val();
                 var theme;
-                if (themeType === "gallery") {
+                opt.currentConfig = $.spEasyForms.configManager.get(opt);
+
+                if (themeType === "gallery" && $("#selGalleryTheme").val() !== "none") {
                     theme = $("#selGalleryTheme").val();
                     theme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-' + theme + '/jquery-ui.css');
+                    opt.currentConfig.jQueryUITheme = theme;
+                }
+                else if (themeType === "custom") {
+                    theme = $("#inpCustomTheme").val();
+                    opt.currentConfig.jQueryUITheme = theme;
                 }
                 else {
-                    theme = $("#inpCustomTheme").val();
+                    delete opt.currentConfig.jQueryUITheme;
                 }
-                opt.currentConfig = $.spEasyForms.configManager.get(opt);
-                opt.currentConfig.jQueryUITheme = theme;
                 $.spEasyForms.configManager.set(opt);
-                $("head").append('<link rel="stylesheet" type="text/css" href="' + theme + '">');
+
+                if (theme) {
+                    opt.source = theme
+                }
+                else {
+                    opt.source = opt.jQueryUITheme;
+                }
+                $("head").append('<link rel="stylesheet" type="text/css" href="' + $.spEasyForms.replaceVariables(opt) + '">');
+
                 return false;
             });
 
-            if (opt.currentConfig.jQueryUITheme) {
-                if (opt.currentConfig.jQueryUITheme.indexOf("/jquery-ui-smoothness/") > 0) {
-                    $("#selGalleryTheme").val("smoothness");
+            var currentGalleryTheme;
+            $.each($(opt.jQueryUIGallery), function (idx, item) {
+                if (opt.currentConfig.jQueryUITheme && opt.currentConfig.jQueryUITheme.indexOf("/jquery-ui-" + item.toLowerCase() + "/") > 0) {
+                    currentGalleryTheme = item;
                 }
-                else if (opt.currentConfig.jQueryUITheme.indexOf("/jquery-ui-sunny/") > 0) {
-                    $("#selGalleryTheme").val("sunny");
-                }
-                else if (opt.currentConfig.jQueryUITheme.indexOf("/jquery-ui-redmond/") < 0) {
-                    $("#inpCustomTheme").val(opt.currentConfig.jQueryUITheme);
-                    $("input:radio[value='custom']").prop("checked", "checked");
-                    $("#inpCustomTheme").show();
-                    $("#selGalleryTheme").hide();
-                }
+                $("#selGalleryTheme").append("<option value='" + item.toLowerCase() + "'>" + item + "</option>")
+            });
+
+            if (currentGalleryTheme) {
+                $("input:radio[value='gallery']").prop("checked", "checked");
+                $("#selGalleryTheme").val("smoothness");
+                $("#inpCustomTheme").hide();
+                $("#selGalleryTheme").show();
+            }
+            else if (opt.currentConfig.jQueryUITheme) {
+                $("#inpCustomTheme").val(opt.currentConfig.jQueryUITheme);
+                $("input:radio[value='custom']").prop("checked", "checked");
+                $("#inpCustomTheme").show();
+                $("#selGalleryTheme").hide();
+            }
+            else {
+                $("input:radio[value='none']").prop("checked", "checked");
+                $("#inpCustomTheme").hide();
+                $("#selGalleryTheme").hide();
             }
 
             // wire the clear cache button
@@ -982,7 +1010,7 @@
             if (opt.currentContainerLayout.name !== opt.currentContainerLayout.containerType) {
                 template.find(".speasyforms-itemtype").html("&nbsp;[" + opt.currentContainerLayout.containerType + "]");
             }
- 
+
             return template;
         },
 

@@ -19,22 +19,21 @@ table.speasyforms-columns, table.speasyforms-columns h3.ms-standardheader, table
     margin: 0;
     padding: 0;
 }
-h3.ms-standardheader, .ms-standardheader {
-    margin-bottom: 0;
+.speasyforms-columnheader {
+    margin-bottom: 5px;
     padding-bottom: 0;
     font-weight: bold !important;
-    color: #666666;
 }
 table.speasyforms-columns td {
     vertical-align: top;
 }
 .speasyforms-tabvalidationerror {
-    border-top: 1px solid red;
-    border-left: 1px solid red;
-    border-right: 1px solid red;
+    border-top: 2px dashed red;
+    border-left: 2px dashed red;
+    border-right: 2px dashed red;
 }
 .speasyforms-accordionvalidationerror {
-    border: 1px solid red;
+    border: 2px dashed red;
 }
 .ms-formlabel {
     padding: 0;

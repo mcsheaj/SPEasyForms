@@ -66,10 +66,12 @@
                 }
             });
 
-            div.on("mouseup", "a.ui-tabs-anchor", function () {
-                div.tabs({
-                    active: $(this).parent().index()
-                });
+            div.on("mouseup", "a.ui-tabs-anchor", function (e) {
+                if (e.which === 1) {
+                    div.tabs({
+                        active: $(this).parent().index()
+                    });
+                }
             });
 
             return opt.result;

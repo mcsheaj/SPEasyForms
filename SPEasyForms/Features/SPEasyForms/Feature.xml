@@ -14,6 +14,8 @@
         <ElementFile Location="SPEasyFormsAssets\speasyforms.css" />
         <ElementFile Location="SPEasyFormsAssets\jquery.cleditor.css" />
         <ElementFile Location="SPEasyFormsAssets\buttons.png" />
+        <ElementFile Location="SPEasyFormsAssets\SPEasyForms16x16.png" />
+        <ElementFile Location="SPEasyFormsAssets\SPEasyForms32x32.png" />
         <ElementFile Location="SPEasyFormsAssets\toolbar.png" />
 
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-redmond\jquery-ui.css" />
@@ -46,7 +48,7 @@
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_b6120d_256x240.png" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_c7665b_256x240.png" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_faada5_256x240.png" />
-        
+
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\jquery-ui.css" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\jquery-ui.theme.css" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -60,6 +62,34 @@
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-icons_454545_256x240.png" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-icons_888888_256x240.png" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-smoothness\ui-icons_cd0a0a_256x240.png" />
+
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\jquery-ui.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\jquery-ui.theme.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\ui-bg_diagonals-medium_20_832ebf_40x40.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\ui-bg_gloss-wave_45_5b0679_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\ui-bg_gloss-wave_60_832ebf_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\ui-bg_gloss-wave_70_5b0679_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\ui-bg_gloss-wave_90_fff9e5_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\ui-bg_highlight-soft_100_efdaf9_1x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\ui-bg_inset-soft_30_ffffff_1x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\ui-icons_5b0679_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\ui-icons_832ebf_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\ui-icons_dd88ff_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-lilac\ui-icons_f08bc4_256x240.png" />
+
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\jquery-ui.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\jquery-ui.theme.css" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\ui-bg_diagonals-medium_20_4e4e00_40x40.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\ui-bg_gloss-wave_45_4e4e00_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\ui-bg_gloss-wave_60_767600_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\ui-bg_gloss-wave_70_4e4e00_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\ui-bg_gloss-wave_90_fff9e5_500x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\ui-bg_highlight-soft_100_cfcfa7_1x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\ui-bg_inset-soft_30_ffffff_1x100.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\ui-icons_767600_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\ui-icons_b6120d_256x240.png" />
+        <ElementFile Location="SPEasyFormsAssets\jquery-ui-olive\ui-icons_d0d050_256x240.png" />
+
 
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\jquery-ui.css" />
         <ElementFile Location="SPEasyFormsAssets\jquery-ui-sunny\jquery-ui.theme.css" />
@@ -89,6 +119,7 @@
         <ElementFile Location="SPEasyFormsAssets\jquery.cleditor.xhtml.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery_SPEasyForms.min.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.js" />
+        <ElementFile Location="SPEasyFormsAssets\SPEasyForms_DefaultSettings.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.sharePointContext.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.utilities.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.sharePoinFieldRows.js" />

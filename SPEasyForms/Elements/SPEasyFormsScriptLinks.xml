@@ -27,6 +27,11 @@
     />
     <CustomAction
        Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/SPEasyForms_DefaultSettings.js"
+       Sequence="57172"
+    />
+    <CustomAction
+       Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript/jquery.SPEasyForms.utilities.js"
        Sequence="57176"
     />

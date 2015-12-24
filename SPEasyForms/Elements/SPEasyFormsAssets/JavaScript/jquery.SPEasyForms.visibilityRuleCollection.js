@@ -406,12 +406,12 @@
             var klass = 'speasyforms-staticrules';
             var table = "<table id='staticVisibilityRules' " +
                 "class='" + klass + "'><tbody class='" + klass + "'><tr>" +
-                "<th class='" + klass + "'>Display Name</th>" +
-                "<th class='" + klass + " speasyforms-hidden' style='display:none'>Internal Name</th>" +
-                "<th class='" + klass + "'>State</th>" +
-                "<th class='" + klass + "'>Applies To</th>" +
-                "<th class='" + klass + "'>On Forms</th>" +
-                "<th class='" + klass + "'>And When</th></tr>";
+                "<th class='" + klass + "  ui-widget-header ui-corner-all '>Display Name</th>" +
+                "<th class='" + klass + "  ui-widget-header ui-corner-all speasyforms-hidden' style='display:none'>Internal Name</th>" +
+                "<th class='" + klass + "  ui-widget-header ui-corner-all'>State</th>" +
+                "<th class='" + klass + "  ui-widget-header ui-corner-all'>Applies To</th>" +
+                "<th class='" + klass + "  ui-widget-header ui-corner-all'>On Forms</th>" +
+                "<th class='" + klass + "  ui-widget-header ui-corner-all'>And When</th></tr>";
             $.each(Object.keys(opt.currentConfig.visibility.def).sort(), function (idx, key) {
                 $.each(opt.currentConfig.visibility.def[key], function (i, rule) {
                     var title = "";
@@ -468,22 +468,20 @@
                     table += "<tr id='visibilityRule" + opt.index + "' title='" + title + "'" +
                         "class='" + klass + "' data-dialogtype='visibility' " +
                         "data-fieldname='" + opt.fieldName + "'>";
-                    table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>" + opt.displayName + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog speasyforms-hidden' style='display:none'>" + opt.fieldName + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>" + rule.state + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>" +
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all speasyforms-dblclickdialog'>" + opt.displayName + "</td>";
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all  speasyforms-dblclickdialog speasyforms-hidden' style='display:none'>" + opt.fieldName + "</td>";
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all speasyforms-dblclickdialog'>" + rule.state + "</td>";
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all  speasyforms-dblclickdialog'>" +
                         (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone") + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>" + rule.forms + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " speasyforms-dblclickdialog'>" + conditions + "</td>";
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all  speasyforms-dblclickdialog'>" + rule.forms + "</td>";
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all  speasyforms-dblclickdialog'>" + conditions + "</td>";
                     table += "</tr>";
                 });
             });
             table += "</table>";
             $("#tabs-min-visibility").append(table);
             if ($("tr.speasyforms-staticrules").length === 0) {
-                $("#staticVisibilityRules").append("<td class='" +
-                    klass +
-                    "' colspan='5'>There are no conditional visibility rules for the current form.</td>");
+                $("#staticVisibilityRules").append("<td class='ui-widget-content ui-corner-all' colspan='5'>There are no conditional visibility rules for the current form.</td>");
             }
         },
 
@@ -571,6 +569,7 @@
                 connectWith: ".speasyforms-rulestable",
                 items: "> tr:not(:first)",
                 helper: "clone",
+                placeholder: "speasyforms-placeholder",
                 zIndex: 990,
                 update: function (event) {
                     if (!event.handled) {

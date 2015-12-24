@@ -28,6 +28,7 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.sharepoint.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.xhtml.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.js
+..\Elements\SPEasyFormsAssets\SPEasyForms_DefaultSettings.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.sharePointContext.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.utilities.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.sharePoinFieldRows.js
@@ -50,6 +51,8 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\Css\jquery.cleditor.css
 
 ..\Elements\SPEasyFormsAssets\Css\images\buttons.png
+..\Elements\SPEasyFormsAssets\Css\images\SPEasyForms16x16.png
+..\Elements\SPEasyFormsAssets\Css\images\SPEasyForms32x32.png
 ..\Elements\SPEasyFormsAssets\Css\images\toolbar.png
 
 ..\Elements\SPEasyFormsAssets\Help\speasyforms_help.aspx
@@ -169,6 +172,37 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\Css\jquery-ui-smoothness\images\ui-icons_454545_256x240.png
 ..\Elements\SPEasyFormsAssets\Css\jquery-ui-smoothness\images\ui-icons_888888_256x240.png
 ..\Elements\SPEasyFormsAssets\Css\jquery-ui-smoothness\images\ui-icons_cd0a0a_256x240.png
+
+.Set DestinationDir="SPEasyForms\SPEasyFormsAssets\jquery-ui-lilac"
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\jquery-ui.css
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\jquery-ui.theme.css
+
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-bg_diagonals-medium_20_832ebf_40x40.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-bg_gloss-wave_45_5b0679_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-bg_gloss-wave_60_832ebf_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-bg_gloss-wave_70_5b0679_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-bg_gloss-wave_90_fff9e5_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-bg_highlight-soft_100_efdaf9_1x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-bg_inset-soft_30_ffffff_1x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-icons_5b0679_256x240.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-icons_832ebf_256x240.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-icons_dd88ff_256x240.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-icons_f08bc4_256x240.png
+
+.Set DestinationDir="SPEasyForms\SPEasyFormsAssets\jquery-ui-olive"
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\jquery-ui.css
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\jquery-ui.theme.css
+
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\images\ui-bg_diagonals-medium_20_4e4e00_40x40.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\images\ui-bg_gloss-wave_45_4e4e00_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\images\ui-bg_gloss-wave_60_767600_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\images\ui-bg_gloss-wave_70_4e4e00_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\images\ui-bg_gloss-wave_90_fff9e5_500x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\images\ui-bg_highlight-soft_100_cfcfa7_1x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\images\ui-bg_inset-soft_30_ffffff_1x100.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\images\ui-icons_767600_256x240.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\images\ui-icons_b6120d_256x240.png
+..\Elements\SPEasyFormsAssets\Css\jquery-ui-olive\images\ui-icons_d0d050_256x240.png
 
 .Set DestinationDir="SPEasyForms\SPEasyFormsAssets\jquery-ui-sunny"
 ..\Elements\SPEasyFormsAssets\Css\jquery-ui-sunny\jquery-ui.css
