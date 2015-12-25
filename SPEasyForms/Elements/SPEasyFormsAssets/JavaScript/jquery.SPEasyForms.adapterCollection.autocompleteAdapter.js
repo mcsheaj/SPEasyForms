@@ -151,6 +151,12 @@
             });
             $("#autocompleteChildSelect").val(opt.fieldName).attr("disabled", "disabled");
             $("#autoCompleteHiddenFieldName").val(opt.fieldName);
+            if ($("#autocompleteChildSelect").val() !== $("#autoCompleteHiddenFieldName").val()) {
+                $("#autocompleteChildSelect").append("<option value='" +
+                    opt.fieldName + "'>" +
+                    opt.fieldName + "</option>");
+                $("#autocompleteChildSelect").val(opt.fieldName).attr("disabled", "disabled");
+            }
 
             // add a change listener to reinitialize on change of the lookup list
             if ($("#autocompleteListSelect").attr("data-changelistener") !== "true") {

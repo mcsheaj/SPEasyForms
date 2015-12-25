@@ -444,7 +444,7 @@
                         };
                     }
                     if ($.spEasyForms.containerCollection.rows[key].fieldMissing) {
-                        klass += ' speasyforms-fieldmissing';
+                        klass += ' speasyforms-fieldmissing ui-state-error';
                     }
                     var conditions = "";
                     var conditionalFieldsMissing = [];
@@ -457,7 +457,7 @@
                             if (!$.spEasyForms.containerCollection.rows[condition.name] || $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
                                 conditionalFieldsMissing.push(condition.name);
                                 if (klass.indexOf('speasyforms-fieldmissing') < 0) {
-                                    klass += ' speasyforms-fieldmissing';
+                                    klass += ' speasyforms-fieldmissing ui-state-error';
                                 }
                             }
                         });

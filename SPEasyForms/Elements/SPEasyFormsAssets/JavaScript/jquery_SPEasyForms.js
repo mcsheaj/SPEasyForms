@@ -36691,7 +36691,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var tr = $($("#spEasyFormsTemplates .speasyforms-fieldrowtemplate").clone());
 
             if (r.fieldMissing) {
-                tr.addClass("speasyforms-fieldmissing");
+                tr.removeClass("ui-widget-content").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
             }
 
             tr.find(".speasyforms-fieldname").html(r.displayName);
@@ -38076,10 +38076,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
 
             if ($("#staticVisibilityRules .speasyforms-fieldmissing").length > 0 && opt.verbose) {
-                $("#visibilityTab").addClass("speasyforms-fieldmissing");
+                $("#visibilityTab").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
             }
             else {
-                $("#visibilityTab").removeClass("speasyforms-fieldmissing");
+                $("#visibilityTab").removeClass("speasyforms-fieldmissing").addClass("ui-state-error");
             }
         },
 
@@ -38235,7 +38235,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         };
                     }
                     if ($.spEasyForms.containerCollection.rows[key].fieldMissing) {
-                        klass += ' speasyforms-fieldmissing';
+                        klass += ' speasyforms-fieldmissing ui-state-error';
                     }
                     var conditions = "";
                     var conditionalFieldsMissing = [];
@@ -38248,7 +38248,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             if (!$.spEasyForms.containerCollection.rows[condition.name] || $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
                                 conditionalFieldsMissing.push(condition.name);
                                 if (klass.indexOf('speasyforms-fieldmissing') < 0) {
-                                    klass += ' speasyforms-fieldmissing';
+                                    klass += ' speasyforms-fieldmissing ui-state-error';
                                 }
                             }
                         });
@@ -38860,10 +38860,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $("#tabs-min-adapters").append("<br /><br />");
 
             if ($("#spEasyFormsAdapterTable tr.speasyforms-fieldmissing").length > 0 && opt.verbose) {
-                $("#adapterTab").addClass("speasyforms-fieldmissing");
+                $("#adapterTab").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
             }
             else {
-                $("#adapterTab").removeClass("speasyforms-fieldmissing");
+                $("#adapterTab").removeClass("speasyforms-fieldmissing").removeClass("ui-state-error");
             }
 
             $("tr.speasyforms-adapter-static").each(function (idx, r) {
