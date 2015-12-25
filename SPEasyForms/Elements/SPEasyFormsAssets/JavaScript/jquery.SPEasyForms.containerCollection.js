@@ -338,7 +338,12 @@
                 current.row.find("*[data-transformAdded='true']").remove();
                 current.row.find("*[data-transformHidden='true']").attr("data-transformHidden", "false").show();
                 current.row.find(".speasyforms-columnheader").removeClass("speasyforms-columnheader").addClass("ms-h3").addClass("ms-standardheader");
-                current.row.detach().appendTo($("table.ms-formtable"));
+                if (current.fieldMissing) {
+                    current.row.detach();
+                }
+                else {
+                    current.row.appendTo($("table.ms-formtable"));
+                }
             });
             containerCollection.rowCache[containerCollection.currentCt] = containerCollection.rows;
             return containerCollection.rows;

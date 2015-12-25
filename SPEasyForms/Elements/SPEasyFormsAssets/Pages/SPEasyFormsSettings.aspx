@@ -983,7 +983,6 @@
                     </div>
                     <div style="margin-top: 10px; margin-bottom: 10px;">
                         <select id="selGalleryTheme">
-                            <option value="">None</option>
                         </select>
                         <input type="text" id="inpCustomTheme" name="inpCustomTheme" 
                             value="" title="Enter the full text to a jQuery UI 1.11.x theme." style="display:none; width: 700px;"/>
