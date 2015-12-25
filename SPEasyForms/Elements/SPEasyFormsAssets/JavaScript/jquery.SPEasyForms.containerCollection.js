@@ -554,7 +554,7 @@
                             }
                         });
                         return result;
-                    }
+                    };
                     opt.currentContainerLayout = findContainerById(opt.currentConfig.layout.def);
 
                     var implname = $.spEasyForms.utilities.jsCase(opt.currentContainerLayout.containerType);

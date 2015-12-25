@@ -257,6 +257,7 @@
                         opt.rowInfo.row.find("td.ms-formbody").prepend(
                             "<div><nobr data-transformAdded='true' class='speasyforms-columnheader'>" + text + "</nobr></div>");
                         tdh.attr("data-transformHidden", "true").hide();
+                        opt.rowInfo.row.attr("data-headerontop", "true");
                     }
                     else {
                         opt.rowInfo.row.find("*").removeClass("ms-standardheader").removeClass("ms-h3");

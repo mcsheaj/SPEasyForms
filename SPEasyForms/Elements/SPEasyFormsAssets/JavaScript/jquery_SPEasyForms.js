@@ -36199,7 +36199,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             }
                         });
                         return result;
-                    }
+                    };
                     opt.currentContainerLayout = findContainerById(opt.currentConfig.layout.def);
 
                     var implname = $.spEasyForms.utilities.jsCase(opt.currentContainerLayout.containerType);
@@ -37025,6 +37025,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         opt.rowInfo.row.find("td.ms-formbody").prepend(
                             "<div><nobr data-transformAdded='true' class='speasyforms-columnheader'>" + text + "</nobr></div>");
                         tdh.attr("data-transformHidden", "true").hide();
+                        opt.rowInfo.row.attr("data-headerontop", "true");
                     }
                     else {
                         opt.rowInfo.row.find("*").removeClass("ms-standardheader").removeClass("ms-h3");
@@ -37899,20 +37900,30 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         }
                         value = "&nbsp;";
                     }
-                    var html = '<tr data-visibilityadded="true">' +
-                        '<td valign="top" width="350px" ' +
-                        'class="ms-formlabel">' +
-                        '<h3 class="ms-standardheader"><nobr>' +
-                        row.displayName +
-                        '</nobr></h3></td><td class="ms-formbody">' +
-                        '<span id="readOnly' + row.internalName + '">' + value + '</td></tr>';
-                    if (row.row.find("td.ms-formbody h3.ms-standardheader").length > 0) {
+                    var html;
+                    if (row.row.attr("data-headerontop") === "true") {
+                        html = $("<tr/>", { "data-visibilityadded": "true" });
+                        html.append($("<td/>", { "valign": "top", "class": "ms-formlabel" }));
+                        html.children("td").append("<h3/>", { "class": "ms-formlabel" });
+                        html.find("h3").html("<nobr class='speasyforms-columnheader'>" + row.displayName + "</nobr>");
+                        html.children("td").append((value.length > 0 ? value : "&nbsp;"));
+                    }
+                    else {
                         html = '<tr data-visibilityadded="true">' +
-                            '<td valign="top" ' +
-                            'width="350px" class="ms-formbody">' +
+                            '<td valign="top" width="350px" ' +
+                            'class="ms-formlabel">' +
                             '<h3 class="ms-standardheader"><nobr>' +
-                            row.displayName + '</nobr></h3>' +
-                            value + '</td></tr>';
+                            row.displayName +
+                            '</nobr></h3></td><td class="ms-formbody">' +
+                            '<span id="readOnly' + row.internalName + '">' + value + '</td></tr>';
+                        if (row.row.find("td.ms-formbody h3.ms-standardheader").length > 0) {
+                            html = '<tr data-visibilityadded="true">' +
+                                '<td valign="top" ' +
+                                'width="350px" class="ms-formbody">' +
+                                '<h3 class="ms-standardheader"><nobr>' +
+                                row.displayName + '</nobr></h3>' +
+                                value + '</td></tr>';
+                        }
                     }
                     if (row.row.attr("data-visibilityhidden") !== "true") {
                         row.row.attr("data-visibilityhidden", "true").hide();
