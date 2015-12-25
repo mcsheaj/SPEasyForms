@@ -73,10 +73,10 @@
             $("#tabs-min-adapters").append("<br /><br />");
 
             if ($("#spEasyFormsAdapterTable tr.speasyforms-fieldmissing").length > 0 && opt.verbose) {
-                $("#adapterTab").addClass("speasyforms-fieldmissing");
+                $("#adapterTab").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
             }
             else {
-                $("#adapterTab").removeClass("speasyforms-fieldmissing");
+                $("#adapterTab").removeClass("speasyforms-fieldmissing").removeClass("ui-state-error");
             }
 
             $("tr.speasyforms-adapter-static").each(function (idx, r) {

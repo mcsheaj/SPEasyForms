@@ -259,15 +259,8 @@
 
         tr.speasyforms-sortablefields,
         tr.speasyforms-sortablerules {
-            border: 1px solid lightblue !important;
-            cursor: move !important;
-            background: white;
             font-size: .9em;
         }
-
-            tr.speasyforms-sortablefields:hover, tr.speasyforms-sortablerules:hover {
-                cursor: move !important;
-            }
 
         td.speasyforms-sortablecontainers {
             border: 1px solid lightblue !important;
@@ -424,15 +417,6 @@
 
         a.speasyforms-credits {
             color: blue !important;
-        }
-
-        table.speasyforms-fieldmissing,
-        td.speasyforms-fieldmissing {
-            background-color: #E28DA9 !important;
-        }
-
-        li.speasyforms-fieldmissing {
-            border: 1px solid #E28DA9 !important;
         }
 
         div.speasyforms-contenttype {
@@ -1339,7 +1323,7 @@
             </table>
             <table>
                 <tbody>
-                    <tr class="speasyforms-sortablefields speasyforms-fieldrowtemplate">
+                    <tr class="speasyforms-sortablefields speasyforms-fieldrowtemplate ui-widget-content ">
                         <td class="speasyforms-sortablefields speasyforms-fieldname"></td>
                         <td class="speasyforms-sortablefields speasyforms-fieldinternal speasyforms-hidden"></td>
                         <td class="speasyforms-sortablefields speasyforms-fieldtype"></td>

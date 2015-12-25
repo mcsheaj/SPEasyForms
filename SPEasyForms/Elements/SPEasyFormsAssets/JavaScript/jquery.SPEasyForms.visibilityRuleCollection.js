@@ -285,10 +285,10 @@
             }
 
             if ($("#staticVisibilityRules .speasyforms-fieldmissing").length > 0 && opt.verbose) {
-                $("#visibilityTab").addClass("speasyforms-fieldmissing");
+                $("#visibilityTab").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
             }
             else {
-                $("#visibilityTab").removeClass("speasyforms-fieldmissing");
+                $("#visibilityTab").removeClass("speasyforms-fieldmissing").addClass("ui-state-error");
             }
         },
 

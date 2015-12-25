@@ -1046,7 +1046,7 @@
             var tr = $($("#spEasyFormsTemplates .speasyforms-fieldrowtemplate").clone());
 
             if (r.fieldMissing) {
-                tr.addClass("speasyforms-fieldmissing");
+                tr.removeClass("ui-widget-content").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
             }
 
             tr.find(".speasyforms-fieldname").html(r.displayName);
