@@ -36185,12 +36185,23 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     var container = $(this).closest("li");
                     var index = container.attr("data-containerindex");
                     opt.currentConfig = containerCollection.toConfig(opt);
-                    $.each($(opt.currentConfig.layout.def), function (idx, layout) {
-                        if (layout.index === index) {
-                            opt.currentContainerLayout = layout;
-                            return false;
-                        }
-                    });
+
+                    var findContainerById = function (containerArray) {
+                        var result;
+                        $.each($(containerArray), function (idx, layout) {
+                            if (layout.index === index) {
+                                result = layout;
+                                return false;
+                            }
+                            result = findContainerById(layout.fieldCollections);
+                            if (typeof (result) !== 'undefined') {
+                                return false;
+                            }
+                        });
+                        return result;
+                    }
+                    opt.currentContainerLayout = findContainerById(opt.currentConfig.layout.def);
+
                     var implname = $.spEasyForms.utilities.jsCase(opt.currentContainerLayout.containerType);
                     if (implname in containerCollection.containerImplementations) {
                         var impl = containerCollection.containerImplementations[implname];
