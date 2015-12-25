@@ -811,7 +811,7 @@
     </style>
 </head>
 <body>
-    <div id="suitBar" class="speasyforms-suitbar ui-widget-header ui-state-default"><a href="https://speasyforms.codeplex.com" target="_blank">SPEasyForms</a></div>
+    <div id="suitBar" class="speasyforms-suitbar ui-widget-header"><a href="https://speasyforms.codeplex.com" target="_blank">SPEasyForms</a></div>
     <div id="msCuiTopbar" class=".ms-cui-topBar2"></div>
     <form id="form1" runat="server">
         <div id='spEasyFormsRibbon' class='speasyforms-ribbon'>
