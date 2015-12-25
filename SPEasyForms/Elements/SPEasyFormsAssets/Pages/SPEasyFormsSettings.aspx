@@ -695,7 +695,7 @@
             border-color: #D4D4D4 #D4D4D4 #BCBCBC;
         }
 
-            .speasyforms-nestedsortable li div {
+            .speasyforms-nestedsortable > li > div {
                 cursor: move;
                 background-color: #ccc;
             }
