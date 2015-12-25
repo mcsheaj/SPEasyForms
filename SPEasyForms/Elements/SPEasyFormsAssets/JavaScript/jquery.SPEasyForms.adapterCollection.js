@@ -66,10 +66,10 @@
             });
             if ($("tr.speasyforms-adapter-static").length === 0) {
                 $("#spEasyFormsAdapterTable").append("<tr class='speasyforms-adapter-static'>" +
-                    "<td class='ui-widget-content ui-corner-all' colspan='5'>" +
+                    "<td class='ui-widget-content ui-corner-all nobr' colspan='5'>" +
                     "There are no adpaters configured for the current form.</td></tr>");
             }
-            $("#spEasyFormsAdapterTable th").addClass("ui-widget-header").addClass("ui-corner-all");
+            $("#spEasyFormsAdapterTable th").addClass("ui-widget-header").addClass("ui-corner-all").addClass("nobr");
             $("#tabs-min-adapters").append("<br /><br />");
 
             if ($("#spEasyFormsAdapterTable tr.speasyforms-fieldmissing").length > 0 && opt.verbose) {
@@ -208,30 +208,30 @@
                 $("#spEasyFormsAdapterTable").append("<tr class='" + klass + "' " +
                     "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
                     "data-dialogtype='adapter' title='" + title + "'>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + displayName + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + opt.adapter.type + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + config + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + displayName + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + opt.adapter.type + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + config + "</td>" +
                     "</tr>");
             }
             else if (klass.indexOf("speasyforms-fieldmissing") < 0) {
                 $("#spEasyFormsAdapterTable").append("<tr class='" + klass + "' " +
                     "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
                     "data-dialogtype='adapter' title='" + title + "'>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + displayName + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + opt.adapter.type + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + config + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + displayName + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + opt.adapter.type + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + config + "</td>" +
                     "</tr>");
             }
             else {
                 $("#spEasyFormsAdapterTable").append("<tr class='" + klass + "' " +
                     "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
                     "data-dialogtype='adapter' title='" + title + "' style='display:none'>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + displayName + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + opt.adapter.type + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + config + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + displayName + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + opt.adapter.type + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + config + "</td>" +
                     "</tr>");
             }
         },

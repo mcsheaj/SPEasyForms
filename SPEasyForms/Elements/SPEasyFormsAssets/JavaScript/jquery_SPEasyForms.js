@@ -38128,7 +38128,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     "There are currently no rules for this field. Click " +
                     "the plus sign to add one.");
             } else {
-                var klass = 'speasyforms-sortablerules';
+                var klass = 'speasyforms-sortablerules nobr';
                 var id = 'conditionalVisibilityRulesTable';
                 var table = "<center>";
                 table += "<table id='" + id + "' " +
@@ -38180,12 +38180,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var klass = 'speasyforms-staticrules';
             var table = "<table id='staticVisibilityRules' " +
                 "class='" + klass + "'><tbody class='" + klass + "'><tr>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all '>Display Name</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all speasyforms-hidden' style='display:none'>Internal Name</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all'>State</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all'>Applies To</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all'>On Forms</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all'>And When</th></tr>";
+                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr '>Display Name</th>" +
+                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr speasyforms-hidden' style='display:none'>Internal Name</th>" +
+                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>State</th>" +
+                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>Applies To</th>" +
+                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>On Forms</th>" +
+                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>And When</th></tr>";
             $.each(Object.keys(opt.currentConfig.visibility.def).sort(), function (idx, key) {
                 $.each(opt.currentConfig.visibility.def[key], function (i, rule) {
                     var title = "";
@@ -38242,20 +38242,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     table += "<tr id='visibilityRule" + opt.index + "' title='" + title + "'" +
                         "class='" + klass + "' data-dialogtype='visibility' " +
                         "data-fieldname='" + opt.fieldName + "'>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all speasyforms-dblclickdialog'>" + opt.displayName + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all  speasyforms-dblclickdialog speasyforms-hidden' style='display:none'>" + opt.fieldName + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all speasyforms-dblclickdialog'>" + rule.state + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all  speasyforms-dblclickdialog'>" +
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-dblclickdialog'>" + opt.displayName + "</td>";
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog speasyforms-hidden' style='display:none'>" + opt.fieldName + "</td>";
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-dblclickdialog'>" + rule.state + "</td>";
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog'>" +
                         (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone") + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all  speasyforms-dblclickdialog'>" + rule.forms + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all  speasyforms-dblclickdialog'>" + conditions + "</td>";
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog'>" + rule.forms + "</td>";
+                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog'>" + conditions + "</td>";
                     table += "</tr>";
                 });
             });
             table += "</table>";
             $("#tabs-min-visibility").append(table);
             if ($("tr.speasyforms-staticrules").length === 0) {
-                $("#staticVisibilityRules").append("<td class='ui-widget-content ui-corner-all' colspan='5'>There are no conditional visibility rules for the current form.</td>");
+                $("#staticVisibilityRules").append("<td class='ui-widget-content ui-corner-all nobr' colspan='5'>There are no conditional visibility rules for the current form.</td>");
             }
         },
 
@@ -38826,10 +38826,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
             if ($("tr.speasyforms-adapter-static").length === 0) {
                 $("#spEasyFormsAdapterTable").append("<tr class='speasyforms-adapter-static'>" +
-                    "<td class='ui-widget-content ui-corner-all' colspan='5'>" +
+                    "<td class='ui-widget-content ui-corner-all nobr' colspan='5'>" +
                     "There are no adpaters configured for the current form.</td></tr>");
             }
-            $("#spEasyFormsAdapterTable th").addClass("ui-widget-header").addClass("ui-corner-all");
+            $("#spEasyFormsAdapterTable th").addClass("ui-widget-header").addClass("ui-corner-all").addClass("nobr");
             $("#tabs-min-adapters").append("<br /><br />");
 
             if ($("#spEasyFormsAdapterTable tr.speasyforms-fieldmissing").length > 0 && opt.verbose) {
@@ -38968,30 +38968,30 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $("#spEasyFormsAdapterTable").append("<tr class='" + klass + "' " +
                     "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
                     "data-dialogtype='adapter' title='" + title + "'>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + displayName + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + opt.adapter.type + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + config + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + displayName + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + opt.adapter.type + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + config + "</td>" +
                     "</tr>");
             }
             else if (klass.indexOf("speasyforms-fieldmissing") < 0) {
                 $("#spEasyFormsAdapterTable").append("<tr class='" + klass + "' " +
                     "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
                     "data-dialogtype='adapter' title='" + title + "'>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + displayName + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + opt.adapter.type + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + config + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + displayName + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + opt.adapter.type + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + config + "</td>" +
                     "</tr>");
             }
             else {
                 $("#spEasyFormsAdapterTable").append("<tr class='" + klass + "' " +
                     "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
                     "data-dialogtype='adapter' title='" + title + "' style='display:none'>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + displayName + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + opt.adapter.type + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all'>" + config + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + displayName + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + opt.adapter.type + "</td>" +
+                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + config + "</td>" +
                     "</tr>");
             }
         },
@@ -39318,7 +39318,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         }
                     },
                     autoOpen: false,
-                    width: 500
+                    width: 650
                 };
                 $('#cascadingLookupAdapterDialog').dialog(adapterOpts);
             }

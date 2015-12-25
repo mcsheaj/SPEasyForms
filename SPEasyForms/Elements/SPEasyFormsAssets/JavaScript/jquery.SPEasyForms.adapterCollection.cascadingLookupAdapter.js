@@ -108,7 +108,7 @@
                         }
                     },
                     autoOpen: false,
-                    width: 500
+                    width: 650
                 };
                 $('#cascadingLookupAdapterDialog').dialog(adapterOpts);
             }
