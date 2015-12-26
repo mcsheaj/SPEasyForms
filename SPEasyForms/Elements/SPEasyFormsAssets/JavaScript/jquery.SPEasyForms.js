@@ -460,15 +460,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         loadDynamicStyles: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            opt.source = opt.jQueryUITheme;
+            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-smoothness/jquery-ui.css";
             var theme = this.replaceVariables(opt);
-
-            $("head").append(
-                '<link rel="stylesheet" type="text/css" href="' + theme + '">');
 
             if (opt.currentConfig.jQueryUITheme) {
                 opt.source = opt.currentConfig.jQueryUITheme;
                 theme = this.replaceVariables(opt);
+                $("head").append(
+                    '<link rel="stylesheet" type="text/css" href="' + theme + '">');
+            }
+            else {
+                if (opt.jQueryUITheme) {
+                    opt.source = opt.jQueryUITheme;
+                    var theme = this.replaceVariables(opt);
+                }
                 $("head").append(
                     '<link rel="stylesheet" type="text/css" href="' + theme + '">');
             }

@@ -33434,15 +33434,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         loadDynamicStyles: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            opt.source = opt.jQueryUITheme;
+            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-smoothness/jquery-ui.css";
             var theme = this.replaceVariables(opt);
-
-            $("head").append(
-                '<link rel="stylesheet" type="text/css" href="' + theme + '">');
 
             if (opt.currentConfig.jQueryUITheme) {
                 opt.source = opt.currentConfig.jQueryUITheme;
                 theme = this.replaceVariables(opt);
+                $("head").append(
+                    '<link rel="stylesheet" type="text/css" href="' + theme + '">');
+            }
+            else {
+                if (opt.jQueryUITheme) {
+                    opt.source = opt.jQueryUITheme;
+                    var theme = this.replaceVariables(opt);
+                }
                 $("head").append(
                     '<link rel="stylesheet" type="text/css" href="' + theme + '">');
             }
@@ -35523,6 +35528,23 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 currentConfig = $.spEasyForms.utilities.parseJSON($("#spEasyFormsJson pre").text());
             } else {
                 currentConfig = $.spEasyForms.sharePointContext.getConfig(opt);
+
+                var nextIndex = 1;
+                var updateLayouts201501 = function (layoutArray) {
+                    for (var i = 0; i < layoutArray.length; i++) {
+                        var current = layoutArray[i];
+                        current.index = nextIndex++;
+                        if (!current.name) {
+                            current.name = current.containerType;
+                        }
+                        if (current.fieldCollections) {
+                            updateLayouts201501(current.fieldCollections);
+                        }
+                    }
+                }
+
+                updateLayouts201501(currentConfig.layout.def);
+
                 $("#spEasyFormsJson pre").text(JSON.stringify(currentConfig, null, 4));
                 $("#spEasyFormsSaveButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
                 $("#spEasyFormsUndoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
@@ -36255,8 +36277,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $("#tabs-min-adapters").on("dblclick", "td.speasyforms-adapter-static", function () {
                     opt.currentConfig = $.spEasyForms.configManager.get(opt);
                     opt.fieldName = $(this).closest("tr").children(".speasyforms-hidden").text();
-                    opt.spFieldType = containerCollection.rows[opt.fieldName].spFieldType;
-                    $.spEasyForms.adapterCollection.launchDialog(opt);
+                    if (containerCollection.rows[opt.fieldName]) {
+                        opt.spFieldType = containerCollection.rows[opt.fieldName].spFieldType;
+                        $.spEasyForms.adapterCollection.launchDialog(opt);
+                    }
+                    else {
+                        alert("The field '" + opt.fieldName + "' does not appear to exist?");
+                    }
                 });
             }
         },
@@ -36799,14 +36826,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         fieldCollectionsDlgPrompt: "Field Collection Names (one per line):",
 
         /*********************************************************************
-         * Convert the layout to an editor for any container containing one or
-         * more field collections.
-         *
-         * @param {object} options = {
-         *     currentContainer - the jQuery node to which this container should add itself
-         *     currentContainerLayout {object} - object representing the configuration for this container
-         * }
-         *********************************************************************/
+        * Convert the layout to an editor for any container containing one or
+        * more field collections.
+        *
+        * @param {object} options = {
+        *     currentContainer - the jQuery node to which this container should add itself
+        *     currentContainerLayout {object} - object representing the configuration for this container
+        * }
+        *********************************************************************/
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = [];
@@ -36816,6 +36843,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
                 if (!fieldCollection.name) {
                     fieldCollection.name = fieldCollection.containerType;
+                }
+                if (!fieldCollection.containerType) {
+                    fieldCollection.containerType = "FieldCollection";
                 }
                 opt.currentContainerLayout = fieldCollection;
                 opt.currentContainerParent = currentContainerList;
@@ -36839,10 +36869,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Convert the editor back to a layout.
-         *
-         * @returns {object} - the layout
-         *********************************************************************/
+        * Convert the editor back to a layout.
+        *
+        * @returns {object} - the layout
+        *********************************************************************/
         toLayout: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = {
@@ -36872,8 +36902,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Launch the settings dialog for this container.
-         *********************************************************************/
+        * Launch the settings dialog for this container.
+        *********************************************************************/
         settings: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -36906,9 +36936,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Wire the initial configuration and add field collection dialogs for this
-         * container.
-         *********************************************************************/
+        * Wire the initial configuration and add field collection dialogs for this
+        * container.
+        *********************************************************************/
         wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -37087,12 +37117,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = [];
-            opt.table = $("<table/>", {
-                "role": "presentation",
-                "id": opt.collectionType + "Table" + opt.collectionIndex,
-                "class": "speasyforms-fieldcollection " + opt.tableClass,
-                "cellspacing": "5"
-            });
+            opt.table = $("<table role='presentation' id='" + opt.collectionType + "Table" + opt.collectionIndex + "' class='speasyforms-fieldcollection " + opt.tableClass + "' cellspacing='5' width='100%'></table>");
             opt.currentContainerParent.append(opt.table);
 
             $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
@@ -37349,11 +37374,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var outerTableId = "spEasyFormsColumnsOuterTable" + opt.currentContainerLayout.index;
             var outerTableClass = "speasyforms-columns";
 
-            var table = $("<table/>", {
-                "role": "presentation",
-                "id": outerTableId,
-                "class": outerTableClass
-            });
+            var table = $("<table role='presentation' id='" + outerTableId + "' class='" + outerTableClass + "' width='100%' ></table>");
             var tableRow = $("<tr/>", { "id": outerTableId + "Row" });
             table.append(tableRow);
             opt.currentContainerParent.append(table);
@@ -37396,7 +37417,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
         },
 
-        preSaveItem: function(options) {
+        preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var index = opt.currentContainerLayout.index;
             var container = $("div.speasyforms-container[data-containerindex='" + index + "']");

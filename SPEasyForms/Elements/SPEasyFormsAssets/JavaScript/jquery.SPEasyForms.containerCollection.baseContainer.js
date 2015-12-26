@@ -25,14 +25,14 @@
         fieldCollectionsDlgPrompt: "Field Collection Names (one per line):",
 
         /*********************************************************************
-         * Convert the layout to an editor for any container containing one or
-         * more field collections.
-         *
-         * @param {object} options = {
-         *     currentContainer - the jQuery node to which this container should add itself
-         *     currentContainerLayout {object} - object representing the configuration for this container
-         * }
-         *********************************************************************/
+        * Convert the layout to an editor for any container containing one or
+        * more field collections.
+        *
+        * @param {object} options = {
+        *     currentContainer - the jQuery node to which this container should add itself
+        *     currentContainerLayout {object} - object representing the configuration for this container
+        * }
+        *********************************************************************/
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = [];
@@ -42,6 +42,9 @@
             $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
                 if (!fieldCollection.name) {
                     fieldCollection.name = fieldCollection.containerType;
+                }
+                if (!fieldCollection.containerType) {
+                    fieldCollection.containerType = "FieldCollection";
                 }
                 opt.currentContainerLayout = fieldCollection;
                 opt.currentContainerParent = currentContainerList;
@@ -65,10 +68,10 @@
         },
 
         /*********************************************************************
-         * Convert the editor back to a layout.
-         *
-         * @returns {object} - the layout
-         *********************************************************************/
+        * Convert the editor back to a layout.
+        *
+        * @returns {object} - the layout
+        *********************************************************************/
         toLayout: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = {
@@ -98,8 +101,8 @@
         },
 
         /*********************************************************************
-         * Launch the settings dialog for this container.
-         *********************************************************************/
+        * Launch the settings dialog for this container.
+        *********************************************************************/
         settings: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -132,9 +135,9 @@
         },
 
         /*********************************************************************
-         * Wire the initial configuration and add field collection dialogs for this
-         * container.
-         *********************************************************************/
+        * Wire the initial configuration and add field collection dialogs for this
+        * container.
+        *********************************************************************/
         wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -313,12 +316,7 @@
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = [];
-            opt.table = $("<table/>", {
-                "role": "presentation",
-                "id": opt.collectionType + "Table" + opt.collectionIndex,
-                "class": "speasyforms-fieldcollection " + opt.tableClass,
-                "cellspacing": "5"
-            });
+            opt.table = $("<table role='presentation' id='" + opt.collectionType + "Table" + opt.collectionIndex + "' class='speasyforms-fieldcollection " + opt.tableClass + "' cellspacing='5' width='100%'></table>");
             opt.currentContainerParent.append(opt.table);
 
             $.each(opt.fieldCollection.fields, function (fieldIdx, field) {

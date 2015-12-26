@@ -27,11 +27,7 @@
             var outerTableId = "spEasyFormsColumnsOuterTable" + opt.currentContainerLayout.index;
             var outerTableClass = "speasyforms-columns";
 
-            var table = $("<table/>", {
-                "role": "presentation",
-                "id": outerTableId,
-                "class": outerTableClass
-            });
+            var table = $("<table role='presentation' id='" + outerTableId + "' class='" + outerTableClass + "' width='100%' ></table>");
             var tableRow = $("<tr/>", { "id": outerTableId + "Row" });
             table.append(tableRow);
             opt.currentContainerParent.append(table);
@@ -74,7 +70,7 @@
             }
         },
 
-        preSaveItem: function(options) {
+        preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var index = opt.currentContainerLayout.index;
             var container = $("div.speasyforms-container[data-containerindex='" + index + "']");

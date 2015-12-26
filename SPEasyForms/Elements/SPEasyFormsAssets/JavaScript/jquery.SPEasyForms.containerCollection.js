@@ -610,8 +610,13 @@
                 $("#tabs-min-adapters").on("dblclick", "td.speasyforms-adapter-static", function () {
                     opt.currentConfig = $.spEasyForms.configManager.get(opt);
                     opt.fieldName = $(this).closest("tr").children(".speasyforms-hidden").text();
-                    opt.spFieldType = containerCollection.rows[opt.fieldName].spFieldType;
-                    $.spEasyForms.adapterCollection.launchDialog(opt);
+                    if (containerCollection.rows[opt.fieldName]) {
+                        opt.spFieldType = containerCollection.rows[opt.fieldName].spFieldType;
+                        $.spEasyForms.adapterCollection.launchDialog(opt);
+                    }
+                    else {
+                        alert("The field '" + opt.fieldName + "' does not appear to exist?");
+                    }
                 });
             }
         },

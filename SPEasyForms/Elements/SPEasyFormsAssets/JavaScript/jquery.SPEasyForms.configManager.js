@@ -169,6 +169,23 @@
                 currentConfig = $.spEasyForms.utilities.parseJSON($("#spEasyFormsJson pre").text());
             } else {
                 currentConfig = $.spEasyForms.sharePointContext.getConfig(opt);
+
+                var nextIndex = 1;
+                var updateLayouts201501 = function (layoutArray) {
+                    for (var i = 0; i < layoutArray.length; i++) {
+                        var current = layoutArray[i];
+                        current.index = nextIndex++;
+                        if (!current.name) {
+                            current.name = current.containerType;
+                        }
+                        if (current.fieldCollections) {
+                            updateLayouts201501(current.fieldCollections);
+                        }
+                    }
+                }
+
+                updateLayouts201501(currentConfig.layout.def);
+
                 $("#spEasyFormsJson pre").text(JSON.stringify(currentConfig, null, 4));
                 $("#spEasyFormsSaveButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
                 $("#spEasyFormsUndoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
