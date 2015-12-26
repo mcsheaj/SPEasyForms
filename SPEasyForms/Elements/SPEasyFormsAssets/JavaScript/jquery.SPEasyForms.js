@@ -388,7 +388,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             //$.spEasyForms.appendContext(opt);
 
-            var bannerHeight = $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height() + 30;
+            var bannerHeight = $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height() + 37;
             $("div.speasyforms-panel").height($(window).height() - bannerHeight);
             $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
             $(window).resize(function () {

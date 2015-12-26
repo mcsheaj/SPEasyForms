@@ -33362,7 +33362,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             //$.spEasyForms.appendContext(opt);
 
-            var bannerHeight = $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height() + 30;
+            var bannerHeight = $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height() + 37;
             $("div.speasyforms-panel").height($(window).height() - bannerHeight);
             $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
             $(window).resize(function () {
@@ -36692,6 +36692,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             if (r.fieldMissing) {
                 tr.removeClass("ui-widget-content").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
+                tr.find("td").removeClass("ui-widget-content").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
             }
 
             tr.find(".speasyforms-fieldname").html(r.displayName);
@@ -37909,15 +37910,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (row.row.attr("data-headerontop") === "true") {
                         html = $("<tr/>", { "data-visibilityadded": "true" });
                         html.append($("<td/>", { "valign": "top", "class": "ms-formlabel" }));
-                        html.children("td").append("<h3/>", { "class": "ms-formlabel" });
-                        html.find("h3").html("<nobr class='speasyforms-columnheader'>" + row.displayName + "</nobr>");
+                        html.children("td").append("<div/>");
+                        html.find("div").html("<nobr class='speasyforms-columnheader'>" + row.displayName + "</nobr>");
                         html.children("td").append((value.length > 0 ? value : "&nbsp;"));
                     }
                     else {
                         html = '<tr data-visibilityadded="true">' +
                             '<td valign="top" width="350px" ' +
                             'class="ms-formlabel">' +
-                            '<h3 class="ms-standardheader"><nobr>' +
+                            '<div><nobr class="speasyforms-columnheader">' +
                             row.displayName +
                             '</nobr></h3></td><td class="ms-formbody">' +
                             '<span id="readOnly' + row.internalName + '">' + value + '</td></tr>';
@@ -38860,10 +38861,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $("#tabs-min-adapters").append("<br /><br />");
 
             if ($("#spEasyFormsAdapterTable tr.speasyforms-fieldmissing").length > 0 && opt.verbose) {
-                $("#adapterTab").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
-            }
-            else {
-                $("#adapterTab").removeClass("speasyforms-fieldmissing").removeClass("ui-state-error");
+                $("#spEasyFormsAdapterTable tr.speasyforms-fieldmissing td").addClass("ui-state-error");
             }
 
             $("tr.speasyforms-adapter-static").each(function (idx, r) {
@@ -39207,6 +39205,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             });
             $("#autocompleteChildSelect").val(opt.fieldName).attr("disabled", "disabled");
             $("#autoCompleteHiddenFieldName").val(opt.fieldName);
+            if ($("#autocompleteChildSelect").val() !== $("#autoCompleteHiddenFieldName").val()) {
+                $("#autocompleteChildSelect").append("<option value='" +
+                    opt.fieldName + "'>" +
+                    opt.fieldName + "</option>");
+                $("#autocompleteChildSelect").val(opt.fieldName).attr("disabled", "disabled");
+            }
 
             // add a change listener to reinitialize on change of the lookup list
             if ($("#autocompleteListSelect").attr("data-changelistener") !== "true") {

@@ -1047,6 +1047,7 @@
 
             if (r.fieldMissing) {
                 tr.removeClass("ui-widget-content").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
+                tr.find("td").removeClass("ui-widget-content").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
             }
 
             tr.find(".speasyforms-fieldname").html(r.displayName);

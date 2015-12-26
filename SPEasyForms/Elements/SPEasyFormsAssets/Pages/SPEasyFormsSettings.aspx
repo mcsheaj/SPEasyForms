@@ -118,7 +118,7 @@
         div.speasyforms-panel {
             width: 400px;
             height: 700px;
-            overflow-x: hidden;
+            overflow-x: scroll;
             overflow-y: scroll;
             background: #eee;
             float: left;
@@ -635,6 +635,7 @@
 
         .speasyforms-helptext {
             background-color: white;
+            color: #383822;
             padding: 10px;
             border: 1px solid gray;
             overflow: auto;
@@ -643,9 +644,10 @@
         #spEasyFormsContent {
             float: left;
             overflow-y: scroll;
-            overflow-x: hidden;
+            overflow-x: scroll;
             padding-right: 10px;
-            margin-left: 410px;
+            padding-left: 10px;
+            margin-left: 400px;
             position: fixed;
         }
 
@@ -1323,14 +1325,14 @@
             </table>
             <table>
                 <tbody>
-                    <tr class="speasyforms-sortablefields speasyforms-fieldrowtemplate ui-widget-content ">
-                        <td class="speasyforms-sortablefields speasyforms-fieldname"></td>
-                        <td class="speasyforms-sortablefields speasyforms-fieldinternal speasyforms-hidden"></td>
-                        <td class="speasyforms-sortablefields speasyforms-fieldtype"></td>
-                        <td class="speasyforms-icon-visibility">
+                    <tr class="speasyforms-sortablefields speasyforms-fieldrowtemplate ">
+                        <td class="speasyforms-sortablefields speasyforms-fieldname  ui-widget-content ui-corner-all"></td>
+                        <td class="speasyforms-sortablefields speasyforms-fieldinternal speasyforms-hidden  ui-widget-content ui-corner-all"></td>
+                        <td class="speasyforms-sortablefields speasyforms-fieldtype  ui-widget-content ui-corner-all"></td>
+                        <td class="speasyforms-icon-visibility ui-widget-content ui-corner-all">
                             <span class="speasyforms-icon-visibility ui-icon ui-icon-key"></span>
                         </td>
-                        <td class="speasyforms-icon-adapter">
+                        <td class="speasyforms-icon-adapter ui-widget-content ui-corner-all">
                             <span class="speasyforms-icon-adapter ui-icon ui-icon-wrench"></span>
                         </td>
                     </tr>
