@@ -33,14 +33,14 @@
         rowCache: {},
 
         /*********************************************************************
-         * Transform the OOB form by looping through each layout part and calling
-         * the appropriate implementation to transform that part.
-         *
-         * @param {object} options - {
-         *     rows: {obect} - map of field internal names to a structured break down
-         *         of form rows, including the jQuery object representing the actual tr.
-         * }
-         *********************************************************************/
+        * Transform the OOB form by looping through each layout part and calling
+        * the appropriate implementation to transform that part.
+        *
+        * @param {object} options - {
+        *     rows: {obect} - map of field internal names to a structured break down
+        *         of form rows, including the jQuery object representing the actual tr.
+        * }
+        *********************************************************************/
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var fieldsInUse = [];
@@ -101,12 +101,12 @@
         },
 
         /*********************************************************************
-         * Call each containers postTransform method, after all containers have
-         * completed transform, to perform final steps like hiding empty containers
-         * or parts of containers. This has to be done post transform, because
-         * visibility rules may have made a container/part 'empty' after it was
-         * transformed.
-         *********************************************************************/
+        * Call each containers postTransform method, after all containers have
+        * completed transform, to perform final steps like hiding empty containers
+        * or parts of containers. This has to be done post transform, because
+        * visibility rules may have made a container/part 'empty' after it was
+        * transformed.
+        *********************************************************************/
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -133,15 +133,15 @@
         },
 
         /*********************************************************************
-         * Convert a layout to an editor properties panel by looping through each
-         * layout part and calling the appropriate implementation's toEditor function.
-         *
-         * @param {object} options - {
-         *     rows: {obect} - map of field internal names to a structured break down
-         *         of form rows, including the jQuery object representing the actual tr.
-         *         If ommitted, call the current lists edit form and parse it to get rows.
-         * }
-         *********************************************************************/
+        * Convert a layout to an editor properties panel by looping through each
+        * layout part and calling the appropriate implementation's toEditor function.
+        *
+        * @param {object} options - {
+        *     rows: {obect} - map of field internal names to a structured break down
+        *         of form rows, including the jQuery object representing the actual tr.
+        *         If ommitted, call the current lists edit form and parse it to get rows.
+        * }
+        *********************************************************************/
         /* jshint -W016 */
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -190,11 +190,11 @@
         /* jshint -W016 */
 
         /*********************************************************************
-         * Convert the editor properties panel back to a layout, by looping through each
-         * editor and calling the appropriate implementation's toLayout function.
-         *
-         * @returns {object} - the layout
-         *********************************************************************/
+        * Convert the editor properties panel back to a layout, by looping through each
+        * editor and calling the appropriate implementation's toLayout function.
+        *
+        * @returns {object} - the layout
+        *********************************************************************/
         toConfig: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var containers = $("ol.speasyforms-nestedsortable").children();
@@ -215,13 +215,13 @@
         },
 
         /*********************************************************************
-         * Called on submit.  Overridden from core.js to allow containers to
-         * perform actions on submit (like highlight tabs with validation errors
-         * and select the first tab with validation errors).
-         *
-         * @returns {bool} - true if the submit should proceed, false if it should
-         *     be cancelled.
-         *********************************************************************/
+        * Called on submit.  Overridden from core.js to allow containers to
+        * perform actions on submit (like highlight tabs with validation errors
+        * and select the first tab with validation errors).
+        *
+        * @returns {bool} - true if the submit should proceed, false if it should
+        *     be cancelled.
+        *********************************************************************/
         preSaveItem: function () {
             var opt = $.extend({}, $.spEasyForms.defaults);
 
@@ -244,8 +244,8 @@
 
 
         /*********************************************************************
-         * Helper to iterate containers and call their preSaveItem methods.
-         *********************************************************************/
+        * Helper to iterate containers and call their preSaveItem methods.
+        *********************************************************************/
         highlightValidationErrors: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = true;
@@ -282,9 +282,9 @@
         },
 
         /*********************************************************************
-         * This adds a row to the ms-formtable for each field that would appear
-         * in a real edit form.
-         *********************************************************************/
+        * This adds a row to the ms-formtable for each field that would appear
+        * in a real edit form.
+        *********************************************************************/
         initRows: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var currentContentType = $("#spEasyFormsContentTypeSelect").val();
@@ -337,7 +337,8 @@
             $.each(containerCollection.rows, function (i, current) {
                 current.row.find("*[data-transformAdded='true']").remove();
                 current.row.find("*[data-transformHidden='true']").attr("data-transformHidden", "false").show();
-                current.row.find(".speasyforms-columnheader").removeClass("speasyforms-columnheader").addClass("ms-h3").addClass("ms-standardheader");
+                current.row.find(".speasyforms-columnheader").removeClass("speasyforms-columnheader").addClass("ms-h3").addClass("ms-standardheader").addClass("ms-formlabel");
+                current.row.find("h3").addClass("ms-standardheader");
                 if (current.fieldMissing) {
                     current.row.detach();
                 }
@@ -350,11 +351,11 @@
         },
 
         /*********************************************************************
-         * Loop through the layouts and call the implementation's toEditor function.
-         *
-         * @returns {object} - an array of all internal field names that are already
-         *     on one of the editors.
-         *********************************************************************/
+        * Loop through the layouts and call the implementation's toEditor function.
+        *
+        * @returns {object} - an array of all internal field names that are already
+        *     on one of the editors.
+        *********************************************************************/
         initContainers: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var defaultFormContainer;
@@ -429,8 +430,8 @@
         },
 
         /*********************************************************************
-         * Wire the container sorting, clicking, and editor button events.
-         *********************************************************************/
+        * Wire the container sorting, clicking, and editor button events.
+        *********************************************************************/
         wireContainerEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -622,8 +623,8 @@
         },
 
         /*********************************************************************
-         * Wire the button events for the ribbon buttons.
-         *********************************************************************/
+        * Wire the button events for the ribbon buttons.
+        *********************************************************************/
         wireRibbonButtonEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -887,8 +888,8 @@
         },
 
         /*********************************************************************
-         * Wire the dialog events.
-         *********************************************************************/
+        * Wire the dialog events.
+        *********************************************************************/
         wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -992,14 +993,14 @@
         },
 
         /*********************************************************************
-         * Utility function to create a uniform container div for a given editor.
-         *
-         * @param {object} options - {
-         *    currentContainerLayout {object} - the layout
-         *    currentContainerParent: {object} - the jQuery node to which this
-         *        container should be attached.
-         * }
-         *********************************************************************/
+        * Utility function to create a uniform container div for a given editor.
+        *
+        * @param {object} options - {
+        *    currentContainerLayout {object} - the layout
+        *    currentContainerParent: {object} - the jQuery node to which this
+        *        container should be attached.
+        * }
+        *********************************************************************/
         appendContainer: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -1036,14 +1037,14 @@
         },
 
         /*********************************************************************
-         * Utility function to construct the HTML for a single row in a field collections
-         * table.
-         *
-         * @param {object} options - {
-         *    row: {string} - the row object representing the field, as returned
-         *        by spFieldRows.init(opt).
-         * }
-         *********************************************************************/
+        * Utility function to construct the HTML for a single row in a field collections
+        * table.
+        *
+        * @param {object} options - {
+        *    row: {string} - the row object representing the field, as returned
+        *        by spFieldRows.init(opt).
+        * }
+        *********************************************************************/
         createFieldRow: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var r = opt.row;
@@ -1063,9 +1064,9 @@
         },
 
         /*********************************************************************
-         * Utility function to construct the HTML the table representing a field
-         * group.
-         *********************************************************************/
+        * Utility function to construct the HTML the table representing a field
+        * group.
+        *********************************************************************/
         createFieldCollection: function () {
             var result = $("#spEasyFormsTemplates .speasyforms-fieldtabletemplate").clone();
             return result;

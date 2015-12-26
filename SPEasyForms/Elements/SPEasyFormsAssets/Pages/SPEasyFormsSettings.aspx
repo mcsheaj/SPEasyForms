@@ -79,6 +79,7 @@
         td.ms-formlabel {
             padding: 5px;
             text-align: right;
+            font-size: 0.7rem;
         }
 
         td.ms-formbody {
@@ -214,7 +215,7 @@
         }
 
         th.speasyforms-fieldcell {
-            font-size: .8em;
+            font-size: .8rem;
         }
 
         table.speasyforms-fieldsheader {
@@ -226,17 +227,17 @@
         }
 
         h1 {
-            font-size: 1.8em;
+            font-size: 1.8rem;
             font-weight: normal;
         }
 
         h3.speasyforms-sortablefields {
-            font-size: 1.2em;
+            font-size: 1.2rem;
             font-weight: normal;
         }
 
         .speasyforms-itemtype {
-            font-size: .7em;
+            font-size: .7rem;
             font-weight: normal;
         }
 
@@ -261,7 +262,7 @@
 
         tr.speasyforms-sortablefields,
         tr.speasyforms-sortablerules {
-            font-size: .9em;
+            font-size: .9rem;
         }
 
         td.speasyforms-sortablecontainers {
@@ -279,7 +280,7 @@
         }
 
         button.ui-button-icon-only {
-            font-size: .8em;
+            font-size: .8rem;
             margin: 0;
             padding: 0;
             min-width: 0;
@@ -478,14 +479,14 @@
         }
 
         .speasyforms-buttongroup {
-            font-size: .8em;
+            font-size: .8rem;
             border-right: 1px dotted gray;
             height: 84px;
             float: left;
         }
 
         .speasyforms-buttongrptext {
-            font-size: .7em;
+            font-size: .7rem;
             text-align: center;
             color: gray;
             clear: both;
@@ -758,7 +759,7 @@
         }
 
         h3.ms-standardheader, .ms-standardheader {
-            font-size: 0.7em;
+            font-size: 0.7rem;
         }
 
         #tabs-min {
@@ -766,7 +767,7 @@
         }
 
         .ui-widget {
-	        font-size: 1em !important;
+	        font-size: 1rem !important;
         }
 
         #suitBar {
@@ -776,7 +777,7 @@
 
         #suitBar a {
             font-family: "SegoeUI-SemiLight-final","Segoe UI SemiLight","Segoe UI WPC Semilight","Segoe UI",Segoe,Tahoma,Helvetica,Arial,sans-serif;
-            font-size: 1.8em;
+            font-size: 1.8rem;
             text-decoration: none;
         }
 
@@ -1314,7 +1315,7 @@
                     </div>
                 </li>
             </ol>
-            <table class="speasyforms-sortablefields speasyforms-fieldtabletemplate">
+            <table width="100%" class="speasyforms-sortablefields speasyforms-fieldtabletemplate">
                 <tbody class="speasyforms-sortablefields">
                     <tr>
                         <th class="speasyforms-fieldcell">Display Name</th>
