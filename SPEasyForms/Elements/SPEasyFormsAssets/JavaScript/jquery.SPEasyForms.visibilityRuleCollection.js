@@ -117,7 +117,7 @@
                     var html;
                     if (row.row.attr("data-headerontop") === "true") {
                         html = $("<tr/>", { "data-visibilityadded": "true" });
-                        html.append($("<td/>", { "valign": "top", "class": "ms-formlabel" }));
+                        html.append($("<td/>", { "valign": "top", "class": "ms-formbody" }));
                         html.children("td").append("<div/>");
                         html.find("div").html("<nobr class='speasyforms-columnheader'>" + row.displayName + "</nobr>");
                         html.children("td").append((value.length > 0 ? value : "&nbsp;"));
@@ -143,7 +143,7 @@
                         row.row.attr("data-visibilityhidden", "true").hide();
                     }
                     if (row.row.next().attr("data-visibilityadded") !== "true") {
-                        row.row.after(html);
+                        $(html).insertAfter(row.row);
                     }
                 }
             },
@@ -191,14 +191,14 @@
         },
 
         /*********************************************************************
-         * Transform the current form by hiding fields or makin them read-only
-         * as required by the current configuration and the group membership
-         * of the current user.
-         *
-         * @param {object} options - {
-         *     config: {object}
-         * }
-         *********************************************************************/
+        * Transform the current form by hiding fields or makin them read-only
+        * as required by the current configuration and the group membership
+        * of the current user.
+        *
+        * @param {object} options - {
+        *     config: {object}
+        * }
+        *********************************************************************/
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (opt.currentConfig && opt.currentConfig.visibility && opt.currentConfig.visibility.def &&
@@ -265,13 +265,13 @@
         },
 
         /*********************************************************************
-         * Convert the conditional visibility rules for the current config into
-         * an editor.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Convert the conditional visibility rules for the current config into
+        * an editor.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (!this.initialized) {
@@ -293,12 +293,12 @@
         },
 
         /*********************************************************************
-         * Convert the editor back into a set of conditional visibility rules.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Convert the editor back into a set of conditional visibility rules.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         toConfig: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var rules = [];
@@ -349,14 +349,14 @@
         },
 
         /*********************************************************************
-         * Draw a set of rules for a single field as a table. This function draws
-         * the rules table for the conditional visibility dialog as well as all
-         * the rule tables on the conditional visibility tab of the main editor.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Draw a set of rules for a single field as a table. This function draws
+        * the rules table for the conditional visibility dialog as well as all
+        * the rule tables on the conditional visibility tab of the main editor.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         drawRuleTable: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (opt.currentConfig.visibility.def[opt.fieldName].length === 0) {
@@ -369,10 +369,10 @@
                 var table = "<center>";
                 table += "<table id='" + id + "' " +
                     "class='" + klass + "'><tbody class='" + klass + "'><tr>" +
-                    "<th class='" + klass + "'>State</th>" +
-                    "<th class='" + klass + "'>Applies To</th>" +
-                    "<th class='" + klass + "'>On Forms</th>" +
-                    "<th class='" + klass + "'>And When</th></tr>";
+                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>State</th>" +
+                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>Applies To</th>" +
+                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>On Forms</th>" +
+                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>And When</th></tr>";
                 var conditionalFieldsMissing = [];
                 $.each(opt.currentConfig.visibility.def[opt.fieldName], function (idx, rule) {
                     var conditions = "";
@@ -389,19 +389,19 @@
                         conditions = "&nbsp;";
                     }
                     table += "<tr class='" + klass + "'>" +
-                        "<td class='" + klass + "'>" + rule.state +
+                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + rule.state +
                         "</td>" +
-                        "<td class='" + klass + "'>" +
+                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" +
                         (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone") +
                         "</td>" +
-                        "<td class='" + klass + "'>" + rule.forms + "</td>" +
-                        "<td class='" + klass + "'>" + conditions + "</td>";
+                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + rule.forms + "</td>" +
+                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + conditions + "</td>";
                     table += "<td class='speasyforms-visibilityrulebutton'>" +
                         "<button id='addVisililityRuleButton" + idx +
-                        "' >Edit Rule</button></td>" +
+                        "' class='speasyforms-visibilityrulebutton'>Edit Rule</button></td>" +
                         "<td class='speasyforms-visibilityrulebutton'>" +
                         "<button id='delVisililityRuleButton" + idx +
-                        "' >Delete Rule</button></td>";
+                        "' clsss='speasyforms-visibilityrulebutton'>Delete Rule</button></td>";
                     table += "</tr>";
                 });
                 table += "</tbody></table>";
@@ -496,13 +496,13 @@
         },
 
         /*********************************************************************
-         * Wire up the buttons for a rules table (only applicable to the conditional
-         * visibility dialog since the rules tables on the main editor are static)
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Wire up the buttons for a rules table (only applicable to the conditional
+        * visibility dialog since the rules tables on the main editor are static)
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         wireVisibilityRulesTable: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             $("[id^='delVisililityRuleButton']").button({
@@ -595,12 +595,12 @@
         },
 
         /*********************************************************************
-         * Wire up the conditional visibility dialog boxes.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Wire up the conditional visibility dialog boxes.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -721,14 +721,14 @@
         },
 
         /*********************************************************************
-         * Get the current visibility rules.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *
-         * @return {object} - the current visibility rules.
-         *********************************************************************/
+        * Get the current visibility rules.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *
+        * @return {object} - the current visibility rules.
+        *********************************************************************/
         getVisibility: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (!opt.currentConfig.visibility) {
@@ -743,14 +743,14 @@
         },
 
         /*********************************************************************
-         * Construct a rule from the add/edit rule dialog box.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *
-         * @return {object} - the new rule.
-         *********************************************************************/
+        * Construct a rule from the add/edit rule dialog box.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *
+        * @return {object} - the new rule.
+        *********************************************************************/
         getRule: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = {};
@@ -793,12 +793,12 @@
         },
 
         /*********************************************************************
-         * Reset the add/edit rule dialog box.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Reset the add/edit rule dialog box.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         clearRuleDialog: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             $("#addVisibilityRuleField").val($("#conditionalVisibilityField").val());
@@ -823,15 +823,15 @@
         },
 
         /*********************************************************************
-         * Get the current form type. This function looks for the word new, edit,
-         * or display in the current page name (case insensative.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *
-         * @return {string} - new, edit, display, or "".
-         *********************************************************************/
+        * Get the current form type. This function looks for the word new, edit,
+        * or display in the current page name (case insensative.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *
+        * @return {string} - new, edit, display, or "".
+        *********************************************************************/
         getFormType: function () {
             var result = "";
             var page = window.location.pathname;

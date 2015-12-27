@@ -20,148 +20,148 @@
         redoBuffer: [],
 
         /*********************************************************************
-         * Get the configuration file for the current list.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *
-         * @return {object} - the configuration object, in the form:
-         *
-         * {
-         *     "layout": { // configuration of containers
-         *         "def": [ // the default layout, later there will be other
-         *             // layouts for other content types the default form
-         *          // container has any fields not placed on another container,
-         *             // this is not necessarily the first container
-         *             {
-         *                 "containerType": "DefaultForm",
-         *                 "index": "d"
-         *             },
-         *             // each additional property is another container
-         *             {
-         *                 // the type is used to find the implementation
-         *                 "containerType": "Tabs",
-         *                 // this is an immutable index that is set at the time the container
-         *                 // was added to the configuration, and is used to find it as things
-         *                 // are moved around through drag and drop, the actual value is
-         *                 // not important, just that it is unique
-         *                 "index": "1",
-         *                 // technically, the rest of the container configuration is implementation
-         *                 // specific, but all of the built-in container implemenations have an
-         *                 // array of field collections; for tabs, one field collection equals one tab, for
-         *                 // accordion one content area, etc.
-         *                 "fieldCollections": [
-         *                     {
-         *                         // the name of the field collection, how theis is used is container
-         *                         // specific; for tabs this is the tab header, for columns this
-         *                         // isn't used at all when transforming the form, only in the
-         *                         // editor
-         *                         "name": "one",
-         *                         // an array of field internal names
-         *                         "fields": [
-         *                             {
-         *                                 "fieldInternalName": "FirstName"
-         *                             },
-         *                             {
-         *                                 "fieldInternalName": "FullName"
-         *                             }
-         *                         ]
-         *                     },
-         *                     {
-         *                         "name": "two",
-         *                         "fields": [
-         *                             {
-         *                                 "fieldInternalName": "Email"
-         *                             },
-         *                             {
-         *                                 "fieldInternalName": "Company"
-         *                             }
-         *                         ]
-         *                     }
-         *                 ]
-         *             },
-         *             {
-         *                 "containerType": "Columns",
-         *                 "index": "2",
-         *                 "fieldCollections": [
-         *                     {
-         *                         "name": "1",
-         *                         "fields": [
-         *                             {
-         *                                 "fieldInternalName": "JobTitle"
-         *                             },
-         *                             {
-         *                                 "fieldInternalName": "WorkPhone"
-         *                             }
-         *                         ]
-         *                     },
-         *                     {
-         *                         "name": "2",
-         *                         "fields": [
-         *                             {
-         *                                 "fieldInternalName": "HomePhone"
-         *                             },
-         *                             {
-         *                                 "fieldInternalName": "CellPhone"
-         *                             }
-         *                         ]
-         *                     }
-         *                 ]
-         *             }
-         *         ]
-         *     },
-         *     "visibility": { the conditional visibility rules
-         *         "def": { // the default rule set, again, there could be
-         *             // multiples in the future for multiple content types
-         *             // the field internal name is the key to an array of
-         *             // rules, the first rule that matches
-         *             // the current user is the only one executed
-         *             "FirstName": [
-         *                 {
-         *                     // Hidden, ReadOnly, or Editable; Editable really
-         *                     // does nothing to the form, but stops processing
-         *                     "state": "Editable",
-         *                     // rules can be written for specific forms,
-         *                     // the default is all forms
-         *                     "forms": "New;Edit;Display",
-         *                     // rules can be applied to specific SharePoint
-         *                     // groups and/or the original author of the
-         *                     // current item, the default is applies to everyone
-         *                     "appliesTo": "Joe McShea - Dev Site Members"
-         *                 },
-         *                 {
-         *                     "state": "ReadOnly",
-         *                     "forms": "New;Edit;Display",
-         *                     "appliesTo": "Joe McShea - Dev Site Visitors"
-         *                 },
-         *                 {
-         *                     "state": "Hidden",
-         *                     "forms": "New;Edit;Display",
-         *                     "appliesTo": ""
-         *                 }
-         *             ],
-         *             "Email": [
-         *                 {
-         *                     "state": "Editable",
-         *                     "forms": "New;Edit;Display",
-         *                     "appliesTo": "Joe McShea - Dev Site Members"
-         *                 },
-         *                 {
-         *                     "state": "ReadOnly",
-         *                     "forms": "New;Edit;Display",
-         *                     "appliesTo": "Joe McShea - Dev Site Visitors"
-         *                 },
-         *                 {
-         *                     "state": "Hidden",
-         *                     "forms": "New;Edit;Display",
-         *                     "appliesTo": ""
-         *                 }
-         *             ]
-         *         }
-         *     }
-         * }
-         *********************************************************************/
+        * Get the configuration file for the current list.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *
+        * @return {object} - the configuration object, in the form:
+        *
+        * {
+        *     "layout": { // configuration of containers
+        *         "def": [ // the default layout, later there will be other
+        *             // layouts for other content types the default form
+        *          // container has any fields not placed on another container,
+        *             // this is not necessarily the first container
+        *             {
+        *                 "containerType": "DefaultForm",
+        *                 "index": "d"
+        *             },
+        *             // each additional property is another container
+        *             {
+        *                 // the type is used to find the implementation
+        *                 "containerType": "Tabs",
+        *                 // this is an immutable index that is set at the time the container
+        *                 // was added to the configuration, and is used to find it as things
+        *                 // are moved around through drag and drop, the actual value is
+        *                 // not important, just that it is unique
+        *                 "index": "1",
+        *                 // technically, the rest of the container configuration is implementation
+        *                 // specific, but all of the built-in container implemenations have an
+        *                 // array of field collections; for tabs, one field collection equals one tab, for
+        *                 // accordion one content area, etc.
+        *                 "fieldCollections": [
+        *                     {
+        *                         // the name of the field collection, how theis is used is container
+        *                         // specific; for tabs this is the tab header, for columns this
+        *                         // isn't used at all when transforming the form, only in the
+        *                         // editor
+        *                         "name": "one",
+        *                         // an array of field internal names
+        *                         "fields": [
+        *                             {
+        *                                 "fieldInternalName": "FirstName"
+        *                             },
+        *                             {
+        *                                 "fieldInternalName": "FullName"
+        *                             }
+        *                         ]
+        *                     },
+        *                     {
+        *                         "name": "two",
+        *                         "fields": [
+        *                             {
+        *                                 "fieldInternalName": "Email"
+        *                             },
+        *                             {
+        *                                 "fieldInternalName": "Company"
+        *                             }
+        *                         ]
+        *                     }
+        *                 ]
+        *             },
+        *             {
+        *                 "containerType": "Columns",
+        *                 "index": "2",
+        *                 "fieldCollections": [
+        *                     {
+        *                         "name": "1",
+        *                         "fields": [
+        *                             {
+        *                                 "fieldInternalName": "JobTitle"
+        *                             },
+        *                             {
+        *                                 "fieldInternalName": "WorkPhone"
+        *                             }
+        *                         ]
+        *                     },
+        *                     {
+        *                         "name": "2",
+        *                         "fields": [
+        *                             {
+        *                                 "fieldInternalName": "HomePhone"
+        *                             },
+        *                             {
+        *                                 "fieldInternalName": "CellPhone"
+        *                             }
+        *                         ]
+        *                     }
+        *                 ]
+        *             }
+        *         ]
+        *     },
+        *     "visibility": { the conditional visibility rules
+        *         "def": { // the default rule set, again, there could be
+        *             // multiples in the future for multiple content types
+        *             // the field internal name is the key to an array of
+        *             // rules, the first rule that matches
+        *             // the current user is the only one executed
+        *             "FirstName": [
+        *                 {
+        *                     // Hidden, ReadOnly, or Editable; Editable really
+        *                     // does nothing to the form, but stops processing
+        *                     "state": "Editable",
+        *                     // rules can be written for specific forms,
+        *                     // the default is all forms
+        *                     "forms": "New;Edit;Display",
+        *                     // rules can be applied to specific SharePoint
+        *                     // groups and/or the original author of the
+        *                     // current item, the default is applies to everyone
+        *                     "appliesTo": "Joe McShea - Dev Site Members"
+        *                 },
+        *                 {
+        *                     "state": "ReadOnly",
+        *                     "forms": "New;Edit;Display",
+        *                     "appliesTo": "Joe McShea - Dev Site Visitors"
+        *                 },
+        *                 {
+        *                     "state": "Hidden",
+        *                     "forms": "New;Edit;Display",
+        *                     "appliesTo": ""
+        *                 }
+        *             ],
+        *             "Email": [
+        *                 {
+        *                     "state": "Editable",
+        *                     "forms": "New;Edit;Display",
+        *                     "appliesTo": "Joe McShea - Dev Site Members"
+        *                 },
+        *                 {
+        *                     "state": "ReadOnly",
+        *                     "forms": "New;Edit;Display",
+        *                     "appliesTo": "Joe McShea - Dev Site Visitors"
+        *                 },
+        *                 {
+        *                     "state": "Hidden",
+        *                     "forms": "New;Edit;Display",
+        *                     "appliesTo": ""
+        *                 }
+        *             ]
+        *         }
+        *     }
+        * }
+        *********************************************************************/
         get: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var currentConfig;
@@ -175,6 +175,9 @@
                     for (var i = 0; i < layoutArray.length; i++) {
                         var current = layoutArray[i];
                         current.index = nextIndex++;
+                        if (!current.containerType) {
+                            current.containerType = "FieldCollection";
+                        }
                         if (!current.name) {
                             current.name = current.containerType;
                         }
@@ -182,7 +185,7 @@
                             updateLayouts201501(current.fieldCollections);
                         }
                     }
-                }
+                };
 
                 updateLayouts201501(currentConfig.layout.def);
 
@@ -219,14 +222,14 @@
         },
 
         /*********************************************************************
-         * Set the current configuration.  This stores it in a control on the
-         * page, it does not write it back to the server.  Use save to write it
-         * back to the server. The save button is also enabled by this function.
-         *
-         * @param {object} options - {
-         *     config: {object}  // the configuration object to be set
-         * }
-         *********************************************************************/
+        * Set the current configuration.  This stores it in a control on the
+        * page, it does not write it back to the server.  Use save to write it
+        * back to the server. The save button is also enabled by this function.
+        *
+        * @param {object} options - {
+        *     config: {object}  // the configuration object to be set
+        * }
+        *********************************************************************/
         set: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (!opt.currentConfig) {
@@ -258,14 +261,14 @@
         },
 
         /*********************************************************************
-         * Write the configuration back to a file in the SiteAssets library. The
-         * save button is also disabled by this function, since there are no
-         * changes to be saved.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Write the configuration back to a file in the SiteAssets library. The
+        * save button is also disabled by this function, since there are no
+        * changes to be saved.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         save: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var listId = $.spEasyForms.sharePointContext.getCurrentListId(opt);

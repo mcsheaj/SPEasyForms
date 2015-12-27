@@ -124,6 +124,9 @@
                     }
                     $(headers[idx]).addClass("speasyforms-accordionvalidationerror");
                 }
+                else {
+                    $(headers[idx]).removeClass("speasyforms-accordionvalidationerror");
+                }
             }
             return true;
         }

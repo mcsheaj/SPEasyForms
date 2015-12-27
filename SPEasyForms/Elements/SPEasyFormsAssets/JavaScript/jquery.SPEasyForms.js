@@ -472,7 +472,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             else {
                 if (opt.jQueryUITheme) {
                     opt.source = opt.jQueryUITheme;
-                    var theme = this.replaceVariables(opt);
+                    theme = this.replaceVariables(opt);
                 }
                 $("head").append(
                     '<link rel="stylesheet" type="text/css" href="' + theme + '">');

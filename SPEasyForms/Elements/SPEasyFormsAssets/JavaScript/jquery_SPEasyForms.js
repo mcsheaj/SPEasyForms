@@ -33446,7 +33446,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             else {
                 if (opt.jQueryUITheme) {
                     opt.source = opt.jQueryUITheme;
-                    var theme = this.replaceVariables(opt);
+                    theme = this.replaceVariables(opt);
                 }
                 $("head").append(
                     '<link rel="stylesheet" type="text/css" href="' + theme + '">');
@@ -35379,148 +35379,148 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         redoBuffer: [],
 
         /*********************************************************************
-         * Get the configuration file for the current list.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *
-         * @return {object} - the configuration object, in the form:
-         *
-         * {
-         *     "layout": { // configuration of containers
-         *         "def": [ // the default layout, later there will be other
-         *             // layouts for other content types the default form
-         *          // container has any fields not placed on another container,
-         *             // this is not necessarily the first container
-         *             {
-         *                 "containerType": "DefaultForm",
-         *                 "index": "d"
-         *             },
-         *             // each additional property is another container
-         *             {
-         *                 // the type is used to find the implementation
-         *                 "containerType": "Tabs",
-         *                 // this is an immutable index that is set at the time the container
-         *                 // was added to the configuration, and is used to find it as things
-         *                 // are moved around through drag and drop, the actual value is
-         *                 // not important, just that it is unique
-         *                 "index": "1",
-         *                 // technically, the rest of the container configuration is implementation
-         *                 // specific, but all of the built-in container implemenations have an
-         *                 // array of field collections; for tabs, one field collection equals one tab, for
-         *                 // accordion one content area, etc.
-         *                 "fieldCollections": [
-         *                     {
-         *                         // the name of the field collection, how theis is used is container
-         *                         // specific; for tabs this is the tab header, for columns this
-         *                         // isn't used at all when transforming the form, only in the
-         *                         // editor
-         *                         "name": "one",
-         *                         // an array of field internal names
-         *                         "fields": [
-         *                             {
-         *                                 "fieldInternalName": "FirstName"
-         *                             },
-         *                             {
-         *                                 "fieldInternalName": "FullName"
-         *                             }
-         *                         ]
-         *                     },
-         *                     {
-         *                         "name": "two",
-         *                         "fields": [
-         *                             {
-         *                                 "fieldInternalName": "Email"
-         *                             },
-         *                             {
-         *                                 "fieldInternalName": "Company"
-         *                             }
-         *                         ]
-         *                     }
-         *                 ]
-         *             },
-         *             {
-         *                 "containerType": "Columns",
-         *                 "index": "2",
-         *                 "fieldCollections": [
-         *                     {
-         *                         "name": "1",
-         *                         "fields": [
-         *                             {
-         *                                 "fieldInternalName": "JobTitle"
-         *                             },
-         *                             {
-         *                                 "fieldInternalName": "WorkPhone"
-         *                             }
-         *                         ]
-         *                     },
-         *                     {
-         *                         "name": "2",
-         *                         "fields": [
-         *                             {
-         *                                 "fieldInternalName": "HomePhone"
-         *                             },
-         *                             {
-         *                                 "fieldInternalName": "CellPhone"
-         *                             }
-         *                         ]
-         *                     }
-         *                 ]
-         *             }
-         *         ]
-         *     },
-         *     "visibility": { the conditional visibility rules
-         *         "def": { // the default rule set, again, there could be
-         *             // multiples in the future for multiple content types
-         *             // the field internal name is the key to an array of
-         *             // rules, the first rule that matches
-         *             // the current user is the only one executed
-         *             "FirstName": [
-         *                 {
-         *                     // Hidden, ReadOnly, or Editable; Editable really
-         *                     // does nothing to the form, but stops processing
-         *                     "state": "Editable",
-         *                     // rules can be written for specific forms,
-         *                     // the default is all forms
-         *                     "forms": "New;Edit;Display",
-         *                     // rules can be applied to specific SharePoint
-         *                     // groups and/or the original author of the
-         *                     // current item, the default is applies to everyone
-         *                     "appliesTo": "Joe McShea - Dev Site Members"
-         *                 },
-         *                 {
-         *                     "state": "ReadOnly",
-         *                     "forms": "New;Edit;Display",
-         *                     "appliesTo": "Joe McShea - Dev Site Visitors"
-         *                 },
-         *                 {
-         *                     "state": "Hidden",
-         *                     "forms": "New;Edit;Display",
-         *                     "appliesTo": ""
-         *                 }
-         *             ],
-         *             "Email": [
-         *                 {
-         *                     "state": "Editable",
-         *                     "forms": "New;Edit;Display",
-         *                     "appliesTo": "Joe McShea - Dev Site Members"
-         *                 },
-         *                 {
-         *                     "state": "ReadOnly",
-         *                     "forms": "New;Edit;Display",
-         *                     "appliesTo": "Joe McShea - Dev Site Visitors"
-         *                 },
-         *                 {
-         *                     "state": "Hidden",
-         *                     "forms": "New;Edit;Display",
-         *                     "appliesTo": ""
-         *                 }
-         *             ]
-         *         }
-         *     }
-         * }
-         *********************************************************************/
+        * Get the configuration file for the current list.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *
+        * @return {object} - the configuration object, in the form:
+        *
+        * {
+        *     "layout": { // configuration of containers
+        *         "def": [ // the default layout, later there will be other
+        *             // layouts for other content types the default form
+        *          // container has any fields not placed on another container,
+        *             // this is not necessarily the first container
+        *             {
+        *                 "containerType": "DefaultForm",
+        *                 "index": "d"
+        *             },
+        *             // each additional property is another container
+        *             {
+        *                 // the type is used to find the implementation
+        *                 "containerType": "Tabs",
+        *                 // this is an immutable index that is set at the time the container
+        *                 // was added to the configuration, and is used to find it as things
+        *                 // are moved around through drag and drop, the actual value is
+        *                 // not important, just that it is unique
+        *                 "index": "1",
+        *                 // technically, the rest of the container configuration is implementation
+        *                 // specific, but all of the built-in container implemenations have an
+        *                 // array of field collections; for tabs, one field collection equals one tab, for
+        *                 // accordion one content area, etc.
+        *                 "fieldCollections": [
+        *                     {
+        *                         // the name of the field collection, how theis is used is container
+        *                         // specific; for tabs this is the tab header, for columns this
+        *                         // isn't used at all when transforming the form, only in the
+        *                         // editor
+        *                         "name": "one",
+        *                         // an array of field internal names
+        *                         "fields": [
+        *                             {
+        *                                 "fieldInternalName": "FirstName"
+        *                             },
+        *                             {
+        *                                 "fieldInternalName": "FullName"
+        *                             }
+        *                         ]
+        *                     },
+        *                     {
+        *                         "name": "two",
+        *                         "fields": [
+        *                             {
+        *                                 "fieldInternalName": "Email"
+        *                             },
+        *                             {
+        *                                 "fieldInternalName": "Company"
+        *                             }
+        *                         ]
+        *                     }
+        *                 ]
+        *             },
+        *             {
+        *                 "containerType": "Columns",
+        *                 "index": "2",
+        *                 "fieldCollections": [
+        *                     {
+        *                         "name": "1",
+        *                         "fields": [
+        *                             {
+        *                                 "fieldInternalName": "JobTitle"
+        *                             },
+        *                             {
+        *                                 "fieldInternalName": "WorkPhone"
+        *                             }
+        *                         ]
+        *                     },
+        *                     {
+        *                         "name": "2",
+        *                         "fields": [
+        *                             {
+        *                                 "fieldInternalName": "HomePhone"
+        *                             },
+        *                             {
+        *                                 "fieldInternalName": "CellPhone"
+        *                             }
+        *                         ]
+        *                     }
+        *                 ]
+        *             }
+        *         ]
+        *     },
+        *     "visibility": { the conditional visibility rules
+        *         "def": { // the default rule set, again, there could be
+        *             // multiples in the future for multiple content types
+        *             // the field internal name is the key to an array of
+        *             // rules, the first rule that matches
+        *             // the current user is the only one executed
+        *             "FirstName": [
+        *                 {
+        *                     // Hidden, ReadOnly, or Editable; Editable really
+        *                     // does nothing to the form, but stops processing
+        *                     "state": "Editable",
+        *                     // rules can be written for specific forms,
+        *                     // the default is all forms
+        *                     "forms": "New;Edit;Display",
+        *                     // rules can be applied to specific SharePoint
+        *                     // groups and/or the original author of the
+        *                     // current item, the default is applies to everyone
+        *                     "appliesTo": "Joe McShea - Dev Site Members"
+        *                 },
+        *                 {
+        *                     "state": "ReadOnly",
+        *                     "forms": "New;Edit;Display",
+        *                     "appliesTo": "Joe McShea - Dev Site Visitors"
+        *                 },
+        *                 {
+        *                     "state": "Hidden",
+        *                     "forms": "New;Edit;Display",
+        *                     "appliesTo": ""
+        *                 }
+        *             ],
+        *             "Email": [
+        *                 {
+        *                     "state": "Editable",
+        *                     "forms": "New;Edit;Display",
+        *                     "appliesTo": "Joe McShea - Dev Site Members"
+        *                 },
+        *                 {
+        *                     "state": "ReadOnly",
+        *                     "forms": "New;Edit;Display",
+        *                     "appliesTo": "Joe McShea - Dev Site Visitors"
+        *                 },
+        *                 {
+        *                     "state": "Hidden",
+        *                     "forms": "New;Edit;Display",
+        *                     "appliesTo": ""
+        *                 }
+        *             ]
+        *         }
+        *     }
+        * }
+        *********************************************************************/
         get: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var currentConfig;
@@ -35534,6 +35534,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     for (var i = 0; i < layoutArray.length; i++) {
                         var current = layoutArray[i];
                         current.index = nextIndex++;
+                        if (!current.containerType) {
+                            current.containerType = "FieldCollection";
+                        }
                         if (!current.name) {
                             current.name = current.containerType;
                         }
@@ -35541,7 +35544,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             updateLayouts201501(current.fieldCollections);
                         }
                     }
-                }
+                };
 
                 updateLayouts201501(currentConfig.layout.def);
 
@@ -35578,14 +35581,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Set the current configuration.  This stores it in a control on the
-         * page, it does not write it back to the server.  Use save to write it
-         * back to the server. The save button is also enabled by this function.
-         *
-         * @param {object} options - {
-         *     config: {object}  // the configuration object to be set
-         * }
-         *********************************************************************/
+        * Set the current configuration.  This stores it in a control on the
+        * page, it does not write it back to the server.  Use save to write it
+        * back to the server. The save button is also enabled by this function.
+        *
+        * @param {object} options - {
+        *     config: {object}  // the configuration object to be set
+        * }
+        *********************************************************************/
         set: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (!opt.currentConfig) {
@@ -35617,14 +35620,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Write the configuration back to a file in the SiteAssets library. The
-         * save button is also disabled by this function, since there are no
-         * changes to be saved.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Write the configuration back to a file in the SiteAssets library. The
+        * save button is also disabled by this function, since there are no
+        * changes to be saved.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         save: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var listId = $.spEasyForms.sharePointContext.getCurrentListId(opt);
@@ -35763,6 +35766,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
                 this.postTransform(opt);
             }
+
+            this.highlightValidationErrors(opt);
 
             return fieldsInUse;
         },
@@ -35904,6 +35909,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     this.highlightValidationErrors(opt);
                     return false;
                 }
+            }
+            else {
+                return this.highlightValidationErrors(opt);
             }
 
             return true;
@@ -37065,7 +37073,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         opt.rowInfo.row.attr("data-headerontop", "true");
                     }
                     else {
-                        opt.rowInfo.row.find("*").removeClass("ms-standardheader").removeClass("ms-h3");
+                        opt.rowInfo.row.find("*").removeClass("ms-standardheader").removeClass("ms-h3").addClass("speasyforms-columnsheader");
                         opt.rowInfo.row.find(".ms-formlabel").removeClass("ms-formlabel").addClass("speasyforms-columnheader");
                     }
                     result = true;
@@ -37144,12 +37152,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
-            if (container.find("span.ms-formvalidation").length > 0) {
+            if (container.find("span[role='alert']").length > 0) {
                 container.attr("data-speasyforms-validationerror", "1");
             }
             else {
                 container.attr("data-speasyforms-validationerror", "0");
             }
+            return true;
         },
 
         toEditor: function (options) {
@@ -37336,6 +37345,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                     $(headers[idx]).addClass("speasyforms-accordionvalidationerror");
                 }
+                else {
+                    $(headers[idx]).removeClass("speasyforms-accordionvalidationerror");
+                }
             }
             return true;
         }
@@ -37430,6 +37442,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     break;
                 }
             }
+            return true;
         },
 
         evenUpTableRows: function (options) {
@@ -37592,6 +37605,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                     $(listItems[idx]).find("a").addClass("speasyforms-tabvalidationerror");
                 }
+                else {
+                    $(listItems[idx]).find("a").removeClass("speasyforms-tabvalidationerror");
+                }
             }
             return true;
         }
@@ -37634,7 +37650,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         postTransform: function () { },
 
         // an opportunity to do validation tasks prior to committing an item
-        preSaveItem: function () { },
+        preSaveItem: function () { return true; },
 
         // TBD need to update from here down for new design
         // draw the container in the properties pane of the settings page from the JSON
@@ -37931,7 +37947,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     var html;
                     if (row.row.attr("data-headerontop") === "true") {
                         html = $("<tr/>", { "data-visibilityadded": "true" });
-                        html.append($("<td/>", { "valign": "top", "class": "ms-formlabel" }));
+                        html.append($("<td/>", { "valign": "top", "class": "ms-formbody" }));
                         html.children("td").append("<div/>");
                         html.find("div").html("<nobr class='speasyforms-columnheader'>" + row.displayName + "</nobr>");
                         html.children("td").append((value.length > 0 ? value : "&nbsp;"));
@@ -37957,7 +37973,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         row.row.attr("data-visibilityhidden", "true").hide();
                     }
                     if (row.row.next().attr("data-visibilityadded") !== "true") {
-                        row.row.after(html);
+                        $(html).insertAfter(row.row);
                     }
                 }
             },
@@ -38005,14 +38021,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Transform the current form by hiding fields or makin them read-only
-         * as required by the current configuration and the group membership
-         * of the current user.
-         *
-         * @param {object} options - {
-         *     config: {object}
-         * }
-         *********************************************************************/
+        * Transform the current form by hiding fields or makin them read-only
+        * as required by the current configuration and the group membership
+        * of the current user.
+        *
+        * @param {object} options - {
+        *     config: {object}
+        * }
+        *********************************************************************/
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (opt.currentConfig && opt.currentConfig.visibility && opt.currentConfig.visibility.def &&
@@ -38079,13 +38095,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Convert the conditional visibility rules for the current config into
-         * an editor.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Convert the conditional visibility rules for the current config into
+        * an editor.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         toEditor: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (!this.initialized) {
@@ -38107,12 +38123,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Convert the editor back into a set of conditional visibility rules.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Convert the editor back into a set of conditional visibility rules.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         toConfig: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var rules = [];
@@ -38163,14 +38179,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Draw a set of rules for a single field as a table. This function draws
-         * the rules table for the conditional visibility dialog as well as all
-         * the rule tables on the conditional visibility tab of the main editor.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Draw a set of rules for a single field as a table. This function draws
+        * the rules table for the conditional visibility dialog as well as all
+        * the rule tables on the conditional visibility tab of the main editor.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         drawRuleTable: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (opt.currentConfig.visibility.def[opt.fieldName].length === 0) {
@@ -38183,10 +38199,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 var table = "<center>";
                 table += "<table id='" + id + "' " +
                     "class='" + klass + "'><tbody class='" + klass + "'><tr>" +
-                    "<th class='" + klass + "'>State</th>" +
-                    "<th class='" + klass + "'>Applies To</th>" +
-                    "<th class='" + klass + "'>On Forms</th>" +
-                    "<th class='" + klass + "'>And When</th></tr>";
+                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>State</th>" +
+                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>Applies To</th>" +
+                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>On Forms</th>" +
+                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>And When</th></tr>";
                 var conditionalFieldsMissing = [];
                 $.each(opt.currentConfig.visibility.def[opt.fieldName], function (idx, rule) {
                     var conditions = "";
@@ -38203,19 +38219,19 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         conditions = "&nbsp;";
                     }
                     table += "<tr class='" + klass + "'>" +
-                        "<td class='" + klass + "'>" + rule.state +
+                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + rule.state +
                         "</td>" +
-                        "<td class='" + klass + "'>" +
+                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" +
                         (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone") +
                         "</td>" +
-                        "<td class='" + klass + "'>" + rule.forms + "</td>" +
-                        "<td class='" + klass + "'>" + conditions + "</td>";
+                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + rule.forms + "</td>" +
+                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + conditions + "</td>";
                     table += "<td class='speasyforms-visibilityrulebutton'>" +
                         "<button id='addVisililityRuleButton" + idx +
-                        "' >Edit Rule</button></td>" +
+                        "' class='speasyforms-visibilityrulebutton'>Edit Rule</button></td>" +
                         "<td class='speasyforms-visibilityrulebutton'>" +
                         "<button id='delVisililityRuleButton" + idx +
-                        "' >Delete Rule</button></td>";
+                        "' clsss='speasyforms-visibilityrulebutton'>Delete Rule</button></td>";
                     table += "</tr>";
                 });
                 table += "</tbody></table>";
@@ -38310,13 +38326,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Wire up the buttons for a rules table (only applicable to the conditional
-         * visibility dialog since the rules tables on the main editor are static)
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Wire up the buttons for a rules table (only applicable to the conditional
+        * visibility dialog since the rules tables on the main editor are static)
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         wireVisibilityRulesTable: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             $("[id^='delVisililityRuleButton']").button({
@@ -38409,12 +38425,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Wire up the conditional visibility dialog boxes.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Wire up the conditional visibility dialog boxes.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
 
@@ -38535,14 +38551,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Get the current visibility rules.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *
-         * @return {object} - the current visibility rules.
-         *********************************************************************/
+        * Get the current visibility rules.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *
+        * @return {object} - the current visibility rules.
+        *********************************************************************/
         getVisibility: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             if (!opt.currentConfig.visibility) {
@@ -38557,14 +38573,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Construct a rule from the add/edit rule dialog box.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *
-         * @return {object} - the new rule.
-         *********************************************************************/
+        * Construct a rule from the add/edit rule dialog box.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *
+        * @return {object} - the new rule.
+        *********************************************************************/
         getRule: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = {};
@@ -38607,12 +38623,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Reset the add/edit rule dialog box.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
+        * Reset the add/edit rule dialog box.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *********************************************************************/
         clearRuleDialog: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             $("#addVisibilityRuleField").val($("#conditionalVisibilityField").val());
@@ -38637,15 +38653,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-         * Get the current form type. This function looks for the word new, edit,
-         * or display in the current page name (case insensative.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *
-         * @return {string} - new, edit, display, or "".
-         *********************************************************************/
+        * Get the current form type. This function looks for the word new, edit,
+        * or display in the current page name (case insensative.
+        *
+        * @param {object} options - {
+        *     // see the definition of defaults for options
+        * }
+        *
+        * @return {string} - new, edit, display, or "".
+        *********************************************************************/
         getFormType: function () {
             var result = "";
             var page = window.location.pathname;

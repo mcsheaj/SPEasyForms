@@ -263,7 +263,7 @@
                         opt.rowInfo.row.attr("data-headerontop", "true");
                     }
                     else {
-                        opt.rowInfo.row.find("*").removeClass("ms-standardheader").removeClass("ms-h3");
+                        opt.rowInfo.row.find("*").removeClass("ms-standardheader").removeClass("ms-h3").addClass("speasyforms-columnsheader");
                         opt.rowInfo.row.find(".ms-formlabel").removeClass("ms-formlabel").addClass("speasyforms-columnheader");
                     }
                     result = true;
@@ -342,12 +342,13 @@
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
-            if (container.find("span.ms-formvalidation").length > 0) {
+            if (container.find("span[role='alert']").length > 0) {
                 container.attr("data-speasyforms-validationerror", "1");
             }
             else {
                 container.attr("data-speasyforms-validationerror", "0");
             }
+            return true;
         },
 
         toEditor: function (options) {

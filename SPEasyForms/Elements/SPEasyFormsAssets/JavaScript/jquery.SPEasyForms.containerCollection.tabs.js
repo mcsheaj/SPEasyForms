@@ -119,6 +119,9 @@
                     }
                     $(listItems[idx]).find("a").addClass("speasyforms-tabvalidationerror");
                 }
+                else {
+                    $(listItems[idx]).find("a").removeClass("speasyforms-tabvalidationerror");
+                }
             }
             return true;
         }

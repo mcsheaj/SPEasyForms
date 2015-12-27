@@ -97,6 +97,8 @@
                 this.postTransform(opt);
             }
 
+            this.highlightValidationErrors(opt);
+
             return fieldsInUse;
         },
 
@@ -237,6 +239,9 @@
                     this.highlightValidationErrors(opt);
                     return false;
                 }
+            }
+            else {
+                return this.highlightValidationErrors(opt);
             }
 
             return true;

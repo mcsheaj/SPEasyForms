@@ -26,13 +26,13 @@ table.speasyforms-columns, table.speasyforms-columns h3.ms-standardheader, table
 table.speasyforms-columns td {
     vertical-align: top;
 }
-.speasyforms-tabvalidationerror {
-    border-top: 2px dashed red;
-    border-left: 2px dashed red;
-    border-right: 2px dashed red;
+a.speasyforms-tabvalidationerror {
+    border-top: 2px dashed red !important;
+    border-left: 2px dashed red !important;
+    border-right: 2px dashed red !important;
 }
-.speasyforms-accordionvalidationerror {
-    border: 2px dashed red;
+h3.speasyforms-accordionvalidationerror {
+    border: 2px dashed red !important;
 }
 .ms-formlabel {
     padding: 0;

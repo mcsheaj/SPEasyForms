@@ -6,8 +6,8 @@
     <script type="text/javascript" src="../JavaScript/jquery.js"></script>
     <style>
         html, body {
-            margin: 0px;
-            padding: 0px;
+            margin: 0;
+            padding: 0;
             overflow: hidden;
             width: auto;
             font: 1em/1.462em 'Segoe UI', Tahoma, Arial, Helvetica, sans-serif;
@@ -33,12 +33,12 @@
             padding-right: 15px;
             float: left;
             background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2RlZWZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9Ijc2JSIgc3RvcC1jb2xvcj0iIzk4YmVkZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
-            background: -moz-linear-gradient(left, #deefff 0%, #98bede 76%);
+            background: -moz-linear-gradient(left, #deefff 0, #98bede 76%);
             background: -webkit-gradient(linear, left top, right top, color-stop(0%, #deefff), color-stop(76%, #98bede));
-            background: -webkit-linear-gradient(left, #deefff 0%, #98bede 76%);
-            background: -o-linear-gradient(left, #deefff 0%, #98bede 76%);
-            background: -ms-linear-gradient(left, #deefff 0%, #98bede 76%);
-            background: linear-gradient(to right, #deefff 0%, #98bede 76%);
+            background: -webkit-linear-gradient(left, #deefff 0, #98bede 76%);
+            background: -o-linear-gradient(left, #deefff 0, #98bede 76%);
+            background: -ms-linear-gradient(left, #deefff 0, #98bede 76%);
+            background: linear-gradient(to right, #deefff 0, #98bede 76%);
             filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#deefff', endColorstr='#98bede', GradientType=1);
         }
         .menu {

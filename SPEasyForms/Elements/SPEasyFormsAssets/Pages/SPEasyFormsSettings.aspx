@@ -280,7 +280,7 @@
         }
 
         button.ui-button-icon-only {
-            font-size: .8rem;
+            font-size: .5rem !important;
             margin: 0;
             padding: 0;
             min-width: 0;
@@ -796,6 +796,12 @@
             font-size: 1.8em;
             color: darkslategray;
             margin-bottom: 20px;
+        }
+
+        h3, h3.speasyforms-columnsheader {
+            font-size: 1rem;
+            font-weight: normal;
+            margin: 4px;
         }
     </style>
 </head>

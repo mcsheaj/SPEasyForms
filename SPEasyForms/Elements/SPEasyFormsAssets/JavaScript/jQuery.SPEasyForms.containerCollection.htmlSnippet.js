@@ -30,7 +30,7 @@
         postTransform: function () { },
 
         // an opportunity to do validation tasks prior to committing an item
-        preSaveItem: function () { },
+        preSaveItem: function () { return true; },
 
         // TBD need to update from here down for new design
         // draw the container in the properties pane of the settings page from the JSON

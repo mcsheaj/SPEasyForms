@@ -82,6 +82,7 @@
                     break;
                 }
             }
+            return true;
         },
 
         evenUpTableRows: function (options) {
