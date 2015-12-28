@@ -36,6 +36,7 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.defaultContainer.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.baseContainer.js
+..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.fieldCollection.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.accordion.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.columns.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.tabs.js

@@ -6,7 +6,7 @@
  * @version 2015.01.beta
  * @requires jQuery.SPEasyForms.2015.01.beta 
  * @requires jQuery-ui v1.9.2 
- * @requires jQuery.SPServices v2015.01 or greater
+ * @requires jQuery.SPServices v2015.01.beta or greater
  * @optional ssw Session Storage Wrapper - Cross Document Transport of
  *    JavaScript Data; used to cache the context across pages if available
  *    and options.useCache === true
@@ -75,9 +75,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // the maximum number of containers that can be nested
             maxNestingLevels: 5,
             // path to the jquery-ui style sheet
-            jQueryUITheme: "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-redmond/jquery-ui.css",
+            jQueryUITheme: "~sitecollection/Style Library/SPEasyFormsAssets/~version/Css/jquery-ui-redmond/jquery-ui.css",
             // path to the spEasyForms style sheet
-            css: "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/speasyforms.css",
+            css: "~sitecollection/Style Library/SPEasyFormsAssets/~version/Css/speasyforms.css",
             // selector for an element in a form table row from which row 
             // will be obtained via .closest("tr")
             formBodySelector: "table td.ms-formbody",
@@ -487,6 +487,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         replaceVariables: function (options) {
             options.source = options.source.replace(/~sitecollection/g, options.currentContext.siteRelativeUrl);
             options.source = options.source.replace(/~site/g, options.currentContext.webRelativeUrl);
+            options.source = options.source.replace(/~version/g, options.version);
             return options.source;
         },
 

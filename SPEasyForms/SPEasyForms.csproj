@@ -225,6 +225,7 @@
     </Content>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.nestedsortable.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.starRatingAdapter.js" />
+    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.fieldCollection.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jQuery.SPEasyForms.containerCollection.htmlSnippet.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.js" />

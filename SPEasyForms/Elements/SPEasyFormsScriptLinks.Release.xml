@@ -7,6 +7,11 @@
     />
     <CustomAction
        Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/SPEasyForms_DefaultSettings.js"
+       Sequence="57152"
+    />
+    <CustomAction
+       Location="ScriptLink"
        ScriptBlock="spefjQuery(window).bind('load', function() { spefjQuery.spEasyForms.init(); });"
        Sequence="57741"
      />

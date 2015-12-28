@@ -26,6 +26,7 @@
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.defaultContainer.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.baseContainer.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.fieldCollection.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.accordion.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.columns.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.tabs.js</file>

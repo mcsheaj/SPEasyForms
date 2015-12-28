@@ -974,7 +974,7 @@ Library/SPEasyFormsAssets/SPEasyForms_DefaultSettings.js for that, which
         <span style="color:green">// path to the default jquery-ui style sheet</span>
         jQueryUITheme: <span style="color:#a31515">"~sitecollection/Style Library/pepper-grinder/jqeury-ui.css"</span>,
         <span style="color:green">// path to the spEasyForms style sheet</span>
-        css: <span style="color:#a31515">"~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/speasyforms.css"</span>
+        css: <span style="color:#a31515">"~sitecollection/Style Library/SPEasyFormsAssets/~version/Css/speasyforms.css"</span>
     });
 })(spefjQuery);
 </pre>

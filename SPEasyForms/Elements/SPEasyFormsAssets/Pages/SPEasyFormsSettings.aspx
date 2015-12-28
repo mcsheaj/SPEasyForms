@@ -34,6 +34,7 @@
     <script src="../JavaScript/jquery.SPEasyForms.containerCollection.js" type="text/javascript"></script>
     <script src="../JavaScript/jquery.SPEasyForms.containerCollection.defaultContainer.js" type="text/javascript"></script>
     <script src="../JavaScript/jquery.SPEasyForms.containerCollection.baseContainer.js" type="text/javascript"></script>
+    <script src="../JavaScript/jquery.SPEasyForms.containerCollection.fieldCollection.js" type="text/javascript"></script>
     <script src="../JavaScript/jquery.SPEasyForms.containerCollection.accordion.js" type="text/javascript"></script>
     <script src="../JavaScript/jquery.SPEasyForms.containerCollection.columns.js" type="text/javascript"></script>
     <script src="../JavaScript/jquery.SPEasyForms.containerCollection.tabs.js" type="text/javascript"></script>

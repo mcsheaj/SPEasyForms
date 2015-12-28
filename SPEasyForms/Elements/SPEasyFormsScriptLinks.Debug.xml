@@ -67,6 +67,11 @@
     />
     <CustomAction
        Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript/jquery.SPEasyForms.containerCollection.fieldCollection.js"
+       Sequence="57207"
+    />
+    <CustomAction
+       Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript/jquery.SPEasyForms.containerCollection.accordion.js"
        Sequence="57211"
     />

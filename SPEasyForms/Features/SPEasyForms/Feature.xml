@@ -127,6 +127,7 @@
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.defaultContainer.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.baseContainer.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.fieldCollection.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.accordion.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.columns.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.tabs.js" />
