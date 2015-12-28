@@ -2,7 +2,9 @@
 <html>
 
 <head>
+    <meta charset="UTF-8" />
     <title>SPEasyForms Help</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <script type="text/javascript" src="../JavaScript/jquery.js"></script>
     <style>
         html, body {

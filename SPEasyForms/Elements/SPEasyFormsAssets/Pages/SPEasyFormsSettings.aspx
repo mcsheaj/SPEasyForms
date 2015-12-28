@@ -10,7 +10,7 @@
 <head runat="server">
     <meta charset="UTF-8" />
     <title>SPEasyForms Settings</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <script src="../JavaScript/MicrosoftAjax.js " type="text/javascript"></script>
     <script src="/_layouts/1033/init.js" type="text/javascript"></script>
     <script src="/_layouts/sp.core.js" type="text/javascript"></script>
@@ -687,7 +687,6 @@
 
             .speasyforms-nestedsortable > li > div {
                 cursor: move;
-                background-color: #ccc;
             }
 
         div.speasyforms-menudiv {
@@ -742,18 +741,6 @@
         .speasyforms-placeholder {
             outline: 1px dashed #4183C4;
         }
-
-        td.speasyforms-icon-visibility,
-        td.speasyforms-icon-adapter {
-            background-color: #ccc;
-        }
-
-            td.speasyforms-icon-visibility:hover,
-            td.speasyforms-icon-adapter:hover,
-            span.speasyforms-nestedsortable-edit:hover,
-            span.speasyforms-nestedsortable-delete:hover {
-                background-color: #e2face;
-            }
 
         .speasyforms-panel, .speasyforms-content {
             display: none;
