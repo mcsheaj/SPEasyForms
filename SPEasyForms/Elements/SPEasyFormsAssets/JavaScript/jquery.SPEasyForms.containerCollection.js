@@ -981,7 +981,7 @@
             // save confirmation dialog
             var importOpts = {
                 modal: true,
-                width: 670,
+                width: 735,
                 buttons: {
                     "Ok": function () {
                         opt.currentConfig = $.spEasyForms.utilities.parseJSON($("#importedJson").val());
