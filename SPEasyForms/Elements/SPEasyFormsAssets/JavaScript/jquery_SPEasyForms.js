@@ -36657,7 +36657,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // save confirmation dialog
             var importOpts = {
                 modal: true,
-                width: 670,
+                width: 735,
                 buttons: {
                     "Ok": function () {
                         opt.currentConfig = $.spEasyForms.utilities.parseJSON($("#importedJson").val());
@@ -36959,7 +36959,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             var groupNames;
             var containerSettingsOpts = {
-                width: 450,
+                width: 475,
                 modal: true,
                 buttons: {
                     "Ok": function () {
