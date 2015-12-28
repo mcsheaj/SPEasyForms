@@ -136,6 +136,7 @@
 
         td.speasyforms-sortablefields {
             width: 45%;
+            cursor: move;
         }
 
         #contentRow {
@@ -266,12 +267,6 @@
             font-size: .9rem;
         }
 
-        td.speasyforms-sortablecontainers {
-            border: 1px solid lightblue !important;
-            background: #dddddd !important;
-            cursor: move !important;
-        }
-
         td.speasyforms-sortablerules {
             border: 1px solid gray;
         }
@@ -357,10 +352,6 @@
 
         table.speasyforms-staticrules {
             width: 100%;
-        }
-
-        table.speasyforms-sortablecontainers {
-            padding-top: 2px;
         }
 
         td.speasyforms-blank {
@@ -681,17 +672,13 @@
             }
 
         .speasyforms-nestedsortable li {
-            border: 1px solid #d4d4d4;
-            border-color: #D4D4D4 #D4D4D4 #BCBCBC;
+            border: 1px solid #999;
         }
-
-            .speasyforms-nestedsortable > li > div {
-                cursor: move;
-            }
 
         div.speasyforms-menudiv {
             margin: 0;
             padding: 2px;
+            cursor: move;
         }
 
         div.speasyforms-nestedsortable-content {
@@ -1312,9 +1299,9 @@
             <table width="100%" class="speasyforms-sortablefields speasyforms-fieldtabletemplate">
                 <tbody class="speasyforms-sortablefields">
                     <tr>
-                        <th class="speasyforms-fieldcell">Display Name</th>
+                        <th class="speasyforms-fieldcell ui-widget-header ui-corner-all nobr">Display Name</th>
                         <th class="speasyforms-fieldcell speasyforms-hidden">Internal Name</th>
-                        <th class="speasyforms-fieldcell speasyforms-fieldtype">Field Type</th>
+                        <th class="speasyforms-fieldcell speasyforms-fieldtype ui-widget-header ui-corner-all nobr">Field Type</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                     </tr>
