@@ -35546,14 +35546,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 };
 
-                updateLayouts201501(currentConfig.layout.def);
+                if (typeof(currentConfig) !== 'undefined') {
+                    updateLayouts201501(currentConfig.layout.def);
+                    $("#spEasyFormsJson pre").text(JSON.stringify(currentConfig, null, 4));
+                }
 
-                $("#spEasyFormsJson pre").text(JSON.stringify(currentConfig, null, 4));
                 $("#spEasyFormsSaveButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
                 $("#spEasyFormsUndoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
                 $("#spEasyFormsRedoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
             }
-            if (currentConfig === undefined) {
+            if (typeof (currentConfig) === 'undefined') {
                 $("#spEasyFormsExportButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
                 currentConfig = {
                     layout: {
@@ -35569,6 +35571,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 };
                 $("#spEasyFormsJson pre").text(JSON.stringify(currentConfig, null, 4));
+                $("#spEasyFormsSaveButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
+                $("#spEasyFormsUndoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
+                $("#spEasyFormsRedoButton").addClass("speasyforms-disabled").css({ opacity: 0.3 });
             }
             options.layout = currentConfig.layout.def;
             $.each(options.layout, function (idx, container) {
