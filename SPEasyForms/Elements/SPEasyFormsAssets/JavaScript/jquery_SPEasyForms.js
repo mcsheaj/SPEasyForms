@@ -36880,6 +36880,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             this.wireDialogEvents(opt);
 
+            if (!opt.verbose) {
+                $(".speasyforms-panel .speasyforms-fieldmissing").hide();
+            }
+
             return result;
         },
 
