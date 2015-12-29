@@ -1,11 +1,8 @@
-.speasyforms-container {
-    margin-right: 3px;
+.speasyforms-container[data-containertype='Tabs'],
+.speasyforms-container[data-containertype='Accordion'],
+.speasyforms-container[data-containertype='Columns'] {
+    width: 95%;
 }
-    .speasyforms-container[data-containertype='Tabs'],
-    .speasyforms-container[data-containertype='Accordion'],
-    .speasyforms-container[data-containertype='Columns'] {
-        width: 95%;
-    }
 
 div.speasyforms-tabs, div.speasyforms-accordion {
     margin-top: 10px;
