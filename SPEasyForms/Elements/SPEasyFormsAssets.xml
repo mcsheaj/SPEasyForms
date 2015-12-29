@@ -11,6 +11,7 @@
         <File Path="SPEasyFormsAssets\buttons.png" Url="buttons.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\SPEasyForms16x16.png" Url="SPEasyForms16x16.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\SPEasyForms32x32.png" Url="SPEasyForms32x32.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\stars.png" Url="stars.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\toolbar.png" Url="toolbar.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
     <Module Name="SPEasyFormsAssetsCssRedmond" Url="Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-redmond">
@@ -248,6 +249,7 @@
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" Url="jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" Url="jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js" Url="jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.starRatingAdapter.js" Url="jquery.SPEasyForms.adapterCollection.starRatingAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.js" Url="jquery.cleditor.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.sharepoint.js" Url="jquery.cleditor.sharepoint.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.xhtml.js" Url="jquery.cleditor.xhtml.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

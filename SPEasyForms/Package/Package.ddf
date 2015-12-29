@@ -47,6 +47,7 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js
+..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.starRatingAdapter.js
 
 ..\Elements\SPEasyFormsAssets\Css\speasyforms.css
 ..\Elements\SPEasyFormsAssets\Css\jquery.cleditor.css
@@ -55,6 +56,7 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\Css\images\SPEasyForms16x16.png
 ..\Elements\SPEasyFormsAssets\Css\images\SPEasyForms32x32.png
 ..\Elements\SPEasyFormsAssets\Css\images\toolbar.png
+..\Elements\SPEasyFormsAssets\Css\images\stars.png
 
 ..\Elements\SPEasyFormsAssets\Help\speasyforms_help.aspx
 

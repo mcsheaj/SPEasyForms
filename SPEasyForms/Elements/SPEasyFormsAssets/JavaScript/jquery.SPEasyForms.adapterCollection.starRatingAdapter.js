@@ -36,8 +36,7 @@
                 if (visibilityRuleCollection.getFormType(opt) === "display") {
                     if ($("#" + opt.adapter.columnNameInternal + "Stars").length === 0) {
                         var td = rowInfo.row.find("td.ms-formbody");
-                        var h3 = "<h3 class='ms-standardheader'>" + td.find("h3").html() + "</h3>";
-                        td.html("<div id='" + opt.adapter.columnNameInternal + "Stars' class='speasyforms-stars'>").prepend(h3);
+                        td.html("<div id='" + opt.adapter.columnNameInternal + "Stars' class='speasyforms-stars'>");
                         $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (30 * value) + "px");
                     }
                 }

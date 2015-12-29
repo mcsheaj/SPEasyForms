@@ -138,6 +138,8 @@
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.starRatingAdapter.js" />
+        <ElementFile Location="SPEasyFormsAssets\stars.png" />
 
         <ElementFile Location="SPEasyFormsAssets\speasyforms_help.aspx" />
         

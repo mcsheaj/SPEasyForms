@@ -24,6 +24,7 @@ table.speasyforms-columns, table.speasyforms-columns h3.ms-standardheader, table
 .speasyforms-columnheader {
     margin-bottom: 5px;
     padding-bottom: 0;
+    font-weight: bold;
 }
 table.speasyforms-columns td {
     vertical-align: top;
@@ -52,7 +53,7 @@ h3.speasyforms-accordionvalidationerror {
 .speasyforms-stars {
     width: 165px;
     height: 30px;
-    background-image: url(stars.png);
+    background-image: url(images/stars.png);
     background-position: left top;
 }
 

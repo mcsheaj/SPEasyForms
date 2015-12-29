@@ -37,6 +37,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Elements\SPEasyFormsAssets\Css\images\buttons.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Css\images\stars.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\images\toolbar.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-bg_diagonals-medium_20_832ebf_40x40.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\jquery-ui-lilac\images\ui-bg_gloss-wave_45_5b0679_500x100.png" />
@@ -280,7 +281,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.columns.js" />
-    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.js.bundle" />
+    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.js.bundle">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.min.js.map">
       <DependentUpon>jquery_SPEasyForms.min.js</DependentUpon>
     </None>
