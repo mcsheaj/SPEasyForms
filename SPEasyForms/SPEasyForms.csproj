@@ -241,6 +241,7 @@
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.defaultContainer.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.tabs.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.wizard.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.sharePoinFieldRows.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.js" />

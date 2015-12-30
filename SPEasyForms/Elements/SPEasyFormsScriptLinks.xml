@@ -87,6 +87,11 @@
     />
     <CustomAction
        Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript/jquery.SPEasyForms.containerCollection.wizard.js"
+       Sequence="57224"
+    />
+    <CustomAction
+       Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript/jquery.SPEasyForms.visibilityRuleCollection.js"
        Sequence="57226"
     />

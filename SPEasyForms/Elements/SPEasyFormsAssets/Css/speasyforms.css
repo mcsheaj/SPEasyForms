@@ -84,3 +84,15 @@ h3.speasyforms-accordionvalidationerror {
     font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;
     font-size: 0.9rem;
 }
+
+div.speasyforms-wizard-outer {
+    margin: 10px;
+}
+
+h3.speasyforms-wizard {
+    padding: 5px;
+}
+
+div.speasyforms-wizard {
+    padding: 10px;
+}

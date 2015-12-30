@@ -614,7 +614,7 @@
                     }
                 },
                 autoOpen: false,
-                width: 750
+                width: 800
             };
             $('#conditonalVisibilityRulesDialog').dialog(conditionalVisibilityOpts);
 
