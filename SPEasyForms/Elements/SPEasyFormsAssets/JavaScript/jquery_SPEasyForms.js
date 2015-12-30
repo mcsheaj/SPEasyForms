@@ -37669,7 +37669,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             opt.result = [];
 
             // create a div to hold the container
-            opt.divId = "spEasyFormsWizardDiv" + opt.index;
+            opt.divId = "spEasyFormsWizardDiv" + opt.currentContainerLayout.index;
             var outerDiv = $("<div/>", {
                 "id": opt.divId,
                 "class": "speasyforms-wizard-outer ui-widget-content ui-corner-all",
@@ -37716,13 +37716,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         // second stage transform, this is called after visibility rules and adapters are applied
         postTransform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var headerSelector = "#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected";
+            var headerSelector = "#spEasyFormsWizardDiv" + opt.currentContainerLayout.index + " h3.speasyforms-wizard-selected";
             if ($(headerSelector).length === 0) {
 
                 // calculate the width and height of the pages
                 var width = 400;
                 var height = 35;
-                var outerDiv = $("#spEasyFormsWizardDiv" + opt.index);
+                var outerDiv = $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index);
                 outerDiv.children("div.speasyforms-wizard").each(function () {
                     if (($(this).width() + 100) > width) {
                         width = $(this).width() + 100;
@@ -37754,7 +37754,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             // check if there are validation errors on the container
-            var outerDiv = $("#spEasyFormsWizardDiv" + opt.index);
+            var outerDiv = $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index);
             outerDiv.children("h3.speasyforms-wizard").removeClass("speasyforms-accordionvalidationerror");
             var errorDivs = outerDiv.children("div.speasyforms-wizard").children("div[data-speasyforms-validationerror='1']");
             if (errorDivs.length > 0) {
@@ -37810,14 +37810,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             // handle previous click event
             $("#" + opt.divId + "Previous").button().click(function () {
-                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected");
+                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index + " h3.speasyforms-wizard-selected");
                 wizard.selectPrevious(opt);
                 return false;
             });
 
             // handle next click event
             $("#" + opt.divId + "Next").button().click(function () {
-                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index + " h3.speasyforms-wizard-selected");
+                opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index + " h3.speasyforms-wizard-selected");
                 wizard.selectNext(opt);
                 return false;
             });
@@ -37891,7 +37891,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         // is a VISIBLE next or previous page.
         setNextPrevVisibility: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
-            opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.index +
+            opt.selectedHeader = $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index +
                 " h3.speasyforms-wizard-selected");
             var tmp = this.getPrevious(opt);
             if (!tmp || tmp.length === 0) {
