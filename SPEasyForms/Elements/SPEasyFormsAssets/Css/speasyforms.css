@@ -108,3 +108,9 @@ table.speasyforms-fieldcollection {
     table.speasyforms-fieldcollection td {
         padding: 3px 0 !important;
     }
+
+.speasyforms-container .speasyforms-container, 
+div.speasyforms-tabs {
+    width: 95%;
+    margin: 0 auto;
+}
