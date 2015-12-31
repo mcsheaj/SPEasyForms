@@ -32995,6 +32995,8 @@ ssw_init = function (window, document) {
 spefjQuery = jQuery.noConflict(true);
 
 /* jshint -W098 */
+
+
 function shouldSPEasyFormsRibbonButtonBeEnabled() {
     if (spefjQuery.spEasyForms.isConfigurableList()) {
         return true;
@@ -37153,7 +37155,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = [];
-            opt.table = $("<table role='presentation' id='" + opt.collectionType + "Table" + opt.collectionIndex + "' class='speasyforms-fieldcollection " + opt.tableClass + "' cellspacing='5' width='100%'></table>");
+            opt.table = $("<table role='presentation' id='" + opt.collectionType + "Table" + opt.collectionIndex + "' class='speasyforms-fieldcollection " + opt.tableClass + "'></table>");
             opt.currentContainerParent.append(opt.table);
 
             $.each(opt.fieldCollection.fields, function (fieldIdx, field) {
@@ -37425,7 +37427,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.collectionType = "columns";
                 opt.fieldCollection = fieldCollection;
                 opt.tableClass = "speasyforms-columncell";
-                opt.headerOnTop = true;
+                if (opt.currentContainerLayout.fieldCollections.length > 1) {
+                    opt.headerOnTop = true;
+                }
 
                 tableRow.append(opt.parentElement);
 
@@ -37745,6 +37749,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         }
                     }
                 });
+
+                if (!selected) {
+                    outerDiv.parent().attr("data-speasyformsempty", "1").hide();
+                }
 
             }
             this.setNextPrevVisibility(opt);
