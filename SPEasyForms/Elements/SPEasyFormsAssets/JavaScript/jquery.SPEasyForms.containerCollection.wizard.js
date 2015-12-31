@@ -99,6 +99,10 @@
                     }
                 });
 
+                if (!selected) {
+                    outerDiv.parent().attr("data-speasyformsempty", "1").hide();
+                }
+
             }
             this.setNextPrevVisibility(opt);
         },

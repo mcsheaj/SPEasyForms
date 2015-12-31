@@ -38,7 +38,9 @@
                 opt.collectionType = "columns";
                 opt.fieldCollection = fieldCollection;
                 opt.tableClass = "speasyforms-columncell";
-                opt.headerOnTop = true;
+                if (opt.currentContainerLayout.fieldCollections.length > 1) {
+                    opt.headerOnTop = true;
+                }
 
                 tableRow.append(opt.parentElement);
 

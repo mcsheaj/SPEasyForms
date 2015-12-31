@@ -21,7 +21,7 @@
         transform: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = [];
-            opt.table = $("<table role='presentation' id='" + opt.collectionType + "Table" + opt.collectionIndex + "' class='speasyforms-fieldcollection " + opt.tableClass + "' cellspacing='5' width='100%'></table>");
+            opt.table = $("<table role='presentation' id='" + opt.collectionType + "Table" + opt.collectionIndex + "' class='speasyforms-fieldcollection " + opt.tableClass + "'></table>");
             opt.currentContainerParent.append(opt.table);
 
             $.each(opt.fieldCollection.fields, function (fieldIdx, field) {

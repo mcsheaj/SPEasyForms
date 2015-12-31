@@ -240,6 +240,7 @@
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.baseContainer.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.defaultContainer.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.stack.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.tabs.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.wizard.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.sharePoinFieldRows.js" />

@@ -82,6 +82,11 @@
     />
     <CustomAction
        Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript/jquery.SPEasyForms.containerCollection.stack.js"
+       Sequence="57218"
+    />
+    <CustomAction
+       Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript/jquery.SPEasyForms.containerCollection.tabs.js"
        Sequence="57221"
     />

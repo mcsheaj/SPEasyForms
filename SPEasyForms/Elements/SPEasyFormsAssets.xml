@@ -242,6 +242,7 @@
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.fieldCollection.js" Url="jquery.SPEasyForms.containerCollection.fieldCollection.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.accordion.js" Url="jquery.SPEasyForms.containerCollection.accordion.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.columns.js" Url="jquery.SPEasyForms.containerCollection.columns.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.stack.js" Url="jquery.SPEasyForms.containerCollection.stack.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.tabs.js" Url="jquery.SPEasyForms.containerCollection.tabs.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.wizard.js" Url="jquery.SPEasyForms.containerCollection.wizard.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.visibilityRuleCollection.js" Url="jquery.SPEasyForms.visibilityRuleCollection.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

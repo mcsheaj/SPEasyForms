@@ -1,53 +1,56 @@
-.speasyforms-container[data-containertype='Tabs'],
-.speasyforms-container[data-containertype='Accordion'],
-.speasyforms-container[data-containertype='Columns'] {
-    width: 95%;
-}
-
 div.speasyforms-tabs, div.speasyforms-accordion {
     margin-top: 10px;
-    margin-bottom: 20px;   
+    margin-bottom: 20px;
 }
+
 .ui-tabs-nav {
     width: 99% !important;
 }
+
 .ui-tabs .ui-tabs-panel {
     padding: .7em .7em;
 }
+
 .speasyforms-columncell .ms-long {
     width: 225px;
 }
+
 table.speasyforms-columns, table.speasyforms-columns h3.ms-standardheader, table.speasyforms-columns td.ms-formbody {
     margin: 0;
     padding: 0;
 }
+
 .speasyforms-columnheader {
     margin-bottom: 5px;
     padding-bottom: 0;
     font-weight: bold;
 }
+
 table.speasyforms-columns td {
     vertical-align: top;
 }
+
 a.speasyforms-tabvalidationerror {
     border-top: 2px dashed red !important;
     border-left: 2px dashed red !important;
     border-right: 2px dashed red !important;
 }
+
 h3.speasyforms-accordionvalidationerror {
     border: 2px dashed red !important;
 }
+
 .ms-formlabel {
     padding: 0;
 }
+
 .ms-formbody {
     padding: .1em;
 }
+
 #spEasyFormsContainersPre,
 #spEasyFormsContainersPost {
-    width: 100%;
-    min-width: 500px;
-    max-width: 1024px;
+    width: 800px;
 }
 
 .speasyforms-stars {
@@ -96,3 +99,12 @@ h3.speasyforms-wizard {
 div.speasyforms-wizard {
     padding: 10px;
 }
+
+table.speasyforms-fieldcollection {
+    border-spacing: 5px;
+    width: 100%;
+}
+
+    table.speasyforms-fieldcollection td {
+        padding: 3px 0 !important;
+    }
