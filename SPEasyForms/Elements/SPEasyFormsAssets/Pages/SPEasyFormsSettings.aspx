@@ -657,7 +657,7 @@
         }
 
         .speasyforms-nestedsortable-error {
-            background: #fbe3e4;
+            background: #fc87a5;
             border-color: transparent;
         }
 
