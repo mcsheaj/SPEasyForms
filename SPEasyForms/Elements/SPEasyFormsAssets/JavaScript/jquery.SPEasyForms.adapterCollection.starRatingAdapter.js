@@ -37,7 +37,7 @@
                     if ($("#" + opt.adapter.columnNameInternal + "Stars").length === 0) {
                         var td = rowInfo.row.find("td.ms-formbody");
                         td.html("<div id='" + opt.adapter.columnNameInternal + "Stars' class='speasyforms-stars'>");
-                        $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (30 * value) + "px");
+                        $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (20 * value) + "px");
                     }
                 }
                 else {
@@ -47,13 +47,13 @@
                         input.parent().prepend("<div id='" + opt.adapter.columnNameInternal + "Stars' class='speasyforms-stars'>" +
                             "<div id='" + opt.adapter.columnNameInternal + "StarsSlider' class='speasyforms-starsslider'></div></div>");
 
-                        $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (30 * value) + "px");
+                        $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (20 * value) + "px");
 
                         $("#" + opt.adapter.columnNameInternal + "StarsSlider").click(function (e) {
                             var posX = $(this).offset().left;
-                            var stars = Math.floor((e.pageX - posX + 15) / 30);
+                            var stars = Math.floor((e.pageX - posX + 15) / 20);
                             input.val(stars);
-                            $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (30 * stars) + "px");
+                            $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (20 * stars) + "px");
                         });
                     }
                 }

@@ -54,15 +54,16 @@ h3.speasyforms-accordionvalidationerror {
 }
 
 .speasyforms-stars {
-    width: 165px;
-    height: 30px;
+    width: 110px;
+    height: 20px;
     background-image: url(images/stars.png);
     background-position: left top;
+    background-size: 110px 120px;
 }
 
 .speasyforms-starsslider {
-    width: 165px;
-    height: 30px;
+    width: 110px;
+    height: 20px;
     background: transparent;
     border: none;
 }

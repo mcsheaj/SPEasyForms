@@ -823,7 +823,7 @@
 
             if (currentGalleryTheme) {
                 $("input:radio[value='gallery']").prop("checked", "checked");
-                $("#selGalleryTheme").val("smoothness");
+                $("#selGalleryTheme").val(currentGalleryTheme);
                 $("#inpCustomTheme").hide();
                 $("#selGalleryTheme").show();
             }
