@@ -1669,16 +1669,16 @@ instance:
             <div>&nbsp;</div>
             <div>.speasyforms-container[data-containerindex=’3’<span style="color: #a31515">]</span><span style="color: #a31515">&nbsp;</span></div>
             <div>&nbsp;</div>
-            <ol>
-                <li>will also target the same specific columns container, but the index 
+            <div>
+                will also target the same specific columns container, but the index 
 is assigned by the editor and may change if you reconfigure the form, so
  if you use this kind of selector you’ll need to check every time you 
 reconfigure your form and possibly update your
  CSS, which is a pain. But the container type and name are two things 
 that you control; you set them when you configure the form and they’ll 
 only change if you explicitly change them, so they’re safer selectors 
-for target container types and specific containers.</li>
-            </ol>
+for target container types and specific containers.
+            </div>
             <div>&nbsp;</div>
             <div>
                 If you want to exceed the capabilities of the rich text editor, but
