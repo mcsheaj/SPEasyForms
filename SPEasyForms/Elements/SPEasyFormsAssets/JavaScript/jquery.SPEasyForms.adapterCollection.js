@@ -165,6 +165,17 @@
             $("#tabs-min-adapters").show();
         },
 
+        getSupportedTypes: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var result = [];
+            $.each(adapterCollection.adapterImplementations, function (idx, impl) {
+                if ($.inArray(opt.spFieldType, impl.supportedTypes(opt)) >= 0) {
+                    result.push(impl.type);
+                }
+            });
+            return result;
+        },
+
         preSaveItem: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = true;

@@ -1068,6 +1068,13 @@
             tr.find(".speasyforms-fieldinternal").html(r.internalName);
             tr.find(".speasyforms-fieldtype").html(r.spFieldType);
 
+            opt.spFieldType = r.spFieldType;
+            if ($.spEasyForms.adapterCollection.getSupportedTypes(opt).length === 0) {
+                var adapterIcon = tr.find(".speasyforms-icon-adapter");
+                adapterIcon.parent().width(adapterIcon.width);
+                adapterIcon.hide();
+            }
+
             return tr;
         },
 

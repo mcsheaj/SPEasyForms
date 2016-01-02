@@ -36755,6 +36755,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             tr.find(".speasyforms-fieldinternal").html(r.internalName);
             tr.find(".speasyforms-fieldtype").html(r.spFieldType);
 
+            opt.spFieldType = r.spFieldType;
+            if ($.spEasyForms.adapterCollection.getSupportedTypes(opt).length === 0) {
+                var adapterIcon = tr.find(".speasyforms-icon-adapter");
+                adapterIcon.parent().width(adapterIcon.width);
+                adapterIcon.hide();
+            }
+
             return tr;
         },
 
@@ -39324,6 +39331,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
             $(".tabs-min").hide();
             $("#tabs-min-adapters").show();
+        },
+
+        getSupportedTypes: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var result = [];
+            $.each(adapterCollection.adapterImplementations, function (idx, impl) {
+                if ($.inArray(opt.spFieldType, impl.supportedTypes(opt)) >= 0) {
+                    result.push(impl.type);
+                }
+            });
+            return result;
         },
 
         preSaveItem: function (options) {
