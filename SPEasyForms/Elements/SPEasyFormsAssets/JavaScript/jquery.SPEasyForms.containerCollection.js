@@ -173,6 +173,7 @@
 
             if (!this.initialized || opt.refresh & refresh.form) {
                 this.transform(opt);
+                this.postTransform(opt);
                 this.wireContainerEvents(opt);
             }
 

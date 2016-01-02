@@ -6,7 +6,7 @@
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
-/* global spefjQuery, _spPageContextInfo */
+/* global spefjQuery, _spPageContextInfo, SP */
 (function ($, undefined) {
 
     ////////////////////////////////////////////////////////////////////////////
@@ -120,19 +120,22 @@
         },
 
         resizeModalDialog: function () {
-            SP.UI.ModalDialog.get_childDialog().autoSize();
-            var dlgContent = $(".ms-dlgContent", window.parent.document);
-            var top = ($(window.top).height() - dlgContent.outerHeight()) / 2;
-            var left = ($(window.top).width() - dlgContent.outerWidth()) / 2;
-            dlgContent.css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
-            dlgContent.prev().css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
+            var dlg = SP.UI.ModalDialog.get_childDialog();
+            if (dlg !== null) {
+                SP.UI.ModalDialog.get_childDialog().autoSize();
+                var dlgContent = $(".ms-dlgContent", window.parent.document);
+                var top = ($(window.top).height() - dlgContent.outerHeight()) / 2;
+                var left = ($(window.top).width() - dlgContent.outerWidth()) / 2;
+                dlgContent.css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
+                dlgContent.prev().css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
 
-            var dlgFrame = $(".ms-dlgFrame", window.parent.document);
-            if (dlgFrame.height() > $(window.parent).height()) {
-                dlgFrame.height($(window.parent).height());
-            }
-            if (dlgFrame.width() > $(window.parent).width()) {
-                dlgFrame.width($(window.parent).width());
+                var dlgFrame = $(".ms-dlgFrame", window.parent.document);
+                if (dlgFrame.height() > $(window.parent).height()) {
+                    dlgFrame.height($(window.parent).height());
+                }
+                if (dlgFrame.width() > $(window.parent).width()) {
+                    dlgFrame.width($(window.parent).width());
+                }
             }
         }
     };

@@ -155,6 +155,7 @@
                             var newLayout = {
                                 name: $("#settingsContainerName").val(),
                                 containerType: $("#settingsContainerType").val(),
+                                index: $.spEasyForms.containerCollection.nextContainerIndex++,
                                 fieldCollections: []
                             };
                             if (!newLayout.name) {
@@ -167,6 +168,7 @@
                                     newLayout.fieldCollections.push({
                                         name: name,
                                         containerType: "FieldCollection",
+                                        index: $.spEasyForms.containerCollection.nextContainerIndex++,
                                         fields: []
                                     });
                                 }
@@ -208,6 +210,7 @@
                                     opt.currentContainerLayout = {
                                         name: name.trim(),
                                         containerType: "FieldCollection",
+                                        index: $.spEasyForms.containerCollection.nextContainerIndex++,
                                         fields: []
                                     };
                                     var table = containerCollection.createFieldCollection(opt);

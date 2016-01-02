@@ -33576,7 +33576,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
-/* global spefjQuery, _spPageContextInfo */
+/* global spefjQuery, _spPageContextInfo, SP */
 (function ($, undefined) {
 
     ////////////////////////////////////////////////////////////////////////////
@@ -33690,19 +33690,22 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         resizeModalDialog: function () {
-            SP.UI.ModalDialog.get_childDialog().autoSize();
-            var dlgContent = $(".ms-dlgContent", window.parent.document);
-            var top = ($(window.top).height() - dlgContent.outerHeight()) / 2;
-            var left = ($(window.top).width() - dlgContent.outerWidth()) / 2;
-            dlgContent.css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
-            dlgContent.prev().css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
+            var dlg = SP.UI.ModalDialog.get_childDialog();
+            if (dlg !== null) {
+                SP.UI.ModalDialog.get_childDialog().autoSize();
+                var dlgContent = $(".ms-dlgContent", window.parent.document);
+                var top = ($(window.top).height() - dlgContent.outerHeight()) / 2;
+                var left = ($(window.top).width() - dlgContent.outerWidth()) / 2;
+                dlgContent.css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
+                dlgContent.prev().css({ top: (top > 0 ? top : 0), left: (left > 0 ? left : 0) });
 
-            var dlgFrame = $(".ms-dlgFrame", window.parent.document);
-            if (dlgFrame.height() > $(window.parent).height()) {
-                dlgFrame.height($(window.parent).height());
-            }
-            if (dlgFrame.width() > $(window.parent).width()) {
-                dlgFrame.width($(window.parent).width());
+                var dlgFrame = $(".ms-dlgFrame", window.parent.document);
+                if (dlgFrame.height() > $(window.parent).height()) {
+                    dlgFrame.height($(window.parent).height());
+                }
+                if (dlgFrame.width() > $(window.parent).width()) {
+                    dlgFrame.width($(window.parent).width());
+                }
             }
         }
     };
@@ -35855,6 +35858,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             if (!this.initialized || opt.refresh & refresh.form) {
                 this.transform(opt);
+                this.postTransform(opt);
                 this.wireContainerEvents(opt);
             }
 
@@ -36979,6 +36983,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             var newLayout = {
                                 name: $("#settingsContainerName").val(),
                                 containerType: $("#settingsContainerType").val(),
+                                index: $.spEasyForms.containerCollection.nextContainerIndex++,
                                 fieldCollections: []
                             };
                             if (!newLayout.name) {
@@ -36991,6 +36996,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                     newLayout.fieldCollections.push({
                                         name: name,
                                         containerType: "FieldCollection",
+                                        index: $.spEasyForms.containerCollection.nextContainerIndex++,
                                         fields: []
                                     });
                                 }
@@ -37032,6 +37038,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                     opt.currentContainerLayout = {
                                         name: name.trim(),
                                         containerType: "FieldCollection",
+                                        index: $.spEasyForms.containerCollection.nextContainerIndex++,
                                         fields: []
                                     };
                                     var table = containerCollection.createFieldCollection(opt);
