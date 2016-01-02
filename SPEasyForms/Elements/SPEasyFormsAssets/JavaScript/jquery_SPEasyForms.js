@@ -32995,8 +32995,6 @@ ssw_init = function (window, document) {
 spefjQuery = jQuery.noConflict(true);
 
 /* jshint -W098 */
-
-
 function shouldSPEasyFormsRibbonButtonBeEnabled() {
     if (spefjQuery.spEasyForms.isConfigurableList()) {
         return true;
@@ -34541,7 +34539,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 success: function(data) {
                     var resultText = data;
                     var txt = resultText.replace(/fieldGroup/g, "fieldCollection").
-                        replace(/childColumnInternal/g, "columnNameInternal");
+                        replace(/childColumnInternal/g, "columnNameInternal").
+                        replace(/LookupDetailAdapter/g, "Lookup Detail").
+                        replace(/DefaultToCurrentUser/g, "Default To Current User");
                     opt.currentConfig = $.spEasyForms.utilities.parseJSON(txt);
                     opt.currentConfig = spContext.layout2Config(opt);
                 },
@@ -36501,7 +36501,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             if (currentGalleryTheme) {
                 $("input:radio[value='gallery']").prop("checked", "checked");
-                $("#selGalleryTheme").val("smoothness");
+                $("#selGalleryTheme").val(currentGalleryTheme);
                 $("#inpCustomTheme").hide();
                 $("#selGalleryTheme").show();
             }
@@ -37672,12 +37672,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.result = [];
 
+            if ($.spEasyForms.visibilityRuleCollection.getFormType(opt) === "display") {
+                return opt.result;
+            }
+
             // create a div to hold the container
             opt.divId = "spEasyFormsWizardDiv" + opt.currentContainerLayout.index;
             var outerDiv = $("<div/>", {
                 "id": opt.divId,
                 "class": "speasyforms-wizard-outer ui-widget-content ui-corner-all",
-                 "role": "tablist"
+                "role": "tablist"
             });
             opt.currentContainerParent.append(outerDiv);
 
@@ -39872,7 +39876,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
     /* Field control adapter for default to current user on user fields */
     $.spEasyForms.defaultToCurrentUserAdapter = {
-        type: "DefaultToCurrentUser",
+        type: "Default To Current User",
 
         // return an array of field types to which this adapter can be applied
         supportedTypes: function () {
@@ -40012,7 +40016,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
     /* Field control adapter for default to current user on user fields */
     $.spEasyForms.lookupDetailAdapter = {
-        type: "LookupDetailAdapter",
+        type: "Lookup Detail",
 
         // return an array of field types to which this adapter can be applied
         supportedTypes: function () {
@@ -40207,7 +40211,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if ($("#" + opt.adapter.columnNameInternal + "Stars").length === 0) {
                         var td = rowInfo.row.find("td.ms-formbody");
                         td.html("<div id='" + opt.adapter.columnNameInternal + "Stars' class='speasyforms-stars'>");
-                        $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (30 * value) + "px");
+                        $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (20 * value) + "px");
                     }
                 }
                 else {
@@ -40217,13 +40221,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         input.parent().prepend("<div id='" + opt.adapter.columnNameInternal + "Stars' class='speasyforms-stars'>" +
                             "<div id='" + opt.adapter.columnNameInternal + "StarsSlider' class='speasyforms-starsslider'></div></div>");
 
-                        $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (30 * value) + "px");
+                        $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (20 * value) + "px");
 
                         $("#" + opt.adapter.columnNameInternal + "StarsSlider").click(function (e) {
                             var posX = $(this).offset().left;
-                            var stars = Math.floor((e.pageX - posX + 15) / 30);
+                            var stars = Math.floor((e.pageX - posX + 10) / 20);
                             input.val(stars);
-                            $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (30 * stars) + "px");
+                            $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (20 * stars) + "px");
                         });
                     }
                 }

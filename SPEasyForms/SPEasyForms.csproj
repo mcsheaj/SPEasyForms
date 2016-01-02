@@ -221,6 +221,20 @@
     <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_094.png" />
     <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_095.png" />
     <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_096.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_097.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_098.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_099.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_100.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_101.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_102.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_103.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_104.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_105.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_106.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_107.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_108.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_109.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_110.png" />
     <Content Include="Elements\SPEasyFormsAssets\Help\speasyforms_help.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>

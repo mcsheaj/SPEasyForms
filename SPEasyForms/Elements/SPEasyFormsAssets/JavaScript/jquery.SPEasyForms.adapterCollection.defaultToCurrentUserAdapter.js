@@ -19,7 +19,7 @@
 
     /* Field control adapter for default to current user on user fields */
     $.spEasyForms.defaultToCurrentUserAdapter = {
-        type: "DefaultToCurrentUser",
+        type: "Default To Current User",
 
         // return an array of field types to which this adapter can be applied
         supportedTypes: function () {

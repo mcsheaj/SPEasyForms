@@ -21,12 +21,16 @@
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             opt.result = [];
 
+            if ($.spEasyForms.visibilityRuleCollection.getFormType(opt) === "display") {
+                return opt.result;
+            }
+
             // create a div to hold the container
             opt.divId = "spEasyFormsWizardDiv" + opt.currentContainerLayout.index;
             var outerDiv = $("<div/>", {
                 "id": opt.divId,
                 "class": "speasyforms-wizard-outer ui-widget-content ui-corner-all",
-                 "role": "tablist"
+                "role": "tablist"
             });
             opt.currentContainerParent.append(outerDiv);
 

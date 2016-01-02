@@ -222,6 +222,20 @@
         <File Path="SPEasyFormsAssets\Download_094.png" Url="Download_094.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\Download_095.png" Url="Download_095.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\Download_096.png" Url="Download_096.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_097.png" Url="Download_097.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_098.png" Url="Download_098.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_099.png" Url="Download_099.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_100.png" Url="Download_100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_101.png" Url="Download_101.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_102.png" Url="Download_102.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_103.png" Url="Download_103.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_104.png" Url="Download_104.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_105.png" Url="Download_105.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_106.png" Url="Download_106.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_107.png" Url="Download_107.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_108.png" Url="Download_108.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_109.png" Url="Download_109.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_110.png" Url="Download_110.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
     <Module Name="SPEasyFormsAssetsJavaScript" Url="Style Library/SPEasyFormsAssets/2015.01.beta/JavaScript">
         <File Path="SPEasyFormsAssets\MicrosoftAjax.js" Url="MicrosoftAjax.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

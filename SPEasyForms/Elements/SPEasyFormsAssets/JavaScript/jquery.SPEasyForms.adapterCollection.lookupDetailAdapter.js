@@ -19,7 +19,7 @@
 
     /* Field control adapter for default to current user on user fields */
     $.spEasyForms.lookupDetailAdapter = {
-        type: "LookupDetailAdapter",
+        type: "Lookup Detail",
 
         // return an array of field types to which this adapter can be applied
         supportedTypes: function () {

@@ -585,7 +585,9 @@
                 success: function(data) {
                     var resultText = data;
                     var txt = resultText.replace(/fieldGroup/g, "fieldCollection").
-                        replace(/childColumnInternal/g, "columnNameInternal");
+                        replace(/childColumnInternal/g, "columnNameInternal").
+                        replace(/LookupDetailAdapter/g, "Lookup Detail").
+                        replace(/DefaultToCurrentUser/g, "Default To Current User");
                     opt.currentConfig = $.spEasyForms.utilities.parseJSON(txt);
                     opt.currentConfig = spContext.layout2Config(opt);
                 },

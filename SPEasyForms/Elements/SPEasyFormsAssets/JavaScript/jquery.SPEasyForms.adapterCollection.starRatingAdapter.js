@@ -51,7 +51,7 @@
 
                         $("#" + opt.adapter.columnNameInternal + "StarsSlider").click(function (e) {
                             var posX = $(this).offset().left;
-                            var stars = Math.floor((e.pageX - posX + 15) / 20);
+                            var stars = Math.floor((e.pageX - posX + 10) / 20);
                             input.val(stars);
                             $("#" + opt.adapter.columnNameInternal + "Stars").css("background-position", "0px " + (20 * stars) + "px");
                         });

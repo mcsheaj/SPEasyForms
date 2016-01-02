@@ -780,6 +780,10 @@
             font-weight: normal;
             margin: 4px;
         }
+
+        div.speasyforms-wizard {
+            max-width: 780px;
+        }
     </style>
 </head>
 <body>
