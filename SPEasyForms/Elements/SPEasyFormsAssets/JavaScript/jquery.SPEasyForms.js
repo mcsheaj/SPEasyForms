@@ -10,7 +10,7 @@
  * @optional ssw Session Storage Wrapper - Cross Document Transport of
  *    JavaScript Data; used to cache the context across pages if available
  *    and options.useCache === true
- * @copyright 2014-2015 Joe McShea
+ * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */

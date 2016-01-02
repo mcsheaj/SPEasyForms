@@ -2,7 +2,7 @@
  * SPEasyForms.sharePointFieldRows - object to parse field rows into a map.
  *
  * @requires jQuery.SPEasyForms.2015.01.beta 
- * @copyright 2014-2015 Joe McShea
+ * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
