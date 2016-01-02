@@ -72,6 +72,7 @@
                         removeClass("ui-corner-all");
                     $(this).next().show();
                     $.spEasyForms.containerCollection.postTransform(opt);
+                    $.spEasyForms.utilities.resizeModalDialog();
                 }
             });
 

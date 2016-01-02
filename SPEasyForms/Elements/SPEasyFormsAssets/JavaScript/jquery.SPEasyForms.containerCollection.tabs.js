@@ -71,6 +71,7 @@
                     div.tabs({
                         active: $(this).parent().index()
                     });
+                    $.spEasyForms.utilities.resizeModalDialog();
                 }
             });
 

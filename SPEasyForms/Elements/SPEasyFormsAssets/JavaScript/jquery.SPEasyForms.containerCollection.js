@@ -244,6 +244,8 @@
                 return this.highlightValidationErrors(opt);
             }
 
+            $.spEasyForms.utilities.resizeModalDialog();
+
             return true;
         },
 
