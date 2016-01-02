@@ -2500,8 +2500,9 @@ is filled out. The data is not updated when
  the data in the lookup list changes; it is only updated when the 
 selected value of the lookup field in the list item changes.
             </p>
-            An example of how this might be used is a poor man’s shopping cart. Say you had an
-            <strong>Inventory</strong> list that looks like:
+            <p>
+                An example of how this might be used is a poor man’s shopping cart. Say you had a list of inventory items that looks like:
+            </p>
             <p><a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532901">
                 <img title="image_thumb7" alt="image_thumb7" src="images/Download_093.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="383" width="599"></a></p>
             <p>And you have a list named <strong>Cart</strong> whose new form looks like:</p>
