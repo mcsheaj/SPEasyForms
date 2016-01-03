@@ -42,7 +42,8 @@
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var index = opt.currentContainerLayout.index;
             var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
-            container.attr("data-speasyforms-speasyformsempty", "1").hide();
+            container.attr("data-speasyformsempty", "1").hide();
+            if (container.children("div.speasyforms-container"))
             container.children("div.speasyforms-container").each(function (idx, current) {
                 if ($(current).attr("data-speasyformsempty") === "0") {
                     container.attr("data-speasyformsempty", "0").show();
