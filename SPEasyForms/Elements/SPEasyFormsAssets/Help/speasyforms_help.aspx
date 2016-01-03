@@ -343,7 +343,6 @@ Discussion Boards) and libraries. The things you can configure fall into
                 Significant performance improvements on the settings page, especially for intense redraw activities like drag and drop. 
                 <li>Updated third party libraries to their latest stable release: jQuery, jQuery-UI, and SPServices. In the case of jQuery and jQuery-UI, that’s the latest 1.x release. </li>
             </ol>
-            <p>There is a full fledged user manual that explains this functionality in nauseating detail, but it's approximately 45 pages.&nbsp; This document is intended to provide a lighter overview of this functionality to get you started with using SPEasyForms quickly. The full manual is installed with the solution and available in the editor from the help button on the ribbon.</p>
             <p>
                 So why is it a beta? Mostly because I haven’t done enough regression 
 testing to feel comfortable calling it production ready. Particularly, 
