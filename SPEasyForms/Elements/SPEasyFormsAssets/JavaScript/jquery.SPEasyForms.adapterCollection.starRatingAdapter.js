@@ -77,6 +77,8 @@
                 modal: true,
                 buttons: {
                     "Add": function () {
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         // add an adapter to the adaptes list and redraw the editor
                         if ($("#starRatingFieldName").text().length > 0) {
                             var result = {
@@ -91,6 +93,8 @@
                         $('#addStarRatingAdapterDialog').dialog("close");
                     },
                     "Remove": function () {
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         // remove the adapter from the adaptes list and redraw the editor
                         if ($("#starRatingFieldName").text().length > 0 &&
                             $("#starRatingFieldName").text() in opt.adapters) {

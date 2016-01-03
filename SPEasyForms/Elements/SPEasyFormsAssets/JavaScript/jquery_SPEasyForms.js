@@ -33726,6 +33726,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 modal: true,
                 buttons: {
                     "Ok": function () {
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         if (opt.relationship.relationshipParentColumn) {
                             $.spEasyForms.adapterCollection.validateRequired({
                                 id: opt.relationship.relationshipParentColumn.id,
@@ -39503,6 +39505,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 modal: true,
                 buttons: {
                     "Ok": function () {
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         adapterCollection.validateRequired({
                             id: "autocompleteFieldSelect",
                             displayName: "Lookup Field"
@@ -39673,6 +39677,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     modal: true,
                     buttons: {
                         "Ok": function () {
+                            opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                            opt.adapters = opt.currentConfig.adapters.def;
                             if (!opt.currentConfig.adapters) {
                                 opt.currentConfig.adapters = {};
                             }
@@ -39981,6 +39987,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 buttons: {
                     "Add": function () {
                         // add an adapter to the adaptes list and redraw the editor
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         if ($("#defaultToCurrentFieldName").text().length > 0) {
                             var result = {
                                 type: defaultToCurrentUserAdapter.type,
@@ -39995,6 +40003,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     },
                     "Remove": function () {
                         // remove the adapter from the adaptes list and redraw the editor
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         if ($("#defaultToCurrentFieldName").text().length > 0 &&
                             $("#defaultToCurrentFieldName").text() in opt.adapters) {
                             delete opt.adapters[$("#defaultToCurrentFieldName").text()];
@@ -40286,6 +40296,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 modal: true,
                 buttons: {
                     "Add": function () {
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         // add an adapter to the adaptes list and redraw the editor
                         if ($("#starRatingFieldName").text().length > 0) {
                             var result = {
@@ -40300,6 +40312,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         $('#addStarRatingAdapterDialog').dialog("close");
                     },
                     "Remove": function () {
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         // remove the adapter from the adaptes list and redraw the editor
                         if ($("#starRatingFieldName").text().length > 0 &&
                             $("#starRatingFieldName").text() in opt.adapters) {

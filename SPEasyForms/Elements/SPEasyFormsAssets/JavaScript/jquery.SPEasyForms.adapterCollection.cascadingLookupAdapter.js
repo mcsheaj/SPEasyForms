@@ -41,6 +41,8 @@
                     modal: true,
                     buttons: {
                         "Ok": function () {
+                            opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                            opt.adapters = opt.currentConfig.adapters.def;
                             if (!opt.currentConfig.adapters) {
                                 opt.currentConfig.adapters = {};
                             }

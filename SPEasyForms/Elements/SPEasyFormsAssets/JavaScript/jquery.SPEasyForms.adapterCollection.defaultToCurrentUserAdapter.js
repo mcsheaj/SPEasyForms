@@ -89,6 +89,8 @@
                 buttons: {
                     "Add": function () {
                         // add an adapter to the adaptes list and redraw the editor
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         if ($("#defaultToCurrentFieldName").text().length > 0) {
                             var result = {
                                 type: defaultToCurrentUserAdapter.type,
@@ -103,6 +105,8 @@
                     },
                     "Remove": function () {
                         // remove the adapter from the adaptes list and redraw the editor
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         if ($("#defaultToCurrentFieldName").text().length > 0 &&
                             $("#defaultToCurrentFieldName").text() in opt.adapters) {
                             delete opt.adapters[$("#defaultToCurrentFieldName").text()];

@@ -58,6 +58,8 @@
                 modal: true,
                 buttons: {
                     "Ok": function () {
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         adapterCollection.validateRequired({
                             id: "autocompleteFieldSelect",
                             displayName: "Lookup Field"

@@ -156,6 +156,8 @@
                 modal: true,
                 buttons: {
                     "Ok": function () {
+                        opt.currentConfig = $.spEasyForms.containerCollection.toConfig(opt);
+                        opt.adapters = opt.currentConfig.adapters.def;
                         if (opt.relationship.relationshipParentColumn) {
                             $.spEasyForms.adapterCollection.validateRequired({
                                 id: opt.relationship.relationshipParentColumn.id,
