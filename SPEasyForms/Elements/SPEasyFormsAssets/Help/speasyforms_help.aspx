@@ -2789,7 +2789,7 @@ current user. It does nothing on the edit or display forms.
 is a graphic of 5 grey or gold stars. In the new or edit form, users can
  choose the rating by clicking on the appropriate star. It is as simple 
 to configure as the default to current user
- adapter, just click the gear icon next to a numeric field and you get 
+ adapter, just click the wrench icon next to a numeric field and you get 
 this dialog prompt:
             </p>
             <p>
