@@ -61,7 +61,7 @@
         body {
             font-family: Verdana, Arial, sans-serif;
             overflow: hidden;
-            margin:0;
+            margin: 0;
         }
 
         table.speasyforms-columns {
@@ -596,7 +596,7 @@
         h2.speasyforms-breadcrumbs {
             padding: 3px;
             color: #666;
-            margin:0;
+            margin: 0;
             font-family: "SegoeUI-SemiLight-final","Segoe UI SemiLight","Segoe UI WPC Semilight","Segoe UI",Segoe,Tahoma,Helvetica,Arial,sans-serif;
             font-size: 1.1em;
             font-weight: normal;
@@ -744,7 +744,7 @@
         }
 
         .ui-widget {
-	        font-size: 1rem !important;
+            font-size: 1rem !important;
         }
 
         #suitBar {
@@ -752,11 +752,11 @@
             padding-left: 10px;
         }
 
-        #suitBar a {
-            font-family: "SegoeUI-SemiLight-final","Segoe UI SemiLight","Segoe UI WPC Semilight","Segoe UI",Segoe,Tahoma,Helvetica,Arial,sans-serif;
-            font-size: 1.8rem;
-            text-decoration: none;
-        }
+            #suitBar a {
+                font-family: "SegoeUI-SemiLight-final","Segoe UI SemiLight","Segoe UI WPC Semilight","Segoe UI",Segoe,Tahoma,Helvetica,Arial,sans-serif;
+                font-size: 1.8rem;
+                text-decoration: none;
+            }
 
         #msCuiTopbar {
             background-color: #eee;
@@ -783,6 +783,46 @@
 
         div.speasyforms-wizard {
             max-width: 780px;
+        }
+
+        li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container
+        {
+            background-color: #ccc;
+        }
+
+        li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-fieldcollection
+        {
+            background-color: #ccc;
+        }
+
+        li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container
+        {
+            background-color: #eee;
+        }
+
+        li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-fieldcollection 
+        {
+            background-color: #eee;
+        }
+
+        li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container
+        {
+            background-color: #ccc;
+        }
+
+        li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-fieldcollection 
+        {
+            background-color: #ccc;
+        }
+
+        li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container
+        {
+            background-color: #eee;
+        }
+
+        li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-container > ol > li.speasyforms-nestedsortable-fieldcollection 
+        {
+            background-color: #eee;
         }
     </style>
 </head>
@@ -953,15 +993,18 @@
                 <div id='tabs-min-settings' class='tabs-min' style='display: none;'>
                     <div class='speasyforms-settingsheader'>jQuery UI Theme</div>
                     <div>
-                        <input type="radio" name="jqueryuitheme" value="none" checked="checked"/> Use Default Theme 
-                        <input type="radio" name="jqueryuitheme" value="gallery" /> Use Gallery Theme 
-                        <input type="radio" name="jqueryuitheme" value="custom"/> Use Custom Theme 
+                        <input type="radio" name="jqueryuitheme" value="none" checked="checked" />
+                        Use Default Theme 
+                        <input type="radio" name="jqueryuitheme" value="gallery" />
+                        Use Gallery Theme 
+                        <input type="radio" name="jqueryuitheme" value="custom" />
+                        Use Custom Theme 
                     </div>
                     <div style="margin-top: 10px; margin-bottom: 10px;">
                         <select id="selGalleryTheme">
                         </select>
-                        <input type="text" id="inpCustomTheme" name="inpCustomTheme" 
-                            value="" title="Enter the full text to a jQuery UI 1.11.x theme." style="display:none; width: 700px;"/>
+                        <input type="text" id="inpCustomTheme" name="inpCustomTheme"
+                            value="" title="Enter the full text to a jQuery UI 1.11.x theme." style="display: none; width: 700px;" />
                     </div>
                     <div>
                         <button id="applyThemeButton">Apply</button>
