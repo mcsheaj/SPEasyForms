@@ -15,6 +15,11 @@ div.speasyforms-tabs, div.speasyforms-accordion {
     width: 225px;
 }
 
+.speasyforms-columncell .ms-rtefield {
+    width: 250px;
+    min-width: 250px;
+}
+
 table.speasyforms-columns, table.speasyforms-columns h3.ms-standardheader, table.speasyforms-columns td.ms-formbody {
     margin: 0;
     padding: 0;
