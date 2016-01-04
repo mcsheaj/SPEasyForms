@@ -43,13 +43,14 @@
             var index = opt.currentContainerLayout.index;
             var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
             container.attr("data-speasyformsempty", "1").hide();
-            if (container.children("div.speasyforms-container"))
-            container.children("div.speasyforms-container").each(function (idx, current) {
-                if ($(current).attr("data-speasyformsempty") === "0") {
-                    container.attr("data-speasyformsempty", "0").show();
-                    return false;
-                }
-            });
+            if (container.children("div.speasyforms-container").length > 0) {
+                container.children("div.speasyforms-container").each(function (idx, current) {
+                    if ($(current).attr("data-speasyformsempty") === "0") {
+                        container.attr("data-speasyformsempty", "0").show();
+                        return false;
+                    }
+                });
+            }
         },
 
         preSaveItem: function (options) {
