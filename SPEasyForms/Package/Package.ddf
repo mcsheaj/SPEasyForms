@@ -175,6 +175,7 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\Help\Images\Download_110.png
 
 ..\Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx
+..\Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.css
 ..\Elements\SPEasyFormsAssets\Pages\menu.png
 
 .Set DestinationDir="SPEasyForms\SPEasyFormsAssets\jquery-ui-redmond"

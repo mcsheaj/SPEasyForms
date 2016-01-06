@@ -294,10 +294,7 @@
             }
 
             if ($("#staticVisibilityRules .speasyforms-fieldmissing").length > 0 && opt.verbose) {
-                $("#visibilityTab").addClass("speasyforms-fieldmissing").addClass("ui-state-error");
-            }
-            else {
-                $("#visibilityTab").removeClass("speasyforms-fieldmissing").addClass("ui-state-error");
+                $("#staticVisibilityRules .speasyforms-fieldmissing").addClass("ui-state-error");
             }
         },
 
@@ -369,16 +366,13 @@
                     "There are currently no rules for this field. Click " +
                     "the plus sign to add one.");
             } else {
-                var table = $(".speasyforms-visibilityrulestabletemplate").
+                var table = $("#spEasyFormsTemplates .speasyforms-visibilityrulestabletemplate").
                     clone().
-                    attr("id", "conditionalVisibilityRulesTable").
-                    removeClass("speasyforms-visibilityrulestabletemplate");
+                    attr("id", "conditionalVisibilityRulesTable");
                 $("#conditionalVisibilityRules").append(table);
 
                 $.each(opt.currentConfig.visibility.def[opt.fieldName], function (idx, rule) {
-                    var tableRow = $(".speasyforms-visibilityrulesrowtemplate").
-                        clone().
-                        removeClass("speasyforms-visibilityrulesrowtemplate");
+                    var tableRow = $("#spEasyFormsTemplates .speasyforms-visibilityrulesrowtemplate").clone();
 
                     var conditions = "";
                     if (rule.conditions) {
@@ -414,21 +408,19 @@
         drawRuleTableTab: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             $("#staticVisibilityRules").remove();
-            var table = $(".speasyforms-staticrulestabletemplate").
+            var table = $("#spEasyFormsTemplates .speasyforms-staticrulestabletemplate").
                 clone().
-                attr("id", "staticVisibilityRules").
-                removeClass("speasyforms-staticrulestabletemplate");
+                attr("id", "staticVisibilityRules");
             $.each(Object.keys(opt.currentConfig.visibility.def).sort(), function (idx, key) {
                 $.each(opt.currentConfig.visibility.def[key], function (i, rule) {
                     opt.index = idx + "_" + i;
 
                     opt.rowInfo = $.spEasyForms.containerCollection.rows[key];
                     if (!opt.rowInfo) {
-                        opt.displayName = opt.fieldName;
                         $.spEasyForms.containerCollection.rows[key] = {
-                            displayName: opt.fieldName,
-                            internalName: opt.fieldName,
-                            spFieldType: opt.fieldName,
+                            displayName: key,
+                            internalName: key,
+                            spFieldType: key,
                             value: "",
                             row: $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'></h3></td><td class='ms-formbody'></td></tr>"),
                             fieldMissing: true
@@ -436,10 +428,9 @@
                         opt.rowInfo = $.spEasyForms.containerCollection.rows[key];
                     }
 
-                    var tr = $(".speasyforms-staticrulesrowtemplate").
+                    var tr = $("#spEasyFormsTemplates .speasyforms-staticrulesrowtemplate").
                         clone().
-                        attr("id", "visibilityRule" + opt.index).
-                        removeClass("speasyforms-staticrulesrowtemplate");
+                        attr("id", "visibilityRule" + opt.index);
 
                     if ($.spEasyForms.containerCollection.rows[key].fieldMissing) {
                         tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
@@ -465,6 +456,10 @@
                     tr.find(".speasyforms-appliesto").text(rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone");
                     tr.find(".speasyforms-forms").text(rule.forms);
                     tr.find(".speasyforms-when").html(conditions);
+
+                    if (opt.rowInfo.fieldMissing) {
+                        tr.find("td").addClass("speasyforms-fieldmissing");
+                    }
 
                     table.append(tr);
                 });

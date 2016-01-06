@@ -258,6 +258,7 @@
         <ElementFile Location="SPEasyFormsAssets\Download_110.png" />
 
         <ElementFile Location="SPEasyFormsAssets\SPEasyFormsSettings.aspx" />
+        <ElementFile Location="SPEasyFormsAssets\SPEasyFormsSettings.css" />
         <ElementFile Location="SPEasyFormsAssets\menu.png" />
     </ElementManifests>
 </Feature>
