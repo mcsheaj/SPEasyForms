@@ -1371,6 +1371,60 @@
                     </tr>
                 </tbody>
             </table>
+            <!-- id='staticVisibilityRules' -->
+            <table class="speasyforms-staticrules speasyforms-staticrulestabletemplate">
+                <tbody class="speasyforms-staticrules">
+                    <tr>
+                        <th class="speasyforms-staticrules  ui-widget-header ui-corner-all nobr ">Display Name</th>
+                        <th class="speasyforms-staticrules  ui-widget-header ui-corner-all nobr speasyforms-hidden">Internal Name</th>
+                        <th class="speasyforms-staticrules  ui-widget-header ui-corner-all nobr">State</th>
+                        <th class="speasyforms-staticrules  ui-widget-header ui-corner-all nobr">Applies To</th>
+                        <th class="speasyforms-staticrules  ui-widget-header ui-corner-all nobr">On Forms</th>
+                        <th class="speasyforms-staticrules  ui-widget-header ui-corner-all nobr">And When</th>
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <tbody>
+                    <!-- id="visibilityRule0" data-fieldname="Company" -->
+                    <tr class="speasyforms-staticrules speasyforms-staticrulesrowtemplate"  data-dialogtype="visibility">
+                        <td class="speasyforms-displayname speasyforms-staticrules ui-widget-content ui-corner-all nobr speasyforms-dblclickdialog"></td>
+                        <td class="speasyforms-internalname speasyforms-staticrules speasyforms-hidden"></td>
+                        <td class="speasyforms-state speasyforms-staticrules ui-widget-content ui-corner-all nobr speasyforms-dblclickdialog"></td>
+                        <td class="speasyforms-appliesto speasyforms-staticrules ui-widget-content ui-corner-all nobr speasyforms-dblclickdialog"></td>
+                        <td class="speasyforms-forms speasyforms-staticrules ui-widget-content ui-corner-all nobr speasyforms-dblclickdialog"></td>
+                        <td class="speasyforms-when speasyforms-staticrules ui-widget-content ui-corner-all nobr speasyforms-dblclickdialog"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="speasyforms-sortablerules speasyforms-visibilityrulestabletemplate">
+                <tbody class="speasyforms-sortablerules">
+                    <tr>
+                        <th class="speasyforms-sortablerules nobr ui-widget-header ui-corner-all">State</th>
+                        <th class="speasyforms-sortablerules nobr ui-widget-header ui-corner-all">Applies To</th>
+                        <th class="speasyforms-sortablerules nobr ui-widget-header ui-corner-all">On Forms</th>
+                        <th class="speasyforms-sortablerules nobr ui-widget-header ui-corner-all">And When</th>
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <tbody>
+                    <tr class="speasyforms-sortablerules speasyforms-visibilityrulesrowtemplate">
+                        <td class="speasyforms-state speasyforms-sortablerules nobr ui-widget-content ui-corner-all"></td>
+                        <td class="speasyforms-appliesto speasyforms-sortablerules nobr ui-widget-content ui-corner-all"></td>
+                        <td class="speasyforms-forms speasyforms-sortablerules nobr ui-widget-content ui-corner-all"></td>
+                        <td class="speasyforms-when speasyforms-sortablerules nobr ui-widget-content ui-corner-all"></td>
+                        <td class="speasyforms-visibilityrulebutton">
+                            <!-- id="addVisililityRuleButton0" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" -->
+                            <button title="Edit Rule" class="speasyforms-visibilityrulebutton"></button>
+                        </td>
+                        <td class="speasyforms-visibilityrulebutton">
+                            <!-- id="delVisililityRuleButton0" -->
+                            <button title="Delete Rule" class="speasyforms-visibilityrulebutton"></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <style type="text/css">
             #DeltaPageStatusBar {

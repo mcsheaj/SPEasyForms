@@ -38587,26 +38587,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         drawRuleTableTab: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             $("#staticVisibilityRules").remove();
-            var klass = 'speasyforms-staticrules';
-            var table = "<table id='staticVisibilityRules' " +
-                "class='" + klass + "'><tbody class='" + klass + "'><tr>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr '>Display Name</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr speasyforms-hidden' style='display:none'>Internal Name</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>State</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>Applies To</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>On Forms</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>And When</th></tr>";
+            var table = $(".speasyforms-staticrulestabletemplate").clone().attr("id", "staticVisibilityRules");
             $.each(Object.keys(opt.currentConfig.visibility.def).sort(), function (idx, key) {
                 $.each(opt.currentConfig.visibility.def[key], function (i, rule) {
-                    var title = "";
-                    klass = 'speasyforms-staticrules';
-                    opt.index = idx;
-                    opt.fieldName = key;
-                    opt.fieldMissing = false;
-                    if ($.spEasyForms.containerCollection.rows[key]) {
-                        opt.displayName = $.spEasyForms.containerCollection.rows[key].displayName;
-                    }
-                    else {
+                    opt.index = idx + "_" + i;
+
+                    opt.rowInfo = $.spEasyForms.containerCollection.rows[key];
+                    if (!opt.rowInfo) {
                         opt.displayName = opt.fieldName;
                         $.spEasyForms.containerCollection.rows[key] = {
                             displayName: opt.fieldName,
@@ -38616,53 +38603,39 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             row: $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'></h3></td><td class='ms-formbody'></td></tr>"),
                             fieldMissing: true
                         };
+                        opt.rowInfo = $.spEasyForms.containerCollection.rows[key];
                     }
+
+                    var tr = $(".speasyforms-staticrulesrowtemplate").clone().attr("id", "visibilityRule" + opt.index);
+
                     if ($.spEasyForms.containerCollection.rows[key].fieldMissing) {
-                        klass += ' speasyforms-fieldmissing ui-state-error';
+                        tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
                     }
                     var conditions = "";
                     var conditionalFieldsMissing = [];
                     if (rule.conditions && rule.conditions.length > 0) {
                         $.each(rule.conditions, function (i, condition) {
-                            if (conditions.length > 0)
-                                conditions += "<br />";
-                            conditions += condition.name + ";" + condition.type +
-                                ";" + condition.value;
-                            if (!$.spEasyForms.containerCollection.rows[condition.name] || $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
+                            conditions += "<div class='speasyforms-conditiondisplay'>" +
+                                condition.name + ";" + condition.type + ";" +
+                                condition.value + "</div>";
+                            if (!$.spEasyForms.containerCollection.rows[condition.name] ||
+                                $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
                                 conditionalFieldsMissing.push(condition.name);
-                                if (klass.indexOf('speasyforms-fieldmissing') < 0) {
-                                    klass += ' speasyforms-fieldmissing ui-state-error';
-                                }
+                                tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
                             }
                         });
                     }
-                    if (conditionalFieldsMissing.length > 0) {
-                        if (conditionalFieldsMissing.length === 1) {
-                            title += 'This rule has conditions which use the field [' + conditionalFieldsMissing[0] +
-                                '], which was not found in the form and may have been deleted.';
-                        }
-                        else {
-                            title += 'This rule has conditions which use the fields [' + conditionalFieldsMissing.toString() +
-                                '], which were not found in the form and may have been deleted.';
-                        }
-                    }
-                    if ($.spEasyForms.containerCollection.rows[opt.fieldName].fieldMissing) {
-                        title = 'This field was not found in the form and may have been deleted. ';
-                    }
-                    table += "<tr id='visibilityRule" + opt.index + "' title='" + title + "'" +
-                        "class='" + klass + "' data-dialogtype='visibility' " +
-                        "data-fieldname='" + opt.fieldName + "'>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-dblclickdialog'>" + opt.displayName + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog speasyforms-hidden' style='display:none'>" + opt.fieldName + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-dblclickdialog'>" + rule.state + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog'>" +
-                        (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone") + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog'>" + rule.forms + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog'>" + conditions + "</td>";
-                    table += "</tr>";
+
+                    tr.find(".speasyforms-displayname").text(opt.rowInfo.displayName);
+                    tr.find(".speasyforms-internalname").text(opt.rowInfo.internalName);
+                    tr.find(".speasyforms-state").text(rule.state);
+                    tr.find(".speasyforms-appliesto").text(rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone");
+                    tr.find(".speasyforms-forms").text(rule.forms);
+                    tr.find(".speasyforms-when").html(conditions);
+
+                    table.append(tr);
                 });
             });
-            table += "</table>";
             $("#tabs-min-visibility").append(table);
             if ($("tr.speasyforms-staticrules").length === 0) {
                 $("#staticVisibilityRules").append("<td class='ui-widget-content ui-corner-all nobr' colspan='5'>There are no conditional visibility rules for the current form.</td>");
@@ -38748,7 +38721,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 return false;
             });
 
-            // make the visibility rules sortable sortable
+            // make the visibility rules sortable
             $("tbody.speasyforms-sortablerules").sortable({
                 connectWith: ".speasyforms-rulestable",
                 items: "> tr:not(:first)",

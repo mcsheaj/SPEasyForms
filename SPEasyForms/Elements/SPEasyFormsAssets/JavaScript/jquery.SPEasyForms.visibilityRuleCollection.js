@@ -16,7 +16,12 @@
     ////////////////////////////////////////////////////////////////////////////
     $.spEasyForms.visibilityRuleCollection = {
         initialized: false,
+        setTimeoutCalled: false,
+        siteGroups: [],
 
+        /*********************************************************************
+        * Each method implements a comparison operator for a conditional expression.
+        *********************************************************************/
         comparisonOperators: {
             equals: function (value, test) {
                 if (utils.isDate(value) && utils.isDate(test)) {
@@ -82,8 +87,9 @@
             }
         },
 
-        setTimeoutCalled: false,
-
+        /*********************************************************************
+        * Each method implements a state transformation for a field.
+        *********************************************************************/
         stateHandlers: {
             hidden: function (options) {
                 var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -162,8 +168,11 @@
             }
         },
 
-        siteGroups: [],
-
+        /*********************************************************************
+        * Undo anything that was done by a previous invocation of transform. i.e.
+        * show anything marked data-visibilityhidden, remove anything marked
+        * data-visibilityadded, and remove any classes in data-visibilityclassadded.
+        *********************************************************************/
         scrubCollection: function (collection) {
             collection.each(function (idx, current) {
                 if ($(current).attr("data-visibilityadded") === "true") {
@@ -350,31 +359,27 @@
 
         /*********************************************************************
         * Draw a set of rules for a single field as a table. This function draws
-        * the rules table for the conditional visibility dialog as well as all
-        * the rule tables on the conditional visibility tab of the main editor.
-        *
-        * @param {object} options - {
-        *     // see the definition of defaults for options
-        * }
+        * the rules table for the conditional visibility dialog.
         *********************************************************************/
         drawRuleTable: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
+            $("#conditionalVisibilityRules").html("");
             if (opt.currentConfig.visibility.def[opt.fieldName].length === 0) {
                 $("#conditionalVisibilityRules").html(
                     "There are currently no rules for this field. Click " +
                     "the plus sign to add one.");
             } else {
-                var klass = 'speasyforms-sortablerules nobr';
-                var id = 'conditionalVisibilityRulesTable';
-                var table = "<center>";
-                table += "<table id='" + id + "' " +
-                    "class='" + klass + "'><tbody class='" + klass + "'><tr>" +
-                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>State</th>" +
-                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>Applies To</th>" +
-                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>On Forms</th>" +
-                    "<th class='" + klass + " ui-widget-header ui-corner-all nobr'>And When</th></tr>";
-                var conditionalFieldsMissing = [];
+                var table = $(".speasyforms-visibilityrulestabletemplate").
+                    clone().
+                    attr("id", "conditionalVisibilityRulesTable").
+                    removeClass("speasyforms-visibilityrulestabletemplate");
+                $("#conditionalVisibilityRules").append(table);
+
                 $.each(opt.currentConfig.visibility.def[opt.fieldName], function (idx, rule) {
+                    var tableRow = $(".speasyforms-visibilityrulesrowtemplate").
+                        clone().
+                        removeClass("speasyforms-visibilityrulesrowtemplate");
+
                     var conditions = "";
                     if (rule.conditions) {
                         $.each(rule.conditions, function (i, condition) {
@@ -388,51 +393,37 @@
                     } else {
                         conditions = "&nbsp;";
                     }
-                    table += "<tr class='" + klass + "'>" +
-                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + rule.state +
-                        "</td>" +
-                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" +
-                        (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone") +
-                        "</td>" +
-                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + rule.forms + "</td>" +
-                        "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + conditions + "</td>";
-                    table += "<td class='speasyforms-visibilityrulebutton'>" +
-                        "<button id='addVisililityRuleButton" + idx +
-                        "' class='speasyforms-visibilityrulebutton'>Edit Rule</button></td>" +
-                        "<td class='speasyforms-visibilityrulebutton'>" +
-                        "<button id='delVisililityRuleButton" + idx +
-                        "' clsss='speasyforms-visibilityrulebutton'>Delete Rule</button></td>";
-                    table += "</tr>";
+
+                    tableRow.find(".speasyforms-state").text(rule.state);
+                    tableRow.find(".speasyforms-appliesto").text(rule.appliesTo);
+                    tableRow.find(".speasyforms-forms").text(rule.forms);
+                    tableRow.find(".speasyforms-when").html(conditions);
+                    tableRow.find("button[title='Edit Rule']").attr("id", "addVisililityRuleButton" + idx);
+                    tableRow.find("button[title='Delete Rule']").attr("id", "delVisililityRuleButton" + idx);
+
+                    table.append(tableRow);
                 });
-                table += "</tbody></table>";
-                $("#conditionalVisibilityRules").html(table + "</center>");
                 this.wireVisibilityRulesTable(opt);
             }
         },
 
+        /*********************************************************************
+        * Draw a the table with all rule for the conditional visibility tab of 
+        * the main editor.
+        *********************************************************************/
         drawRuleTableTab: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             $("#staticVisibilityRules").remove();
-            var klass = 'speasyforms-staticrules';
-            var table = "<table id='staticVisibilityRules' " +
-                "class='" + klass + "'><tbody class='" + klass + "'><tr>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr '>Display Name</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr speasyforms-hidden' style='display:none'>Internal Name</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>State</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>Applies To</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>On Forms</th>" +
-                "<th class='" + klass + "  ui-widget-header ui-corner-all nobr'>And When</th></tr>";
+            var table = $(".speasyforms-staticrulestabletemplate").
+                clone().
+                attr("id", "staticVisibilityRules").
+                removeClass("speasyforms-staticrulestabletemplate");
             $.each(Object.keys(opt.currentConfig.visibility.def).sort(), function (idx, key) {
                 $.each(opt.currentConfig.visibility.def[key], function (i, rule) {
-                    var title = "";
-                    klass = 'speasyforms-staticrules';
-                    opt.index = idx;
-                    opt.fieldName = key;
-                    opt.fieldMissing = false;
-                    if ($.spEasyForms.containerCollection.rows[key]) {
-                        opt.displayName = $.spEasyForms.containerCollection.rows[key].displayName;
-                    }
-                    else {
+                    opt.index = idx + "_" + i;
+
+                    opt.rowInfo = $.spEasyForms.containerCollection.rows[key];
+                    if (!opt.rowInfo) {
                         opt.displayName = opt.fieldName;
                         $.spEasyForms.containerCollection.rows[key] = {
                             displayName: opt.fieldName,
@@ -442,53 +433,42 @@
                             row: $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'></h3></td><td class='ms-formbody'></td></tr>"),
                             fieldMissing: true
                         };
+                        opt.rowInfo = $.spEasyForms.containerCollection.rows[key];
                     }
+
+                    var tr = $(".speasyforms-staticrulesrowtemplate").
+                        clone().
+                        attr("id", "visibilityRule" + opt.index).
+                        removeClass("speasyforms-staticrulesrowtemplate");
+
                     if ($.spEasyForms.containerCollection.rows[key].fieldMissing) {
-                        klass += ' speasyforms-fieldmissing ui-state-error';
+                        tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
                     }
                     var conditions = "";
                     var conditionalFieldsMissing = [];
                     if (rule.conditions && rule.conditions.length > 0) {
                         $.each(rule.conditions, function (i, condition) {
-                            if (conditions.length > 0)
-                                conditions += "<br />";
-                            conditions += condition.name + ";" + condition.type +
-                                ";" + condition.value;
-                            if (!$.spEasyForms.containerCollection.rows[condition.name] || $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
+                            conditions += "<div class='speasyforms-conditiondisplay'>" +
+                                condition.name + ";" + condition.type + ";" +
+                                condition.value + "</div>";
+                            if (!$.spEasyForms.containerCollection.rows[condition.name] ||
+                                $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
                                 conditionalFieldsMissing.push(condition.name);
-                                if (klass.indexOf('speasyforms-fieldmissing') < 0) {
-                                    klass += ' speasyforms-fieldmissing ui-state-error';
-                                }
+                                tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
                             }
                         });
                     }
-                    if (conditionalFieldsMissing.length > 0) {
-                        if (conditionalFieldsMissing.length === 1) {
-                            title += 'This rule has conditions which use the field [' + conditionalFieldsMissing[0] +
-                                '], which was not found in the form and may have been deleted.';
-                        }
-                        else {
-                            title += 'This rule has conditions which use the fields [' + conditionalFieldsMissing.toString() +
-                                '], which were not found in the form and may have been deleted.';
-                        }
-                    }
-                    if ($.spEasyForms.containerCollection.rows[opt.fieldName].fieldMissing) {
-                        title = 'This field was not found in the form and may have been deleted. ';
-                    }
-                    table += "<tr id='visibilityRule" + opt.index + "' title='" + title + "'" +
-                        "class='" + klass + "' data-dialogtype='visibility' " +
-                        "data-fieldname='" + opt.fieldName + "'>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-dblclickdialog'>" + opt.displayName + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog speasyforms-hidden' style='display:none'>" + opt.fieldName + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-dblclickdialog'>" + rule.state + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog'>" +
-                        (rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone") + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog'>" + rule.forms + "</td>";
-                    table += "<td title='" + title + "' class='" + klass + " ui-widget-content ui-corner-all nobr  speasyforms-dblclickdialog'>" + conditions + "</td>";
-                    table += "</tr>";
+
+                    tr.find(".speasyforms-displayname").text(opt.rowInfo.displayName);
+                    tr.find(".speasyforms-internalname").text(opt.rowInfo.internalName);
+                    tr.find(".speasyforms-state").text(rule.state);
+                    tr.find(".speasyforms-appliesto").text(rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone");
+                    tr.find(".speasyforms-forms").text(rule.forms);
+                    tr.find(".speasyforms-when").html(conditions);
+
+                    table.append(tr);
                 });
             });
-            table += "</table>";
             $("#tabs-min-visibility").append(table);
             if ($("tr.speasyforms-staticrules").length === 0) {
                 $("#staticVisibilityRules").append("<td class='ui-widget-content ui-corner-all nobr' colspan='5'>There are no conditional visibility rules for the current form.</td>");
@@ -498,10 +478,6 @@
         /*********************************************************************
         * Wire up the buttons for a rules table (only applicable to the conditional
         * visibility dialog since the rules tables on the main editor are static)
-        *
-        * @param {object} options - {
-        *     // see the definition of defaults for options
-        * }
         *********************************************************************/
         wireVisibilityRulesTable: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -574,7 +550,7 @@
                 return false;
             });
 
-            // make the visibility rules sortable sortable
+            // make the visibility rules sortable
             $("tbody.speasyforms-sortablerules").sortable({
                 connectWith: ".speasyforms-rulestable",
                 items: "> tr:not(:first)",
@@ -596,10 +572,6 @@
 
         /*********************************************************************
         * Wire up the conditional visibility dialog boxes.
-        *
-        * @param {object} options - {
-        *     // see the definition of defaults for options
-        * }
         *********************************************************************/
         wireDialogEvents: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -723,10 +695,6 @@
         /*********************************************************************
         * Get the current visibility rules.
         *
-        * @param {object} options - {
-        *     // see the definition of defaults for options
-        * }
-        *
         * @return {object} - the current visibility rules.
         *********************************************************************/
         getVisibility: function (options) {
@@ -744,10 +712,6 @@
 
         /*********************************************************************
         * Construct a rule from the add/edit rule dialog box.
-        *
-        * @param {object} options - {
-        *     // see the definition of defaults for options
-        * }
         *
         * @return {object} - the new rule.
         *********************************************************************/
@@ -794,10 +758,6 @@
 
         /*********************************************************************
         * Reset the add/edit rule dialog box.
-        *
-        * @param {object} options - {
-        *     // see the definition of defaults for options
-        * }
         *********************************************************************/
         clearRuleDialog: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -826,10 +786,6 @@
         * Get the current form type. This function looks for the word new, edit,
         * or display in the current page name (case insensative.
         *
-        * @param {object} options - {
-        *     // see the definition of defaults for options
-        * }
-        *
         * @return {string} - new, edit, display, or "".
         *********************************************************************/
         getFormType: function () {
@@ -856,6 +812,9 @@
             return result;
         },
 
+        /*********************************************************************
+        * Check if a rule passes based solely on which form we're on.
+        *********************************************************************/
         checkForm: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var formType = visibilityRuleCollection.getFormType(opt);
@@ -865,6 +824,9 @@
             return $.inArray(formType, ruleForms) >= 0;
         },
 
+        /*********************************************************************
+        * Check if a rule passes based solely on who it applies to.
+        *********************************************************************/
         checkAppliesTo: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var appliesMatch = false;
@@ -904,6 +866,9 @@
             return appliesMatch;
         },
 
+        /*********************************************************************
+        * Check if a rule passes based solely on its conditional expressions.
+        *********************************************************************/
         checkConditionals: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var result = false;
@@ -932,6 +897,19 @@
             return result;
         },
 
+        /*********************************************************************
+        * Search and substitue for variables in the conditional value. Possible
+        * variables include:
+        * 
+        * [CurrentUser] - epands to ctx.userId
+        * [CurrentUserId] - epands to ctx.userId
+        * [CurrentUserLogin] - epands to ctx.userInformation.userName
+        * [CurrentUserEmail] - epands to ctx.userInformation.eMail
+        * [Today] - expands to the current date
+        * [Today[+-]X] - expands to the current date plus or minus X days
+        * [Now] - expands to the current datetime
+        * [Now[+-]X] - expands to the current datetime plus or minus X minutes
+        *********************************************************************/
         expandRuleValue: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var expandedValue = opt.condition.value;
