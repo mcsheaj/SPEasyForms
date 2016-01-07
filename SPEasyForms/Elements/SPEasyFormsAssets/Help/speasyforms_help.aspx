@@ -2843,7 +2843,7 @@ possible that a field adapter could hide validation
 and Cascading Look Up fields as it does on OOB text fields and look up 
 fields.
             </p>
-            <h2>5. Wrapping It Up</h2>
+            <h2>6. Wrapping It Up</h2>
             <p>
                 Well, that’s it. I think I’ve now described all of the functionality 
 that will be included in the 2015.01 release. Hopefully somebody 
