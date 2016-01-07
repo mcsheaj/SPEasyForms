@@ -51,16 +51,26 @@
          *********************************************************************/
         getRequestParameters: function () {
             var result = {};
+            var query, index;
             if (window.location.search.length > 0 &&
                 window.location.search.indexOf('?') >= 0) {
-                var nvPairs = window.location.search.slice(
-                    window.location.search.indexOf('?') + 1).split('&');
+                index = window.location.search.indexOf('?') + 1;
+                query = window.location.search.substr(index);
+            }
+            else if (window.location.href.indexOf("start.aspx#") >= 0 &&
+                window.location.href.indexOf('?') >= 0) {
+                index = window.location.href.indexOf('?') + 1;
+                query = window.location.href.substr(index);
+            }
+            if (query) {
+                var nvPairs = query.split('&');
                 for (var i = 0; i < nvPairs.length; i++) {
                     var nvPair = nvPairs[i].split('=', 2);
                     if (nvPair.length === 2) {
                         result[nvPair[0]] = decodeURIComponent(nvPair[1]);
                     }
                 }
+
             }
             return result;
         },
