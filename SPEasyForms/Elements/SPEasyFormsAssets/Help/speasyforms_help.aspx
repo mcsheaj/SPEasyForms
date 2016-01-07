@@ -2961,7 +2961,7 @@ cannot be met by SPEasyForms, let me know. I’m always
             <h2>Appendix B. Variables in Conditional Expressions</h2>
             <p>One of the weaknesses in the original implementation of conditional expressions in visibility rules was that you could only compare a field with a literal expression. I was asked by someone how you could write an expression to see if a user field contained the current user, and at the time the answer was you can’t. But this would obviously be pretty useful, so I went ahead and added it. You can now create a conditional expression like:</p>
             <p><strong>Where ‘Manager’ Matches ‘[CurrentUser]’</strong></p>
-            <p>and if Manager is a people picker field, the visibility rules engine will substitute a pattern for [CurrentUser] that will make the expression work. While I was at it, I added several other variable expressions that I thought would be handle. The table below shows the complete list of variable expressions you can use:</p>
+            <p>and if Manager is a people picker field, the visibility rules engine will substitute a pattern for [CurrentUser] that will make the expression work. While I was at it, I added several other variable expressions that I thought would be handy. The table below shows the complete list of variable expressions you can use:</p>
             <table cellspacing="0" cellpadding="2" width="600" border="1">
                 <tbody>
                     <tr>
