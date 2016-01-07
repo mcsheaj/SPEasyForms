@@ -190,6 +190,10 @@
                 </div>
             </div>
             <div class='speasyforms-buttongroup'>
+                <div id='spEasyFormsDiagButton' class='speasyforms-buttonouterdiv speasyforms-hidden'>
+                    <div class="speasyforms-img speasyforms-diagimg"></div>
+                    <div class='speasyforms-buttontext'>Diag</div>
+                </div>
                 <div id='spEasyFormsAboutButton' class='speasyforms-buttonouterdiv'>
                     <div class="speasyforms-img speasyforms-aboutimg"></div>
                     <div class='speasyforms-buttontext'>About</div>
@@ -218,10 +222,10 @@
                 <div id='tabs-min-adapters' class='tabs-min' style='display: none'>
                     <table id='spEasyFormsAdapterTable' class='speasyforms-adapters'>
                         <tr>
-                            <th>Display Name</th>
-                            <th class='speasyforms-hidden' style='display: none'>Internal Name</th>
-                            <th>Adapter Type</th>
-                            <th>Additional Settings</th>
+                            <th class="ui-widget-header ui-corner-all nobr">Display Name</th>
+                            <th class="ui-widget-header ui-corner-all nobr speasyforms-hidden">Internal Name</th>
+                            <th class="ui-widget-header ui-corner-all nobr">Adapter Type</th>
+                            <th class="ui-widget-header ui-corner-all nobr">Additional Settings</th>
                         </tr>
                     </table>
                 </div>
@@ -656,6 +660,21 @@
                         <td class="speasyforms-visibilityrulebutton">
                             <!-- id="delVisililityRuleButton0" -->
                             <button title="Delete Rule" class="speasyforms-visibilityrulebutton"></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <tbody>
+                    <!--  data-fieldname="Rating" -->
+                    <tr class="speasyforms-adapter-static speasyforms-dblclickdialog speasyforms-adapterrowtemplate" data-dialogtype="adapter">
+                        <td class="speasyforms-displayname speasyforms-adapter-static speasyforms-dblclickdialog ui-widget-content ui-corner-all nobr"></td>
+                        <td class="speasyforms-internalname speasyforms-adapter-static speasyforms-dblclickdialog ui-widget-content ui-corner-all nobr speasyforms-hidden"></td>
+                        <td class="speasyforms-adaptertype speasyforms-adapter-static speasyforms-dblclickdialog ui-widget-content ui-corner-all nobr"></td>
+                        <td class="speasyforms-adapterconfig speasyforms-adapter-static speasyforms-dblclickdialog ui-widget-content ui-corner-all nobr"></td>
+                        <td>
+                            <!-- id="RatingDelete" -->
+                            <button title="Delete" class="speasyforms-containerbtn speasyforms-deleteadapter"></button>
                         </td>
                     </tr>
                 </tbody>

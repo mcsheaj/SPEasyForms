@@ -501,6 +501,10 @@ div.speasyforms-contenttype {
     background-position: 160px 0;
 }
 
+.speasyforms-diagimg {
+    background-image: url('/_layouts/images/menudownload.gif');
+}
+
 .speasyforms-helpimg {
     background-position: 128px 0;
 }
@@ -766,6 +770,7 @@ ol > li.speasyforms-nestedsortable-fieldcollection {
     background-color: #eee;
 }
 
-button.speasyforms-visibilityrulebutton {
+button.speasyforms-visibilityrulebutton,
+button.speasyforms-deleteadapter {
     height: 20px;
 }

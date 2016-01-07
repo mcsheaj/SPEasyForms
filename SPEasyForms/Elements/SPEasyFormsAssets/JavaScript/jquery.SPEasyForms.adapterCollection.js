@@ -56,7 +56,7 @@
                 }
             });
 
-            $("tr.speasyforms-adapter-static").remove();
+            $("#spEasyFormsAdapterTable tr.speasyforms-adapter-static").remove();
             $.each(Object.keys(opt.adapters).sort(this.compareAdapters), function (idx, adapterField) {
                 opt.adapter = opt.adapters[adapterField];
                 opt.fieldName = adapterField;
@@ -64,25 +64,11 @@
                     adapterCollection.drawAdapter(opt);
                 }
             });
-            if ($("tr.speasyforms-adapter-static").length === 0) {
+            if ($("#spEasyFormsAdapterTable tr.speasyforms-adapter-static").length === 0) {
                 $("#spEasyFormsAdapterTable").append("<tr class='speasyforms-adapter-static'>" +
                     "<td class='ui-widget-content ui-corner-all nobr' colspan='5'>" +
                     "There are no adpaters configured for the current form.</td></tr>");
             }
-            $("#spEasyFormsAdapterTable th").addClass("ui-widget-header").addClass("ui-corner-all").addClass("nobr");
-            $("#tabs-min-adapters").append("<br /><br />");
-
-            if ($("#spEasyFormsAdapterTable tr.speasyforms-fieldmissing").length > 0 && opt.verbose) {
-                $("#spEasyFormsAdapterTable tr.speasyforms-fieldmissing td").addClass("ui-state-error");
-            }
-
-            $("tr.speasyforms-adapter-static").each(function (idx, r) {
-                var row = $(r);
-                var internalName = $(row.find("td")[1]).text();
-                if (row.find("td").length > 1) {
-                    row.append("<td><button id='" + internalName + "Delete' title='Delete' class='speasyforms-containerbtn speasyforms-deleteadapter' style='height: 25px;'></button></td>");
-                }
-            });
 
             $(".speasyforms-deleteadapter").button({
                 icons: {
@@ -190,8 +176,6 @@
         drawAdapter: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var displayName = opt.fieldName;
-            var klass = "speasyforms-adapter-static speasyforms-dblclickdialog";
-            var title = JSON.stringify(opt.adapter);
             var config = "";
 
             $.each(Object.keys(opt.adapter).sort(), function (idx, key) {
@@ -202,45 +186,31 @@
                     config += "<b>" + $.spEasyForms.utilities.titleCase(key) + "</b> = " + opt.adapter[key];
                 }
             });
+    
+            var tableRow = $("#spEasyFormsTemplates .speasyforms-adapterrowtemplate").
+                clone().
+                attr("data-fieldname", opt.adapter.columnNameInternal);
+            $("#spEasyFormsAdapterTable").append(tableRow);
 
             if ($.spEasyForms.containerCollection.rows[opt.adapter.columnNameInternal] &&
                 !$.spEasyForms.containerCollection.rows[opt.adapter.columnNameInternal].fieldMissing) {
                 displayName = $.spEasyForms.containerCollection.rows[opt.adapter.columnNameInternal].displayName;
             }
             else {
-                klass += " speasyforms-fieldmissing";
-                title = "This field was not found in the form and may have been deleted.";
+                tableRow.addClass("speasyforms-fieldmissing").find("td").addClass("speasyforms-fieldmissing");
             }
 
-            if (opt.verbose && klass.indexOf("speasyforms-fieldmissing") >= 0) {
-                $("#spEasyFormsAdapterTable").append("<tr class='" + klass + "' " +
-                    "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
-                    "data-dialogtype='adapter' title='" + title + "'>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + displayName + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + opt.adapter.type + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + config + "</td>" +
-                    "</tr>");
+            tableRow.find(".speasyforms-displayname").text(displayName);
+            tableRow.find(".speasyforms-internalname").text(opt.adapter.columnNameInternal);
+            tableRow.find(".speasyforms-adaptertype").text(opt.adapter.type);
+            tableRow.find(".speasyforms-adapterconfig").html(config);
+            tableRow.find("button.speasyforms-deleteadapter").attr("id", opt.adapter.columnNameInternal + "Delete");
+
+            if (opt.verbose && tableRow.hasClass("speasyforms-fieldmissing")) {
+                tableRow.find("td.speasyforms-adapter-static").addClass("ui-state-error");
             }
-            else if (klass.indexOf("speasyforms-fieldmissing") < 0) {
-                $("#spEasyFormsAdapterTable").append("<tr class='" + klass + "' " +
-                    "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
-                    "data-dialogtype='adapter' title='" + title + "'>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + displayName + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + opt.adapter.type + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + config + "</td>" +
-                    "</tr>");
-            }
-            else {
-                $("#spEasyFormsAdapterTable").append("<tr class='" + klass + "' " +
-                    "data-fieldname='" + opt.adapter.columnNameInternal + "' " +
-                    "data-dialogtype='adapter' title='" + title + "' style='display:none'>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + displayName + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr speasyforms-hidden' style='display:none'>" + opt.adapter.columnNameInternal + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + opt.adapter.type + "</td>" +
-                    "<td class='" + klass + " ui-widget-content ui-corner-all nobr'>" + config + "</td>" +
-                    "</tr>");
+            else if (tableRow.hasClass("speasyforms-fieldmissing")) {
+                tableRow.addClass("speasyforms-hidden").find("td").addClass("speasyforms-hidden");
             }
         },
 
@@ -264,9 +234,8 @@
             var control = $("#" + options.id);
             control.parent().find(".speasyforms-error").remove();
             if (!control.val()) {
-                control.parent().append(
-                    "<div class='speasyforms-error'>'" + options.displayName +
-                    "' is a required field!</div>");
+                var div = $("<div/>", { "class": "speasyforms-error" }).text("'" + options.displayName + "' is a required field!");
+                control.parent().append(div);
             }
         }
     };

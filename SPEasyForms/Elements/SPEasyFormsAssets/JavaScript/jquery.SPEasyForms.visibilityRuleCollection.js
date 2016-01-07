@@ -134,8 +134,8 @@
                             'class="ms-formlabel">' +
                             '<div><nobr class="speasyforms-columnheader">' +
                             row.displayName +
-                            '</nobr></h3></td><td class="ms-formbody">' +
-                            '<span id="readOnly' + row.internalName + '">' + value + '</td></tr>';
+                            '</nobr></td><td class="ms-formbody">' +
+                            '<span id="readOnly' + row.internalName + '">' + value + '</span></td></tr>';
                         if (row.row.find("td.ms-formbody h3.ms-standardheader").length > 0) {
                             html = '<tr data-visibilityadded="true">' +
                                 '<td valign="top" ' +

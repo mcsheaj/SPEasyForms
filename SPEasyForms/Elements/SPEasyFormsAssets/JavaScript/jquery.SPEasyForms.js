@@ -184,8 +184,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
             });
             if ($.spEasyForms.defaults.verbose) {
-                $("#spEasyFormsAboutButton").parent().prepend('<a id="spEasyFormsDiagLink" href="javascript:void(0)"><div class="speasyforms-buttonouterdiv" id="spEasyFormsDiagButton"><img width="32" height="32" class="speasyforms-buttonimg" src="/_layouts/images/menudownload.gif"><div class="speasyforms-buttontext">Diagnostics</div></div></a>');
-                $("#spEasyFormsDiagLink").click(function () {
+                $("#spEasyFormsDiagButton").show().click(function () {
                     var win = window.open();
                     win.document.write("<pre>\n" + JSON.stringify($.spEasyForms.sharePointContext.getListContext(options), null, 4) + "\n</pre>");
                     win.document.close();
