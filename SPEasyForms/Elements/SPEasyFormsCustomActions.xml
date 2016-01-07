@@ -21,8 +21,8 @@
                         ToolTipDescription="Settings page for configuring this list for SPEasyForms."
                         Id="Ribbon.List.Settings.Controls.SPEasyForms.Button"
                         Command="Ribbon.List.Settings.Controls.SPEasyForms.Command"
-                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/images/SPEasyForms32x32.png"
-                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/images/SPEasyForms16x16.png"
+                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/Css/images/SPEasyForms32x32.png"
+                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/Css/images/SPEasyForms16x16.png"
                         Sequence="10256"
                         TemplateAlias="o1"
                       />
@@ -36,8 +36,8 @@
                         ToolTipDescription="Settings page for configuring this list for SPEasyForms."
                         Id="Ribbon.List.Settings.Controls.SPEasyForms.Button"
                         Command="Ribbon.List.Settings.Controls.SPEasyForms.Command"
-                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/images/SPEasyForms32x32.png"
-                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/images/SPEasyForms16x16.png"
+                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/Css/images/SPEasyForms32x32.png"
+                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/Css/images/SPEasyForms16x16.png"
                         Sequence="10256"
                         TemplateAlias="o1"
                       />
@@ -51,8 +51,8 @@
                         ToolTipDescription="Settings page for configuring this list for SPEasyForms."
                         Id="Ribbon.List.Settings.Controls.SPEasyForms.Button"
                         Command="Ribbon.List.Settings.Controls.SPEasyForms.Command"
-                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/images/SPEasyForms32x32.png"
-                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/images/SPEasyForms16x16.png"
+                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/Css/images/SPEasyForms32x32.png"
+                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/Css/images/SPEasyForms16x16.png"
                         Sequence="10256"
                         TemplateAlias="o1"
                       />
@@ -64,7 +64,7 @@
             <CommandUIHandlers>
                 <CommandUIHandler
                     Command="Ribbon.List.Settings.Controls.SPEasyForms.Command"
-                    CommandAction="javascript:window.location=(_spPageContextInfo.siteServerRelativeUrl != '/' ? _spPageContextInfo.siteServerRelativeUrl : '') + '/Style Library/SPEasyFormsAssets/2015.01.beta/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}&amp;Source=' + encodeURIComponent(window.location.href)"
+                    CommandAction="javascript:window.location=(_spPageContextInfo.siteServerRelativeUrl != '/' ? _spPageContextInfo.siteServerRelativeUrl : '') + '/Style Library/SPEasyFormsAssets/2015.01/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}&amp;Source=' + encodeURIComponent(window.location.href)"
                     EnabledScript="javascript:shouldSPEasyFormsRibbonButtonBeEnabled();"
                  />
             </CommandUIHandlers>

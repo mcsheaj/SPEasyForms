@@ -264,9 +264,9 @@ Discussion Boards) and libraries. The things you can configure fall into
                         <li>
                         Columns - the ability to put fields or containers into 2 or more columns instead of one per row (technically, one or more, but one column doesn't really buy you much) 
                         <li>Stack <font color="#910000">(NEW!)</font>
-                        - allows you to stack 2 or more containers on top of each other, so you can put multiple containers onto a single tab or accordion page. 
+                            - allows you to stack 2 or more containers on top of each other, so you can put multiple containers onto a single tab or accordion page. 
                         <li>Wizard <font color="#910000">(NEW!) </font>
-                        - a specialty container that allows users to page through containers using next and previous buttons. 
+                            - a specialty container that allows users to page through containers using next and previous buttons. 
                         <li>HTML Snippets <font color="#910000">(NEW!) </font>- a specialty container, that doesn’t actually hold any fields, but allows you to inject arbitrary HTML into the page, including referencing external scripts and style sheets. </li>
                     </ul>
                     <li>Conditional Visibility – conditionally format a field: 
@@ -286,13 +286,13 @@ Discussion Boards) and libraries. The things you can configure fall into
                                             <li><strong>NotMatches</strong>
                                             - does not match a JavaScript regular expression 
                                             <li><strong>GreaterThan</strong> <font color="#910000">(NEW!)</font>
-                                            - greater than a string literal 
+                                                - greater than a string literal 
                                             <li><strong>GreaterThanOrEquals</strong> <font color="#910000">(NEW!)</font>
-                                            - greater than or equals to a string literal 
+                                                - greater than or equals to a string literal 
                                             <li><strong>LessThan</strong> <font color="#910000">(NEW!)</font>
-                                            - less than a string literal 
+                                                - less than a string literal 
                                             <li><strong>LessThanOrEquals</strong> <font color="#910000">(NEW!)</font>
-                                            - less than or equals a string literal 
+                                                - less than or equals a string literal 
                                             <li><strong>NotEquals</strong> <font color="#910000">(NEW!)</font>- is not equal to a string literal </li>
                                         </ul>
                                     </li>
@@ -322,14 +322,14 @@ Discussion Boards) and libraries. The things you can configure fall into
                         <li>
                         Autocomplete - provide type ahead functionality in a text field based on values pulled from a field in another list on the same site 
                         <li>Lookup Detail <font color="#910000">(NEW!) </font>
-                        - allows you to pull in additional fields from a lookup list based on the value selected in a lookup field. 
+                            - allows you to pull in additional fields from a lookup list based on the value selected in a lookup field. 
                         <li>Default to Current User <font color="#910000">(NEW!) </font>
-                        - pre-populate a user field with the current user on the new form. 
+                            - pre-populate a user field with the current user on the new form. 
                         <li>Star Rating Adapter <font color="#910000">(NEW!) </font>- can be applied to numeric fields. Fields are displayed as five stars and edited by clicking on one of the stars. </li>
                     </ul>
                 </li>
             </ul>
-            <p>Most of the things marked <font color="#910000">(NEW!) </font><font color="#000000">were actually released in the updates package to v2014.01. The Stack and Star Ratings Adapter are actually brand new. Other than that, most of what’s changed in v2015.01.beta is:</font></p>
+            <p>Most of the things marked <font color="#910000">(NEW!) </font><font color="#000000">were actually released in the updates package to v2014.01. The Stack and Star Ratings Adapter are actually brand new. Other than that, most of what’s changed in v2015.01 is:</font></p>
             <ol>
                 <li>
                 Added a Client Side Rendering (CSR) hook to hide the form until SPEasyForms has done it’s work, making the page load less jumpy (SharePoint 2013/Online only). 
@@ -343,21 +343,6 @@ Discussion Boards) and libraries. The things you can configure fall into
                 Significant performance improvements on the settings page, especially for intense redraw activities like drag and drop. 
                 <li>Updated third party libraries to their latest stable release: jQuery, jQuery-UI, and SPServices. In the case of jQuery and jQuery-UI, that’s the latest 1.x release. </li>
             </ol>
-            <p>
-                So why is it a beta? Mostly because I haven’t done enough regression 
-testing to feel comfortable calling it production ready. Particularly, 
-I’ve done a lot of work to make the configuration forward compatible, so
- if you configured a list with the previous
- version it should still just work, but I haven’t done enough testing to
- be sure it will in all cases. Also, keep in mind that the configuration
- is certainly not backward compatible; if you configure a list with 
-2015.01.beta, it will probably not work if you
- roll the site collection back to 2014.01. Over the next month or so, 
-I’ll be testing and updating documentation/videos, and I expect to have a
- production ready release by sometime in February 2016 assuming I don’t 
-find anything huge (which I don’t expect,
- I have done quite a bit of testing already).
-            </p>
             <p>
                 The rest of this user manual will consist of an Overview section 
 (system requirements, installation, and a laundry list of UI buttons and
@@ -645,7 +630,7 @@ quietly).</td>
                     <tr>
                         <td valign="top" width="231"><a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532817">
                             <img title="image" alt="image" src="images/Download_097.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; border-top-width: 0px; margin-right: auto" border="0" height="77" width="57"></a></td>
-                        <td valign="top" width="366"><font color="#820000"><strong>New in 2015.01.beta!</strong></font>Configure settings for this list, which currently means configure the jQuery UI theme for this list.</td>
+                        <td valign="top" width="366"><font color="#820000"><strong>New in 2015.01!</strong></font>Configure settings for this list, which currently means configure the jQuery UI theme for this list.</td>
                     </tr>
                     <tr>
                         <td valign="top" width="231">
@@ -968,7 +953,7 @@ theme in the Style Library/SPEasyFormsAssets/Css
 collection.
             </p>
             <p>
-                With 2015.01.beta, you can configure a different jQuery UI theme for each list. On the settings page, hit the Settings
+                With 2015.01, you can configure a different jQuery UI theme for each list. On the settings page, hit the Settings
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532829">
                     <img title="image" alt="image" src="images/Download_052.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="20" width="20"></a>
                 button. You will see a form that looks like:
@@ -1051,7 +1036,7 @@ Library/SPEasyFormsAssets/SPEasyForms_DefaultSettings.js for that, which
         <span style="color:green">// path to the default jquery-ui style sheet</span>
         jQueryUITheme: <span style="color:#a31515">"~sitecollection/Style Library/pepper-grinder/jqeury-ui.css"</span>,
         <span style="color:green">// path to the spEasyForms style sheet</span>
-        css: <span style="color:#a31515">"~sitecollection/Style Library/SPEasyFormsAssets/2015.01.beta/Css/speasyforms.css"</span>
+        css: <span style="color:#a31515">"~sitecollection/Style Library/SPEasyFormsAssets/2015.01/Css/speasyforms.css"</span>
     });
 })(spefjQuery);
 </pre>
@@ -1775,7 +1760,7 @@ link to it in the snippet container rich text editor.
             </ol>
             <h3>3.7 Stack</h3>
             <p>
-                The <strong>Stack</strong> container is new to 2015.01.beta, and 
+                The <strong>Stack</strong> container is new to 2015.01, and 
 really wouldn’t have been useful in the previous version because there 
 were no nested containers, but with nested containers it can be useful.
             </p>
@@ -2861,7 +2846,7 @@ fields.
             <h2>5. Wrapping It Up</h2>
             <p>
                 Well, that’s it. I think I’ve now described all of the functionality 
-that will be included in the 2015.01.beta release. Hopefully somebody 
+that will be included in the 2015.01 release. Hopefully somebody 
 else finds it useful.
             </p>
             <p>
@@ -2871,6 +2856,158 @@ does. You’re mileage may vary. But if you do have requirements that
 cannot be met by SPEasyForms, let me know. I’m always
  looking for ideas for the next version.
             </p>
+            <h2>Appendix A. Initializing Field Values with Request Parameters</h2>
+            <p>You can initialize values in forms for most SPFieldTypes by passing request parameters in the URL, but because of the number of different SPFieldTypes, using it is not entirely intuitive. In general: </p>
+            <ol>
+                <li>Parameter names should start with <strong>spef_</strong>. This tells SPEasyForms that this parameter is intended to initialize a field value. 
+                <li>
+                The rest of the parameter name should match the internal name of the field you want initialized. 
+                <li>The parameter value should be URL escaped using the JavaScript function escapeURIComponent(a), or something equivalent if you’re not constructing the URL in JavaScript. If this isn’t done and the value contains special characters like ampersands and newlines, you’re may see some undesirable side effects.</li>
+            </ol>
+            <p>
+                So, if you go to a form with a URL like: 
+            <p>
+                &lt;formURL&gt;<strong>?</strong>spef_Title=My New Title<strong>&amp;</strong>
+            spef_Description=My New Description 
+            <p>SPEasyForms will look for a field with the internal name of <strong>Title</strong> and set it to ‘My New Title’ and a field with the internal name of <strong>Description</strong> and set it to the value ‘My New Description’. So you can pretty much stop reading now, right? It’s pretty self explanatory? But how do you set a people picker field? or a boolean? or a date/time? A lot of decisions had to be made during the coding about how to set different field types. You could guess about how those decisions were made, or you could read the table below:</p>
+            <p>
+                <table cellspacing="0" cellpadding="2" width="603" border="1">
+                    <tbody>
+                        <tr>
+                            <td valign="top" width="138">
+                                <p align="center"><strong>SPFieldType</strong></p>
+                            </td>
+                            <td valign="top" width="165">
+                                <p align="center"><strong>Example</strong></p>
+                            </td>
+                            <td valign="top" width="298">
+                                <p align="center"><strong>Description</strong></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138">
+                                <p align="justify"><span style="color: #ff0000">SPFieldText SPFieldNumber SPFieldCurrency</span></p>
+                            </td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_Title</span>=<br>
+                                text</td>
+                            <td valign="top" width="298">Nothing special here, this is the simple case.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138"><span style="color: #ff0000">SPFieldNote SPFieldMultiLine</span></td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_Description</span>=<br>
+                                text</td>
+                            <td valign="top" width="298">Newlines will have to be escaped, and this only works on fields designated as plain text. Enhanced Rich Text does not work and Rich Text wasn’t actually tested.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138"><span style="color: #ff0000">SPFieldChoice</span> (Dropdown)</td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_Choice</span>=A</td>
+                            <td valign="top" width="298"><span style="color: #000000"><strong>A</strong></span> should equal the text of an option in the drop down. If not, <span style="color: #000000"><strong>A</strong></span> will be inserted into the fill-in input box if there is one.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138"><span style="color: #ff0000">SPFieldChoice</span>
+                                <br>
+                                (Radio)</td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_Choice</span>=A</td>
+                            <td valign="top" width="298"><strong>A</strong> should equal the text of label for a radio button. If not, <strong>A</strong> will be inserted into the fill-in input box if there is one.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138"><span style="color: #ff0000">SPFieldChoice</span> (Checkboxes)</td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_Choice</span>=A;B;C</td>
+                            <td valign="top" width="298"><strong>A</strong>, <strong>B</strong>, and <strong>C</strong> should each equal the text in a label for one of the checkboxes. If not, they will be appended to the fill-in input box if there is one, with multiple values separated by a semi-colon.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138"><span style="color: #ff0000">SPFieldDate</span></td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_DateAndTime</span>=<br>
+                                1/2/2015 4:25 PM</td>
+                            <td valign="top" width="298">The date passed in must be able to be parsed by the JavaScript Date object. This can unfortunately be somewhat browser specific, for instance I originally left out the space before PM in the example, which worked fine in IE but not in FireFox. The time may be omitted and will be ignored if the field is date only.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138"><span style="color: #ff0000">SPFieldBoolean</span></td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_YesNo</span>=NO</td>
+                            <td valign="top" width="298">You can pass in either <strong>0</strong>, <strong>no</strong>, or <strong>false</strong> (case insensitive) to uncheck the box. Any other value will check the box.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138"><span style="color: #ff0000">SPFieldURl</span></td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_HyperLink</span>= http://speasyforms.com|<br>
+                                SPEasyForms</td>
+                            <td valign="top" width="298">Pass in just a URL and it will be used for the URL and the description. To pass a separate description, pass the URL, followed by a pipe, followed by the description.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138"><span style="color: #ff0000">SPFieldUser</span></td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_User</span>=<br>
+                                joe@speasyforms.com</td>
+                            <td valign="top" width="298">Pass in any value that the people picker can resolve (user name, email, SIP address, even display name if it is unique). If the field accepts groups, you can pass in anything that can be uniquely resolved to a group</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138"><span style="color: #ff0000">SPFieldUserMulti</span></td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_Users</span>= joe@speasyforms.com;<br>
+                                SPEasyForms Visitors</td>
+                            <td valign="top" width="298">Same as above except multiple values are separated by a semi-colon.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138"><span style="color: #ff0000">SPFieldLookup</span></td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_Lookup</span>=3</td>
+                            <td valign="top" width="298">Generally, you should always pass in the ID for a lookup. You can pass the text instead, but if it is not unique the first match as it appear in the dropdown will be selected.</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="138"><span style="color: #ff0000">SPFieldLookupMulti</span></td>
+                            <td valign="top" width="165"><span style="color: #0000ff">spef_LookupMulti</span>=3;7</td>
+                            <td valign="top" width="298">Same as above except multiple values are separated by a semi-colon.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p>
+            <p>Note that if SPEasyForms is installed and activated on a site collection, you can initialize fields using request parameters in any list even if the list is not configured to use SPEasyForms. </p>
+            <h2>Appendix B. Variables in Conditional Expressions</h2>
+            <p>One of the weaknesses in the original implementation of conditional expressions in visibility rules was that you could only compare a field with a literal expression. I was asked by someone how you could write an expression to see if a user field contained the current user, and at the time the answer was you can’t. But this would obviously be pretty useful, so I went ahead and added it. You can now create a conditional expression like:</p>
+            <p><strong>Where ‘Manager’ Matches ‘[CurrentUser]’</strong></p>
+            <p>and if Manager is a people picker field, the visibility rules engine will substitute a pattern for [CurrentUser] that will make the expression work. While I was at it, I added several other variable expressions that I thought would be handle. The table below shows the complete list of variable expressions you can use:</p>
+            <table cellspacing="0" cellpadding="2" width="600" border="1">
+                <tbody>
+                    <tr>
+                        <td valign="top" width="197">
+                            <p align="center"><strong>Expression</strong></p>
+                        </td>
+                        <td valign="top" width="403">
+                            <p align="center"><strong>Interpretation</strong> </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" width="197">[CurrentUser]</td>
+                        <td valign="top" width="403">Gets replaced with a regular expression suitable for matching against a people picker field. The actual expression <strong>“userdisp.aspx\\?ID=” + currentUserId + “[$&amp;]”</strong>, which matches the link to a user in a people picker.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top" width="197">[CurrentUserId]</td>
+                        <td valign="top" width="403">Gets replaced with the site collection integer id of the current user.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top" width="197">[CurrentUserLogin]</td>
+                        <td valign="top" width="403">Gets replaced with the current user’s login name. The format of the name may vary depending on the authentication method and SharePoint version. For instance this may be a domain name, or it may be a claims based name. Whatever appears in the user name field on userdisp.aspx is what will be used here.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top" width="197">[CurrentUserEmail]</td>
+                        <td valign="top" width="403">Gets replaced with the work email address of the current user.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top" width="197">[Today]</td>
+                        <td valign="top" width="403">Gets replaced with todays date.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top" width="197">[Today+2]</td>
+                        <td valign="top" width="403">Gets replaced with todays date plus 2 days. You can add or subtract any number of days by added [+-]X, where X is an integer.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top" width="197">[Now]</td>
+                        <td valign="top" width="403">Gets replaced with the current date/time.</td>
+                    </tr>
+                    <tr>
+                        <td valign="top" width="197">[Now-60]</td>
+                        <td valign="top" width="403">Gets replaced with the current date/time minus 60 minutes. You can add or subtract any number of minutes by added [+-]X, where X is an integer.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Its not an exhaustive list; these are just the variable expressions I thought would be useful on the spur of the moment. If there are other variable expressions you think would be useful, let me know on the CodePlex discussion board and I’ll consider adding them.</p>
+
         </div>
         <div></div>
 

@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms.visibilityRuleCollection - object to hold and manage all field visibility rules.
  *
- * @requires jQuery.SPEasyForms.2015.01.beta 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -911,7 +911,7 @@
             // expand current user variables
             if (opt.condition.value.indexOf("[CurrentUser") >= 0) {
                 var ctx = $.spEasyForms.sharePointContext.get(opt);
-                expandedValue = expandedValue.replace(/\[CurrentUser\]/g, "userdisp.aspx\\?ID=" + ctx.userId + "'");
+                expandedValue = expandedValue.replace(/\[CurrentUser\]/g, "userdisp.aspx\\?ID=" + ctx.userId + "[$&]");
                 expandedValue = expandedValue.replace(/\[CurrentUserId\]/g, ctx.userId);
                 expandedValue = expandedValue.replace(/\[CurrentUserLogin\]/g, ctx.userInformation.userName);
                 expandedValue = expandedValue.replace(/\[CurrentUserEmail\]/g, ctx.userInformation.eMail);

@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms.containerCollection - object to hold and manage all containers.
  *
- * @requires jQuery.SPEasyForms.2015.01.beta 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -793,7 +793,7 @@
 
                 if (themeType === "gallery" && $("#selGalleryTheme").val() !== "none") {
                     theme = $("#selGalleryTheme").val();
-                    theme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.beta/Css/jquery-ui-' + theme + '/jquery-ui.css');
+                    theme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01/Css/jquery-ui-' + theme + '/jquery-ui.css');
                     opt.currentConfig.jQueryUITheme = theme;
                 }
                 else if (themeType === "custom") {
@@ -869,7 +869,7 @@
 
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.beta/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });

@@ -18,29 +18,29 @@
 
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.js</file>
 
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.utilities.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.sharePointContext.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.sharePoinFieldRows.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.configManager.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/utilities.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/sharePointContext.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/sharePoinFieldRows.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/configManager.js</file>
 
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.defaultContainer.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.baseContainer.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.fieldCollection.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.accordion.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.columns.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.tabs.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.wizard.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.containerCollection.htmlSnippet.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/containerCollection.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/cont.defaultContainer.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/cont.baseContainer.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/cont.fieldCollection.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/cont.accordion.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/cont.columns.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/cont.tabs.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/cont.wizard.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/cont.htmlSnippet.js</file>
 
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.visibilityRuleCollection.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/visibilityRuleCollection.js</file>
 
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js</file>
-        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyForms.adapterCollection.starRatingAdapter.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/adapterCollection.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/adap.autocompleteAdapter.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/adap.cascadingLookupAdapter.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/adap.defaultToCurrentUserAdapter.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/adap.lookupDetailAdapter.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/adap.starRatingAdapter.js</file>
 
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.xhtml.js</file>

@@ -26,30 +26,30 @@
     <script src="../JavaScript/jquery.SPEasyForms.js" type="text/javascript"></script>
     <script src="../../SPEasyForms_DefaultSettings.js" type="text/javascript"></script>
 
-    <script src="../JavaScript/jquery.SPEasyForms.utilities.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.sharePointContext.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.sharePoinFieldRows.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.configManager.js" type="text/javascript"></script>
+    <script src="../JavaScript/utilities.js" type="text/javascript"></script>
+    <script src="../JavaScript/sharePointContext.js" type="text/javascript"></script>
+    <script src="../JavaScript/sharePoinFieldRows.js" type="text/javascript"></script>
+    <script src="../JavaScript/configManager.js" type="text/javascript"></script>
 
-    <script src="../JavaScript/jquery.SPEasyForms.containerCollection.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.containerCollection.defaultContainer.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.containerCollection.baseContainer.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.containerCollection.fieldCollection.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.containerCollection.accordion.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.containerCollection.columns.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.containerCollection.stack.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.containerCollection.tabs.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.containerCollection.wizard.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.containerCollection.htmlSnippet.js" type="text/javascript"></script>
+    <script src="../JavaScript/containerCollection.js" type="text/javascript"></script>
+    <script src="../JavaScript/cont.defaultContainer.js" type="text/javascript"></script>
+    <script src="../JavaScript/cont.baseContainer.js" type="text/javascript"></script>
+    <script src="../JavaScript/cont.fieldCollection.js" type="text/javascript"></script>
+    <script src="../JavaScript/cont.accordion.js" type="text/javascript"></script>
+    <script src="../JavaScript/cont.columns.js" type="text/javascript"></script>
+    <script src="../JavaScript/cont.stack.js" type="text/javascript"></script>
+    <script src="../JavaScript/cont.tabs.js" type="text/javascript"></script>
+    <script src="../JavaScript/cont.wizard.js" type="text/javascript"></script>
+    <script src="../JavaScript/cont.htmlSnippet.js" type="text/javascript"></script>
 
-    <script src="../JavaScript/jquery.SPEasyForms.visibilityRuleCollection.js" type="text/javascript"></script>
+    <script src="../JavaScript/visibilityRuleCollection.js" type="text/javascript"></script>
 
-    <script src="../JavaScript/jquery.SPEasyForms.adapterCollection.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js" type="text/javascript"></script>
-    <script src="../JavaScript/jquery.SPEasyForms.adapterCollection.starRatingAdapter.js" type="text/javascript"></script>
+    <script src="../JavaScript/adapterCollection.js" type="text/javascript"></script>
+    <script src="../JavaScript/adap.autocompleteAdapter.js" type="text/javascript"></script>
+    <script src="../JavaScript/adap.cascadingLookupAdapter.js" type="text/javascript"></script>
+    <script src="../JavaScript/adap.defaultToCurrentUserAdapter.js" type="text/javascript"></script>
+    <script src="../JavaScript/adap.lookupDetailAdapter.js" type="text/javascript"></script>
+    <script src="../JavaScript/adap.starRatingAdapter.js" type="text/javascript"></script>
 
     <script src="../JavaScript/jquery.cleditor.js" type="text/javascript"></script>
     <script src="../JavaScript/jquery.cleditor.xhtml.js" type="text/javascript"></script>
@@ -270,7 +270,7 @@
             <div id='spEasyFormsAboutDialog' class='tabs-min' style='display: none' title='About SPEasyForms'>
                 <div class='speasyforms-helptext ui-corner-all'>
                     <p>
-                        <b>Version: 2015.01.beta</b>
+                        <b>Version: 2015.01</b>
                     </p>
                     <h2>The MIT License (MIT)</h2>
                     <p>Copyright (c) 2014-2016 Joe McShea</p>

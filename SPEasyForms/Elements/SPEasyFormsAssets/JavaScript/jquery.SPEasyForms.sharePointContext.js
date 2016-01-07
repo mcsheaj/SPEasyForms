@@ -2,7 +2,7 @@
  * SPEasyForms.sharePointContext - object for capturing SharePoint context information
  * using web services.
  *
- * @requires jQuery.SPEasyForms.2015.01.beta 
+ * @requires jQuery.SPEasyForms.2015.01 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
