@@ -793,7 +793,7 @@
 
                 if (themeType === "gallery" && $("#selGalleryTheme").val() !== "none") {
                     theme = $("#selGalleryTheme").val();
-                    theme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01/Css/jquery-ui-' + theme + '/jquery-ui.css');
+                    theme = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/~version/Css/jquery-ui-' + theme + '/jquery-ui.css');
                     opt.currentConfig.jQueryUITheme = theme;
                 }
                 else if (themeType === "custom") {

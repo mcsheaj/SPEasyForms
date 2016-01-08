@@ -244,24 +244,9 @@
                                             fieldMissing: true
                                         };
                                     }
-                                    if (!tr.fieldMissing && tr.row.attr("data-visibilitychangelistener") !== "true") {
-                                        tr.row.find("input").change(function () {
-                                            visibilityRuleCollection.transform(opt);
-                                            $.spEasyForms.adapterCollection.transform(opt);
-                                            $.spEasyForms.containerCollection.postTransform(opt);
-                                        });
-                                        tr.row.find("select").change(function () {
-                                            visibilityRuleCollection.transform(opt);
-                                            $.spEasyForms.adapterCollection.transform(opt);
-                                            $.spEasyForms.containerCollection.postTransform(opt);
-                                        });
-                                        tr.row.find("textarea").change(function () {
-                                            visibilityRuleCollection.transform(opt);
-                                            $.spEasyForms.adapterCollection.transform(opt);
-                                            $.spEasyForms.containerCollection.postTransform(opt);
-                                        });
-                                        tr.row.attr("data-visibilitychangelistener", "true");
-                                    }
+                                    tr.row.find("input").addClass("speasyforms-visibilitychangelistener");
+                                    tr.row.find("select").addClass("speasyforms-visibilitychangelistener");
+                                    tr.row.find("textarea").addClass("speasyforms-visibilitychangelistener");
                                 });
                             }
                         });
@@ -270,6 +255,15 @@
                         }
                     }
                 });
+                var body = $("#s4-bodyContainer");
+                if (body.attr("data-visibilitychangelistener") !== "true") {
+                    body.attr("data-visibilitychangelistener", "true");
+                    body.on("change", ".speasyforms-visibilitychangelistener", function () {
+                        visibilityRuleCollection.transform(opt);
+                        $.spEasyForms.adapterCollection.transform(opt);
+                        $.spEasyForms.containerCollection.postTransform(opt);
+                    });
+                }
             }
         },
 
