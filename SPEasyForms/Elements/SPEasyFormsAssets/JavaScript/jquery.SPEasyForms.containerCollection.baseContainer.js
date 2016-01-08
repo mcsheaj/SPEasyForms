@@ -270,7 +270,7 @@
                         opt.rowInfo.row.attr("data-headerontop", "true");
                     }
                     else {
-                        opt.rowInfo.row.find("*").removeClass("ms-standardheader").removeClass("ms-h3").addClass("speasyforms-columnsheader");
+                        opt.rowInfo.row.find("h3.ms-standardheader, span.ms-h3").removeClass("ms-standardheader").removeClass("ms-h3").addClass("speasyforms-columnsheader");
                         opt.rowInfo.row.find(".ms-formlabel").removeClass("ms-formlabel").addClass("speasyforms-columnheader");
                     }
                     result = true;
