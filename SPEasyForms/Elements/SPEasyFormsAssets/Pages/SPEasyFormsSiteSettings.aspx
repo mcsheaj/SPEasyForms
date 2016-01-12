@@ -141,6 +141,14 @@
                             $("#selGalleryTheme").hide();
                         }
                     });
+
+                    if ($.spEasyForms.userDefaults.additionalFiles && $.spEasyForms.userDefaults.additionalFiles.length > 0) {
+                        var additionalFiles = "";
+                        $.each($($.spEasyForms.userDefaults.additionalFiles), function (idx, file) {
+                            additionalFiles += file + "\n";
+                        });
+                        $("#settingsAdditionalFiles").val(additionalFiles);
+                    }
                 },
 
                 wireButtonEvents: function () {
