@@ -774,3 +774,17 @@ button.speasyforms-visibilityrulebutton,
 button.speasyforms-deleteadapter {
     height: 20px;
 }
+
+#applyThemeButton {
+    font-size: 1em !important;
+}
+
+    #applyThemeButton span.ui-button-text {
+        padding: .3em .6em;
+    }
+
+div.speasyforms-applytheme
+{
+    text-align: right;
+    width: 450px;
+}

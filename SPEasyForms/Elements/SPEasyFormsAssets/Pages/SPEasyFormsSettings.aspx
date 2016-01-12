@@ -245,7 +245,7 @@
                         <input type="text" id="inpCustomTheme" name="inpCustomTheme"
                             value="" title="Enter the full text to a jQuery UI 1.11.x theme." style="display: none; width: 700px;" />
                     </div>
-                    <div>
+                    <div class="speasyforms-applytheme">
                         <button id="applyThemeButton">Apply</button>
                     </div>
                 </div>

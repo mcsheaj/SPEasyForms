@@ -54,6 +54,19 @@
             border: 1px solid darkgrey;
             padding: 10px;
         }
+
+        .buttun-div {
+            text-align: right;
+            width: 700px;
+        }
+
+        button.settings-button {
+            font-size: 1em;
+        }
+
+            button.settings-button span.ui-button-text {
+                padding: .3em .5em;
+            }
     </style>
 </asp:Content>
 <asp:Content ContentPlaceHolderID='PlaceHolderMiniConsole' runat='server'>
@@ -84,9 +97,9 @@
                 id='settingsAdditionalFiles' rows='10' cols='100'></textarea>
         </div>
     </div>
-    <div>
-        <button id="saveButton">Save</button>
-        <button id="cancelButton">Cancel</button>
+    <div class="buttun-div">
+        <button id="saveButton" class="settings-button">Save</button>
+        <button id="cancelButton" class="settings-button">Cancel</button>
     </div>
     <script type="text/javascript">
         (function ($, undefined) {
@@ -221,12 +234,13 @@
 
                 addAdditionalFileCustomActions: function (callback) {
                     var found = false;
+                    var suuid = Math.uuidFast("_");
                     $.each($($.spEasyForms.userDefaults.additionalFiles), function (idx, file) {
                         if (/\.js$/.test(file) && /^~sitecollection/.test(file)) {
                             found = true;
                             var newAction = siteSettings.userCustomActions.add();
                             newAction.set_location("ScriptLink");
-                            newAction.set_scriptSrc(file);
+                            newAction.set_scriptSrc(file + "?rev=" + suuid);
                             newAction.set_sequence(57500 + idx);
                             newAction.set_title("SPEasyForms Additional File #" + idx);
                             newAction.set_description("Generally used to load SPEasyForms AddOns.");
@@ -293,6 +307,25 @@
                 error: function() {
                     alert("oops...");
                 }
+            };
+
+            var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+            Math.uuidFast = function (separator) {
+                var chars = CHARS, uuid = new Array(36), rnd = 0, r;
+                separator = separator || '-';
+                for (var i = 0; i < 36; i++) {
+                    if (i == 8 || i == 13 || i == 18 || i == 23) {
+                        uuid[i] = separator;
+                    } else if (i == 14) {
+                        uuid[i] = '4';
+                    } else {
+                        if (rnd <= 0x02) rnd = 0x2000000 + (Math.random() * 0x1000000) | 0;
+                        r = rnd & 0xf;
+                        rnd = rnd >> 4;
+                        uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+                    }
+                }
+                return uuid.join('');
             };
 
             var siteSettings = $.spEasyForms.siteSettings;
