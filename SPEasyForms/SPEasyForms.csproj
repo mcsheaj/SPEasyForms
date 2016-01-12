@@ -281,6 +281,9 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.css" />
+    <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSiteSettings.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="Elements\SPEasyFormsAssets\SPEasyForms_DefaultSettings.js" />
     <Content Include="Elements\SPEasyFormsCustomActions.xml">
       <SubType>Designer</SubType>

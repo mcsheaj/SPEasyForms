@@ -207,9 +207,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.source = $.spEasyForms.utilities.getRequestParameters(opt).Source;
                 opt.currentListContext = $.spEasyForms.sharePointContext.getListContext(opt);
 
-                /***
-                 * Produce the editor on the SPEasyForms settings page.
-                 ***/
+                    /***
+                     * Produce the editor on the SPEasyForms settings page.
+                     ***/
                 if (spEasyForms.isSettingsPage(opt)) {
                     spEasyForms.toEditor(opt);
                 }
@@ -220,10 +220,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     spEasyForms.transform(opt);
                 }
                     /***
-                     * If it looks like a transformable list settings page, insert an SPEasyForms link.
+                     * If it looks like a transformable list settings page, insert an SPEasyForms list settings link.
                      ***/
                 else if (spEasyForms.isConfigurableListSettings(opt)) {
-                    spEasyForms.insertSettingsLink(opt);
+                    spEasyForms.insertListSettingsLink(opt);
+                }
+                    /***
+                     * If it looks like a site settings page, insert an SPEasyForms site settings link.
+                     ***/
+                else if (window.location.href.toLowerCase().indexOf("/settings.aspx") > 0) {
+                    spEasyForms.insertSiteSettingsLink(opt);
                 }
             } finally {
                 $("table.ms-formtable ").show();
@@ -388,7 +394,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          * Add a link to the SPEasyForms settings page to an OOB list settings
          * page (listedit.aspx).
          ********************************************************************/
-        insertSettingsLink: function (opt) {
+        insertListSettingsLink: function (opt) {
             var generalSettings = $("td.ms-descriptiontext:contains('description and navigation')").closest("table");
             var permissionsLink = $("a:contains('Permissions for this list')");
             if (permissionsLink.length > 0) {
@@ -412,6 +418,30 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         "</td>" +
                         "</tr>";
                     generalSettings.append(newRow);
+                }
+            }
+        },
+
+        /********************************************************************
+         * Add a link to the SPEasyForms site settings page to an OOB site settings
+         * page (settings.aspx).
+         ********************************************************************/
+        insertSiteSettingsLink: function (opt) {
+            var usersAndPermissions = $("h3:contains('Users and Permissions')");
+            var scaLink = usersAndPermissions.next().find("a:contains('Site collection administrators')");
+            if (scaLink.length > 0) {
+                var siteCollectionAdministrationList = $("h3:contains('Site Collection Administration')").next();
+                if (siteCollectionAdministrationList.length > 0) {
+                    var source = window.location.href;
+                    if (source.indexOf("start.aspx#") >= 0) {
+                        source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
+                    }
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01/Pages/SPEasyFormsSiteSettings.aspx") +
+                        "?Source=" + encodeURIComponent(source);
+                    var newItem = "<li class='ms-linksection-listItem'>" + 
+	                    "<a title='Restore or permanently remove items that users have deleted on this site.' href='" + settings + "'>SPEasyForms</a>" +
+		                "</li>";
+                    siteCollectionAdministrationList.append(newItem);
                 }
             }
         },
