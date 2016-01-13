@@ -244,32 +244,33 @@
         <File Path="SPEasyFormsAssets\jquery-ui.nestedsortable.js" Url="jquery-ui.nestedsortable.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPServices.js" Url="jquery.SPServices.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\ssw.js" Url="ssw.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\jquery_bundle.min.js" Url="jquery.bundle.min.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery_SPEasyForms.min.js" Url="jquery.SPEasyForms.min.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.SPEasyForms.js" Url="jquery.SPEasyForms.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.sharePointContext.js" Url="sharePointContext.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.utilities.js" Url="utilities.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.sharePoinFieldRows.js" Url="sharePoinFieldRows.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.configManager.js" Url="configManager.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.js" Url="containerCollection.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.defaultContainer.js" Url="cont.defaultContainer.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.baseContainer.js" Url="cont.baseContainer.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.fieldCollection.js" Url="cont.fieldCollection.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.accordion.js" Url="cont.accordion.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.columns.js" Url="cont.columns.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.stack.js" Url="cont.stack.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.tabs.js" Url="cont.tabs.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.containerCollection.wizard.js" Url="cont.wizard.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.visibilityRuleCollection.js" Url="visibilityRuleCollection.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.js" Url="adapterCollection.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" Url="adap.autocompleteAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" Url="adap.cascadingLookupAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" Url="adap.defaultToCurrentUserAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js" Url="adap.lookupDetailAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jquery.SPEasyForms.adapterCollection.starRatingAdapter.js" Url="adap.starRatingAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\sharePointContext.js" Url="sharePointContext.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\utilities.js" Url="utilities.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\sharePoinFieldRows.js" Url="sharePoinFieldRows.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\configManager.js" Url="configManager.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\containerCollection.js" Url="containerCollection.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\cont.defaultContainer.js" Url="cont.defaultContainer.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\cont.baseContainer.js" Url="cont.baseContainer.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\cont.fieldCollection.js" Url="cont.fieldCollection.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\cont.accordion.js" Url="cont.accordion.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\cont.columns.js" Url="cont.columns.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\cont.stack.js" Url="cont.stack.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\cont.tabs.js" Url="cont.tabs.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\cont.wizard.js" Url="cont.wizard.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\visibilityRuleCollection.js" Url="visibilityRuleCollection.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\adapterCollection.js" Url="adapterCollection.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\adap.autocompleteAdapter.js" Url="adap.autocompleteAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\adap.cascadingLookupAdapter.js" Url="adap.cascadingLookupAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\adap.defaultToCurrentUserAdapter.js" Url="adap.defaultToCurrentUserAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\adap.lookupDetailAdapter.js" Url="adap.lookupDetailAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\adap.starRatingAdapter.js" Url="adap.starRatingAdapter.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.js" Url="jquery.cleditor.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.sharepoint.js" Url="jquery.cleditor.sharepoint.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.xhtml.js" Url="jquery.cleditor.xhtml.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-        <File Path="SPEasyFormsAssets\jQuery.SPEasyForms.containerCollection.HtmlSnippet.js" Url="cont.htmlSnippet.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\cont.HtmlSnippet.js" Url="cont.htmlSnippet.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
     <Module Name="SPEasyFormsAssetsPages" Url="Style Library/SPEasyFormsAssets/2015.01/Pages">
         <File Path="SPEasyFormsAssets\SPEasyFormsSettings.aspx" Url="SPEasyFormsSettings.aspx" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

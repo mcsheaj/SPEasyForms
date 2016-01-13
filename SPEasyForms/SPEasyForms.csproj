@@ -239,33 +239,39 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.nestedsortable.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.starRatingAdapter.js" />
-    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.fieldCollection.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jQuery.SPEasyForms.containerCollection.htmlSnippet.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.defaultToCurrentUserAdapter.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\adap.starRatingAdapter.js" />
+    <None Include="Elements\SPEasyFormsAssets\JavaScript\cont.fieldCollection.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.htmlSnippet.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\adap.defaultToCurrentUserAdapter.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.sharepoint.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.xhtml.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.configManager.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.autocompleteAdapter.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.cascadingLookupAdapter.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.accordion.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.baseContainer.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.defaultContainer.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.stack.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.tabs.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.wizard.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.sharePoinFieldRows.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\adapterCollection.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\configManager.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\adap.autocompleteAdapter.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\adap.cascadingLookupAdapter.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.accordion.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.baseContainer.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.defaultContainer.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\containerCollection.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.stack.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.tabs.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.wizard.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.js">
+      <DependentUpon>jquery_bundle.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.min.js">
+      <DependentUpon>jquery_bundle.js</DependentUpon>
+    </Content>
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\sharePoinFieldRows.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.sharePointContext.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.utilities.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.visibilityRuleCollection.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\sharePointContext.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\utilities.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\visibilityRuleCollection.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPServices.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.adapterCollection.lookupDetailAdapter.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\adap.lookupDetailAdapter.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.js">
       <DependentUpon>jquery_SPEasyForms.js.bundle</DependentUpon>
     </Content>
@@ -277,9 +283,7 @@
     <Content Include="Elements\SPEasyFormsAssets\Css\images\SPEasyForms16x16.png" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\menu.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\images\SPEasyForms32x32.png" />
-    <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
+    <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.css" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSiteSettings.aspx">
       <SubType>ASPXCodeBehind</SubType>
@@ -300,7 +304,11 @@
     <Content Include="Package\Manifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.containerCollection.columns.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.columns.js" />
+    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.js.bundle" />
+    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.min.js.map">
+      <DependentUpon>jquery_bundle.min.js</DependentUpon>
+    </None>
     <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.js.bundle">
       <SubType>Designer</SubType>
     </None>
