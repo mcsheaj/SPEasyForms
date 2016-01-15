@@ -942,16 +942,25 @@ constructs like the Columns container and Stack container, which are not
  part of jQuery UI, uses jQuery UI classes to be consistent. The Redmond
  theme was chosen because it looks reasonably
  well with unaltered/out of the box sites in both SharePoint 2010 and 
-2013. But if we could live with unaltered SharePoint sites, we could 
+2013. 
+            </p>
+            <p>
+                But if we could live with unaltered SharePoint sites, we could 
 probably live with unaltered forms, and SPEasyForms would serve no 
 purpose. Most production sites have had some custom
  theme work done, so it would be hard to argue that the Redmond theme 
-will look good on your site. One of the common requests for version 
+will look good on your site. 
+            </p>
+            <p>
+                One of the common requests for version 
 2014.01 was how do I change the theme. The only way was to overwrite my 
 theme in the Style Library/SPEasyFormsAssets/Css
  directory, which changed the theme for every list in the site 
-collection.
+collection. That's changed in the latest version. You can configure the default
+theme for the site collection or the theme for an individual list through the user
+interface.
             </p>
+            <h3>2.1 Changing the Theme for a List</h3>
             <p>
                 With 2015.01, you can configure a different jQuery UI theme for each list. On the settings page, hit the Settings
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532829">
@@ -1024,31 +1033,24 @@ not have to be stored in SharePoint; you can even load it from a CDN
 assuming your users will be able to access the
  CDN when they’re using the form.
             </p>
+            <h3>2.2 Changing the Default Theme for the Site Collection</h3>
             <p>
-                Now I mentioned earlier that you can replace the default theme for 
-the entire site collection, but there isn’t any UI for that. You need to
- modify the file Style 
-Library/SPEasyFormsAssets/SPEasyForms_DefaultSettings.js for that, which
- looks like:
+                You must be a site collection administrator to change the default theme for the site colleciton. To do so, 
+go to the site settings page of the root site for your site collection. Under the Site Collection Administration heading,
+click the link that says SPEasyForms, and you should see the following page:
             </p>
-            <pre>(<span style="color:blue">function</span> ($, undefined) {
-    $.spEasyForms.defaults = $.extend({}, $.spEasyForms.defaults, {
-        <span style="color:green">// path to the default jquery-ui style sheet</span>
-        jQueryUITheme: <span style="color:#a31515">"~sitecollection/Style Library/pepper-grinder/jqeury-ui.css"</span>,
-        <span style="color:green">// path to the spEasyForms style sheet</span>
-        css: <span style="color:#a31515">"~sitecollection/Style Library/SPEasyFormsAssets/2015.01/Css/speasyforms.css"</span>
-    });
-})(spefjQuery);
-</pre>
             <p>
-                Just modify the string value for jQueryUITheme. Again, if the theme is stored in SharePoint you can use
-                <strong>~sitecollection</strong> or <strong>~site</strong> to represent 
-the path to the current site collection or site respectively. You may 
-have to clear your browser cache to see the change.&nbsp; I’ve already 
-modified the one above the way I want it, so
- after uploading/overwriting the file and clearing my cache, if I open a
- form the settings page for a list that doesn’t have it’s own custom 
-theme I see:
+                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1538467">
+                    <img title="image" alt="image" src="images/Download_111.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="356" width="604"></a>
+            </p>
+            <p>
+                This looks very similar to configuring a list in the editor, except there is no option to revert to the 
+                default theme, because the default theme is what you’re configuring. Just choose one of the six gallery 
+                themes. Or choose use custom theme and enter a path to the jquery-ui.css file. Again, you can use 
+                <strong>~sitecollection</strong> in your path if your theme is stored in the current site collection. 
+                So if I choose use custom theme and enter the path 
+                “~sitecollection/Style Library/jquery-ui-peppergrinder/jqury-ui.css” for the path, save it and open the 
+                settings page for a list that isn’t configured to use a non-default theme I see:
             </p>
             <p>
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532843">
@@ -1056,7 +1058,7 @@ theme I see:
             </p>
             <p>
                 and…that…doesn’t…look…right at all?&nbsp; This is jQuery with no CSS 
-applied. It still functions, but it doesn’t look at all good. The 
+applied. It still functions, but it doesn’t look very good. The 
 reason: if you look at my configuration above I’ve spelled jQuery wrong 
 in my path. I demonstrate this because I know it’s
  going to happen and showing what it looks like may help (if anybody 
@@ -1068,6 +1070,12 @@ refresh the editor I get:
                     <img title="image" alt="image" src="images/Download_070.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="356" width="604"></a>
             </p>
             <p>Which is a bit more like what I was expecting.</p>
+<p>Also note that there is a large text area called additional files to load. I can specify additional JavaScript and CSS files to be loaded on every page in the site. This was intended to provide an easy way to install SPEasyForms AddOns in the future, without the need to install a hotfix sandbox solution, but it can also be used as a sort of Swiss army knife for designers that want to tweak forms a little more than SPEasyForms will allow. Buyer beware though, before loading files in this way, you must understand:</p>
+<ul>
+<li>These files are loaded on every page in the site, just like the JavaScript files that implement SPEasyForms. That means if they’re broken they can break every page in the site.</li>
+<li>You must use<strong> ~sitecollection</strong> at the beginning of the path for each JavaScript file. That’s because behind the scenes I’m going to create a user custom action for each JavaScript file and let SharePoint actually load them up just like it loads up SPEasyForms. But SharePoint only allows script user custom actions that point to script files in the current site collection.</li>
+<li>You may use <strong>~sitecollection</strong> in CSS file paths as well, but it is not required, CSS can be loaded from anywhere.</li></ul>
+<p>In general, before loading any files like this in a production environment, you should test them in a non-production site collection to ensure that they are stable and provide the functionality desired.</p>
             <h2>3. Containers</h2>
             <p>
                 As mentioned previously, the rest of this document is going to follow

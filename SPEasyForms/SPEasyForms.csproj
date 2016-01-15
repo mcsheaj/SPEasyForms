@@ -235,6 +235,7 @@
     <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_108.png" />
     <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_109.png" />
     <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_110.png" />
+    <Content Include="Elements\SPEasyFormsAssets\Help\Images\Download_111.png" />
     <Content Include="Elements\SPEasyFormsAssets\Help\speasyforms_help.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>

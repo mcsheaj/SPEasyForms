@@ -236,6 +236,7 @@
         <File Path="SPEasyFormsAssets\Download_108.png" Url="Download_108.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\Download_109.png" Url="Download_109.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\Download_110.png" Url="Download_110.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\Download_111.png" Url="Download_111.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
     <Module Name="SPEasyFormsAssetsJavaScript" Url="Style Library/SPEasyFormsAssets/2015.01/JavaScript">
         <File Path="SPEasyFormsAssets\MicrosoftAjax.js" Url="MicrosoftAjax.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
