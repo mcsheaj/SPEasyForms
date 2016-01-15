@@ -16,17 +16,16 @@
     <script src="/_layouts/sp.core.js" type="text/javascript"></script>
     <script src="/_layouts/sp.runtime.js" type="text/javascript"></script>
     <script src="/_layouts/sp.js" type="text/javascript"></script>
-
     <script src="../JavaScript/jquery.bundle.min.js" type="text/javascript"></script>
 
+    <!--
+    <script src="../JavaScript/jquery.SPEasyForms.min.js" type="text/javascript"></script>
+    -->
     <script src="../JavaScript/jquery.SPEasyForms.js" type="text/javascript"></script>
-    <script src="../../SPEasyForms_DefaultSettings.js" type="text/javascript"></script>
-
     <script src="../JavaScript/utilities.js" type="text/javascript"></script>
     <script src="../JavaScript/sharePointContext.js" type="text/javascript"></script>
     <script src="../JavaScript/sharePoinFieldRows.js" type="text/javascript"></script>
     <script src="../JavaScript/configManager.js" type="text/javascript"></script>
-
     <script src="../JavaScript/containerCollection.js" type="text/javascript"></script>
     <script src="../JavaScript/cont.defaultContainer.js" type="text/javascript"></script>
     <script src="../JavaScript/cont.baseContainer.js" type="text/javascript"></script>
@@ -37,9 +36,7 @@
     <script src="../JavaScript/cont.tabs.js" type="text/javascript"></script>
     <script src="../JavaScript/cont.wizard.js" type="text/javascript"></script>
     <script src="../JavaScript/cont.htmlSnippet.js" type="text/javascript"></script>
-
     <script src="../JavaScript/visibilityRuleCollection.js" type="text/javascript"></script>
-
     <script src="../JavaScript/adapterCollection.js" type="text/javascript"></script>
     <script src="../JavaScript/adap.autocompleteAdapter.js" type="text/javascript"></script>
     <script src="../JavaScript/adap.cascadingLookupAdapter.js" type="text/javascript"></script>
@@ -47,11 +44,9 @@
     <script src="../JavaScript/adap.lookupDetailAdapter.js" type="text/javascript"></script>
     <script src="../JavaScript/adap.starRatingAdapter.js" type="text/javascript"></script>
 
+    <script src="../../SPEasyForms_DefaultSettings.js" type="text/javascript"></script>
     <link href="SPEasyFormsSettings.css" rel="stylesheet" type="text/css" />
     <link href="../Css/speasyforms.css" rel="stylesheet" type="text/css" />
-
-    <SharePoint:CssRegistration Name="default" runat="server" />
-
 </head>
 <body>
     <div id="suitBar" class="speasyforms-suitbar ui-widget-header"><a href="https://speasyforms.codeplex.com" target="_blank">SPEasyForms</a></div>
@@ -678,66 +673,8 @@
             }
         </style>
         <script type='text/javascript'>
-            spefjQuery(window).bind('load', function () { spefjQuery.spEasyForms.init(); });
-
-/*
-            var scripts = [
-                "../JavaScript/jquery.SPEasyForms.js"
-            ];
-
-            var scripts2 = [
-                "../../SPEasyForms_DefaultSettings.js",
-                "../JavaScript/utilities.js",
-                "../JavaScript/sharePointContext.js",
-                "../JavaScript/sharePoinFieldRows.js",
-                "../JavaScript/configManager.js",
-                "../JavaScript/containerCollection.js",
-                "../JavaScript/cont.defaultContainer.js",
-                "../JavaScript/cont.baseContainer.js",
-                "../JavaScript/cont.fieldCollection.js",
-                "../JavaScript/cont.accordion.js",
-                "../JavaScript/cont.columns.js",
-                "../JavaScript/cont.stack.js",
-                "../JavaScript/cont.tabs.js",
-                "../JavaScript/cont.wizard.js",
-                "../JavaScript/cont.htmlSnippet.js",
-                "../JavaScript/visibilityRuleCollection.js",
-                "../JavaScript/adapterCollection.js",
-                "../JavaScript/adap.autocompleteAdapter.js",
-                "../JavaScript/adap.cascadingLookupAdapter.js",
-                "../JavaScript/adap.defaultToCurrentUserAdapter.js",
-                "../JavaScript/adap.lookupDetailAdapter.js",
-                "../JavaScript/adap.starRatingAdapter.js",
-                "../JavaScript/jquery.cleditor.js"
-            ];
-
-            jQuery.getMultiScripts = function ($, arr) {
-                var _arr = $.map(arr, function (scr) {
-                    return $.getScript(scr);
-                });
-
-                _arr.push($.Deferred(function (deferred) {
-                    $(deferred.resolve);
-                }));
-
-                return $.when.apply($, _arr);
-            }
-
-            jQuery.getMultiScripts(jQuery, scripts).done(function () {
-                spefjQuery.getMultiScripts(spefjQuery, scripts2).done(function () {
-                    spefjQuery.spEasyForms.init();
-                }).fail(function () {
-                    alert("fail2");
-                });
-            }).fail(function () {
-                alert("fail");
-            });
-*/
+            spefjQuery.spEasyForms.init();
         </script>
-        <!--<script type="text/javascript">
-            clientContext = SP.ClientContext.get_current();
-            document.getElementById("heading1").innerHTML = "Hello " + _spPageContextInfo.userLoginName + "!";
-        </script>-->
         <SharePoint:FormDigest ID="FormDigest1" runat="server"></SharePoint:FormDigest>
     </form>
 </body>

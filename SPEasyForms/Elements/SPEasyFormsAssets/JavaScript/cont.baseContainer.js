@@ -256,7 +256,7 @@
                     opt.table.append(opt.rowInfo.row);
                     if (opt.headerOnTop) {
                         var tdh = opt.rowInfo.row.find("td.ms-formlabel");
-                        if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+                        if ($.spEasyForms.isSettingsPage(opt)) {
                             opt.rowInfo.row.find("td.ms-formbody").prepend(
                                 "<div data-transformAdded='true'>&nbsp;</div>");
                         }

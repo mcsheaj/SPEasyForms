@@ -80,7 +80,7 @@
             }
             var currentContext = $.spEasyForms.sharePointContext.get(opt);
             var listId = $.spEasyForms.sharePointContext.getCurrentListId(opt);
-            if (listId in currentContext.listContexts && !opt.skipCalculatedFields && window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+            if (listId in currentContext.listContexts && !opt.skipCalculatedFields && $.spEasyForms.isSettingsPage(opt)) {
                 var hasCalculatedFields = false;
                 $.each(Object.keys(results), function (idx, key) {
                     if (results[key].spFieldType === "SPFieldCalculated") {

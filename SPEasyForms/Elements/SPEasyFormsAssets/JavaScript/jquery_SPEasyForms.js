@@ -259,12 +259,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, spEasyForms.defaults, options);
             // if we're not in the context of a configurable list
             if (!spEasyForms.isConfigurableList(opt)) {
-                if (window.location.href.toLowerCase().indexOf('speasyformssettings.aspx') >= 0) {
+                if (window.location.href.toLowerCase().indexOf('speasyformssettings') >= 0) {
                     $("#spEasyFormsInitializationError").show();
                 }
                 return false;
             }
-            return window.location.href.toLowerCase().indexOf('speasyformssettings.aspx') >= 0;
+            return window.location.href.toLowerCase().indexOf('speasyformssettings') >= 0;
         },
 
         /********************************************************************
@@ -1852,7 +1852,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
             var currentContext = $.spEasyForms.sharePointContext.get(opt);
             var listId = $.spEasyForms.sharePointContext.getCurrentListId(opt);
-            if (listId in currentContext.listContexts && !opt.skipCalculatedFields && window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+            if (listId in currentContext.listContexts && !opt.skipCalculatedFields && $.spEasyForms.isSettingsPage(opt)) {
                 var hasCalculatedFields = false;
                 $.each(Object.keys(results), function (idx, key) {
                     if (results[key].spFieldType === "SPFieldCalculated") {
@@ -2844,7 +2844,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 });
 
-                if (window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
+                if (!$.spEasyForms.isSettingsPage(opt)) {
                     $.spEasyForms.visibilityRuleCollection.transform(opt);
                     $.spEasyForms.adapterCollection.transform(opt);
                 }
@@ -3051,7 +3051,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         initRows: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var currentContentType = $("#spEasyFormsContentTypeSelect").val();
-            if (window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
+            if (!$.spEasyForms.isSettingsPage(opt)) {
                 containerCollection.rows = $.spEasyForms.sharePointFieldRows.init(opt);
             }
             else if (!containerCollection.rows || Object.keys(containerCollection.rows).length === 0) {
@@ -4161,7 +4161,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     opt.table.append(opt.rowInfo.row);
                     if (opt.headerOnTop) {
                         var tdh = opt.rowInfo.row.find("td.ms-formlabel");
-                        if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") >= 0) {
+                        if ($.spEasyForms.isSettingsPage(opt)) {
                             opt.rowInfo.row.find("td.ms-formbody").prepend(
                                 "<div data-transformAdded='true'>&nbsp;</div>");
                         }
@@ -4602,6 +4602,81 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     };
 
     containerCollection.containerImplementations.columns = $.extend({}, baseContainer, columns);
+
+})(spefjQuery);
+
+///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/cont.stack.js
+/*
+ * SPEasyForms.containerCollection.stack - Object representing a container where multiple containers
+ * can be stacked one on top of another.
+ *
+ * @requires jQuery.SPEasyForms.2015.01 
+ * @copyright 2014-2016 Joe McShea
+ * @license under the MIT license:
+ *    http://www.opensource.org/licenses/mit-license.php
+ */
+/* global spefjQuery */
+(function ($, undefined) {
+
+    var containerCollection = $.spEasyForms.containerCollection;
+    var baseContainer = $.spEasyForms.baseContainer;
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Stack container implementation.
+    ////////////////////////////////////////////////////////////////////////////
+    var columns = {
+        containerType: "Stack",
+        fieldCollectionsDlgTitle: "Enter the names of the containers, one per line; these are only displayed on the settings page, not on the form itself.",
+        fieldCollectionsDlgPrompt: "Container Names (one per line):",
+
+        transform: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            opt.result = [];
+
+            $.each(opt.currentContainerLayout.fieldCollections, function (idx, fieldCollection) {
+                opt.collectionIndex = opt.currentContainerLayout.index + "_" + idx;
+                opt.parentElement = opt.currentContainerParent;
+                opt.collectionType = "stack";
+                opt.fieldCollection = fieldCollection;
+                opt.tableClass = "speasyforms-stack";
+
+                $.spEasyForms.baseContainer.appendFieldCollection(opt);
+            });
+
+            return opt.result;
+        },
+
+        postTransform: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var index = opt.currentContainerLayout.index;
+            var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
+            container.attr("data-speasyformsempty", "1").hide();
+            if (container.children("div.speasyforms-container").length > 0) {
+                container.children("div.speasyforms-container").each(function (idx, current) {
+                    if ($(current).attr("data-speasyformsempty") === "0") {
+                        container.attr("data-speasyformsempty", "0").show();
+                        return false;
+                    }
+                });
+            }
+        },
+
+        preSaveItem: function (options) {
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var index = opt.currentContainerLayout.index;
+            var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
+            container.attr("data-speasyforms-validationerror", "0");
+            container.children("div.speasyforms-container").each(function (idx, current) {
+                if ($(current).attr("data-speasyforms-validationerror") === "1") {
+                    container.attr("data-speasyforms-validationerror", "1");
+                    return false;
+                }
+            });
+            return true;
+        },
+    };
+
+    containerCollection.containerImplementations.stack = $.extend({}, baseContainer, columns);
 
 })(spefjQuery);
 
@@ -6235,8 +6310,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         transform: function (options) {
-            if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") < 0) {
-                var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if (!$.spEasyForms.isSettingsPage(opt)) {
                 if (opt.currentConfig && opt.currentConfig.adapters && opt.currentConfig.adapters.def) {
                     opt.adapters = opt.currentConfig.adapters.def;
                     $.each(opt.adapters, function (idx, adapter) {

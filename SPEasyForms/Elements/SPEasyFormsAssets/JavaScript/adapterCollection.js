@@ -32,8 +32,8 @@
         },
 
         transform: function (options) {
-            if (window.location.href.toLowerCase().indexOf("speasyformssettings.aspx") < 0) {
-                var opt = $.extend({}, $.spEasyForms.defaults, options);
+            var opt = $.extend({}, $.spEasyForms.defaults, options);
+            if (!$.spEasyForms.isSettingsPage(opt)) {
                 if (opt.currentConfig && opt.currentConfig.adapters && opt.currentConfig.adapters.def) {
                     opt.adapters = opt.currentConfig.adapters.def;
                     $.each(opt.adapters, function (idx, adapter) {

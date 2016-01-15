@@ -89,7 +89,7 @@
                     }
                 });
 
-                if (window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
+                if (!$.spEasyForms.isSettingsPage(opt)) {
                     $.spEasyForms.visibilityRuleCollection.transform(opt);
                     $.spEasyForms.adapterCollection.transform(opt);
                 }
@@ -296,7 +296,7 @@
         initRows: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var currentContentType = $("#spEasyFormsContentTypeSelect").val();
-            if (window.location.href.indexOf("SPEasyFormsSettings.aspx") < 0) {
+            if (!$.spEasyForms.isSettingsPage(opt)) {
                 containerCollection.rows = $.spEasyForms.sharePointFieldRows.init(opt);
             }
             else if (!containerCollection.rows || Object.keys(containerCollection.rows).length === 0) {
