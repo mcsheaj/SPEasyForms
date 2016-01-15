@@ -273,6 +273,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         isTransformable: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
+            this.loadDynamicStyles(opt);
             // if we're not in the context of a configurable list
             if (!spEasyForms.isConfigurableList(opt)) {
                 return false;
@@ -299,7 +300,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         transform: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            this.loadDynamicStyles(opt);
             // convert all lookups to simple selects, only for 2010 and
             // earlier, from Marc Anderson's SPServices documentation and 
             // attributed to Dan Kline
@@ -352,7 +352,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         toEditor: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            this.loadDynamicStyles(opt);
             $("#msCuiTopbar").prepend("<h2 class='speasyforms-breadcrumbs'><a href='" + opt.source + "'>" + opt.currentListContext.title + "</a>  -&gt; SPEasyForms Configuration</h2>");
 
             $.each(opt.currentListContext.contentTypes.order, function (i, ctid) {
@@ -483,22 +482,27 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (opt.currentConfig.jQueryUITheme) {
                 opt.source = opt.currentConfig.jQueryUITheme;
                 theme = this.replaceVariables(opt);
-                $("head").append(
-                    '<link rel="stylesheet" type="text/css" href="' + theme + '">');
             }
             else {
                 if (opt.jQueryUITheme) {
                     opt.source = opt.jQueryUITheme;
                     theme = this.replaceVariables(opt);
                 }
-                $("head").append(
-                    '<link rel="stylesheet" type="text/css" href="' + theme + '">');
             }
 
-            opt.source = opt.css;
-            theme = this.replaceVariables(opt);
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + theme + '">');
+
+            if ($.spEasyForms.userDefaults.additionalFiles) {
+                $.each($($.spEasyForms.userDefaults.additionalFiles), function (idx, file) {
+                    if (/\.css$/.test(file)) {
+                        opt.source = file;
+                        var path = $.spEasyForms.replaceVariables(opt);
+                        $("head").append(
+                            '<link rel="stylesheet" type="text/css" href="' + path + '">');
+                    }
+                });
+            }
         },
 
         replaceVariables: function (options) {
@@ -1585,6 +1589,10 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             opt.currentContext = this.get(opt);
             opt.listId = this.getCurrentListId(opt);
             
+            if (!opt.listId) {
+                return undefined;
+            }
+
             if (this.config && opt.listId === this.configListId) {
                 return this.config;
             }

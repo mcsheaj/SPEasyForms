@@ -554,6 +554,10 @@
             opt.currentContext = this.get(opt);
             opt.listId = this.getCurrentListId(opt);
             
+            if (!opt.listId) {
+                return undefined;
+            }
+
             if (this.config && opt.listId === this.configListId) {
                 return this.config;
             }
