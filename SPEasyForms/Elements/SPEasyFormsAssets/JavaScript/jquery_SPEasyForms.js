@@ -259,12 +259,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var opt = $.extend({}, spEasyForms.defaults, options);
             // if we're not in the context of a configurable list
             if (!spEasyForms.isConfigurableList(opt)) {
-                if (window.location.href.toLowerCase().indexOf('speasyformssettings') >= 0) {
+                if (/\/SPEasyFormsSettings[a-zA-Z]*.aspx/.test(window.location.href)) {
                     $("#spEasyFormsInitializationError").show();
                 }
                 return false;
             }
-            return window.location.href.toLowerCase().indexOf('speasyformssettings') >= 0;
+            return /\/SPEasyFormsSettings[a-zA-Z]*.aspx/.test(window.location.href);
         },
 
         /********************************************************************
