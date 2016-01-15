@@ -18,8 +18,9 @@
     <script src="/_layouts/sp.js" type="text/javascript"></script>
     <script src="../JavaScript/jquery.bundle.min.js" type="text/javascript"></script>
 
-    <script src="../JavaScript/jquery.SPEasyForms.min.js" type="text/javascript"></script>
     <!--
+    <script src="../JavaScript/jquery.SPEasyForms.min.js" type="text/javascript"></script>
+    -->
     <script src="../JavaScript/jquery.SPEasyForms.js" type="text/javascript"></script>
     <script src="../JavaScript/utilities.js" type="text/javascript"></script>
     <script src="../JavaScript/sharePointContext.js" type="text/javascript"></script>
@@ -42,7 +43,6 @@
     <script src="../JavaScript/adap.defaultToCurrentUserAdapter.js" type="text/javascript"></script>
     <script src="../JavaScript/adap.lookupDetailAdapter.js" type="text/javascript"></script>
     <script src="../JavaScript/adap.starRatingAdapter.js" type="text/javascript"></script>
-    -->
 
     <script src="../../SPEasyForms_DefaultSettings.js" type="text/javascript"></script>
     <link href="SPEasyFormsSettings.css" rel="stylesheet" type="text/css" />

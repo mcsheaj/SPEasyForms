@@ -285,6 +285,7 @@
     <Content Include="Elements\SPEasyFormsAssets\Css\images\SPEasyForms32x32.png" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.css" />
+    <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettingsVerbose.aspx" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSiteSettings.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>

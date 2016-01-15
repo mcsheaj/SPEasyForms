@@ -274,6 +274,7 @@
     </Module>
     <Module Name="SPEasyFormsAssetsPages" Url="Style Library/SPEasyFormsAssets/2015.01/Pages">
         <File Path="SPEasyFormsAssets\SPEasyFormsSettings.aspx" Url="SPEasyFormsSettings.aspx" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
+        <File Path="SPEasyFormsAssets\SPEasyFormsSettingsVerbose.aspx" Url="SPEasyFormsSettingsVerbose.aspx" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\SPEasyFormsSettings.css" Url="SPEasyFormsSettings.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\menu.png" Url="menu.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>

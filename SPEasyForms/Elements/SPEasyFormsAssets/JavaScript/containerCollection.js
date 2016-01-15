@@ -852,9 +852,9 @@
             // wire the verbose button
             $("#spEasyFormsVerboseButton").click(function () {
                 if (opt.verbose) {
-                    window.location.href = window.location.href.replace("&spEasyFormsVerbose=true", "");
+                    window.location.href = window.location.href.replace("&spEasyFormsVerbose=true", "").replace("SPEasyFormsSettingsVerbose.aspx", "SPEasyFormsSettings.aspx");
                 } else {
-                    window.location.href = window.location.href + "&spEasyFormsVerbose=true";
+                    window.location.href = window.location.href.replace("SPEasyFormsSettings.aspx", "SPEasyFormsSettingsVerbose.aspx") + "&spEasyFormsVerbose=true";
                 }
                 return false;
             });
