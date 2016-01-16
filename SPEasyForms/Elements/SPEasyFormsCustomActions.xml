@@ -64,7 +64,19 @@
             <CommandUIHandlers>
                 <CommandUIHandler
                     Command="Ribbon.List.Settings.Controls.SPEasyForms.Command"
-                    CommandAction="javascript:window.location=(_spPageContextInfo.siteServerRelativeUrl != '/' ? _spPageContextInfo.siteServerRelativeUrl : '') + '/Style Library/SPEasyFormsAssets/2015.01/Pages/SPEasyFormsSettings.aspx?ListId={ListId}&amp;SiteUrl={SiteUrl}&amp;Source=' + encodeURIComponent(window.location.href)"
+                    CommandAction="javascript:goToSettingsPage();
+                    function goToSettingsPage() {
+                        var page = '/Style Library/SPEasyFormsAssets/2015.01/Pages/SPEasyFormsSettings.aspx?';
+                        if($.spEasyForms.defaults.verbose) {
+                            page = '/Style Library/SPEasyFormsAssets/2015.01/Pages/SPEasyFormsSettingsVerbose.aspx?';
+                            page += 'spEasyFormsVerbose=true&amp;';
+                        }
+                        if(_spPageContextInfo.siteServerRelativeUrl != '/') {
+                            page = _spPageContextInfo.siteServerRelativeUrl + page;
+                        }
+                        page += 'ListId={ListId}&amp;SiteUrl={SiteUrl}&amp;Source=' + encodeURIComponent(window.location.href);
+                        window.location=(page);
+                    }"
                     EnabledScript="javascript:shouldSPEasyFormsRibbonButtonBeEnabled();"
                  />
             </CommandUIHandlers>

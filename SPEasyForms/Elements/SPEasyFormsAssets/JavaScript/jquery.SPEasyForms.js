@@ -206,6 +206,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.currentContext = $.spEasyForms.sharePointContext.get(opt);
                 opt.source = $.spEasyForms.utilities.getRequestParameters(opt).Source;
                 opt.currentListContext = $.spEasyForms.sharePointContext.getListContext(opt);
+                spEasyForms.loadDynamicStyles(opt);
 
                     /***
                      * Produce the editor on the SPEasyForms settings page.
@@ -272,7 +273,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         isTransformable: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
-            this.loadDynamicStyles(opt);
             // if we're not in the context of a configurable list
             if (!spEasyForms.isConfigurableList(opt)) {
                 return false;

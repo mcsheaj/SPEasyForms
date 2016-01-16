@@ -284,9 +284,13 @@
     <Content Include="Elements\SPEasyFormsAssets\Css\images\SPEasyForms16x16.png" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\menu.png" />
     <Content Include="Elements\SPEasyFormsAssets\Css\images\SPEasyForms32x32.png" />
-    <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx" />
+    <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettingsVerbose.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.css" />
-    <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettingsVerbose.aspx" />
     <Content Include="Elements\SPEasyFormsAssets\Pages\SPEasyFormsSiteSettings.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
@@ -318,6 +322,7 @@
       <DependentUpon>jquery_SPEasyForms.min.js</DependentUpon>
     </None>
     <None Include="Package\Build.bat" />
+    <None Include="Package\CreateVerboseSettingsPage.ps1" />
     <None Include="Package\Package.ddf" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
