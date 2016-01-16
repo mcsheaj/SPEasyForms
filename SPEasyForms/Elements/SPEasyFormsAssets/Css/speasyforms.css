@@ -24,6 +24,10 @@ div.speasyforms-tabs, div.speasyforms-accordion {
     width: 230px;
 }
 
+.speasyforms-columncell select[multiple='multiple'] {
+    width: 136px !important;
+}
+
 table.speasyforms-columns, table.speasyforms-columns h3.ms-standardheader, table.speasyforms-columns td.ms-formbody {
     margin: 0;
     padding: 0;

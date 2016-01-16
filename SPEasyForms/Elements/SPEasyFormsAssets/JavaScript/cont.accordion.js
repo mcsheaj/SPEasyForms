@@ -97,6 +97,7 @@
                     $(headers[idx]).hide();
                 }
                 else {
+                    $(headers[idx]).show();
                     allHidden = false;
                 }
             }

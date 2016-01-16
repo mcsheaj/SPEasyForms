@@ -94,6 +94,7 @@
                     $(listItems[idx]).hide();
                 }
                 else {
+                    $(listItems[idx]).show();
                     allHidden = false;
                 }
             }

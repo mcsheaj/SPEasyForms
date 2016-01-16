@@ -4453,6 +4453,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $(headers[idx]).hide();
                 }
                 else {
+                    $(headers[idx]).show();
                     allHidden = false;
                 }
             }
@@ -4793,6 +4794,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     $(listItems[idx]).hide();
                 }
                 else {
+                    $(listItems[idx]).show();
                     allHidden = false;
                 }
             }
