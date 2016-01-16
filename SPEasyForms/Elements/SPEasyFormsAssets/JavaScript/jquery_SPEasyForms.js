@@ -479,7 +479,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2015.01/Css/jquery-ui-smoothness/jquery-ui.css";
             var theme = this.replaceVariables(opt);
 
-            if (opt.currentConfig.jQueryUITheme) {
+            // determine if the theme is set at the list or site level
+            if (opt.currentConfig && opt.currentConfig.jQueryUITheme) {
                 opt.source = opt.currentConfig.jQueryUITheme;
                 theme = this.replaceVariables(opt);
             }
@@ -490,6 +491,13 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
             }
 
+            // load the jQuery UI theme
+            $("head").append(
+                '<link rel="stylesheet" type="text/css" href="' + theme + '">');
+
+            // load the spEasyForms CSS
+            opt.source = opt.css;
+            theme = this.replaceVariables(opt);
             $("head").append(
                 '<link rel="stylesheet" type="text/css" href="' + theme + '">');
 
