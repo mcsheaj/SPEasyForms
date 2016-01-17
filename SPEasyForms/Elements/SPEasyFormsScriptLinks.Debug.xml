@@ -117,8 +117,23 @@
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/cont.htmlSnippet.js"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.cleditor.js"
        Sequence="57251"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.cleditor.sharepoint.js"
+       Sequence="57261"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.cleditor.xhtml.js"
+       Sequence="57271"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/cont.htmlSnippet.js"
+       Sequence="57281"
     />
     <CustomAction
        Location="ScriptLink"

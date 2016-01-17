@@ -36,5 +36,9 @@
         <file>/Elements/SPEasyFormsAssets/JavaScript/adap.defaultToCurrentUserAdapter.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/adap.lookupDetailAdapter.js</file>
         <file>/Elements/SPEasyFormsAssets/JavaScript/adap.starRatingAdapter.js</file>
+
+        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.sharepoint.js</file>
+        <file>/Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.xhtml.js</file>
     </files>
 </bundle>
