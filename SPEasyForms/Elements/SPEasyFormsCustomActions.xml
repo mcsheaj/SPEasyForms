@@ -67,7 +67,7 @@
                     CommandAction="javascript:goToSettingsPage();
                     function goToSettingsPage() {
                         var page = '/Style Library/SPEasyFormsAssets/2015.01/Pages/SPEasyFormsSettings.aspx?';
-                        if($.spEasyForms.defaults.verbose) {
+                        if(spefjQuery.spEasyForms.defaults.verbose) {
                             page = '/Style Library/SPEasyFormsAssets/2015.01/Pages/SPEasyFormsSettingsVerbose.aspx?';
                             page += 'spEasyFormsVerbose=true&amp;';
                         }
