@@ -5682,63 +5682,65 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             var table = $("#spEasyFormsTemplates .speasyforms-staticrulestabletemplate").
                 clone().
                 attr("id", "staticVisibilityRules");
-            $.each(Object.keys(opt.currentConfig.visibility.def).sort(), function (idx, key) {
-                $.each(opt.currentConfig.visibility.def[key], function (i, rule) {
-                    opt.index = idx + "_" + i;
-
-                    opt.rowInfo = $.spEasyForms.containerCollection.rows[key];
-                    if (!opt.rowInfo) {
-                        $.spEasyForms.containerCollection.rows[key] = {
-                            displayName: key,
-                            internalName: key,
-                            spFieldType: key,
-                            value: "",
-                            row: $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'></h3></td><td class='ms-formbody'></td></tr>"),
-                            fieldMissing: true
-                        };
-                        opt.rowInfo = $.spEasyForms.containerCollection.rows[key];
-                    }
-
-                    var tr = $("#spEasyFormsTemplates .speasyforms-staticrulesrowtemplate").
-                        clone().
-                        attr("id", "visibilityRule" + opt.index);
-
-                    if ($.spEasyForms.containerCollection.rows[key].fieldMissing) {
-                        tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
-                    }
-                    var conditions = "";
-                    var conditionalFieldsMissing = [];
-                    if (rule.conditions && rule.conditions.length > 0) {
-                        $.each(rule.conditions, function (i, condition) {
-                            conditions += "<div class='speasyforms-conditiondisplay'>" +
-                                condition.name + ";" + condition.type + ";" +
-                                condition.value + "</div>";
-                            if (!$.spEasyForms.containerCollection.rows[condition.name] ||
-                                $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
-                                conditionalFieldsMissing.push(condition.name);
-                                tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
-                            }
-                        });
-                    }
-
-                    tr.find(".speasyforms-displayname").text(opt.rowInfo.displayName);
-                    tr.find(".speasyforms-internalname").text(opt.rowInfo.internalName);
-                    tr.find(".speasyforms-state").text(rule.state);
-                    tr.find(".speasyforms-appliesto").text(rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone");
-                    tr.find(".speasyforms-forms").text(rule.forms);
-                    tr.find(".speasyforms-when").html(conditions);
-
-                    if (opt.rowInfo.fieldMissing) {
-                        tr.find("td").addClass("speasyforms-fieldmissing");
-                    }
-
-                    table.append(tr);
-                });
-            });
-            $("#tabs-min-visibility").append(table);
-            if ($("tr.speasyforms-staticrules").length === 0) {
-                $("#staticVisibilityRules").append("<td class='ui-widget-content ui-corner-all nobr' colspan='5'>There are no conditional visibility rules for the current form.</td>");
+            if (Object.keys(opt.currentConfig.visibility.def).length === 0) {
+                table.append("<td class='ui-widget-content ui-corner-all nobr' colspan='5'>There are no conditional visibility rules for the current form.</td>");
             }
+            else {
+                $.each(Object.keys(opt.currentConfig.visibility.def).sort(), function (idx, key) {
+                    $.each(opt.currentConfig.visibility.def[key], function (i, rule) {
+                        opt.index = idx + "_" + i;
+
+                        opt.rowInfo = $.spEasyForms.containerCollection.rows[key];
+                        if (!opt.rowInfo) {
+                            $.spEasyForms.containerCollection.rows[key] = {
+                                displayName: key,
+                                internalName: key,
+                                spFieldType: key,
+                                value: "",
+                                row: $("<tr><td class='ms-formlabel'><h3 class='ms-standardheader'></h3></td><td class='ms-formbody'></td></tr>"),
+                                fieldMissing: true
+                            };
+                            opt.rowInfo = $.spEasyForms.containerCollection.rows[key];
+                        }
+
+                        var tr = $("#spEasyFormsTemplates .speasyforms-staticrulesrowtemplate").
+                            clone().
+                            attr("id", "visibilityRule" + opt.index);
+
+                        if ($.spEasyForms.containerCollection.rows[key].fieldMissing) {
+                            tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
+                        }
+                        var conditions = "";
+                        var conditionalFieldsMissing = [];
+                        if (rule.conditions && rule.conditions.length > 0) {
+                            $.each(rule.conditions, function (i, condition) {
+                                conditions += "<div class='speasyforms-conditiondisplay'>" +
+                                    condition.name + ";" + condition.type + ";" +
+                                    condition.value + "</div>";
+                                if (!$.spEasyForms.containerCollection.rows[condition.name] ||
+                                    $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
+                                    conditionalFieldsMissing.push(condition.name);
+                                    tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
+                                }
+                            });
+                        }
+
+                        tr.find(".speasyforms-displayname").text(opt.rowInfo.displayName);
+                        tr.find(".speasyforms-internalname").text(opt.rowInfo.internalName);
+                        tr.find(".speasyforms-state").text(rule.state);
+                        tr.find(".speasyforms-appliesto").text(rule.appliesTo.length > 0 ? rule.appliesTo : "Everyone");
+                        tr.find(".speasyforms-forms").text(rule.forms);
+                        tr.find(".speasyforms-when").html(conditions);
+
+                        if (opt.rowInfo.fieldMissing) {
+                            tr.find("td").addClass("speasyforms-fieldmissing");
+                        }
+
+                        table.append(tr);
+                    });
+                });
+            }
+            $("#tabs-min-visibility").append(table);
         },
 
         /*********************************************************************
