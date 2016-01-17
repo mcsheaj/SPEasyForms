@@ -339,7 +339,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     this.setAttributeNode(newOnSave);
                 }
             });
-            $.spEasyForms.appendContext(opt);
             if (_spPageContextInfo.webUIVersion === 4) {
                 $(".ui-widget input").css("font-size", "8pt");
             }
@@ -377,14 +376,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
             });
 
-            //$.spEasyForms.appendContext(opt);
-
             var bannerHeight = $("#suiteBarTop").height() + $("#suitBar").height() + $("#s4-ribbonrow").height() + $("#spEasyFormsRibbon").height() + 37;
             $("div.speasyforms-panel").height($(window).height() - bannerHeight);
-            $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
+            $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 460);
             $(window).resize(function () {
                 $("div.speasyforms-panel").height($(window).height() - bannerHeight);
-                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 420);
+                $("#spEasyFormsContent").height($(window).height() - bannerHeight).width($(window).width() - 460);
             });
             $('#spEasyFormsRibbon').show();
         },
@@ -577,59 +574,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
             return undefined;
         },
-
-        /*********************************************************************
-         * Append a dump of all of the cached context information to the body
-         * of the current page if defaults.verbose equals true.
-         *
-         * @param {object} options - {
-         *     // see the definition of defaults for options
-         * }
-         *********************************************************************/
-        appendContext: function () {
-            /*
-            var opt = $.extend({}, spEasyForms.defaults, options);
-            if (spEasyForms.defaults.verbose) {
-                $('#outputTable').remove();
-                var output = "<table id='outputTable'><tr><td></td>" +
-                    "<a href='javascript:void(0)' class='nobr' id='toggleContext'>Toggle Context</a>" + 
-                    "</tr><tr id='contextRow' style='display:none'><td><pre>";
-                output += "_spPageContextInfo = {\r\n" +
-                    "    siteServerRelativeUrl: '" + opt.currentContext.siteRelativeUrl + "',\r\n" +
-                    "    webServerRelativeUrl: '" + opt.currentContext.webRelativeUrl + "',\r\n" +
-                    "    webUIVersion: 15,\r\n" +
-                    "    pageListId: '" + $.spEasyForms.sharePointContext.getCurrentListId(opt) + "',\r\n" +
-                    "    userId: " + opt.currentContext.userId + "\r\n" +
-                    "};\r\n";
-                output += "var cache = " + JSON.stringify(cache, null, 4) + ";\r\n";
-                output += "cache['spEasyForms_spContext_" +
-                    opt.currentContext.webRelativeUrl + "'].groups = " +
-                    JSON.stringify($.spEasyForms.sharePointContext.getUserGroups(opt), null, 4) + ";\r\n";
-                output += "cache['spEasyForms_spContext_" +
-                    opt.currentContext.webRelativeUrl + "'].siteGroups = " +
-                    JSON.stringify($.spEasyForms.sharePointContext.getSiteGroups(opt), null, 4) + ";\r\n";
-                output += "cache['spEasyForms_spContext_" + opt.currentContext.webRelativeUrl + "']." +
-                    "listContexts['" + opt.currentContext.listId + "'].config = " +
-                    JSON.stringify(opt.currentConfig, null, 4) + ";\r\n";
-                output += "$().ready(function () {\r\n" +
-                    "    $.spEasyForms.defaults = $.extend({}, $.spEasyForms.defaults, {\r\n" +
-                    "        useCache: true,\r\n" +
-                    "        cache: cache\r\n" +
-                    "    });\r\n" +
-                    "    $.spEasyForms.init();\r\n" +
-                    "});\r\n";
-                output += "</pre></td></tr></table>";
-                if (window.location.href.toLowerCase().indexOf('fiddle') <= 0) {
-                    $("#s4-bodyContainer").append(output);
-                } else {
-                    $("body").append(output);
-                }
-                $("#toggleContext").click(function() {
-                    $("#contextRow").toggle();
-                });
-            }
-            */
-        }
     };
     var spEasyForms = $.spEasyForms;
 
