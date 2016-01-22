@@ -4660,7 +4660,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     // Tabs container implementation.
     ////////////////////////////////////////////////////////////////////////////
     var tabs = {
-        containerType: "Tabs", // test
+        containerType: "Tabs",
         fieldCollectionsDlgTitle: "Enter the names of the tabs, one per line",
         fieldCollectionsDlgPrompt: "Tab Names (one per line):",
 
