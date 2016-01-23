@@ -94,6 +94,10 @@
                     $.spEasyForms.adapterCollection.transform(opt);
                 }
 
+                if (opt.currentConfig.formWidth && opt.currentConfig.formWidth !== "800") {
+                    pre.width(opt.currentConfig.formWidth);
+                    post.width(opt.currentConfig.formWidth);
+                }
                 this.postTransform(opt);
             }
 
@@ -803,6 +807,12 @@
                 else {
                     delete opt.currentConfig.jQueryUITheme;
                 }
+                if ($("#spFormWidth").val() !== "800") {
+                    opt.currentConfig.formWidth = $("#spFormWidth").val();
+                }
+                else {
+                    delete opt.currentConfig.formWidth;
+                }
                 $.spEasyForms.configManager.set(opt);
 
                 if (theme) {
@@ -840,6 +850,10 @@
                 $("input:radio[value='none']").prop("checked", "checked");
                 $("#inpCustomTheme").hide();
                 $("#selGalleryTheme").hide();
+            }
+
+            if (opt.currentConfig.formWidth) {
+                $("#spFormWidth").val(opt.currentConfig.formWidth);
             }
 
             // wire the clear cache button
