@@ -16,7 +16,7 @@
  *    http://www.opensource.org/licenses/mit-license.php
  */
 
-/* global spefjQuery:true, ssw, PreSaveItem:true, _spPageContextInfo, ssw_init, ExecuteOrDelayUntilScriptLoaded, SP, SPClientTemplates */
+/* global spefjQuery:true, ssw, PreSaveItem:true, _spPageContextInfo, ssw_init, ExecuteOrDelayUntilScriptLoaded, SP, SPClientTemplates, RegisterModuleInit */
 
 // save a reference to our instance of jQuery just in case
 spefjQuery = jQuery.noConflict(true);
@@ -33,7 +33,29 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
 (function ($, undefined) {
 
+    function getScriptPath() {
+        var scripts = document.getElementsByTagName('script');
+        for (var i = 0; i < scripts.length; i++) {
+            if (/jquery.speasyforms.*\.js/.test(scripts[i].src)) {
+                return scripts[i];
+            }
+            return _spPageContextInfo.siteServerRelativeUrl + "/Style Library/SPEasyFormsAssets/2015.01/JavaSccript/jquery.SPEasyForms.js";
+        }
+    }
+
     if (typeof (SPClientTemplates) !== 'undefined' && SPClientTemplates.TemplateManager && SPClientTemplates.TemplateManager.RegisterTemplateOverrides) {
+        if (window.location.href.indexOf("start.aspx#") >= 0) {
+            var scriptUrl = getScriptPath();
+            RegisterModuleInit(scriptUrl, function () {
+                SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
+                    OnPreRender: function (ctx) {
+                        if ($("body").attr("data-speasyforms-formhidden") !== "true") {
+                            $("body").attr("data-speasyforms-formhidden", "true").append("<style type='text/css'>.ms-formtable { display: none; }</style>");
+                        }
+                    }
+                });
+            });
+        }
         SPClientTemplates.TemplateManager.RegisterTemplateOverrides({
             OnPreRender: function (ctx) {
                 if ($("body").attr("data-speasyforms-formhidden") !== "true") {

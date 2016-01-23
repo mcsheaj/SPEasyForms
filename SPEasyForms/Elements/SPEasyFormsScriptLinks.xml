@@ -3,17 +3,137 @@
     <CustomAction
        Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.bundle.min.js"
-       Sequence="57150"
+       Sequence="57166"
     />
     <CustomAction
        Location="ScriptLink"
-       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.SPEasyForms.min.js"
-       Sequence="57151"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.SPEasyForms.js"
+       Sequence="57171"
     />
     <CustomAction
        Location="ScriptLink"
        ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/SPEasyForms_DefaultSettings.js"
-       Sequence="57152"
+       Sequence="57172"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/utilities.js"
+       Sequence="57176"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/sharePointContext.js"
+       Sequence="57181"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/sharePoinFieldRows.js"
+       Sequence="57186"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/configManager.js"
+       Sequence="57191"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/containerCollection.js"
+       Sequence="57196"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/cont.defaultContainer.js"
+       Sequence="57201"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/cont.baseContainer.js"
+       Sequence="57206"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/cont.fieldCollection.js"
+       Sequence="57207"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/cont.accordion.js"
+       Sequence="57211"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/cont.columns.js"
+       Sequence="57216"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/cont.stack.js"
+       Sequence="57218"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/cont.tabs.js"
+       Sequence="57221"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/cont.wizard.js"
+       Sequence="57224"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/visibilityRuleCollection.js"
+       Sequence="57226"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/adapterCollection.js"
+       Sequence="57231"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/adap.autocompleteAdapter.js"
+       Sequence="57236"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/adap.cascadingLookupAdapter.js"
+       Sequence="57241"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/adap.defaultToCurrentUserAdapter.js"
+       Sequence="57243"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/adap.lookupDetailAdapter.js"
+       Sequence="57243"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/adap.starRatingAdapter.js"
+       Sequence="57244"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.cleditor.js"
+       Sequence="57251"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.cleditor.sharepoint.js"
+       Sequence="57261"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/jquery.cleditor.xhtml.js"
+       Sequence="57271"
+    />
+    <CustomAction
+       Location="ScriptLink"
+       ScriptSrc="~sitecollection/Style Library/SPEasyFormsAssets/2015.01/JavaScript/cont.htmlSnippet.js"
+       Sequence="57281"
     />
     <CustomAction
        Location="ScriptLink"
