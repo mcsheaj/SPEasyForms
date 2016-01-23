@@ -971,9 +971,7 @@ interface.
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532831">
                     <img title="image" alt="image" src="images/Download_024.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="332" width="604"></a>
             </p>
-            <p>&nbsp;</p>
             <p>If you click the <strong>Use Gallery Theme</strong> radio button, you’ll have a drop down of 6 themes included in the release:</p>
-            <p>&nbsp;</p>
             <p>
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532833">
                     <img title="image" alt="image" src="images/Download_109.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="236" width="604"></a>
@@ -1013,7 +1011,7 @@ more of a developer than a designer. That’s what
             <p>
                 With this option, you can point me at any jquery-ui.css file and 
 apply it as a theme (assuming you’ve got all of the other files needed 
-by the theme with it and in the appropriate directory structure).&nbsp; 
+by the theme with it and in the appropriate directory structure). 
 If you put in a path and hit apply theme, and
  either nothing happens or it goes back to Redmond, it means the browser
  could not find your theme, i.e. there is something wrong with your 
@@ -1032,6 +1030,11 @@ theme is in the same place on each farm). But of course, the theme does
 not have to be stored in SharePoint; you can even load it from a CDN 
 assuming your users will be able to access the
  CDN when they’re using the form.
+            </p>
+            <p>
+                Finally, you can set the width of the SPEasyForms outer container. The default is 800, but 
+                depending on the design and complexity of your form and list, you may have to play around with
+                this until you find something that works.
             </p>
             <h3>2.2 Changing the Default Theme for the Site Collection</h3>
             <p>
