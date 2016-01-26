@@ -156,6 +156,9 @@
                                     if (opt.row.row.next().find("td.ms-formbody").find("h3").length > 0) {
                                         h3 = opt.row.row.next().find("td.ms-formbody").find("h3")[0].outerHTML;
                                     }
+                                    else if (opt.row.row.next().find("td.ms-formbody").find("nobr.speasyforms-columnheader")) {
+                                        h3 = opt.row.row.next().find("td.ms-formbody").find("nobr.speasyforms-columnheader").parent()[0].outerHTML;
+                                    }
                                     opt.row.row.next().find("td.ms-formbody").html("");
                                     opt.row.row.next().find("td.ms-formbody").append(h3 + "<span class='readonly'>" + opt.row.value + "</span>");
                                 }
