@@ -4055,7 +4055,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             var groupNames;
             var containerSettingsOpts = {
-                width: 475,
+                width: 500,
                 modal: true,
                 buttons: {
                     "Ok": function () {
@@ -5694,9 +5694,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             conditions += "<div class='speasyforms-conditiondisplay'>" +
                                 condition.name + ";" + condition.type + ";" +
                                 condition.value + "</div>";
-                            if (!$.spEasyForms.containerCollection.rows[condition.name] || $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
-                                conditionalFieldsMissing.push(condition.name);
-                            }
                         });
                     } else {
                         conditions = "&nbsp;";
@@ -5754,7 +5751,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                             tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
                         }
                         var conditions = "";
-                        var conditionalFieldsMissing = [];
                         if (rule.conditions && rule.conditions.length > 0) {
                             $.each(rule.conditions, function (i, condition) {
                                 conditions += "<div class='speasyforms-conditiondisplay'>" +
@@ -5762,7 +5758,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                     condition.value + "</div>";
                                 if (!$.spEasyForms.containerCollection.rows[condition.name] ||
                                     $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
-                                    conditionalFieldsMissing.push(condition.name);
                                     tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
                                 }
                             });
@@ -7281,6 +7276,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                                     var h3 = "";
                                     if (opt.row.row.next().find("td.ms-formbody").find("h3").length > 0) {
                                         h3 = opt.row.row.next().find("td.ms-formbody").find("h3")[0].outerHTML;
+                                    }
+                                    else if (opt.row.row.next().find("td.ms-formbody").find("nobr.speasyforms-columnheader")) {
+                                        h3 = opt.row.row.next().find("td.ms-formbody").find("nobr.speasyforms-columnheader").parent()[0].outerHTML;
                                     }
                                     opt.row.row.next().find("td.ms-formbody").html("");
                                     opt.row.row.next().find("td.ms-formbody").append(h3 + "<span class='readonly'>" + opt.row.value + "</span>");

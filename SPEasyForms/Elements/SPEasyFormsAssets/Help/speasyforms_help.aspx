@@ -406,7 +406,7 @@ force checkout on the Style Library before
                 <li>Click the <strong>Upload Solution</strong> button in the ribbon. </li>
                 <li>Browse to the <strong>SPEasyForms.wsp</strong> file you downloaded from CodePlex and hit
                     <strong>OK</strong>. </li>
-                <li>When the upload finishes, click the <strong>Activate</strong> button from the ribbon.
+                <li>When the upload finishes, click the <strong>Activate</strong> button from the ribbon. <b>Note that activation will take quite a bit of time because of all the files being copied to the style library and there is no indication that anything is happening, so be patient.</b>
                 </li>
             </ol>
             <p>

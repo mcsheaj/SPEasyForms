@@ -147,7 +147,7 @@
 
             var groupNames;
             var containerSettingsOpts = {
-                width: 475,
+                width: 500,
                 modal: true,
                 buttons: {
                     "Ok": function () {

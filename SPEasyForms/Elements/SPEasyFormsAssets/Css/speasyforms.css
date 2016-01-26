@@ -124,7 +124,8 @@ table.speasyforms-fieldcollection {
     }
 
 .speasyforms-container .speasyforms-container, 
-div.speasyforms-tabs {
-    width: 95%;
+div.speasyforms-tabs,
+div.speasyforms-accordion {
+    width: 98%;
     margin: 0 auto;
 }
