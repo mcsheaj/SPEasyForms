@@ -20,8 +20,10 @@ div.speasyforms-tabs, div.speasyforms-accordion {
     min-width: 250px;
 }
 
-.speasyforms-columncell .sp-peoplepicker-topLevel, .speasyforms-columncell .sp-peoplepicker-topLevelDisabled {
-    width: 230px;
+.speasyforms-columncell .sp-peoplepicker-topLevel, 
+.speasyforms-columncell .sp-peoplepicker-topLevelDisabled,
+.speasyforms-columncell .ms-usereditor {
+    width: 250px;
 }
 
 .speasyforms-columncell select[multiple='multiple'] {
@@ -71,7 +73,6 @@ h3.speasyforms-accordionvalidationerror {
     height: 20px;
     background-image: url(images/stars.png);
     background-position: left top;
-    background-size: 110px 120px;
 }
 
 .speasyforms-starsslider {
