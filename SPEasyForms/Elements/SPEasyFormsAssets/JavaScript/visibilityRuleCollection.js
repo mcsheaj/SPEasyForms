@@ -374,9 +374,6 @@
                             conditions += "<div class='speasyforms-conditiondisplay'>" +
                                 condition.name + ";" + condition.type + ";" +
                                 condition.value + "</div>";
-                            if (!$.spEasyForms.containerCollection.rows[condition.name] || $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
-                                conditionalFieldsMissing.push(condition.name);
-                            }
                         });
                     } else {
                         conditions = "&nbsp;";
@@ -434,7 +431,6 @@
                             tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
                         }
                         var conditions = "";
-                        var conditionalFieldsMissing = [];
                         if (rule.conditions && rule.conditions.length > 0) {
                             $.each(rule.conditions, function (i, condition) {
                                 conditions += "<div class='speasyforms-conditiondisplay'>" +
@@ -442,7 +438,6 @@
                                     condition.value + "</div>";
                                 if (!$.spEasyForms.containerCollection.rows[condition.name] ||
                                     $.spEasyForms.containerCollection.rows[condition.name].fieldMissing) {
-                                    conditionalFieldsMissing.push(condition.name);
                                     tr.addClass("speasyforms-fieldmissing").addClass("ui-state-error");
                                 }
                             });
