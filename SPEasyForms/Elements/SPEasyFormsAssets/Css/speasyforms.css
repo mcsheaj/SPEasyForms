@@ -1,3 +1,7 @@
+.ui-widget select {
+    font-size: 11px;
+}
+
 div.speasyforms-tabs, div.speasyforms-accordion {
     margin-top: 10px;
     margin-bottom: 20px;
