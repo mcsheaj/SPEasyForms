@@ -1034,7 +1034,9 @@ assuming your users will be able to access the
             <p>
                 Finally, you can set the width of the SPEasyForms outer container. The default is 800, but 
                 depending on the design and complexity of your form and list, you may have to play around with
-                this until you find something that works.
+                this until you find something that works. In my form, I've set this to 700. If I set it any smaller
+                I'll start seeing weird glitches like scroll bars in the accordion content, or the content of tabs
+                overrunning the edge of the tab.
             </p>
             <h3>2.2 Changing the Default Theme for the Site Collection</h3>
             <p>
