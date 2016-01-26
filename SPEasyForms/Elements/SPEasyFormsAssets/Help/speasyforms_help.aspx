@@ -267,7 +267,7 @@ Discussion Boards) and libraries. The things you can configure fall into
                             - allows you to stack 2 or more containers on top of each other, so you can put multiple containers onto a single tab or accordion page. 
                         <li>Wizard <font color="#910000">(NEW!) </font>
                             - a specialty container that allows users to page through containers using next and previous buttons. 
-                        <li>HTML Snippets <font color="#910000">(NEW!) </font>- a specialty container, that doesn’t actually hold any fields, but allows you to inject arbitrary HTML into the page, including referencing external scripts and style sheets. </li>
+                        <li>HTML Snippet <font color="#910000">(NEW!) </font>- a specialty container, that doesn’t actually hold any fields, but allows you to inject arbitrary HTML into the page, including referencing external scripts and style sheets. </li>
                     </ul>
                     <li>Conditional Visibility – conditionally format a field: 
                         <ul>
@@ -311,7 +311,7 @@ Discussion Boards) and libraries. The things you can configure fall into
                             Hiding a field completely 
                             <li>
                             Making a field read-only 
-                            <li>Highlighting a field in one of four colors </li>
+                            <li>Highlighting a field in one of four colors <font color="#910000">(NEW!) </font></li>
                         </ul>
                     </li>
                 </ul>
