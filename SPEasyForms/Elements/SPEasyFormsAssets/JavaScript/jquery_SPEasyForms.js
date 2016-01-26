@@ -2756,7 +2756,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     };
     var refresh = $.spEasyForms.refresh;
 
-    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////F
     // Compound container representing the array of containers for a layout. This
     // container handles the layout for the default form, and also controls when
     // the other containers transform, draw editors, or convert editors back to
@@ -3544,21 +3544,28 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 else {
                     delete opt.currentConfig.jQueryUITheme;
                 }
-                if ($("#spFormWidth").val() !== "800") {
-                    opt.currentConfig.formWidth = $("#spFormWidth").val();
-                }
-                else {
-                    delete opt.currentConfig.formWidth;
-                }
-                $.spEasyForms.configManager.set(opt);
 
-                if (theme) {
-                    opt.source = theme;
+                if (/^[0-9]*$/.test($("#spFormWidth").val())) {
+                    $("#formWidthValidationError").hide();
+                    if ($("#spFormWidth").val() !== "800") {
+                        opt.currentConfig.formWidth = $("#spFormWidth").val();
+                    }
+                    else {
+                        delete opt.currentConfig.formWidth;
+                    }
+                    $.spEasyForms.configManager.set(opt);
+
+                    if (theme) {
+                        opt.source = theme;
+                    }
+                    else {
+                        opt.source = opt.jQueryUITheme;
+                    }
+                    $("head").append('<link rel="stylesheet" type="text/css" href="' + $.spEasyForms.replaceVariables(opt) + '">');
                 }
                 else {
-                    opt.source = opt.jQueryUITheme;
+                    $("#formWidthValidationError").show();
                 }
-                $("head").append('<link rel="stylesheet" type="text/css" href="' + $.spEasyForms.replaceVariables(opt) + '">');
 
                 return false;
             });
