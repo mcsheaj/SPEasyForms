@@ -7288,6 +7288,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 });
             }
+            $.spEasyForms.utilities.resizeModalDialog();
         }
     };
 

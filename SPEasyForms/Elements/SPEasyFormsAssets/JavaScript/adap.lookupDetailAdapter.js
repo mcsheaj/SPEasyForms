@@ -167,6 +167,7 @@
                     }
                 });
             }
+            $.spEasyForms.utilities.resizeModalDialog();
         }
     };
 
