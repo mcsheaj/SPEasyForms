@@ -1,5 +1,14 @@
+h3.speasyforms-columnsheader {
+    margin-top: 2px;
+}
+
 .ui-widget select {
     font-size: 11px;
+}
+
+.speasyforms-wizard .ms-formbody {
+    background: transparent;
+    border-top: 0px;
 }
 
 div.speasyforms-tabs, div.speasyforms-accordion {
