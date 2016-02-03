@@ -176,6 +176,7 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\Help\Images\Download_110.png
 ..\Elements\SPEasyFormsAssets\Help\Images\Download_111.png
 
+..\Elements\SPEasyFormsAssets\Pages\SPEasyFormsSiteSettings.aspx
 ..\Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx
 ..\Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettingsVerbose.aspx
 ..\Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.css

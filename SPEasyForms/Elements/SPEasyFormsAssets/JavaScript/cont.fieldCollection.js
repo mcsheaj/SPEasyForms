@@ -2,7 +2,7 @@
  * SPEasyForms.containerCollection.fieldCollection - This is the leaf collection most of the time, a collection that contains
  * a single table of SharePoint fields.
  *
- * @requires jQuery.SPEasyForms.2015.01 
+ * @requires jQuery.SPEasyForms.2015.01.01 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php

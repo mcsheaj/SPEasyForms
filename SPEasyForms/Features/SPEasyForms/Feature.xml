@@ -145,7 +145,7 @@
         <ElementFile Location="SPEasyFormsAssets\stars.png" />
 
         <ElementFile Location="SPEasyFormsAssets\speasyforms_help.aspx" />
-        
+
         <ElementFile Location="SPEasyFormsAssets\bullet_blue.png" />
         <ElementFile Location="SPEasyFormsAssets\Download.png" />
         <ElementFile Location="SPEasyFormsAssets\Download_002.png" />
@@ -259,6 +259,7 @@
         <ElementFile Location="SPEasyFormsAssets\Download_110.png" />
         <ElementFile Location="SPEasyFormsAssets\Download_111.png" />
 
+        <ElementFile Location="SPEasyFormsAssets\SPEasyFormsSiteSettings.aspx" />
         <ElementFile Location="SPEasyFormsAssets\SPEasyFormsSettings.aspx" />
         <ElementFile Location="SPEasyFormsAssets\SPEasyFormsSettingsVerbose.aspx" />
         <ElementFile Location="SPEasyFormsAssets\SPEasyFormsSettings.css" />

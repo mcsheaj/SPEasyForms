@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms.adapterCollection.cascadingLookupAdapter - implementaiton of a cascading lookup field adapter.
  *
- * @requires jQuery.SPEasyForms.2015.01 
+ * @requires jQuery.SPEasyForms.2015.01.01 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
