@@ -291,7 +291,7 @@
                     }
 
                     if (!siteSettings.site) {
-                        siteSettings.site = siteSettings.clientContext.get_web();
+                        siteSettings.site = siteSettings.clientContext.get_site();
                     }
 
                     if (!siteSettings.userCustomActions) {
