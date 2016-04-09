@@ -111,9 +111,9 @@ h3.speasyforms-accordionvalidationerror {
         width: 0;
     }
 
-.ms-formvalidation {
+.ms-error, .ms-formvalidation {
     font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 div.speasyforms-wizard-outer {

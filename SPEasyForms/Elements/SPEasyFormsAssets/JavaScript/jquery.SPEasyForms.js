@@ -241,6 +241,21 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                      ***/
                 else if (spEasyForms.isTransformable(opt)) {
                     spEasyForms.transform(opt);
+                    if (_spPageContextInfo.webUIVersion === 4) {
+                        var url = function (input) { return input.substr(0, input.indexOf("?")); };
+                        if (url(document.referrer) !== url(window.location.href)) {
+                            $("span.ms-error, span.ms-formvalidation").hide();
+                        }
+                        else {
+                            $("span.ms-error, span.ms-formvalidation").show();
+                        }
+                        var span = $("span.ms-formvalidation[role='alert']");
+                        $.each(span, function (i, current) {
+                            if ($(current).prev().hasClass("ms-formvalidation")) {
+                                $(current).hide();
+                            }
+                        });
+                    }
                 }
                     /***
                      * If it looks like a transformable list settings page, insert an SPEasyForms list settings link.
