@@ -58,6 +58,10 @@
                 pre.insertBefore("table.ms-formtable");
                 post.insertAfter("table.ms-formtable");
 
+                if (!opt.loadDynamicStylesAlways && (opt.currentConfig.layout.def.length || opt.currentConfig.visibility.def.length || opt.currentConfig.adapters.def.length)) {
+                    $.spEasyForms.loadDynamicStyles(opt);
+                }
+
                 opt.currentConfig = $.spEasyForms.configManager.get(opt);
                 opt.prepend = true;
                 var name, impl;

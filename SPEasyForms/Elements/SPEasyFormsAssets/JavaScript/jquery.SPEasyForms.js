@@ -119,7 +119,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
             initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
             version: "2015.01.01",
-            jQueryUIGallery: ["lilac", "olive", "redmond", "salmon", "smoothness", "sunny"]
+            jQueryUIGallery: ["lilac", "olive", "redmond", "salmon", "smoothness", "sunny"],
+            loadDynamicStylesAlways: false
         },
 
         /********************************************************************
@@ -228,7 +229,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.currentContext = $.spEasyForms.sharePointContext.get(opt);
                 opt.source = $.spEasyForms.utilities.getRequestParameters(opt).Source;
                 opt.currentListContext = $.spEasyForms.sharePointContext.getListContext(opt);
-                spEasyForms.loadDynamicStyles(opt);
+                if (opt.loadDynamicStylesAlways) {
+                    spEasyForms.loadDynamicStyles(opt);
+                }
 
                     /***
                      * Produce the editor on the SPEasyForms settings page.
