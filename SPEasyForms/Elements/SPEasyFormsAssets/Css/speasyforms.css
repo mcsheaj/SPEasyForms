@@ -137,9 +137,13 @@ table.speasyforms-fieldcollection {
         padding: 3px 0 !important;
     }
 
-.speasyforms-container .speasyforms-container, 
+.speasyforms-container .speasyforms-container{
+    width: 98%;
+    margin: 0 auto;
+}
+
 div.speasyforms-tabs,
 div.speasyforms-accordion {
     width: 98%;
-    margin: 0 auto;
+    margin: 10px auto 10px auto;
 }
