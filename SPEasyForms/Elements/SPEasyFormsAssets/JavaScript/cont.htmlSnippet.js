@@ -1,7 +1,7 @@
 /*
  * SPEasyForms htmlSnippet
  *
- * @version 2015.01.01
+ * @version 2015.01.02
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
