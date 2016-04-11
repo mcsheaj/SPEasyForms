@@ -94,8 +94,9 @@
                         return false;
                     }
                 },
+
                 autoOpen: false,
-                width: 400
+                width: 600
             };
             $('#autocompleteAdapterDialog').dialog(autocompleteOpts);
         },
