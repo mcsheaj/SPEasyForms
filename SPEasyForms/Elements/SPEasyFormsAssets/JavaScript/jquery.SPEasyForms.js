@@ -363,21 +363,24 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     return result;
                 };
             }
-            // override the save button in 2013/O365 so validation 
-            // occurs before PreSaveAction, like it did in previous
-            // version of SharePoint
-            $("input[value='Save']").each(function () {
-                if (null !== this.getAttributeNode("onclick")) {
-                    var onSave = this.getAttributeNode("onclick").nodeValue;
-                    onSave = onSave.replace(
-                        "if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
-                    var newOnSave = document.createAttribute('onclick');
-                    newOnSave.value = onSave;
-                    this.setAttributeNode(newOnSave);
-                }
-            });
+
             if (_spPageContextInfo.webUIVersion === 4) {
                 $(".ui-widget input").css("font-size", "8pt");
+            }
+            else {
+                // override the save button in 2013/O365 so validation 
+                // occurs before PreSaveAction, like it did in previous
+                // version of SharePoint
+                $("input[value='Save']").each(function () {
+                    if (null !== this.getAttributeNode("onclick")) {
+                        var onSave = this.getAttributeNode("onclick").nodeValue;
+                        onSave = onSave.replace(
+                            "if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
+                        var newOnSave = document.createAttribute('onclick');
+                        newOnSave.value = onSave;
+                        this.setAttributeNode(newOnSave);
+                    }
+                });
             }
         },
 

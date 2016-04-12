@@ -3,7 +3,7 @@
  * can be applied to integer fields and allows users to enter 0-5 stars as the
  * value by clicking on the stars or a slider-like interface.
  *
- * @requires jQuery.SPEasyForms.2015.01.01 
+ * @requires jQuery.SPEasyForms.2015.01.02 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php

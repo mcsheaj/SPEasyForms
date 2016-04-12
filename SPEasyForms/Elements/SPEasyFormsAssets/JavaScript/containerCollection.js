@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms.containerCollection - object to hold and manage all containers.
  *
- * @requires jQuery.SPEasyForms.2015.01.01 
+ * @requires jQuery.SPEasyForms.2015.01.02 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -57,6 +57,10 @@
 
                 pre.insertBefore("table.ms-formtable");
                 post.insertAfter("table.ms-formtable");
+
+                if (!opt.loadDynamicStylesAlways && (opt.currentConfig.layout.def.length || opt.currentConfig.visibility.def.length || opt.currentConfig.adapters.def.length)) {
+                    $.spEasyForms.loadDynamicStyles(opt);
+                }
 
                 opt.currentConfig = $.spEasyForms.configManager.get(opt);
                 opt.prepend = true;
@@ -890,7 +894,7 @@
 
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.01/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.02/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });

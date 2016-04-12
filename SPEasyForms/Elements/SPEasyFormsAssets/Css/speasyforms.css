@@ -11,11 +11,6 @@ h3.speasyforms-columnsheader {
     border-top: 0px;
 }
 
-div.speasyforms-tabs, div.speasyforms-accordion {
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-
 .ui-tabs-nav {
     width: 99% !important;
 }
@@ -137,9 +132,13 @@ table.speasyforms-fieldcollection {
         padding: 3px 0 !important;
     }
 
-.speasyforms-container .speasyforms-container, 
+.speasyforms-container .speasyforms-container{
+    width: 98%;
+    margin: 0 auto;
+}
+
 div.speasyforms-tabs,
 div.speasyforms-accordion {
     width: 98%;
-    margin: 0 auto;
+    margin: 10px auto 20px auto;
 }
