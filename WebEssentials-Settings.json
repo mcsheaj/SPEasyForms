@@ -91,7 +91,7 @@
     "MakeMinified": true,
     "OutputDirectory": null,
     "RootDirectory": "/Scripts/",
-    "RunOnBuild": false,
+    "RunOnBuild": true,
     "TermSemicolons": true
   },
   "Less": {
