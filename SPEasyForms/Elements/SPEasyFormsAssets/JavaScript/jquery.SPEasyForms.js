@@ -3,10 +3,10 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2015.01.01
- * @requires jQuery.SPEasyForms.2015.01.01 
+ * @version 2015.01.02
+ * @requires jQuery.SPEasyForms.2015.01.02 
  * @requires jQuery-ui v1.9.2 
- * @requires jQuery.SPServices v2015.01.01 or greater
+ * @requires jQuery.SPServices v2015.01.02 or greater
  * @optional ssw Session Storage Wrapper - Cross Document Transport of
  *    JavaScript Data; used to cache the context across pages if available
  *    and options.useCache === true
@@ -38,7 +38,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (/jquery.speasyforms.*\.js/.test(scripts[i].src)) {
                 return scripts[i];
             }
-            return _spPageContextInfo.siteServerRelativeUrl + "/Style Library/SPEasyFormsAssets/2015.01.01/JavaSccript/jquery.SPEasyForms.js";
+            return _spPageContextInfo.siteServerRelativeUrl + "/Style Library/SPEasyFormsAssets/2015.01.02/JavaSccript/jquery.SPEasyForms.js";
         }
     }
 
@@ -118,8 +118,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
             initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
-            version: "2015.01.01",
-            jQueryUIGallery: ["lilac", "olive", "redmond", "salmon", "smoothness", "sunny"]
+            version: "2015.01.02",
+            jQueryUIGallery: ["lilac", "olive", "redmond", "salmon", "smoothness", "sunny"],
+            loadDynamicStylesAlways: false
         },
 
         /********************************************************************
@@ -228,7 +229,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 opt.currentContext = $.spEasyForms.sharePointContext.get(opt);
                 opt.source = $.spEasyForms.utilities.getRequestParameters(opt).Source;
                 opt.currentListContext = $.spEasyForms.sharePointContext.getListContext(opt);
-                spEasyForms.loadDynamicStyles(opt);
+                if (opt.loadDynamicStylesAlways) {
+                    spEasyForms.loadDynamicStyles(opt);
+                }
 
                     /***
                      * Produce the editor on the SPEasyForms settings page.
@@ -439,7 +442,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (source.indexOf("start.aspx#") >= 0) {
                         source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                     }
-                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.01/Pages/SPEasyFormsSettings.aspx") +
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.02/Pages/SPEasyFormsSettings.aspx") +
                         "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
                         "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
                         "&Source=" + encodeURIComponent(source);
@@ -472,7 +475,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (source.indexOf("start.aspx#") >= 0) {
                         source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                     }
-                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.01/Pages/SPEasyFormsSiteSettings.aspx") +
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.02/Pages/SPEasyFormsSiteSettings.aspx") +
                         "?Source=" + encodeURIComponent(source);
                     var newItem = "<li class='ms-linksection-listItem'>" + 
 	                    "<a title='Restore or permanently remove items that users have deleted on this site.' href='" + settings + "'>SPEasyForms</a>" +
@@ -512,7 +515,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         loadDynamicStyles: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.01/Css/jquery-ui-smoothness/jquery-ui.css";
+            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.02/Css/jquery-ui-smoothness/jquery-ui.css";
             var theme = this.replaceVariables(opt);
 
             // determine if the theme is set at the list or site level

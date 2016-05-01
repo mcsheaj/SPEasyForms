@@ -323,6 +323,7 @@
     </None>
     <None Include="Package\Build.bat" />
     <None Include="Package\CreateVerboseSettingsPage.ps1" />
+    <None Include="Package\jquery_SPEasyForms.min.js.map" />
     <None Include="Package\Package.ddf" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
