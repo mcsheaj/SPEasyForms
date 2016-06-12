@@ -3,10 +3,9 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2015.01.02
- * @requires jQuery.SPEasyForms.2015.01.02 
+ * @version 2015.01.03
  * @requires jQuery-ui v1.9.2 
- * @requires jQuery.SPServices v2015.01.02 or greater
+ * @requires jQuery.SPServices v2015.02 or greater
  * @optional ssw Session Storage Wrapper - Cross Document Transport of
  *    JavaScript Data; used to cache the context across pages if available
  *    and options.useCache === true
@@ -38,7 +37,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (/jquery.speasyforms.*\.js/.test(scripts[i].src)) {
                 return scripts[i];
             }
-            return _spPageContextInfo.siteServerRelativeUrl + "/Style Library/SPEasyFormsAssets/2015.01.02/JavaSccript/jquery.SPEasyForms.js";
+            return _spPageContextInfo.siteServerRelativeUrl + "/Style Library/SPEasyFormsAssets/2015.01.03/JavaSccript/jquery.SPEasyForms.js";
         }
     }
 
@@ -118,7 +117,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
             initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
-            version: "2015.01.02",
+            version: "2015.01.03",
             jQueryUIGallery: ["lilac", "olive", "redmond", "salmon", "smoothness", "sunny"],
             loadDynamicStylesAlways: false
         },
@@ -156,6 +155,21 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         init: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
+
+            // exit if we don't see any form field rows
+            var fieldRows = $("td.ms-formlabel h3.ms-standardheader, td.ms-formlabel span.ms-standardheader");
+            if (fieldRows.length === 0) {
+                $("table.ms-formtable ").show();
+                return;
+            }
+
+            // exit if the form table contains an old RTE field (ERTE is fine)
+            var formTable = fieldRows.first().closest("table");
+            if (formTable.find("iframe[id$='TextField_iframe']").length > 0) {
+                $("table.ms-formtable ").show();
+                return;
+            }
+
             this.initCacheLibrary(opt);
             opt.callback = spEasyForms.contextReady;
             this.options = opt;
@@ -351,7 +365,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // add ms-formtable to the...um, form table. For some reason 
             // designer does not put this in custom forms.
             if ($("table.ms-formtable").length === 0) {
-                $("td.ms-formlabel h3.ms-standardheader").closest("table").addClass("ms-formtable");
+                $("td.ms-formlabel h3.ms-standardheader, td.ms-formlabel span.ms-standardheader").first().closest("table").addClass("ms-formtable");
             }
             $.spEasyForms.containerCollection.transform(opt);
             // Override the core.js PreSaveItem function, to allow containers 
@@ -442,7 +456,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (source.indexOf("start.aspx#") >= 0) {
                         source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                     }
-                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.02/Pages/SPEasyFormsSettings.aspx") +
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.03/Pages/SPEasyFormsSettings.aspx") +
                         "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
                         "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
                         "&Source=" + encodeURIComponent(source);
@@ -475,7 +489,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (source.indexOf("start.aspx#") >= 0) {
                         source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                     }
-                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.02/Pages/SPEasyFormsSiteSettings.aspx") +
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.03/Pages/SPEasyFormsSiteSettings.aspx") +
                         "?Source=" + encodeURIComponent(source);
                     var newItem = "<li class='ms-linksection-listItem'>" + 
 	                    "<a title='Restore or permanently remove items that users have deleted on this site.' href='" + settings + "'>SPEasyForms</a>" +
@@ -515,7 +529,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         loadDynamicStyles: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.02/Css/jquery-ui-smoothness/jquery-ui.css";
+            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.03/Css/jquery-ui-smoothness/jquery-ui.css";
             var theme = this.replaceVariables(opt);
 
             // determine if the theme is set at the list or site level
