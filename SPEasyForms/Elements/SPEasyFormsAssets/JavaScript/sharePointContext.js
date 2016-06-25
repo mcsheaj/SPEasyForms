@@ -365,6 +365,14 @@
                                         newField.formula = $(field).find("formula").text();
                                     }
                                 }
+                                var richText = $(field).attr("richtext");
+                                var richTextMode = $(field).attr("richtextmode");
+                                if (richText && richText.toLowerCase() === "true" && richTextMode && richTextMode.toLowerCase() === "compatible") {
+                                    newField.subtype = "RichText";
+                                }
+                                else {
+                                    newField.subtype = "";
+                                }
                                 newField.required = $(field).attr("Required");
                                 result.schema[newField.displayName] = newField;
                                 result.schema[newField.name] = newField;

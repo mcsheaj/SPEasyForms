@@ -142,3 +142,7 @@ div.speasyforms-accordion {
     width: 98%;
     margin: 10px auto 20px auto;
 }
+
+.ui-dialog {
+    z-index: 101;
+}

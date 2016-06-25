@@ -258,6 +258,9 @@
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.stack.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.tabs.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.wizard.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.min.js">
+      <DependentUpon>jquery.SPEasyForms.js</DependentUpon>
+    </Content>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.js">
       <DependentUpon>jquery_bundle.js.bundle</DependentUpon>
     </Content>
@@ -311,6 +314,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.columns.js" />
+    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.min.js.map">
+      <DependentUpon>jquery.SPEasyForms.min.js</DependentUpon>
+    </None>
     <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.js.bundle" />
     <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.min.js.map">
       <DependentUpon>jquery_bundle.min.js</DependentUpon>

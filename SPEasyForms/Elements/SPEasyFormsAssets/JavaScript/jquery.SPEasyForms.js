@@ -156,18 +156,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         init: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
 
-            // exit if we don't see any form field rows
-            var fieldRows = $("td.ms-formlabel h3.ms-standardheader, td.ms-formlabel span.ms-standardheader");
-            if (fieldRows.length === 0) {
-                $("table.ms-formtable ").show();
-                return;
-            }
+            if (!/\/SPEasyFormsSettings[a-zA-Z]*.aspx/.test(window.location.href)) {
+                // exit if we don't see any form field rows
+                var fieldRows = $("td.ms-formlabel h3.ms-standardheader, td.ms-formlabel span.ms-standardheader");
+                //if (fieldRows.length === 0) {
+                //    $("table.ms-formtable ").show();
+                //    return;
+                //}
 
-            // exit if the form table contains an old RTE field (ERTE is fine)
-            var formTable = fieldRows.first().closest("table");
-            if (formTable.find("iframe[id$='TextField_iframe']").length > 0) {
-                $("table.ms-formtable ").show();
-                return;
+                // exit if the form table contains an old RTE field (ERTE is fine)
+                var formTable = fieldRows.first().closest("table");
+                if (formTable.find("iframe[id$='TextField_iframe']").length > 0) {
+                    $("table.ms-formtable ").show();
+                    return;
+                }
             }
 
             this.initCacheLibrary(opt);
@@ -247,15 +249,17 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     spEasyForms.loadDynamicStyles(opt);
                 }
 
-                    /***
-                     * Produce the editor on the SPEasyForms settings page.
-                     ***/
+                /***
+                 * Produce the editor on the SPEasyForms settings page.
+                 ***/
                 if (spEasyForms.isSettingsPage(opt)) {
-                    spEasyForms.toEditor(opt);
+                    if (!spEasyForms.containsOldRichTextFields(opt)) {
+                        spEasyForms.toEditor(opt);
+                    }
                 }
-                    /***
-                     * If it looks like a transformable form, try to transform it.
-                     ***/
+                /***
+                 * If it looks like a transformable form, try to transform it.
+                 ***/
                 else if (spEasyForms.isTransformable(opt)) {
                     spEasyForms.transform(opt);
                     if (_spPageContextInfo.webUIVersion === 4) {
@@ -274,15 +278,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         });
                     }
                 }
-                    /***
-                     * If it looks like a transformable list settings page, insert an SPEasyForms list settings link.
-                     ***/
+                /***
+                 * If it looks like a transformable list settings page, insert an SPEasyForms list settings link.
+                 ***/
                 else if (spEasyForms.isConfigurableListSettings(opt)) {
                     spEasyForms.insertListSettingsLink(opt);
                 }
-                    /***
-                     * If it looks like a site settings page, insert an SPEasyForms site settings link.
-                     ***/
+                /***
+                 * If it looks like a site settings page, insert an SPEasyForms site settings link.
+                 ***/
                 else if (window.location.href.toLowerCase().indexOf("/settings.aspx") > 0) {
                     spEasyForms.insertSiteSettingsLink(opt);
                 }
@@ -291,6 +295,59 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $("#spEasyFormsBusyScreen").dialog('close');
             }
             return this;
+        },
+
+        containsOldRichTextFields: function (options) {
+            var errorFields = [];
+
+            var containsOldRichTextFieldsInternal = function() {
+                var res = false;
+                errorFields = [];
+
+                $.each(Object.keys(options.currentListContext.schema), function (idx, key) {
+                    var field = options.currentListContext.schema[key];
+                    if (field.type === "Note" && field.subtype === "RichText") {
+                        if ($.inArray(field.displayName, errorFields) < 0) {
+                            errorFields.push(field.displayName);
+                        }
+                        res = true;
+                    }
+                });
+
+                return res;
+            };
+
+            var result = containsOldRichTextFieldsInternal();
+            if (result === true) {
+                $.spEasyForms.clearCachedContext(options);
+                $.spEasyForms.sharePointContext.ctx = undefined;
+                options.currentContext = $.spEasyForms.sharePointContext.get(options);
+                options.currentListContext = $.spEasyForms.sharePointContext.getListContext(options);
+                result = containsOldRichTextFieldsInternal();
+                if (result === true) {
+                    $.spEasyForms.loadDynamicStyles(options);
+                    $("#spEasyFormsBusyScreen").dialog('close');
+                    var rteOpts = {
+                        modal: true,
+                        buttons: {
+                            "Ok": function () {
+                                window.location.href = $.spEasyForms.utilities.getRequestParameters(options).Source;
+                                return false;
+                            }
+                        },
+                        autoOpen: false,
+                        width: 400
+                    };
+
+                    $("#spEasyFormsErrorDialog").attr("title", "Unsupported Field Type");
+                    $("#spEasyFormsErrorDialog").html("This list contains Rich Text Multi-line fields, which are not compatible with SPEasyForms (The display name(s) are: <b>" + errorFields.join(", ") + "</b>).<br/><br/>" +
+                        "If you wish to configure this list with SPEasyForms, you must change them to either Enhanced Rich Text or Plain Text Multi-line fields.");
+                    $("#spEasyFormsErrorDialog").dialog(rteOpts);
+                    $("#spEasyFormsErrorDialog").dialog("open");
+                }
+            }
+
+            return result;
         },
 
         /********************************************************************
