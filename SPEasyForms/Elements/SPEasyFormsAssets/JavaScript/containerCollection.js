@@ -245,7 +245,8 @@
                 typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
                 typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
                 if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
-                    return this.highlightValidationErrors(opt);
+                    this.highlightValidationErrors(opt);
+                    return false;
                 }
             }
             else {
