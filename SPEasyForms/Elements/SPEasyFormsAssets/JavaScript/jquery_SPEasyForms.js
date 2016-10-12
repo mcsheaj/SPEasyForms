@@ -4,7 +4,7 @@
  * tabs, show/hide fields, validate field values, modify the controls used
  * to enter field values etc.)
  *
- * @version 2015.01.03
+ * 
  * @requires jQuery-ui v1.9.2 
  * @requires jQuery.SPServices v2015.02 or greater
  * @optional ssw Session Storage Wrapper - Cross Document Transport of
@@ -38,7 +38,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (/jquery.speasyforms.*\.js/.test(scripts[i].src)) {
                 return scripts[i];
             }
-            return _spPageContextInfo.siteServerRelativeUrl + "/Style Library/SPEasyFormsAssets/2015.01.03/JavaSccript/jquery.SPEasyForms.js";
+            return _spPageContextInfo.siteServerRelativeUrl + "/Style Library/SPEasyFormsAssets/2015.01.04/JavaSccript/jquery.SPEasyForms.js";
         }
     }
 
@@ -118,7 +118,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
             initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
-            version: "2015.01.03",
+            version: "2015.01.04",
             jQueryUIGallery: ["lilac", "olive", "redmond", "salmon", "smoothness", "sunny"],
             loadDynamicStylesAlways: false
         },
@@ -258,9 +258,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         spEasyForms.toEditor(opt);
                     }
                 }
-                /***
-                 * If it looks like a transformable form, try to transform it.
-                 ***/
+                    /***
+                     * If it looks like a transformable form, try to transform it.
+                     ***/
                 else if (spEasyForms.isTransformable(opt)) {
                     spEasyForms.transform(opt);
                     if (_spPageContextInfo.webUIVersion === 4) {
@@ -279,15 +279,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         });
                     }
                 }
-                /***
-                 * If it looks like a transformable list settings page, insert an SPEasyForms list settings link.
-                 ***/
+                    /***
+                     * If it looks like a transformable list settings page, insert an SPEasyForms list settings link.
+                     ***/
                 else if (spEasyForms.isConfigurableListSettings(opt)) {
                     spEasyForms.insertListSettingsLink(opt);
                 }
-                /***
-                 * If it looks like a site settings page, insert an SPEasyForms site settings link.
-                 ***/
+                    /***
+                     * If it looks like a site settings page, insert an SPEasyForms site settings link.
+                     ***/
                 else if (window.location.href.toLowerCase().indexOf("/settings.aspx") > 0) {
                     spEasyForms.insertSiteSettingsLink(opt);
                 }
@@ -301,7 +301,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         containsOldRichTextFields: function (options) {
             var errorFields = [];
 
-            var containsOldRichTextFieldsInternal = function() {
+            var containsOldRichTextFieldsInternal = function () {
                 var res = false;
                 errorFields = [];
 
@@ -411,6 +411,12 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         transform: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
+            // if the current configuration is empty, just return
+            if (opt.currentConfig.layout.def.length === 1 &&
+                $.isEmptyObject(opt.currentConfig.adapters.def) &&
+                $.isEmptyObject(opt.currentConfig.visibility.def)) {
+                return; // no configuration, get out of dodge
+            }
             // convert all lookups to simple selects, only for 2010 and
             // earlier, from Marc Anderson's SPServices documentation and 
             // attributed to Dan Kline
@@ -514,7 +520,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (source.indexOf("start.aspx#") >= 0) {
                         source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                     }
-                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.03/Pages/SPEasyFormsSettings.aspx") +
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.04/Pages/SPEasyFormsSettings.aspx") +
                         "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
                         "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
                         "&Source=" + encodeURIComponent(source);
@@ -547,9 +553,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (source.indexOf("start.aspx#") >= 0) {
                         source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                     }
-                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.03/Pages/SPEasyFormsSiteSettings.aspx") +
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.04/Pages/SPEasyFormsSiteSettings.aspx") +
                         "?Source=" + encodeURIComponent(source);
-                    var newItem = "<li class='ms-linksection-listItem'>" + 
+                    var newItem = "<li class='ms-linksection-listItem'>" +
 	                    "<a title='Restore or permanently remove items that users have deleted on this site.' href='" + settings + "'>SPEasyForms</a>" +
 		                "</li>";
                     siteCollectionAdministrationList.append(newItem);
@@ -587,7 +593,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         loadDynamicStyles: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.03/Css/jquery-ui-smoothness/jquery-ui.css";
+            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2015.01.04/Css/jquery-ui-smoothness/jquery-ui.css";
             var theme = this.replaceVariables(opt);
 
             // determine if the theme is set at the list or site level
@@ -628,8 +634,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (options.currentContext.siteRelativeUrl.length === 1) {
                 options.source = options.source.replace(/~sitecollection/g, "");
             }
-            else
-            {
+            else {
                 options.source = options.source.replace(/~sitecollection/g, options.currentContext.siteRelativeUrl);
             }
             options.source = options.source.replace(/~site/g, options.currentContext.webRelativeUrl);
@@ -703,7 +708,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.utilites - general helper functions for SPEasyForms
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -1109,7 +1114,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * SPEasyForms.sharePointContext - object for capturing SharePoint context information
  * using web services.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -1861,7 +1866,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.sharePointFieldRows - object to parse field rows into a map.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -2529,7 +2534,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * SPEasyForms.configManager - Object that encapsulates getting, setting, and saving the SPEasyForms
  * configuration file for the current list.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -2779,7 +2784,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 };
             }
-            opt.currentConfig.version = "2015.01.03";
+            opt.currentConfig.version = "2015.01.04";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig !== oldConfig) {
@@ -2844,7 +2849,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection - object to hold and manage all containers.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -3088,8 +3093,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
                 typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
                 if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
-                    this.highlightValidationErrors(opt);
-                    return false;
+                    return this.highlightValidationErrors(opt);
                 }
             }
             else {
@@ -3124,7 +3128,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     impl = containerCollection.containerImplementations[containerType];
                     if (typeof (impl.preSaveItem) === 'function') {
                         opt.currentContainerLayout = layout;
-                        result = impl.preSaveItem(opt) && r;
+                        result = impl.preSaveItem(opt) && result;
                     }
                 }
                 return r;
@@ -3737,7 +3741,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.03/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.04/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });
@@ -3963,7 +3967,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection.defaultFormContainer - object representing the OOB SharePoint form.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -4022,7 +4026,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * groups of fields (which I imagine is all containers).  It implements everything 
  * but the transform function.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -4339,7 +4343,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * SPEasyForms.containerCollection.fieldCollection - This is the leaf collection most of the time, a collection that contains
  * a single table of SharePoint fields.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -4454,7 +4458,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 -/*
  * SPEasyForms.containerCollection.accordion - Object representing an accordion container.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -4595,7 +4599,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.containerCollection.columns - Object representing a multi-column container.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -4724,7 +4728,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * SPEasyForms.containerCollection.stack - Object representing a container where multiple containers
  * can be stacked one on top of another.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -4798,7 +4802,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * $.spEasyForms.containerCollection.tabs - Object representing a tabs container.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -4934,7 +4938,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms WizardContainer - container that allows users to page through sub-containers one at a time.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -5063,6 +5067,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 });
             }
             wizard.setNextPrevVisibility(opt);
+            return true;
         },
 
         // select the content area for the given header
@@ -5221,7 +5226,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms htmlSnippet
  *
- * @version 2015.01.03
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -5431,7 +5436,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.visibilityRuleCollection - object to hold and manage all field visibility rules.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -6391,7 +6396,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.adapterCollection - collection of field control adapters.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -6638,7 +6643,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * SPEasyForms.adapterCollection.autocompleteAdapter - implementation of type ahead field control 
  * adapter for SPFieldText.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -6827,7 +6832,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /*
  * SPEasyForms.adapterCollection.cascadingLookupAdapter - implementaiton of a cascading lookup field adapter.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -7091,7 +7096,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * that creates an adapter for user fields to enter a default value of the current
  * user on new forms.
  *
- * @version 2015.01.03
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -7235,7 +7240,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * that creates an adapter for text fields to listen for changes to a lookup
  * and pull in data from another field in the lookup list.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -7416,7 +7421,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
  * can be applied to integer fields and allows users to enter 0-5 stars as the
  * value by clicking on the stars or a slider-like interface.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -9045,7 +9050,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     $.fn.sharePoint_Original_cleditor = $.fn.cleditor;
     $.fn.cleditor = function (options) {
         if (!cssLoaded) {
-            var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.03/Css/jquery.cleditor.css');
+            var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.04/Css/jquery.cleditor.css');
             $("head").append('<link rel="stylesheet" type="text/css" href="' + css + '">');
             cssLoaded = true;
         }

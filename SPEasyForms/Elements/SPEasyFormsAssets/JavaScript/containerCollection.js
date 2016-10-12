@@ -1,7 +1,7 @@
 ﻿/*
  * SPEasyForms.containerCollection - object to hold and manage all containers.
  *
- * @requires jQuery.SPEasyForms.2015.01.03 
+ * 
  * @copyright 2014-2016 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
@@ -245,8 +245,7 @@
                 typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
                 typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
                 if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
-                    this.highlightValidationErrors(opt);
-                    return false;
+                    return this.highlightValidationErrors(opt);
                 }
             }
             else {
@@ -281,7 +280,7 @@
                     impl = containerCollection.containerImplementations[containerType];
                     if (typeof (impl.preSaveItem) === 'function') {
                         opt.currentContainerLayout = layout;
-                        result = impl.preSaveItem(opt) && r;
+                        result = impl.preSaveItem(opt) && result;
                     }
                 }
                 return r;
@@ -894,7 +893,7 @@
 
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.03/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.04/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });
