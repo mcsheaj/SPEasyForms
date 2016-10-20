@@ -410,6 +410,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
          ********************************************************************/
         transform: function (opt) {
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
+
+            $.spEasyForms.defaults.formId = "WPQ2";
+            try {
+                var saveOnSubmit = $("input[value='Save']")[0].getAttributeNode("onclick").nodeValue;
+                var matches = saveOnSubmit.match(/SPClientForms\.ClientFormManager.SubmitClientForm\(\'([^\']*)\'/);
+                if (matches && matches.length >= 2) $.spEasyForms.defaults.formId = matches[1];
+            } catch (e) { }
+
             // if the current configuration is empty, just return
             if (opt.currentConfig.layout.def.length === 1 &&
                 $.isEmptyObject(opt.currentConfig.adapters.def) &&
@@ -455,7 +463,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (null !== this.getAttributeNode("onclick")) {
                         var onSave = this.getAttributeNode("onclick").nodeValue;
                         onSave = onSave.replace(
-                            "if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;", "");
+                            "if (SPClientForms.ClientFormManager.SubmitClientForm('" + $.spEasyForms.defaults.formId + "')) return false;", "");
                         var newOnSave = document.createAttribute('onclick');
                         newOnSave.value = onSave;
                         this.setAttributeNode(newOnSave);

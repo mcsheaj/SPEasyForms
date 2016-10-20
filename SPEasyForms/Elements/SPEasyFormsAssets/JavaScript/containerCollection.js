@@ -244,7 +244,7 @@
             if (typeof (SPClientForms) !== 'undefined' &&
                 typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
                 typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
-                if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) {
+                if (SPClientForms.ClientFormManager.SubmitClientForm(opt.formId)) {
                     this.highlightValidationErrors(opt);
                     return false;
                 }
