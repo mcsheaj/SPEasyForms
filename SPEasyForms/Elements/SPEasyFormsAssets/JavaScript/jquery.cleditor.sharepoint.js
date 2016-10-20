@@ -176,7 +176,7 @@
     $.fn.sharePoint_Original_cleditor = $.fn.cleditor;
     $.fn.cleditor = function (options) {
         if (!cssLoaded) {
-            var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.04/Css/jquery.cleditor.css');
+            var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery.cleditor.css');
             $("head").append('<link rel="stylesheet" type="text/css" href="' + css + '">');
             cssLoaded = true;
         }

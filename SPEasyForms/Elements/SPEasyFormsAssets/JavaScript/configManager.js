@@ -252,7 +252,7 @@
                     }
                 };
             }
-            opt.currentConfig.version = "2015.01.04";
+            opt.currentConfig.version = "2015.01.05";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig !== oldConfig) {
