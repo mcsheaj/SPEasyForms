@@ -3,22 +3,22 @@
     <Module Name="SPEasyFormsAssetsDefaults" Url="Style Library/SPEasyFormsAssets">
         <File Path="SPEasyFormsAssets\SPEasyForms_DefaultSettings.js" Url="SPEasyForms_DefaultSettings.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCss" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css">
+    <Module Name="SPEasyFormsAssetsCss" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css">
         <File Path="SPEasyFormsAssets\speasyforms.css" Url="speasyforms.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.cleditor.css" Url="jquery.cleditor.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsImages" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/images">
+    <Module Name="SPEasyFormsAssetsImages" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/images">
         <File Path="SPEasyFormsAssets\buttons.png" Url="buttons.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\SPEasyForms16x16.png" Url="SPEasyForms16x16.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\SPEasyForms32x32.png" Url="SPEasyForms32x32.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\stars.png" Url="stars.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\toolbar.png" Url="toolbar.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssRedmond" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-redmond">
+    <Module Name="SPEasyFormsAssetsCssRedmond" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-redmond">
         <File Path="SPEasyFormsAssets\jquery-ui-redmond\jquery-ui.css" Url="jquery-ui.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-redmond\jquery.ui.theme.css" Url="jquery-ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssImagesRedmond" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-redmond/images">
+    <Module Name="SPEasyFormsAssetsCssImagesRedmond" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-redmond/images">
         <File Path="SPEasyFormsAssets\jquery-ui-redmond\ui-bg_glass_75_d0e5f5_1x400.png" Url="ui-bg_glass_75_d0e5f5_1x400.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-redmond\ui-bg_glass_85_dfeffc_1x400.png" Url="ui-bg_glass_85_dfeffc_1x400.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-redmond\ui-bg_glass_95_fef1ec_1x400.png" Url="ui-bg_glass_95_fef1ec_1x400.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -33,11 +33,11 @@
         <File Path="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_d8e7f3_256x240.png" Url="ui-icons_d8e7f3_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-redmond\ui-icons_f9bd01_256x240.png" Url="ui-icons_f9bd01_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssSalmon" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-salmon">
+    <Module Name="SPEasyFormsAssetsCssSalmon" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-salmon">
         <File Path="SPEasyFormsAssets\jquery-ui-salmon\jquery-ui.css" Url="jquery-ui.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-salmon\jquery-ui.theme.css" Url="jquery-ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssImagesSalmon" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-salmon/images">
+    <Module Name="SPEasyFormsAssetsCssImagesSalmon" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-salmon/images">
         <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_diagonals-medium_20_d34d17_40x40.png" Url="ui-bg_diagonals-medium_20_d34d17_40x40.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_gloss-wave_45_944c44_500x100.png" Url="ui-bg_gloss-wave_45_944c44_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-bg_gloss-wave_60_d7665b_500x100.png" Url="ui-bg_gloss-wave_60_d7665b_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -51,11 +51,11 @@
         <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_c7665b_256x240.png" Url="ui-icons_c7665b_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-salmon\ui-icons_faada5_256x240.png" Url="ui-icons_faada5_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssSmoothness" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-smoothness">
+    <Module Name="SPEasyFormsAssetsCssSmoothness" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-smoothness">
         <File Path="SPEasyFormsAssets\jquery-ui-smoothness\jquery-ui.css" Url="jquery-ui.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-smoothness\jquery-ui.theme.css" Url="jquery.ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssImagesSmoothness" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-smoothness/images">
+    <Module Name="SPEasyFormsAssetsCssImagesSmoothness" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-smoothness/images">
         <File Path="SPEasyFormsAssets\jquery-ui-smoothness\ui-bg_glass_55_fbf9ee_1x400.png" Url="ui-bg_glass_55_fbf9ee_1x400.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-smoothness\ui-bg_glass_65_ffffff_1x400.png" Url="ui-bg_glass_65_ffffff_1x400.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-smoothness\ui-bg_glass_75_dadada_1x400.png" Url="ui-bg_glass_75_dadada_1x400.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -68,11 +68,11 @@
         <File Path="SPEasyFormsAssets\jquery-ui-smoothness\ui-icons_888888_256x240.png" Url="ui-icons_888888_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-smoothness\ui-icons_cd0a0a_256x240.png" Url="ui-icons_cd0a0a_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssOlive" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-olive">
+    <Module Name="SPEasyFormsAssetsCssOlive" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-olive">
         <File Path="SPEasyFormsAssets\jquery-ui-olive\jquery-ui.css" Url="jquery-ui.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-olive\jquery-ui.theme.css" Url="jquery.ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssImagesOlive" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-olive/images">
+    <Module Name="SPEasyFormsAssetsCssImagesOlive" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-olive/images">
         <File Path="SPEasyFormsAssets\jquery-ui-olive\ui-bg_diagonals-medium_20_4e4e00_40x40.png" Url="ui-bg_diagonals-medium_20_4e4e00_40x40.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-olive\ui-bg_gloss-wave_45_4e4e00_500x100.png" Url="ui-bg_gloss-wave_45_4e4e00_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-olive\ui-bg_gloss-wave_60_767600_500x100.png" Url="ui-bg_gloss-wave_60_767600_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -84,11 +84,11 @@
         <File Path="SPEasyFormsAssets\jquery-ui-olive\ui-icons_b6120d_256x240.png" Url="ui-icons_b6120d_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-olive\ui-icons_d0d050_256x240.png" Url="ui-icons_d0d050_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssLilac" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-lilac">
+    <Module Name="SPEasyFormsAssetsCssLilac" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-lilac">
         <File Path="SPEasyFormsAssets\jquery-ui-lilac\jquery-ui.css" Url="jquery-ui.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-lilac\jquery-ui.theme.css" Url="jquery.ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssImagesLilac" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-lilac/images">
+    <Module Name="SPEasyFormsAssetsCssImagesLilac" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-lilac/images">
         <File Path="SPEasyFormsAssets\jquery-ui-lilac\ui-bg_diagonals-medium_20_832ebf_40x40.png" Url="ui-bg_diagonals-medium_20_832ebf_40x40.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-lilac\ui-bg_gloss-wave_45_5b0679_500x100.png" Url="ui-bg_gloss-wave_45_5b0679_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-lilac\ui-bg_gloss-wave_60_832ebf_500x100.png" Url="ui-bg_gloss-wave_60_832ebf_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -101,11 +101,11 @@
         <File Path="SPEasyFormsAssets\jquery-ui-lilac\ui-icons_dd88ff_256x240.png" Url="ui-icons_dd88ff_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-lilac\ui-icons_f08bc4_256x240.png" Url="ui-icons_f08bc4_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssSunny" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-sunny">
+    <Module Name="SPEasyFormsAssetsCssSunny" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-sunny">
         <File Path="SPEasyFormsAssets\jquery-ui-sunny\jquery-ui.css" Url="jquery-ui.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-sunny\jquery-ui.theme.css" Url="jquery-ui.theme.css" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsCssImagesSunny" Url="Style Library/SPEasyFormsAssets/2015.01.05/Css/jquery-ui-sunny/images">
+    <Module Name="SPEasyFormsAssetsCssImagesSunny" Url="Style Library/SPEasyFormsAssets/2015.01.06/Css/jquery-ui-sunny/images">
         <File Path="SPEasyFormsAssets\jquery-ui-sunny\ui-bg_diagonals-medium_20_d34d17_40x40.png" Url="ui-bg_diagonals-medium_20_d34d17_40x40.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-sunny\ui-bg_gloss-wave_45_817865_500x100.png" Url="ui-bg_gloss-wave_45_817865_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-sunny\ui-bg_gloss-wave_60_fece2f_500x100.png" Url="ui-bg_gloss-wave_60_fece2f_500x100.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -121,10 +121,10 @@
         <File Path="SPEasyFormsAssets\jquery-ui-sunny\ui-icons_fadc7a_256x240.png" Url="ui-icons_fadc7a_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui-sunny\ui-icons_ffe180_256x240.png" Url="ui-icons_ffe180_256x240.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsHelp" Url="Style Library/SPEasyFormsAssets/2015.01.05/Help">
+    <Module Name="SPEasyFormsAssetsHelp" Url="Style Library/SPEasyFormsAssets/2015.01.06/Help">
         <File Path="SPEasyFormsAssets\speasyforms_help.aspx" Url="speasyforms_help.aspx" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsHelpImages" Url="Style Library/SPEasyFormsAssets/2015.01.05/Help/Images">
+    <Module Name="SPEasyFormsAssetsHelpImages" Url="Style Library/SPEasyFormsAssets/2015.01.06/Help/Images">
         <File Path="SPEasyFormsAssets\bullet_blue.png" Url="bullet_blue.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\Download.png" Url="Download.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\Download_002.png" Url="Download_002.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -238,7 +238,7 @@
         <File Path="SPEasyFormsAssets\Download_110.png" Url="Download_110.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\Download_111.png" Url="Download_111.png" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsJavaScript" Url="Style Library/SPEasyFormsAssets/2015.01.05/JavaScript">
+    <Module Name="SPEasyFormsAssetsJavaScript" Url="Style Library/SPEasyFormsAssets/2015.01.06/JavaScript">
         <File Path="SPEasyFormsAssets\MicrosoftAjax.js" Url="MicrosoftAjax.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery.js" Url="jquery.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\jquery-ui.js" Url="jquery-ui.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
@@ -273,7 +273,7 @@
         <File Path="SPEasyFormsAssets\jquery.cleditor.xhtml.js" Url="jquery.cleditor.xhtml.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\cont.HtmlSnippet.js" Url="cont.htmlSnippet.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
     </Module>
-    <Module Name="SPEasyFormsAssetsPages" Url="Style Library/SPEasyFormsAssets/2015.01.05/Pages">
+    <Module Name="SPEasyFormsAssetsPages" Url="Style Library/SPEasyFormsAssets/2015.01.06/Pages">
         <File Path="SPEasyFormsAssets\SPEasyFormsSiteSettings.aspx" Url="SPEasyFormsSiteSettings.aspx" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\SPEasyFormsSettings.aspx" Url="SPEasyFormsSettings.aspx" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
         <File Path="SPEasyFormsAssets\SPEasyFormsSettingsVerbose.aspx" Url="SPEasyFormsSettingsVerbose.aspx" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />

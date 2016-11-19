@@ -894,7 +894,7 @@
 
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.05/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.06/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });
