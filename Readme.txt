@@ -1,4 +1,4 @@
-﻿SPEasyForms is a no code sandbox solution for Office 365, and 
+﻿joe SPEasyForms is a no code sandbox solution for Office 365, and 
 SharePoint 2013 and 2010. It was developed using Visual Studio Ultimate
 (Update 3), but Visual Studio is not required to build it (with the
 folowing caveats).
