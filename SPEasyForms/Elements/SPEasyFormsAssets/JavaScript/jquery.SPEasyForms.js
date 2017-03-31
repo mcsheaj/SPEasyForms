@@ -168,7 +168,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 var formTable = fieldRows.first().closest("table");
                 if (formTable.find("iframe[id$='TextField_iframe']").length > 0) {
                     $("table.ms-formtable").show();
-                    $.spEasyForms.utilities.resizeModalDialog();
+                    ExecuteOrDelayUntilScriptLoaded(function () {
+                        var dlg = SP.UI.ModalDialog.get_childDialog();
+                        if (dlg !== null) {
+                            setTimeout(function () {
+                                if ($(".ms-formtable").css("display") === "none" || $("#spEasyFormsContainersPre").length > 0) {
+                                    $.spEasyForms.utilities.resizeModalDialog();
+                                }
+                            }, 3000);
+                        }
+                    }, "sp.ui.dialog.js");
                     return;
                 }
             }
@@ -293,7 +302,16 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 }
             } finally {
                 $("table.ms-formtable ").show();
-                $.spEasyForms.utilities.resizeModalDialog();
+                ExecuteOrDelayUntilScriptLoaded(function () {
+                    var dlg = SP.UI.ModalDialog.get_childDialog();
+                    if (dlg !== null) {
+                        setTimeout(function () {
+                            if ($(".ms-formtable").css("display") === "none" || $("#spEasyFormsContainersPre").length > 0) {
+                                $.spEasyForms.utilities.resizeModalDialog();
+                            }
+                        }, 3000);
+                    }
+                }, "sp.ui.dialog.js");
                 $("#spEasyFormsBusyScreen").dialog('close');
             }
             return this;
@@ -415,7 +433,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             $.spEasyForms.defaults.formId = "WPQ2";
             try {
-                var saveOnSubmit = $("input[value='Save']")[0].getAttributeNode("onclick").nodeValue;
+                var saveOnSubmit = $("input[id$='_diidIOSaveItem']")[0].getAttributeNode("onclick").nodeValue;
                 var matches = saveOnSubmit.match(/SPClientForms\.ClientFormManager.SubmitClientForm\(\'([^\']*)\'/);
                 if (matches && matches.length >= 2) $.spEasyForms.defaults.formId = matches[1];
             } catch (e) { }
@@ -461,7 +479,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 // override the save button in 2013/O365 so validation 
                 // occurs before PreSaveAction, like it did in previous
                 // version of SharePoint
-                $("input[value='Save']").each(function () {
+                $("input[id$='_diidIOSaveItem']").each(function () {
                     if (null !== this.getAttributeNode("onclick")) {
                         var onSave = this.getAttributeNode("onclick").nodeValue;
                         onSave = onSave.replace(
