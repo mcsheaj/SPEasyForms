@@ -130,7 +130,7 @@
         },
 
         resizeModalDialog: function () {
-            if (typeof (SP.UI.ModalDialog.get_childDialog) === "function") {
+            if (typeof(SP.UI.ModalDialog) !== "undefined" && typeof (SP.UI.ModalDialog.get_childDialog) === "function") {
                 var dlg = SP.UI.ModalDialog.get_childDialog();
                 if (dlg !== null) {
                     SP.UI.ModalDialog.get_childDialog().autoSize();
