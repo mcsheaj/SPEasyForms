@@ -30,6 +30,7 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.xhtml.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.js
 ..\Elements\SPEasyFormsAssets\SPEasyForms_DefaultSettings.js
+..\Elements\SPEasyFormsAssets\SPEasyFormsInstaller.aspx
 ..\Elements\SPEasyFormsAssets\JavaScript\sharePointContext.js
 ..\Elements\SPEasyFormsAssets\JavaScript\utilities.js
 ..\Elements\SPEasyFormsAssets\JavaScript\sharePoinFieldRows.js

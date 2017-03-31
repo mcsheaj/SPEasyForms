@@ -239,6 +239,7 @@
     <Content Include="Elements\SPEasyFormsAssets\Help\speasyforms_help.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+    <Content Include="Elements\SPEasyFormsAssets\SPEasyFormsInstaller.aspx" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.nestedsortable.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\adap.starRatingAdapter.js" />
     <None Include="Elements\SPEasyFormsAssets\JavaScript\cont.fieldCollection.js" />
