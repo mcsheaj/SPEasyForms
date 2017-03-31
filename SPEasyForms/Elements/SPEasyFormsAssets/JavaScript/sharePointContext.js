@@ -365,9 +365,9 @@
                                         newField.formula = $(field).find("formula").text();
                                     }
                                 }
-                                var richText = $(field).attr("richtext");
-                                var richTextMode = $(field).attr("richtextmode");
-                                if (richText && richText.toLowerCase() === "true" && richTextMode && richTextMode.toLowerCase() === "compatible") {
+                                var richText = $(field).attr("RichText");
+                                var richTextMode = $(field).attr("RichTextMode");
+                                if (richText && richText.toLowerCase() === "true" && (!richTextMode || richTextMode.toLowerCase() === "compatible")) {
                                     newField.subtype = "RichText";
                                 }
                                 else {
