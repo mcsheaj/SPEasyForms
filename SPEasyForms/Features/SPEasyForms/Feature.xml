@@ -9,6 +9,7 @@
     <ElementManifests>
         <ElementManifest Location="SPEasyFormsScriptLinks.xml" />
         <ElementManifest Location="SPEasyFormsCustomActions.xml" />
+		
         <ElementManifest Location="SPEasyFormsAssets.xml" />
 
         <ElementFile Location="SPEasyFormsAssets\speasyforms.css" />
