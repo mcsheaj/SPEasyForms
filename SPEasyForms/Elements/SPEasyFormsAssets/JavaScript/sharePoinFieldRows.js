@@ -332,6 +332,11 @@
                                 tr.value += " " + hour + ":" + minutes + " " +
                                     ampm;
                             }
+                            else {
+                                var hour = $(selects[0]).val();
+                                var minutes = $(selects[1]).val();
+                                tr.value += " " + hour + ":" + minutes;
+                            }
                         }
                         break;
                     case "SPFieldLookup":
@@ -412,6 +417,26 @@
                         break;
                     case "SPFieldCalculated":
                         tr.value = tr.find("td.ms-formbody").text().trim();
+                        break;
+                    case "SPFieldTaxonomyFieldType":
+                    case "SPFieldTaxonomyFieldTypeMulti":
+                        var value = tr.row.find("td.ms-formbody input").val();
+                        if (value.length > 0) {
+                            if (value.indexOf(";") > -1) {
+                                var values = value.split(";");
+                                if (values.length > 0) {
+                                    value = "";
+                                    $.each(values, function (idx, val) {
+                                        value += ";" + val.substr(0, val.indexOf("|"));
+                                    });
+                                }
+                            }
+                            else {
+                                value = value.substr(0, value.indexOf("|"));
+                            }
+                            tr.value = value;
+                            if (tr.value[0] === ";") tr.value = tr.value.substr(1);
+                        }
                         break;
                     default:
                         if (tr.row.find("td.ms-formbody input").length > 0) {

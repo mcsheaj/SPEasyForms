@@ -80,7 +80,10 @@
                 this.options.tolerance = "intersect";
             }
 
-            $.ui.sortable.prototype._create.apply(this, arguments);
+            try {
+                $.ui.sortable.prototype._create.apply(this, arguments);
+            }
+            catch(e) {}
 
             // prepare the tree by applying the right classes
             // (the CSS is responsible for actual hide/show functionality)

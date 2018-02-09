@@ -162,10 +162,11 @@
             if (!this.initialized) {
                 this.wireRibbonButtonEvents(opt);
                 this.wireDialogEvents(opt);
-                this.initConditionalFieldChoices(opt);
             }
 
             if (!this.initialized || opt.refresh & refresh.panel) {
+                this.initConditionalFieldChoices(opt);
+
                 $("ol.speasyforms-nestedsortable").empty();
 
                 this.initContainers(opt);
@@ -426,6 +427,8 @@
             $.each(Object.keys(containerCollection.rows), function (idx, name) {
                 fields[containerCollection.rows[name].displayName] = containerCollection.rows[name];
             });
+            $(".speasyforms-conditionalfield").find("option").remove();
+            $(".speasyforms-conditionalfield").append('<option></option>');
             $.each(Object.keys(fields).sort(), function (idx, displayName) {
                 var name = fields[displayName].internalName;
                 if (name !== $.spEasyForms.defaultFormContainer.containerType) {

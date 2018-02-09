@@ -188,7 +188,7 @@
                     "alignleft center alignright | " +
                     "numbering bullets outdent indent | " +
                     "color highlight backgroundcolor | " +
-                    "rule image link unlink | " +
+                    "rule | " +
                     "cut copy paste pastetext | " +
                     "ltr rtl print source",
                 fonts: "Arial,Arial Black,Comic Sans MS,Courier New,Narrow,Garamond," +
