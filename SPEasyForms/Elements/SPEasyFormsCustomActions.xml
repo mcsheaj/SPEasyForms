@@ -21,8 +21,8 @@
                         ToolTipDescription="Settings page for configuring this list for SPEasyForms."
                         Id="Ribbon.List.Settings.Controls.SPEasyForms.Button"
                         Command="Ribbon.List.Settings.Controls.SPEasyForms.Command"
-                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.07/Css/images/SPEasyForms32x32.png"
-                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.07/Css/images/SPEasyForms16x16.png"
+                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms32x32.png"
+                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms16x16.png"
                         Sequence="10256"
                         TemplateAlias="o1"
                       />
@@ -36,8 +36,8 @@
                         ToolTipDescription="Settings page for configuring this list for SPEasyForms."
                         Id="Ribbon.List.Settings.Controls.SPEasyForms.Button"
                         Command="Ribbon.List.Settings.Controls.SPEasyForms.Command"
-                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.07/Css/images/SPEasyForms32x32.png"
-                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.07/Css/images/SPEasyForms16x16.png"
+                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms32x32.png"
+                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms16x16.png"
                         Sequence="10256"
                         TemplateAlias="o1"
                       />
@@ -51,8 +51,8 @@
                         ToolTipDescription="Settings page for configuring this list for SPEasyForms."
                         Id="Ribbon.List.Settings.Controls.SPEasyForms.Button"
                         Command="Ribbon.List.Settings.Controls.SPEasyForms.Command"
-                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.07/Css/images/SPEasyForms32x32.png"
-                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2015.01.07/Css/images/SPEasyForms16x16.png"
+                        Image32by32="~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms32x32.png"
+                        Image16by16="~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms16x16.png"
                         Sequence="10256"
                         TemplateAlias="o1"
                       />
@@ -66,9 +66,9 @@
                     Command="Ribbon.List.Settings.Controls.SPEasyForms.Command"
                     CommandAction="javascript:goToSettingsPage();
                     function goToSettingsPage() {
-                        var page = '/Style Library/SPEasyFormsAssets/2015.01.07/Pages/SPEasyFormsSettings.aspx?';
+                        var page = '/Style Library/SPEasyFormsAssets/2018.01/Pages/SPEasyFormsSettings.aspx?';
                         if(spefjQuery.spEasyForms.defaults.verbose) {
-                            page = '/Style Library/SPEasyFormsAssets/2015.01.07/Pages/SPEasyFormsSettingsVerbose.aspx?';
+                            page = '/Style Library/SPEasyFormsAssets/2018.01/Pages/SPEasyFormsSettingsVerbose.aspx?';
                             page += 'spEasyFormsVerbose=true&amp;';
                         }
                         if(_spPageContextInfo.siteServerRelativeUrl != '/') {

@@ -118,9 +118,9 @@
         <ElementFile Location="SPEasyFormsAssets\jquery.cleditor.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.cleditor.sharepoint.js" />
         <ElementFile Location="SPEasyFormsAssets\jquery.cleditor.xhtml.js" />
-        <ElementFile Location="SPEasyFormsAssets\jquery_bundle.min.js" />
-        <ElementFile Location="SPEasyFormsAssets\jquery_SPEasyForms.min.js" />
-        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.bundle.min.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyForms.min.js" />
+        <ElementFile Location="SPEasyFormsAssets\jquery.SPEasyFormsInstance.js" />
 		<ElementFile Location="SPEasyFormsAssets\SPEasyForms_DefaultSettings.js" />
 		<ElementFile Location="SPEasyFormsAssets\SPEasyFormsInstaller.aspx" />
 		<ElementFile Location="SPEasyFormsAssets\sharePointContext.js" />

@@ -1,0 +1,44 @@
+[
+  {
+    "outputFileName": "Elements/SPEasyFormsAssets/JavaScript/jQuery.SPEasyForms.js",
+    "inputFiles": [
+      "Elements/SPEasyFormsAssets/JavaScript/jquery.SPEasyFormsInstance.js",
+      "Elements/SPEasyFormsAssets/JavaScript/utilities.js",
+      "Elements/SPEasyFormsAssets/JavaScript/sharePointContext.js",
+      "Elements/SPEasyFormsAssets/JavaScript/sharePoinFieldRows.js",
+      "Elements/SPEasyFormsAssets/JavaScript/configManager.js",
+      "Elements/SPEasyFormsAssets/JavaScript/containerCollection.js",
+      "Elements/SPEasyFormsAssets/JavaScript/cont.accordion.js",
+      "Elements/SPEasyFormsAssets/JavaScript/cont.baseContainer.js",
+      "Elements/SPEasyFormsAssets/JavaScript/cont.columns.js",
+      "Elements/SPEasyFormsAssets/JavaScript/cont.defaultContainer.js",
+      "Elements/SPEasyFormsAssets/JavaScript/cont.fieldCollection.js",
+      "Elements/SPEasyFormsAssets/JavaScript/cont.htmlSnippet.js",
+      "Elements/SPEasyFormsAssets/JavaScript/cont.stack.js",
+      "Elements/SPEasyFormsAssets/JavaScript/cont.tabs.js",
+      "Elements/SPEasyFormsAssets/JavaScript/cont.wizard.js",
+      "Elements/SPEasyFormsAssets/JavaScript/visibilityRuleCollection.js",
+      "Elements/SPEasyFormsAssets/JavaScript/adapterCollection.js",
+      "Elements/SPEasyFormsAssets/JavaScript/adap.autocompleteAdapter.js",
+      "Elements/SPEasyFormsAssets/JavaScript/adap.cascadingLookupAdapter.js",
+      "Elements/SPEasyFormsAssets/JavaScript/adap.defaultToCurrentUserAdapter.js",
+      "Elements/SPEasyFormsAssets/JavaScript/adap.lookupDetailAdapter.js",
+      "Elements/SPEasyFormsAssets/JavaScript/adap.starRatingAdapter.js",
+      "Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.js",
+      "Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.sharepoint.js",
+      "Elements/SPEasyFormsAssets/JavaScript/jquery.cleditor.xhtml.js"
+    ],
+    "sourceMap": true
+  },
+  {
+    "outputFileName": "Elements/SPEasyFormsAssets/JavaScript/jquery.bundle.js",
+    "inputFiles": [
+      "Elements/SPEasyFormsAssets/JavaScript/jquery.js",
+      "Elements/SPEasyFormsAssets/JavaScript/jquery-ui.js",
+      "Elements/SPEasyFormsAssets/JavaScript/jquery-ui.nestedsortable.js",
+      "Elements/SPEasyFormsAssets/JavaScript/jquery.SPServices.js",
+      "Elements/SPEasyFormsAssets/JavaScript/ssw.js"
+    ],
+    "sourceMap": true
+  }
+]

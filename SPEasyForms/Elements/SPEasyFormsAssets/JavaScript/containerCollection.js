@@ -2,7 +2,7 @@
  * SPEasyForms.containerCollection - object to hold and manage all containers.
  *
  * 
- * @copyright 2014-2016 Joe McShea
+ * @copyright 2014-2018 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */
@@ -897,7 +897,7 @@
 
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2015.01.07/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.01/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });

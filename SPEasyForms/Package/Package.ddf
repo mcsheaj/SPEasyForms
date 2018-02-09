@@ -17,8 +17,8 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets.xml
 
 .Set DestinationDir="SPEasyForms\SPEasyFormsAssets"
-..\Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.min.js
-..\Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.min.js
+..\Elements\SPEasyFormsAssets\JavaScript\jquery.bundle.min.js
+..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.min.js
 ..\Elements\SPEasyFormsAssets\JavaScript\MicrosoftAjax.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery-ui.js
@@ -28,7 +28,7 @@ Manifest.xml
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.sharepoint.js
 ..\Elements\SPEasyFormsAssets\JavaScript\jquery.cleditor.xhtml.js
-..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.js
+..\Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyFormsInstance.js
 ..\Elements\SPEasyFormsAssets\SPEasyForms_DefaultSettings.js
 ..\Elements\SPEasyFormsAssets\SPEasyFormsInstaller.aspx
 ..\Elements\SPEasyFormsAssets\JavaScript\sharePointContext.js

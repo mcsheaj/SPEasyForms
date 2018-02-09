@@ -5,7 +5,3 @@ $settingsPage = $settingsPage.Replace("<!-- DEBUG_START -->", "<!-- DEBUG_START"
 $settingsPage = $settingsPage.Replace("<!-- DEBUG_END -->", "DEBUG_END -->")
 $settingsPage | Out-File -FilePath ..\Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx
 Write-Host "Updated ..\Elements\SPEasyFormsAssets\Pages\SPEasyFormsSettings.aspx"
-
-$map = Get-Content ..\Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.min.js.map
-$map = $map.Replace("/Elements/SPEasyFormsAssets/JavaScript/", "")
-$map | Out-File -FilePath jquery_SPEasyForms.min.js.map

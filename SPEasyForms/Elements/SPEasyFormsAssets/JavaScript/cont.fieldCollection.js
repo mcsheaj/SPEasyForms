@@ -3,7 +3,7 @@
  * a single table of SharePoint fields.
  *
  * 
- * @copyright 2014-2016 Joe McShea
+ * @copyright 2014-2018 Joe McShea
  * @license under the MIT license:
  *    http://www.opensource.org/licenses/mit-license.php
  */

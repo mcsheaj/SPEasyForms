@@ -1,4 +1,3 @@
-﻿///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.js
 /*!
  * jQuery JavaScript Library v1.11.3
  * http://jquery.com/
@@ -12,7 +11,7 @@
  *
  * Date: 2015-04-28T16:19Z
  */
-
+ 
 (function( global, factory ) {
 
 	if ( typeof module === "object" && typeof module.exports === "object" ) {
@@ -10352,7 +10351,6 @@ return jQuery;
 }));
 
 
-///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery-ui.js
 /*! jQuery UI - v1.11.4 - 2015-03-11
 * http://jqueryui.com
 * Includes: core.js, widget.js, mouse.js, position.js, accordion.js, autocomplete.js, button.js, datepicker.js, dialog.js, draggable.js, droppable.js, effect.js, effect-blind.js, effect-bounce.js, effect-clip.js, effect-drop.js, effect-explode.js, effect-fade.js, effect-fold.js, effect-highlight.js, effect-puff.js, effect-pulsate.js, effect-scale.js, effect-shake.js, effect-size.js, effect-slide.js, effect-transfer.js, menu.js, progressbar.js, resizable.js, selectable.js, selectmenu.js, slider.js, sortable.js, spinner.js, tabs.js, tooltip.js
@@ -26971,7 +26969,6 @@ var tooltip = $.widget( "ui.tooltip", {
 
 }));
 
-///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery-ui.nestedsortable.js
 /*
  * jQuery UI Nested Sortable
  * v 2.0 / 29 oct 2012
@@ -27054,7 +27051,10 @@ var tooltip = $.widget( "ui.tooltip", {
                 this.options.tolerance = "intersect";
             }
 
-            $.ui.sortable.prototype._create.apply(this, arguments);
+            try {
+                $.ui.sortable.prototype._create.apply(this, arguments);
+            }
+            catch(e) {}
 
             // prepare the tree by applying the right classes
             // (the CSS is responsible for actual hide/show functionality)
@@ -27876,7 +27876,6 @@ var tooltip = $.widget( "ui.tooltip", {
 }));
 
 
-///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/jquery.SPServices.js
 /*
  * SPServices - Work with SharePoint's Web Services using jQuery
  * Version 2014.02
@@ -32452,7 +32451,6 @@ var tooltip = $.widget( "ui.tooltip", {
 
 
 })(jQuery);
-///#source 1 1 /Elements/SPEasyFormsAssets/JavaScript/ssw.js
 /*
  * Session Storage Wrapper - Cross Document Transport of JavaScript Data
  * 

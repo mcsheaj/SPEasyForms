@@ -239,9 +239,20 @@
     <Content Include="Elements\SPEasyFormsAssets\Help\speasyforms_help.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="Elements\SPEasyFormsAssets\SPEasyFormsInstaller.aspx" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.bundle.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.bundle.min.js">
+      <DependentUpon>jquery.bundle.js</DependentUpon>
+    </Content>
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jQuery.SPEasyForms.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jQuery.SPEasyForms.min.js">
+      <DependentUpon>jQuery.SPEasyForms.js</DependentUpon>
+    </Content>
+    <Content Include="Elements\SPEasyFormsAssets\SPEasyFormsInstaller.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.nestedsortable.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\adap.starRatingAdapter.js" />
+    <None Include="bundleconfig.json" />
     <None Include="Elements\SPEasyFormsAssets\JavaScript\cont.fieldCollection.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.htmlSnippet.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\adap.defaultToCurrentUserAdapter.js" />
@@ -259,30 +270,15 @@
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.stack.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.tabs.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.wizard.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.min.js">
-      <DependentUpon>jquery.SPEasyForms.js</DependentUpon>
-    </Content>
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.js">
-      <DependentUpon>jquery_bundle.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.min.js">
-      <DependentUpon>jquery_bundle.js</DependentUpon>
-    </Content>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\sharePoinFieldRows.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery-ui.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.js" />
+    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyFormsInstance.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\sharePointContext.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\utilities.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\visibilityRuleCollection.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPServices.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\adap.lookupDetailAdapter.js" />
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.js">
-      <DependentUpon>jquery_SPEasyForms.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.min.js">
-      <DependentUpon>jquery_SPEasyForms.js</DependentUpon>
-    </Content>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\MicrosoftAjax.js" />
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\ssw.js" />
     <Content Include="Elements\SPEasyFormsAssets\Css\images\SPEasyForms16x16.png" />
@@ -315,22 +311,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Elements\SPEasyFormsAssets\JavaScript\cont.columns.js" />
-    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery.SPEasyForms.min.js.map">
-      <DependentUpon>jquery.SPEasyForms.min.js</DependentUpon>
+    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery.bundle.min.js.map">
+      <DependentUpon>jquery.bundle.min.js</DependentUpon>
     </None>
-    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.js.bundle" />
-    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_bundle.min.js.map">
-      <DependentUpon>jquery_bundle.min.js</DependentUpon>
-    </None>
-    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.js.bundle">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Elements\SPEasyFormsAssets\JavaScript\jquery_SPEasyForms.min.js.map">
-      <DependentUpon>jquery_SPEasyForms.min.js</DependentUpon>
+    <None Include="Elements\SPEasyFormsAssets\JavaScript\jQuery.SPEasyForms.min.js.map">
+      <DependentUpon>jQuery.SPEasyForms.min.js</DependentUpon>
     </None>
     <None Include="Package\Build.bat" />
     <None Include="Package\CreateVerboseSettingsPage.ps1" />
-    <None Include="Package\jquery_SPEasyForms.min.js.map" />
     <None Include="Package\Package.ddf" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
