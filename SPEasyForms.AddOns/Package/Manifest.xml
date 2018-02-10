@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Solution xmlns="http://schemas.microsoft.com/sharepoint/"
-         SolutionId="eec95124-c174-4cf2-9978-25a37d3375a8" >
-    <FeatureManifests>
-        <FeatureManifest Location="SPEasyForms.AddOns\Feature.xml"/>
-    </FeatureManifests>
-</Solution>

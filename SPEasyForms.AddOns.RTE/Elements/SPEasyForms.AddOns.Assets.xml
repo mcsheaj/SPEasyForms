@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
-    <Module Name="SPEasyFormsAddOnsRTEAssets" Url="Style Library/SPEasyFormsAssets/AddOns/RTE.2015.00.01">
-        <File Path="RTEPatch.js" Url="RTEPatch.js" Type="GhostableInLibrary" IgnoreIfAlreadyExists="True" />
-    </Module>
-</Elements>
