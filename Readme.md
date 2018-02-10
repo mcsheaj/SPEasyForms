@@ -3,7 +3,9 @@
 ### Latest Release - 2015.01.07, fixed:
 
 [Issue 58: Error cannot call get_childDialog on undefined](https://github.com/mcsheaj/SPEasyForms/issues/58)
+
 [Issue 61: When attaching files it won't save on sites with Minimal Download Strategy (MDS) enabled](https://github.com/mcsheaj/SPEasyForms/issues/61)
+
 [Issue 63: Dialog explaining that old rich text fields are not supported does not work on SP 2013 or earlier](https://github.com/mcsheaj/SPEasyForms/issues/63)
 
 ##### Fixed in 2015.01.06:
@@ -17,22 +19,27 @@
 ##### Fixed in 2015.01.04:
 
 [Issue 52: SPEasyForms is unnecessarily invasive on forms for lists which have no configuration](https://speasyforms.codeplex.com/workitem/52)
+
 [Issue 53: Conflicts with PreSaveAction](https://speasyforms.codeplex.com/workitem/53)
 
 ##### Fixed in 2015.01.03:
 
 [Issue 49: Old Rich Text fields lose data (sometimes?)](https://speasyforms.codeplex.com/workitem/49)
+
 [Issue 50: Matches CurrentUser does not work in validation rules](https://speasyforms.codeplex.com/workitem/50)
 
 ##### Fixed in 2015.01.02:
 
 [Issue 44: jQuery-UI Theme is Loaded on All Pages](https://speasyforms.codeplex.com/workitem/44)
+
 [Issue 45: People Picker Required Fields Show 'You must specify a value' Message On Form Load (2010 only)](https://speasyforms.codeplex.com/workitem/45)
+
 [Issue 46: SharePoint 2010 forms do not submit](https://speasyforms.codeplex.com/workitem/46)
 
 ##### Fixed in 2015.01.01:
 
 [Issue 40: Themes do not work on a root site collection](https://speasyforms.codeplex.com/workitem/40)
+
 [Issue 41: 404 error for SPEasyFormsSiteSettings.aspx](https://speasyforms.codeplex.com/workitem/41)
 
 ##### What's new in v2015.01
