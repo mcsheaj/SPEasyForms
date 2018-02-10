@@ -79,6 +79,7 @@ The complete list of customizations supported, old and new, is now:
   - Star Rating Adapter (NEW!): can be applied to numeric fields. Fields are displayed as five stars and edited by clicking on one of the stars.
 
 *All comparison operators ignore case}
+
 ** All comparison operators except Matches/NotMatches will check if both operands are valid dates and use date comparison, check if both operands are valid numbers and use numeric comparison second, and lastly use string comparison
 
 Most of the things marked (NEW!) were actually released in the updates package to v2014.01. The Stack and Star Ratings Adapter are actually brand new.
