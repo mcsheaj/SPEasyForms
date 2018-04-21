@@ -313,7 +313,6 @@
                         url: $.spEasyForms.utilities.webRelativePathAsAbsolutePath("/_layouts/listform.aspx") +
                             "?PageType=6&ListId=" +
                             opt.listId +
-                            ($("#spEasyFormsContentTypeSelect").val() ? "&ContentTypeId=" + $("#spEasyFormsContentTypeSelect").val() : "") +
                             "&RootFolder=",
                         complete: function (xData) {
                             if (opt.listId === spContext.getCurrentListId(opt)) {

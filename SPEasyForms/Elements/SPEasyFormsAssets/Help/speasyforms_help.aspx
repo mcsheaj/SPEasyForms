@@ -329,7 +329,7 @@ Discussion Boards) and libraries. The things you can configure fall into
                     </ul>
                 </li>
             </ul>
-            <p>Most of the things marked <font color="#910000">(NEW!) </font><font color="#000000">were actually released in the updates package to v2014.01. The Stack and Star Ratings Adapter are actually brand new. Other than that, most of what’s changed in v2018.01 is:</font></p>
+            <p>Most of the things marked <font color="#910000">(NEW!) </font><font color="#000000">were actually released in the updates package to v2014.01. The Stack and Star Ratings Adapter are actually brand new. Other than that, most of what’s changed in v2015.01.01 is:</font></p>
             <ol>
                 <li>
                 Added a Client Side Rendering (CSR) hook to hide the form until SPEasyForms has done it’s work, making the page load less jumpy (SharePoint 2013/Online only). 
@@ -630,7 +630,7 @@ quietly).</td>
                     <tr>
                         <td valign="top" width="231"><a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532817">
                             <img title="image" alt="image" src="images/Download_097.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; border-top-width: 0px; margin-right: auto" border="0" height="77" width="57"></a></td>
-                        <td valign="top" width="366"><font color="#820000"><strong>New in 2018.01!</strong></font>Configure settings for this list, which currently means configure the jQuery UI theme for this list.</td>
+                        <td valign="top" width="366"><font color="#820000"><strong>New in 2015.01.01!</strong></font>Configure settings for this list, which currently means configure the jQuery UI theme for this list.</td>
                     </tr>
                     <tr>
                         <td valign="top" width="231">
@@ -962,7 +962,7 @@ interface.
             </p>
             <h3>2.1 Changing the Theme for a List</h3>
             <p>
-                With 2018.01, you can configure a different jQuery UI theme for each list. On the settings page, hit the Settings
+                With 2015.01.01 and later, you can configure a different jQuery UI theme for each list. On the settings page, hit the Settings
                 <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532829">
                     <img title="image" alt="image" src="images/Download_052.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="20" width="20"></a>
                 button. You will see a form that looks like:
@@ -1773,7 +1773,7 @@ link to it in the snippet container rich text editor.
             </ol>
             <h3>3.7 Stack</h3>
             <p>
-                The <strong>Stack</strong> container is new to 2018.01, and 
+                The <strong>Stack</strong> container is new to 2015.01.01, and 
 really wouldn’t have been useful in the previous version because there 
 were no nested containers, but with nested containers it can be useful.
             </p>
@@ -2859,7 +2859,7 @@ fields.
             <h2>6. Wrapping It Up</h2>
             <p>
                 Well, that’s it. I think I’ve now described all of the functionality 
-that will be included in the 2018.01 release. Hopefully somebody 
+that will be included in the 2015.01.01 release. Hopefully somebody 
 else finds it useful.
             </p>
             <p>
