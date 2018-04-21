@@ -437,9 +437,11 @@
                 }
             });
 
-            $.each(Object.keys($.spEasyForms.visibilityRuleCollection.stateHandlers), function (idx, name) {
-                $("#addVisibilityRuleState").append("<option>" + $.spEasyForms.utilities.titleCase(name) + "</option>");
-            });
+            if ($("#addVisibilityRuleState").find("option").length < 2) {
+                $.each(Object.keys($.spEasyForms.visibilityRuleCollection.stateHandlers), function (idx, name) {
+                    $("#addVisibilityRuleState").append("<option>" + $.spEasyForms.utilities.titleCase(name) + "</option>");
+                });
+            }
 
             $.each(Object.keys($.spEasyForms.visibilityRuleCollection.comparisonOperators), function (idx, name) {
                 $(".speasyforms-conditionaltype").append("<option>" + $.spEasyForms.utilities.titleCase(name) + "</option>");
