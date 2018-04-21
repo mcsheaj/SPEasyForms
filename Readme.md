@@ -1,6 +1,18 @@
 [Donload the latest release from https://speasyforms.intellipointsol.com](http://speasyforms.intellipointsol.com/sdm_downloads/speasyforms-2015-01-07/) 
 
-### Latest Release - 2015.01.07, fixed:
+### Latest Release is 2018.01:
+
+[Issue 59: Visibility based on the value of a field is only available for fields in the default content type](https://github.com/mcsheaj/SPEasyForms/issues/59)
+
+[Issue 68: Date / Time Field shows Date only in Read-Only mode on Edit Form (non en-us sites)](https://github.com/mcsheaj/SPEasyForms/issues/68)
+
+[Issue 69: Managed meta data in read only mode shows term and guid](https://github.com/mcsheaj/SPEasyForms/issues/69)
+
+[Issue 70: Add lists to an HTML Snippet Container causes the editor to come blank on subsequent page loads](https://github.com/mcsheaj/SPEasyForms/issues/70)
+
+[Issue 73: Fields in foreign lists do not load when the foreign list allows management of content types (affects cascading lookups, autocomplete, and lookup detail)](https://github.com/mcsheaj/SPEasyForms/issues/73)
+
+### Fixed in 2015.01.07:
 
 [Issue 58: Error cannot call get_childDialog on undefined](https://github.com/mcsheaj/SPEasyForms/issues/58)
 
