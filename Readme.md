@@ -1,6 +1,6 @@
 [Donload the latest release from https://speasyforms.intellipointsol.com](http://speasyforms.intellipointsol.com/sdm_downloads/speasyforms-2015-01-07/) 
 
-### Latest Release is 2018.01:
+### Latest Release is 2018.01, which fixes:
 
 [Issue 59: Visibility based on the value of a field is only available for fields in the default content type](https://github.com/mcsheaj/SPEasyForms/issues/59)
 
