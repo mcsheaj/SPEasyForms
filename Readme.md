@@ -1,4 +1,4 @@
-[Donload the latest release from https://speasyforms.intellipointsol.com](http://speasyforms.intellipointsol.com/sdm_downloads/speasyforms-2015-01-07/) 
+[Donload the latest release from https://speasyforms.intellipointsol.com](http://speasyforms.intellipointsol.com/sdm_downloads/speasyforms-2018-01/) 
 
 ### Latest Release is 2018.01, which fixes:
 
