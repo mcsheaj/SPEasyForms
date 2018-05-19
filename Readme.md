@@ -12,7 +12,7 @@
 
 [Issue 73: Fields in foreign lists do not load when the foreign list allows management of content types (affects cascading lookups, autocomplete, and lookup detail)](https://github.com/mcsheaj/SPEasyForms/issues/73)
 
-#### Fixed in 2015.01.07:
+##### Fixed in 2015.01.07:
 
 [Issue 58: Error cannot call get_childDialog on undefined](https://github.com/mcsheaj/SPEasyForms/issues/58)
 
