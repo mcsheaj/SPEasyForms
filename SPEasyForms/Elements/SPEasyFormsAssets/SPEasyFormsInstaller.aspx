@@ -69,8 +69,8 @@
                         ToolTipDescription=&quot;Settings page for configuring this list for SPEasyForms.&quot;
                         Id=&quot;Ribbon.List.Settings.Controls.SPEasyForms.Button&quot;
                         Command=&quot;Ribbon.List.Settings.Controls.SPEasyForms.Command&quot;
-                        Image32by32=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms32x32.png&quot;
-                        Image16by16=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms16x16.png&quot;
+                        Image32by32=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/Css/images/SPEasyForms32x32.png&quot;
+                        Image16by16=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/Css/images/SPEasyForms16x16.png&quot;
                         Sequence=&quot;10256&quot;
                         TemplateAlias=&quot;o1&quot;
                       /&gt;
@@ -83,8 +83,8 @@
                         ToolTipDescription=&quot;Settings page for configuring this list for SPEasyForms.&quot;
                         Id=&quot;Ribbon.List.Settings.Controls.SPEasyForms.Button&quot;
                         Command=&quot;Ribbon.List.Settings.Controls.SPEasyForms.Command&quot;
-                        Image32by32=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms32x32.png&quot;
-                        Image16by16=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms16x16.png&quot;
+                        Image32by32=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/Css/images/SPEasyForms32x32.png&quot;
+                        Image16by16=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/Css/images/SPEasyForms16x16.png&quot;
                         Sequence=&quot;10256&quot;
                         TemplateAlias=&quot;o1&quot;
                       /&gt;
@@ -97,8 +97,8 @@
                         ToolTipDescription=&quot;Settings page for configuring this list for SPEasyForms.&quot;
                         Id=&quot;Ribbon.List.Settings.Controls.SPEasyForms.Button&quot;
                         Command=&quot;Ribbon.List.Settings.Controls.SPEasyForms.Command&quot;
-                        Image32by32=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms32x32.png&quot;
-                        Image16by16=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/Css/images/SPEasyForms16x16.png&quot;
+                        Image32by32=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/Css/images/SPEasyForms32x32.png&quot;
+                        Image16by16=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/Css/images/SPEasyForms16x16.png&quot;
                         Sequence=&quot;10256&quot;
                         TemplateAlias=&quot;o1&quot;
                       /&gt;
@@ -109,9 +109,9 @@
                     Command=&quot;Ribbon.List.Settings.Controls.SPEasyForms.Command&quot;
                     CommandAction=&quot;javascript:goToSettingsPage();
                     function goToSettingsPage() {
-                        var page = &apos;/Style Library/SPEasyFormsAssets/2018.01/Pages/SPEasyFormsSettings.aspx?&apos;;
+                        var page = &apos;/Style Library/SPEasyFormsAssets/2018.02/Pages/SPEasyFormsSettings.aspx?&apos;;
                         if(spefjQuery.spEasyForms.defaults.verbose) {
-                            page = &apos;/Style Library/SPEasyFormsAssets/2018.01/Pages/SPEasyFormsSettingsVerbose.aspx?&apos;;
+                            page = &apos;/Style Library/SPEasyFormsAssets/2018.02/Pages/SPEasyFormsSettingsVerbose.aspx?&apos;;
                             page += &apos;spEasyFormsVerbose=true&amp;amp;&apos;;
                         }
                         if(_spPageContextInfo.siteServerRelativeUrl != &apos;/&apos;) {
@@ -130,12 +130,12 @@
     <div id='scriptLinksRelease'  style='display: none'>&lt;Elements xmlns=&quot;http://schemas.microsoft.com/sharepoint/&quot;&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/jquery.bundle.min.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/jquery.bundle.min.js&quot;
        Sequence=&quot;57150&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/jquery.SPEasyForms.min.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/jquery.SPEasyForms.min.js&quot;
        Sequence=&quot;57151&quot;
     /&gt;
     &lt;CustomAction
@@ -153,12 +153,12 @@
     <div id='scriptLinksDebug'  style='display: none'>&lt;Elements xmlns=&quot;http://schemas.microsoft.com/sharepoint/&quot;&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/jquery.bundle.min.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/jquery.bundle.min.js&quot;
        Sequence=&quot;57166&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/jquery.SPEasyFormsInstance.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/jquery.SPEasyFormsInstance.js&quot;
        Sequence=&quot;57171&quot;
     /&gt;
     &lt;CustomAction
@@ -168,122 +168,122 @@
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/utilities.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/utilities.js&quot;
        Sequence=&quot;57176&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/sharePointContext.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/sharePointContext.js&quot;
        Sequence=&quot;57181&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/sharePoinFieldRows.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/sharePoinFieldRows.js&quot;
        Sequence=&quot;57186&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/configManager.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/configManager.js&quot;
        Sequence=&quot;57191&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/containerCollection.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/containerCollection.js&quot;
        Sequence=&quot;57196&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/cont.defaultContainer.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/cont.defaultContainer.js&quot;
        Sequence=&quot;57201&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/cont.baseContainer.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/cont.baseContainer.js&quot;
        Sequence=&quot;57206&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/cont.fieldCollection.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/cont.fieldCollection.js&quot;
        Sequence=&quot;57207&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/cont.accordion.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/cont.accordion.js&quot;
        Sequence=&quot;57211&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/cont.columns.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/cont.columns.js&quot;
        Sequence=&quot;57216&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/cont.stack.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/cont.stack.js&quot;
        Sequence=&quot;57218&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/cont.tabs.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/cont.tabs.js&quot;
        Sequence=&quot;57221&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/cont.wizard.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/cont.wizard.js&quot;
        Sequence=&quot;57224&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/visibilityRuleCollection.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/visibilityRuleCollection.js&quot;
        Sequence=&quot;57226&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/adapterCollection.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/adapterCollection.js&quot;
        Sequence=&quot;57231&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/adap.autocompleteAdapter.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/adap.autocompleteAdapter.js&quot;
        Sequence=&quot;57236&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/adap.cascadingLookupAdapter.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/adap.cascadingLookupAdapter.js&quot;
        Sequence=&quot;57241&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/adap.defaultToCurrentUserAdapter.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/adap.defaultToCurrentUserAdapter.js&quot;
        Sequence=&quot;57243&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/adap.lookupDetailAdapter.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/adap.lookupDetailAdapter.js&quot;
        Sequence=&quot;57243&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/adap.starRatingAdapter.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/adap.starRatingAdapter.js&quot;
        Sequence=&quot;57244&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/jquery.cleditor.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/jquery.cleditor.js&quot;
        Sequence=&quot;57251&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/jquery.cleditor.sharepoint.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/jquery.cleditor.sharepoint.js&quot;
        Sequence=&quot;57261&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/jquery.cleditor.xhtml.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/jquery.cleditor.xhtml.js&quot;
        Sequence=&quot;57271&quot;
     /&gt;
     &lt;CustomAction
        Location=&quot;ScriptLink&quot;
-       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.01/JavaScript/cont.htmlSnippet.js&quot;
+       ScriptSrc=&quot;~sitecollection/Style Library/SPEasyFormsAssets/2018.02/JavaScript/cont.htmlSnippet.js&quot;
        Sequence=&quot;57281&quot;
     /&gt;
     &lt;CustomAction

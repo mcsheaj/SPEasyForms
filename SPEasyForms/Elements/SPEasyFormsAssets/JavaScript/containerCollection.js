@@ -236,18 +236,14 @@
         *********************************************************************/
         preSaveItem: function () {
             var opt = $.extend({}, $.spEasyForms.defaults);
-
-            if (!$.spEasyForms.adapterCollection.preSaveItem(opt)) {
-                this.highlightValidationErrors(opt);
-                return false;
-            }
+            var result = true;
 
             if (typeof (SPClientForms) !== 'undefined' &&
                 typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
                 typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
                 if (SPClientForms.ClientFormManager.SubmitClientForm(opt.formId)) {
                     this.highlightValidationErrors(opt);
-                    return false;
+                    result = false;
                 }
             }
             else {
@@ -256,7 +252,7 @@
 
             $.spEasyForms.utilities.resizeModalDialog();
 
-            return true;
+            return result;
         },
 
 
@@ -899,7 +895,7 @@
 
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.01/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.02/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });
