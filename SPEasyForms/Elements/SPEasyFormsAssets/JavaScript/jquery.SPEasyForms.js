@@ -17,7 +17,7 @@
 /* global spefjQuery:true, ssw, PreSaveItem:true, _spPageContextInfo, ssw_init, ExecuteOrDelayUntilScriptLoaded, SP, SPClientTemplates, RegisterModuleInit */
  
 // save a reference to our instance of jQuery just in case
-spefjQuery = jQuery.noConflict(true);
+//spefjQuery = jQuery.noConflict(true);
 
 /* jshint -W098 */
 function shouldSPEasyFormsRibbonButtonBeEnabled() {
@@ -30,6 +30,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 /* jshint +W098 */
 
 (function ($, undefined) {
+
+    if (typeof ($) === 'undefined')
+        return;
 
     function getScriptPath() {
         var scripts = document.getElementsByTagName('script');
@@ -730,7 +733,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     };
     var spEasyForms = $.spEasyForms;
 
-})(spefjQuery);
+})(typeof (spefjQuery) === 'undefined' ? undefined : spefjQuery);
+
 /*
  * SPEasyForms.utilites - general helper functions for SPEasyForms
  *

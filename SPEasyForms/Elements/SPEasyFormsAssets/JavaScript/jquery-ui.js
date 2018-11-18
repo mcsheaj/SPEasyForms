@@ -11,7 +11,7 @@
 	} else {
 
 		// Browser globals
-		factory( jQuery );
+		factory( spefjQuery );
 	}
 }(function( $ ) {
 /*!

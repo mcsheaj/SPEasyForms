@@ -22,6 +22,9 @@
 
 (function ($) {
 
+    if (typeof ($) === 'undefined')
+        return;
+
     "use strict";
 
     // Version info
@@ -4572,4 +4575,4 @@
     };
 
 
-})(jQuery);
+})(typeof (spefjQuery) === 'undefined' ? undefined : spefjQuery);

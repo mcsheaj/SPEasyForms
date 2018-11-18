@@ -64,7 +64,7 @@ var support = {};
 
 
 var
-	version = "1.11.3",
+	version = "1.11.3 for SPEasyForms",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -10316,21 +10316,20 @@ if ( typeof define === "function" && define.amd ) {
 
 
 
-
+/*
 var
 	// Map over jQuery in case of overwrite
 	_jQuery = window.jQuery,
 
 	// Map over the $ in case of overwrite
 	_$ = window.$;
+    */
+var _spefjQuery = window.spefjQuery;
 
-jQuery.noConflict = function( deep ) {
-	if ( window.$ === jQuery ) {
-		window.$ = _$;
-	}
+jQuery.noConflict = function (deep) {
 
-	if ( deep && window.jQuery === jQuery ) {
-		window.jQuery = _jQuery;
+    if (deep && window.spefjQuery === jQuery) {
+        window.spefjQuery = _spefjQuery;
 	}
 
 	return jQuery;
@@ -10340,7 +10339,7 @@ jQuery.noConflict = function( deep ) {
 // AMD (#7102#comment:10, https://github.com/jquery/jquery/pull/557)
 // and CommonJS for browser emulators (#13566)
 if ( typeof noGlobal === strundefined ) {
-	window.jQuery = window.$ = jQuery;
+    window.spefjQuery = jQuery;
 }
 
 
