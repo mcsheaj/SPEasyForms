@@ -6,7 +6,7 @@
 
 [Issue 79: jQuery.noconflict does not always resolve conflicts with other versions of jQuery loaded](https://github.com/mcsheaj/SPEasyForms/issues/79)
 
-### Fixed in 2018.02:
+#### Fixed in 2018.02:
 
 [Issue 75: Form is being submitted without any validation, SP2013 and Later](https://github.com/mcsheaj/SPEasyForms/issues/75)
 
