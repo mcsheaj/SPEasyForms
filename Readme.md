@@ -1,6 +1,11 @@
-[Donload the latest release from https://speasyforms.intellipointsol.com](http://speasyforms.intellipointsol.com/sdm_downloads/speasyforms-2018-01/) 
+[Donload the latest release from https://speasyforms.intellipointsol.com](http://speasyforms.intellipointsol.com/sdm_downloads/speasyforms-2018-03/) 
 
-### Latest Release is 2018.02, which fixes:
+### Latest Release is 2018.03, which fixes:
+
+[Issue 78: PreSaveAction does not get called on forms with SPEasyForms configuration](https://github.com/mcsheaj/SPEasyForms/issues/78)
+[Issue 79: jQuery.noconflict does not always resolve conflicts with other versions of jQuery loaded](https://github.com/mcsheaj/SPEasyForms/issues/79)
+
+### Fixed in 2018.02:
 
 [Issue 75: Form is being submitted without any validation, SP2013 and Later](https://github.com/mcsheaj/SPEasyForms/issues/75)
 
