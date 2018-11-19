@@ -40,7 +40,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (/jquery.speasyforms.*\.js/.test(scripts[i].src)) {
                 return scripts[i];
             }
-            return _spPageContextInfo.siteServerRelativeUrl + "/Style Library/SPEasyFormsAssets/2018.02/JavaSccript/jquery.SPEasyForms.min.js";
+            return _spPageContextInfo.siteServerRelativeUrl + "/Style Library/SPEasyFormsAssets/2018.03/JavaSccript/jquery.SPEasyForms.min.js";
         }
     }
 
@@ -120,7 +120,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
             initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
-            version: "2018.02",
+            version: "2018.03",
             jQueryUIGallery: ["lilac", "olive", "redmond", "salmon", "smoothness", "sunny"],
             loadDynamicStylesAlways: false
         },
@@ -462,37 +462,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $("td.ms-formlabel h3.ms-standardheader, td.ms-formlabel span.ms-standardheader").first().closest("table").addClass("ms-formtable");
             }
             $.spEasyForms.containerCollection.transform(opt);
-            // Override the core.js PreSaveItem function, to allow containers 
-            // and/or adapters to react to validation errors.
-            if (typeof (PreSaveItem) !== 'undefined') {
-                var originalPreSaveItem = PreSaveItem;
-                PreSaveItem = function () {
-                    var origResult = originalPreSaveItem();
-                    try {
-                        var ezResult = spefjQuery.spEasyForms.containerCollection.preSaveItem();
-                    } catch (e) { }
-                    return origResult && ezResult;
-                };
-            }
 
             if (_spPageContextInfo.webUIVersion === 4) {
                 $(".ui-widget input").css("font-size", "8pt");
             }
-            else {
-                // override the save button in 2013/O365 so validation 
-                // occurs before PreSaveAction, like it did in previous
-                // version of SharePoint
-                $("input[id$='_diidIOSaveItem']").each(function () {
-                    if (null !== this.getAttributeNode("onclick")) {
-                        var onSave = this.getAttributeNode("onclick").nodeValue;
-                        onSave = onSave.replace(
-                            "if (SPClientForms.ClientFormManager.SubmitClientForm('" + $.spEasyForms.defaults.formId + "')) return false;", "");
-                        var newOnSave = document.createAttribute('onclick');
-                        newOnSave.value = onSave;
-                        this.setAttributeNode(newOnSave);
-                    }
-                });
-            }
+
+            $("input[id$='_diidIOSaveItem']").each(function () {
+                if (null !== this.getAttributeNode("onclick")) {
+                    var onSave = this.getAttributeNode("onclick").nodeValue;
+                    onSave = onSave.replace(/return false;/g, "return spefjQuery.spEasyForms.containerCollection.postValidationAction();");
+                    var newOnSave = document.createAttribute('onclick');
+                    newOnSave.value = onSave;
+                    this.setAttributeNode(newOnSave);
+                }
+            });
         },
 
         /********************************************************************
@@ -550,7 +533,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (source.indexOf("start.aspx#") >= 0) {
                         source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                     }
-                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.02/Pages/SPEasyFormsSettings.aspx") +
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.03/Pages/SPEasyFormsSettings.aspx") +
                         "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
                         "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
                         "&Source=" + encodeURIComponent(source);
@@ -583,7 +566,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (source.indexOf("start.aspx#") >= 0) {
                         source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                     }
-                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.02/Pages/SPEasyFormsSiteSettings.aspx") +
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.03/Pages/SPEasyFormsSiteSettings.aspx") +
                         "?Source=" + encodeURIComponent(source);
                     var newItem = "<li class='ms-linksection-listItem'>" +
 	                    "<a title='Restore or permanently remove items that users have deleted on this site.' href='" + settings + "'>SPEasyForms</a>" +
@@ -623,7 +606,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         loadDynamicStyles: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2018.02/Css/jquery-ui-smoothness/jquery-ui.css";
+            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2018.03/Css/jquery-ui-smoothness/jquery-ui.css";
             var theme = this.replaceVariables(opt);
 
             // determine if the theme is set at the list or site level
@@ -2835,7 +2818,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     }
                 };
             }
-            opt.currentConfig.version = "2018.02";
+            opt.currentConfig.version = "2018.03";
             var newConfig = JSON.stringify(opt.currentConfig, null, 4);
             var oldConfig = $("#spEasyFormsJson pre").text();
             if (newConfig !== oldConfig) {
@@ -3125,37 +3108,24 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         /*********************************************************************
-        * Called on submit.  Overridden from core.js to allow containers to
-        * perform actions on submit (like highlight tabs with validation errors
+        * Called when validation errors occur on submit to 
+        * perform actions (like highlight tabs with validation errors
         * and select the first tab with validation errors).
         *
-        * @returns {bool} - true if the submit should proceed, false if it should
-        *     be cancelled.
+        * @returns {bool} - false // must be false or it will cause submit to fail
         *********************************************************************/
-        preSaveItem: function () {
+        postValidationAction: function () {
             var opt = $.extend({}, $.spEasyForms.defaults);
-            var result = true;
 
-            if (typeof (SPClientForms) !== 'undefined' &&
-                typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
-                typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
-                if (SPClientForms.ClientFormManager.SubmitClientForm(opt.formId)) {
-                    this.highlightValidationErrors(opt);
-                    result = false;
-                }
-            }
-            else {
-                return this.highlightValidationErrors(opt);
-            }
-
+            this.highlightValidationErrors(opt);
             $.spEasyForms.utilities.resizeModalDialog();
 
-            return result;
+            return false;
         },
 
 
         /*********************************************************************
-        * Helper to iterate containers and call their preSaveItem methods.
+        * Helper to iterate containers and call their postValidationAction methods.
         *********************************************************************/
         highlightValidationErrors: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -3174,9 +3144,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 containerType = $.spEasyForms.utilities.jsCase(layout.containerType);
                 if (containerType in containerCollection.containerImplementations) {
                     impl = containerCollection.containerImplementations[containerType];
-                    if (typeof (impl.preSaveItem) === 'function') {
+                    if (typeof (impl.postValidationAction) === 'function') {
                         opt.currentContainerLayout = layout;
-                        result = impl.preSaveItem(opt) && result;
+                        result = impl.postValidationAction(opt) && result;
                     }
                 }
                 return r;
@@ -3793,7 +3763,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
 
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.02/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.03/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });
@@ -4434,7 +4404,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
         },
 
-        preSaveItem: function (options) {
+        postValidationAction: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
             if (container.find("span[role='alert']").length > 0) {
@@ -4614,7 +4584,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
         },
 
-        preSaveItem: function (options) {
+        postValidationAction: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var index = opt.currentContainerLayout.index;
             var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
@@ -4717,7 +4687,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
         },
 
-        preSaveItem: function (options) {
+        postValidationAction: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var index = opt.currentContainerLayout.index;
             var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
@@ -4802,7 +4772,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         postTransform: function () { },
 
         // an opportunity to do validation tasks prior to committing an item
-        preSaveItem: function () { return true; },
+        postValidationAction: function () { return true; },
 
         // TBD need to update from here down for new design
         // draw the container in the properties pane of the settings page from the JSON
@@ -5034,7 +5004,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
         },
 
-        preSaveItem: function (options) {
+        postValidationAction: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var index = opt.currentContainerLayout.index;
             var container = $("div.speasyforms-container[data-containerindex='" + index + "']");
@@ -5161,7 +5131,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             }
         },
 
-        preSaveItem: function (options) {
+        postValidationAction: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
             var tabs = container.children("div.speasyforms-tabs");
@@ -5302,7 +5272,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         },
 
         // an opportunity to do validation tasks prior to committing an item
-        preSaveItem: function (options) {
+        postValidationAction: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             // check if there are validation errors on the container
             var outerDiv = $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index);
@@ -6593,17 +6563,6 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             $.each(adapterCollection.adapterImplementations, function (idx, impl) {
                 if ($.inArray(opt.spFieldType, impl.supportedTypes(opt)) >= 0) {
                     result.push(impl.type);
-                }
-            });
-            return result;
-        },
-
-        preSaveItem: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var result = true;
-            $.each(adapterCollection.adapterImplementations, function (idx, impl) {
-                if (typeof (impl.preSaveItem) === "function") {
-                    result = result && impl.preSaveItem(opt);
                 }
             });
             return result;
@@ -9084,7 +9043,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
     $.fn.sharePoint_Original_cleditor = $.fn.cleditor;
     $.fn.cleditor = function (options) {
         if (!cssLoaded) {
-            var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2018.02/Css/jquery.cleditor.css');
+            var css = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath('/Style Library/SPEasyFormsAssets/2018.03/Css/jquery.cleditor.css');
             $("head").append('<link rel="stylesheet" type="text/css" href="' + css + '">');
             cssLoaded = true;
         }

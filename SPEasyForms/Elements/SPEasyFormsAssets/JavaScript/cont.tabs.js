@@ -106,7 +106,7 @@
             }
         },
 
-        preSaveItem: function (options) {
+        postValidationAction: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
             var tabs = container.children("div.speasyforms-tabs");

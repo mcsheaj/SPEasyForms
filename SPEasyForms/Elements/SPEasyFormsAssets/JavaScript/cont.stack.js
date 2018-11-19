@@ -53,7 +53,7 @@
             }
         },
 
-        preSaveItem: function (options) {
+        postValidationAction: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var index = opt.currentContainerLayout.index;
             var container = $("div.speasyforms-container[data-containerindex='" + index + "']");

@@ -227,37 +227,24 @@
         },
 
         /*********************************************************************
-        * Called on submit.  Overridden from core.js to allow containers to
-        * perform actions on submit (like highlight tabs with validation errors
+        * Called when validation errors occur on submit to 
+        * perform actions (like highlight tabs with validation errors
         * and select the first tab with validation errors).
         *
-        * @returns {bool} - true if the submit should proceed, false if it should
-        *     be cancelled.
+        * @returns {bool} - false // must be false or it will cause submit to fail
         *********************************************************************/
-        preSaveItem: function () {
+        postValidationAction: function () {
             var opt = $.extend({}, $.spEasyForms.defaults);
-            var result = true;
 
-            if (typeof (SPClientForms) !== 'undefined' &&
-                typeof (SPClientForms.ClientFormManager) !== 'undefined' &&
-                typeof (SPClientForms.ClientFormManager.SubmitClientForm) === "function") {
-                if (SPClientForms.ClientFormManager.SubmitClientForm(opt.formId)) {
-                    this.highlightValidationErrors(opt);
-                    result = false;
-                }
-            }
-            else {
-                return this.highlightValidationErrors(opt);
-            }
-
+            this.highlightValidationErrors(opt);
             $.spEasyForms.utilities.resizeModalDialog();
 
-            return result;
+            return false;
         },
 
 
         /*********************************************************************
-        * Helper to iterate containers and call their preSaveItem methods.
+        * Helper to iterate containers and call their postValidationAction methods.
         *********************************************************************/
         highlightValidationErrors: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
@@ -276,9 +263,9 @@
                 containerType = $.spEasyForms.utilities.jsCase(layout.containerType);
                 if (containerType in containerCollection.containerImplementations) {
                     impl = containerCollection.containerImplementations[containerType];
-                    if (typeof (impl.preSaveItem) === 'function') {
+                    if (typeof (impl.postValidationAction) === 'function') {
                         opt.currentContainerLayout = layout;
-                        result = impl.preSaveItem(opt) && result;
+                        result = impl.postValidationAction(opt) && result;
                     }
                 }
                 return r;
@@ -895,7 +882,7 @@
 
             // wire the help button
             $("#spEasyFormsHelpLink").click(function () {
-                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.02/Help/speasyforms_help.aspx");
+                var helpFile = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.03/Help/speasyforms_help.aspx");
                 window.open(helpFile);
                 return false;
             });

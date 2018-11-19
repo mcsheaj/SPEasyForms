@@ -40,7 +40,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (/jquery.speasyforms.*\.js/.test(scripts[i].src)) {
                 return scripts[i];
             }
-            return _spPageContextInfo.siteServerRelativeUrl + "/Style Library/SPEasyFormsAssets/2018.02/JavaSccript/jquery.SPEasyForms.min.js";
+            return _spPageContextInfo.siteServerRelativeUrl + "/Style Library/SPEasyFormsAssets/2018.03/JavaSccript/jquery.SPEasyForms.min.js";
         }
     }
 
@@ -120,7 +120,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             // appends a table with a bunch of context info to the page body
             verbose: window.location.href.indexOf('spEasyFormsVerbose=true') >= 0,
             initAsync: window.location.href.indexOf('spEasyFormsAsync=false') < 0,
-            version: "2018.02",
+            version: "2018.03",
             jQueryUIGallery: ["lilac", "olive", "redmond", "salmon", "smoothness", "sunny"],
             loadDynamicStylesAlways: false
         },
@@ -462,37 +462,20 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                 $("td.ms-formlabel h3.ms-standardheader, td.ms-formlabel span.ms-standardheader").first().closest("table").addClass("ms-formtable");
             }
             $.spEasyForms.containerCollection.transform(opt);
-            // Override the core.js PreSaveItem function, to allow containers 
-            // and/or adapters to react to validation errors.
-            if (typeof (PreSaveItem) !== 'undefined') {
-                var originalPreSaveItem = PreSaveItem;
-                PreSaveItem = function () {
-                    var origResult = originalPreSaveItem();
-                    try {
-                        var ezResult = spefjQuery.spEasyForms.containerCollection.preSaveItem();
-                    } catch (e) { }
-                    return origResult && ezResult;
-                };
-            }
 
             if (_spPageContextInfo.webUIVersion === 4) {
                 $(".ui-widget input").css("font-size", "8pt");
             }
-            else {
-                // override the save button in 2013/O365 so validation 
-                // occurs before PreSaveAction, like it did in previous
-                // version of SharePoint
-                $("input[id$='_diidIOSaveItem']").each(function () {
-                    if (null !== this.getAttributeNode("onclick")) {
-                        var onSave = this.getAttributeNode("onclick").nodeValue;
-                        onSave = onSave.replace(
-                            "if (SPClientForms.ClientFormManager.SubmitClientForm('" + $.spEasyForms.defaults.formId + "')) return false;", "");
-                        var newOnSave = document.createAttribute('onclick');
-                        newOnSave.value = onSave;
-                        this.setAttributeNode(newOnSave);
-                    }
-                });
-            }
+
+            $("input[id$='_diidIOSaveItem']").each(function () {
+                if (null !== this.getAttributeNode("onclick")) {
+                    var onSave = this.getAttributeNode("onclick").nodeValue;
+                    onSave = onSave.replace(/return false;/g, "return spefjQuery.spEasyForms.containerCollection.postValidationAction();");
+                    var newOnSave = document.createAttribute('onclick');
+                    newOnSave.value = onSave;
+                    this.setAttributeNode(newOnSave);
+                }
+            });
         },
 
         /********************************************************************
@@ -550,7 +533,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (source.indexOf("start.aspx#") >= 0) {
                         source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                     }
-                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.02/Pages/SPEasyFormsSettings.aspx") +
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.03/Pages/SPEasyFormsSettings.aspx") +
                         "?ListId=" + $.spEasyForms.sharePointContext.getCurrentListId(opt) +
                         "&SiteUrl=" + $.spEasyForms.sharePointContext.getCurrentSiteUrl(opt) +
                         "&Source=" + encodeURIComponent(source);
@@ -583,7 +566,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     if (source.indexOf("start.aspx#") >= 0) {
                         source = $.spEasyForms.utilities.webRelativePathAsAbsolutePath(source.substring(source.indexOf('#') + 1));
                     }
-                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.02/Pages/SPEasyFormsSiteSettings.aspx") +
+                    var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.03/Pages/SPEasyFormsSiteSettings.aspx") +
                         "?Source=" + encodeURIComponent(source);
                     var newItem = "<li class='ms-linksection-listItem'>" +
 	                    "<a title='Restore or permanently remove items that users have deleted on this site.' href='" + settings + "'>SPEasyForms</a>" +
@@ -623,7 +606,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
         loadDynamicStyles: function (options) {
             var opt = $.extend({}, spEasyForms.defaults, options);
             opt.currentConfig = $.spEasyForms.configManager.get(opt);
-            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2018.02/Css/jquery-ui-smoothness/jquery-ui.css";
+            opt.source = "~sitecollection/Style Library/SPEasyFormsAssets/2018.03/Css/jquery-ui-smoothness/jquery-ui.css";
             var theme = this.replaceVariables(opt);
 
             // determine if the theme is set at the list or site level

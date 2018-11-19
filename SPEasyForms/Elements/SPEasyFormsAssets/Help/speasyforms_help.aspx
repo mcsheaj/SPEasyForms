@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <title>SPEasyForms Help</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <script type="text/javascript" src="../JavaScript/jquery.js"></script>
+    <script type="text/javascript" src="../JavaScript/jquery.bundle.min.js"></script>
     <style>
         html, body {
             margin: 0;
@@ -85,8 +85,6 @@
             }
     </style>
     <script type="text/javascript">
-        var helpQuery = jQuery.noConflict(true);
-
         (function ($, undefined) {
             $.spEasyFormsHelp = {
                 init: function () {
@@ -226,10 +224,10 @@
                     $(selector).height($(window).height());
                 });
             };
-        })(helpQuery);
+        })(spefjQuery);
 
-        helpQuery().ready(function () {
-            helpQuery.spEasyFormsHelp.init();
+        spefjQuery().ready(function () {
+            spefjQuery.spEasyFormsHelp.init();
         });
     </script>
 </head>
@@ -263,11 +261,11 @@ Discussion Boards) and libraries. The things you can configure fall into
                         Accordion - an implementation of jQueryUI Accordion 
                         <li>
                         Columns - the ability to put fields or containers into 2 or more columns instead of one per row (technically, one or more, but one column doesn't really buy you much) 
-                        <li>Stack <font color="#910000">(NEW!)</font>
+                        <li>Stack 
                             - allows you to stack 2 or more containers on top of each other, so you can put multiple containers onto a single tab or accordion page. 
-                        <li>Wizard <font color="#910000">(NEW!) </font>
+                        <li>Wizard 
                             - a specialty container that allows users to page through containers using next and previous buttons. 
-                        <li>HTML Snippet <font color="#910000">(NEW!) </font>- a specialty container, that doesn’t actually hold any fields, but allows you to inject arbitrary HTML into the page, including referencing external scripts and style sheets. </li>
+                        <li>HTML Snippet - a specialty container, that doesn’t actually hold any fields, but allows you to inject arbitrary HTML into the page, including referencing external scripts and style sheets. </li>
                     </ul>
                     <li>Conditional Visibility – conditionally format a field: 
                         <ul>
@@ -285,15 +283,15 @@ Discussion Boards) and libraries. The things you can configure fall into
                                             - matches a JavaScript regular expression 
                                             <li><strong>NotMatches</strong>
                                             - does not match a JavaScript regular expression 
-                                            <li><strong>GreaterThan</strong> <font color="#910000">(NEW!)</font>
+                                            <li><strong>GreaterThan</strong> 
                                                 - greater than a string literal 
-                                            <li><strong>GreaterThanOrEquals</strong> <font color="#910000">(NEW!)</font>
+                                            <li><strong>GreaterThanOrEquals</strong> 
                                                 - greater than or equals to a string literal 
-                                            <li><strong>LessThan</strong> <font color="#910000">(NEW!)</font>
+                                            <li><strong>LessThan</strong> 
                                                 - less than a string literal 
-                                            <li><strong>LessThanOrEquals</strong> <font color="#910000">(NEW!)</font>
+                                            <li><strong>LessThanOrEquals</strong> 
                                                 - less than or equals a string literal 
-                                            <li><strong>NotEquals</strong> <font color="#910000">(NEW!)</font>- is not equal to a string literal </li>
+                                            <li><strong>NotEquals</strong> - is not equal to a string literal </li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -311,7 +309,7 @@ Discussion Boards) and libraries. The things you can configure fall into
                             Hiding a field completely 
                             <li>
                             Making a field read-only 
-                            <li>Highlighting a field in one of four colors <font color="#910000">(NEW!) </font></li>
+                            <li>Highlighting a field in one of four colors </li>
                         </ul>
                     </li>
                 </ul>
@@ -321,15 +319,15 @@ Discussion Boards) and libraries. The things you can configure fall into
                         Cascading Look Ups - join two look up fields such that the values available in one look up are trimmed based on the value selected in another look up 
                         <li>
                         Autocomplete - provide type ahead functionality in a text field based on values pulled from a field in another list on the same site 
-                        <li>Lookup Detail <font color="#910000">(NEW!) </font>
+                        <li>Lookup Detail 
                             - allows you to pull in additional fields from a lookup list based on the value selected in a lookup field. 
-                        <li>Default to Current User <font color="#910000">(NEW!) </font>
+                        <li>Default to Current User 
                             - pre-populate a user field with the current user on the new form. 
-                        <li>Star Rating Adapter <font color="#910000">(NEW!) </font>- can be applied to numeric fields. Fields are displayed as five stars and edited by clicking on one of the stars. </li>
+                        <li>Star Rating Adapter - can be applied to numeric fields. Fields are displayed as five stars and edited by clicking on one of the stars. </li>
                     </ul>
                 </li>
             </ul>
-            <p>Most of the things marked <font color="#910000">(NEW!) </font><font color="#000000">were actually released in the updates package to v2014.01. The Stack and Star Ratings Adapter are actually brand new. Other than that, most of what’s changed in v2015.01.01 is:</font></p>
+            <p>As of version 2015+, most of what’s changed is:</font></p>
             <ol>
                 <li>
                 Added a Client Side Rendering (CSR) hook to hide the form until SPEasyForms has done it’s work, making the page load less jumpy (SharePoint 2013/Online only). 
@@ -398,7 +396,7 @@ force checkout on the Style Library before
  installation.
             </p>
             <p>
-                To get started, download the latest recommended release from <a href="https://speasyforms.codeplex.com/">https://speasyforms.codeplex.com</a> and follow these steps to install it:
+                To get started, download the latest recommended release from <a href="https://speasyforms.intellipointsol.com/">https://speasyforms.intellipointsol.com/</a> and follow these steps to install it:
             </p>
             <ol>
                 <li>Go to the root site of your site collection and go to <strong>Site Settings –&gt; Web Designer Galleries –&gt; Solutions</strong>.
@@ -416,7 +414,7 @@ the
                 <strong>Settings</strong> panel of the <strong>List, Library </strong>or <strong>Calendar</strong> ribbon labeled SPEasyForms:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532803">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532803">
                     <img title="image" alt="image" src="images/Download_102.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="234" width="604"></a>
             </p>
             <p>Click on the the icon and you should see the SPEasyForms Settings page, pictured in the next section.</p>
@@ -430,7 +428,7 @@ document with a troubleshooting section.
             </p>
             <h3>1.3 The List Settings Page</h3>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532805">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532805">
                     <img title="image" alt="image" src="images/Download_079.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="412" width="604"></a>
             </p>
             <p>The list settings page is pictured above. It is comprised of four parts:</p>
@@ -467,7 +465,7 @@ exposed through the following ribbon buttons:
                     <tr>
                         <td valign="top" width="215">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532807">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532807">
                                     <img title="image" alt="image" src="images/Download_067.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="77" width="44"></a>
                             </p>
                         </td>
@@ -478,7 +476,7 @@ file in the Site Assets library of the same site where the list resides.
                     <tr>
                         <td valign="top" width="221">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532995">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532995">
                                     <img title="image" alt="image" src="images/Download_036.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="78" width="53"></a>
                             </p>
                         </td>
@@ -487,7 +485,7 @@ discarding any uncommitted changes. If you do have uncommitted changes,
 you will be presented with a confirmation dialog.</td>
                     </tr>
                     <tr>
-                        <td valign="top" width="225"><a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532997">
+                        <td valign="top" width="225"><a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532997">
                             <br>
                             <img title="image" alt="image" src="images/Download_103.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; border-top-width: 0px; margin-right: auto" border="0" height="47" width="89"></a></td>
                         <td valign="top" width="370">If there are multiple content types for the
@@ -498,7 +496,7 @@ explained later.</td>
                     <tr>
                         <td valign="top" width="227">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532999">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532999">
                                     <img title="image" alt="image" src="images/Download_110.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="26" width="108"></a>
                             </p>
                         </td>
@@ -507,7 +505,7 @@ explained later.</td>
                     <tr>
                         <td valign="top" width="229">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533001">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533001">
                                     <img title="image" alt="image" src="images/Download_086.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="42" width="121"></a>
                             </p>
                         </td>
@@ -518,7 +516,7 @@ only enabled when you have undone at least one change.</td>
                     <tr>
                         <td valign="top" width="230">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532811">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532811">
                                     <img title="image" alt="image" src="images/Download_078.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="78" width="46"></a>
                             </p>
                         </td>
@@ -527,7 +525,7 @@ only enabled when you have undone at least one change.</td>
                     <tr>
                         <td valign="top" width="231">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532813">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532813">
                                     <img title="image" alt="image" src="images/Download_059.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="79" width="79"></a>
                             </p>
                         </td>
@@ -538,7 +536,7 @@ automatically when you add or edit conditional visibility rules.</td>
                     <tr>
                         <td valign="top" width="231">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533003">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533003">
                                     <img title="image" alt="image" src="images/Download_032.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="78" width="64"></a>
                             </p>
                         </td>
@@ -549,7 +547,7 @@ or edit field adapters.</td>
                     <tr>
                         <td valign="top" width="231">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533005">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533005">
                                     <img title="image" alt="image" src="images/Download_025.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="51" width="77"></a>
                             </p>
                         </td>
@@ -562,7 +560,7 @@ containers in the properties pane by double clicking
                     <tr>
                         <td valign="top" width="231">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532815">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532815">
                                     <img title="image" alt="image" src="images/Download_034.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="78" width="50"></a>
                             </p>
                         </td>
@@ -575,7 +573,7 @@ for the current list or you have uncommitted changes
                     <tr>
                         <td valign="top" width="231">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533007">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533007">
                                     <img title="image" alt="image" src="images/Download_015.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="78" width="52"></a>
                             </p>
                         </td>
@@ -594,7 +592,7 @@ configuration, but is not committed until you hit save and can be rolled
                             <p align="center">&nbsp;</p>
                             <p align="center">&nbsp;</p>
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533009">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533009">
                                     <img title="image" alt="image" src="images/Download_013.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="31" width="94"></a>
                             </p>
                         </td>
@@ -614,7 +612,7 @@ click on Clear Cache before continuing with SPEasyForms configuration.</td>
                             <p align="center">&nbsp;</p>
                             <p align="center">&nbsp;</p>
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533011">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533011">
                                     <img title="image" alt="image" src="images/Download_094.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="32" width="94"></a>
                             </p>
                         </td>
@@ -628,14 +626,14 @@ debug true, so they popup messages on errors (normally they fail
 quietly).</td>
                     </tr>
                     <tr>
-                        <td valign="top" width="231"><a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532817">
+                        <td valign="top" width="231"><a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532817">
                             <img title="image" alt="image" src="images/Download_097.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; border-top-width: 0px; margin-right: auto" border="0" height="77" width="57"></a></td>
-                        <td valign="top" width="366"><font color="#820000"><strong>New in 2015.01.01!</strong></font>Configure settings for this list, which currently means configure the jQuery UI theme for this list.</td>
+                        <td valign="top" width="366">Configure settings for this list, which currently means configure the jQuery UI theme for this list.</td>
                     </tr>
                     <tr>
                         <td valign="top" width="231">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533013">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533013">
                                     <img title="image" alt="image" src="images/Download_071.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="78" width="50"></a>
                             </p>
                         </td>
@@ -649,7 +647,7 @@ are also distributed under the MIT License (MIT) or are public domain.</td>
                     <tr>
                         <td valign="top" width="231">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533015">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533015">
                                     <img title="image" alt="image" src="images/Download_049.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="77" width="48"></a>
                             </p>
                         </td>
@@ -670,7 +668,7 @@ all of it’s children by double clicking on the
  container.
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532819">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532819">
                     <img title="image" alt="image" src="images/Download_061.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: left; padding-top: 0px; padding-left: 0px; margin: 10px 20px 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" align="left" border="0" height="472" width="404"></a>
             </p>
             <p>
@@ -734,7 +732,7 @@ right of what they configure or on the title of what they configure, and
                     <tr>
                         <td valign="top" width="139">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532821">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532821">
                                     <img title="image" alt="image" src="images/Download_040.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="31" width="28"></a>
                             </p>
                         </td>
@@ -744,7 +742,7 @@ right of what they configure or on the title of what they configure, and
                     <tr>
                         <td valign="top" width="141">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532823">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532823">
                                     <img title="image" alt="image" src="images/Download_106.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="34" width="28"></a>
                             </p>
                         </td>
@@ -756,7 +754,7 @@ right of what they configure or on the title of what they configure, and
                     <tr>
                         <td valign="top" width="141">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532825">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532825">
                                     <img title="image" alt="image" src="images/Download_082.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="32" width="28"></a>
                             </p>
                         </td>
@@ -766,7 +764,7 @@ right of what they configure or on the title of what they configure, and
                     <tr>
                         <td valign="top" width="141">
                             <p align="center">
-                                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532827">
+                                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532827">
                                     <img title="image" alt="image" src="images/Download_050.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="29" width="28"></a>
                             </p>
                         </td>
@@ -953,7 +951,7 @@ will look good on your site.
             </p>
             <p>
                 One of the common requests for version 
-2014.01 was how do I change the theme. The only way was to overwrite my 
+2014.01.x was how do I change the theme. The only way was to overwrite my 
 theme in the Style Library/SPEasyFormsAssets/Css
  directory, which changed the theme for every list in the site 
 collection. That's changed in the latest version. You can configure the default
@@ -962,27 +960,27 @@ interface.
             </p>
             <h3>2.1 Changing the Theme for a List</h3>
             <p>
-                With 2015.01.01 and later, you can configure a different jQuery UI theme for each list. On the settings page, hit the Settings
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532829">
+                With versions 2015+, you can configure a different jQuery UI theme for each list. On the settings page, hit the Settings
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532829">
                     <img title="image" alt="image" src="images/Download_052.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="20" width="20"></a>
                 button. You will see a form that looks like:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532831">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532831">
                     <img title="image" alt="image" src="images/Download_024.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="332" width="604"></a>
             </p>
             <p>If you click the <strong>Use Gallery Theme</strong> radio button, you’ll have a drop down of 6 themes included in the release:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532833">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532833">
                     <img title="image" alt="image" src="images/Download_109.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="236" width="604"></a>
             </p>
             <p>
-                Choose salmon, hit the apply theme button, and go to the form view <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532835">
+                Choose salmon, hit the apply theme button, and go to the form view <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532835">
                     <img title="image" alt="image" src="images/Download_085.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="19" width="20"></a>
                 and you’re interface should look something like this:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532837">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532837">
                     <img title="image" alt="image" src="images/Download_029.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="406" width="604"></a>
             </p>
             <p>
@@ -994,7 +992,7 @@ need to hit the Save button. Now if you go to
 something like:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532839">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532839">
                     <img title="image" alt="image" src="images/Download_105.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="713" width="604"></a>
             </p>
             <p>
@@ -1005,7 +1003,7 @@ more of a developer than a designer. That’s what
  the third radio button is for:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532841">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532841">
                     <img title="image" alt="image" src="images/Download_021.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="149" width="604"></a>
             </p>
             <p>
@@ -1045,7 +1043,7 @@ go to the site settings page of the root site for your site collection. Under th
 click the link that says SPEasyForms, and you should see the following page:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1538467">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1538467">
                     <img title="image" alt="image" src="images/Download_111.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="356" width="604"></a>
             </p>
             <p>
@@ -1058,7 +1056,7 @@ click the link that says SPEasyForms, and you should see the following page:
                 settings page for a list that isn’t configured to use a non-default theme I see:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532843">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532843">
                     <img title="image" alt="image" src="images/Download_048.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="356" width="604"></a>
             </p>
             <p>
@@ -1071,7 +1069,7 @@ actually reads this). Anyway, if I fix the path, clear the cache, and
 refresh the editor I get:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532845">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532845">
                     <img title="image" alt="image" src="images/Download_070.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="356" width="604"></a>
             </p>
             <p>Which is a bit more like what I was expecting.</p>
@@ -1152,7 +1150,7 @@ cascading look ups.
             </p>
             <p>Anyway, now that we have all of this stuff configured, go to the new form for an Employee:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533017">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533017">
                     <img title="image" alt="image" src="images/Download_022.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="841" width="604"></a>
             </p>
             <p>
@@ -1183,7 +1181,7 @@ doesn’t really gain you much). To add a columns container:
                 <li>Click the <strong>Add Container </strong>button. </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535791">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535791">
                     <img title="image" alt="image" src="images/Download_017.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="192" width="315"></a>
             </p>
             <ul>
@@ -1191,7 +1189,7 @@ doesn’t really gain you much). To add a columns container:
                 </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532849">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532849">
                     <img title="image" alt="image" src="images/Download_108.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="229" width="364"></a>
             </p>
             <p>
@@ -1217,7 +1215,7 @@ label the tabs, so they would be more significant.
             </p>
             <p>The settings page should now look like this:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532851">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532851">
                     <img title="image" alt="image" src="images/Download_084.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="406" width="604"></a>
             </p>
             <p>
@@ -1233,7 +1231,7 @@ end of this section.
                 In the properties pane, however, you’ll now see 2 containers, the 
 second one being a columns container with two empty field collections. 
 Once you have more than one container, you can reorder the containers 
-via drag and drop. In the picture to the right<a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532853"><img title="image" alt="image" src="images/Download_063.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: right; padding-top: 0px; padding-left: 0px; margin: 15px 0px 10px 20px; display: inline; padding-right: 0px; border-top-width: 0px" align="right" border="0" height="140" width="344"></a>
+via drag and drop. In the picture to the right<a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532853"><img title="image" alt="image" src="images/Download_063.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: right; padding-top: 0px; padding-left: 0px; margin: 15px 0px 10px 20px; display: inline; padding-right: 0px; border-top-width: 0px" align="right" border="0" height="140" width="344"></a>
                 I’ve dragged the columns container above the default form (after 
 collapsing all containers, I might have mentioned how to do that 
 earlier). The blue dashed box below the hovering container is called a 
@@ -1260,7 +1258,7 @@ drag and drop in a future version, but for now
  which my settings page looks like this:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532855">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532855">
                     <img title="image" alt="image" src="images/Download_041.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="406" width="604"></a>
             </p>
             <p>
@@ -1284,7 +1282,7 @@ dramatic lack of changes to the form. Once you’ve saved, the new form
 should look something like this:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533019">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533019">
                     <img title="image" alt="image" src="images/Download_005.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="564" width="604"></a>
             </p>
             <p>
@@ -1300,7 +1298,7 @@ four fields Code, SalesRegion, SalesDivision, and
  form and it should look something like:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533021">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533021">
                     <img title="image" alt="image" src="images/Download_031.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="492" width="604"></a>
             </p>
             <p>
@@ -1365,7 +1363,7 @@ column columns containers named
                 <strong>Address</strong> columns and the phone fields onto one of the <strong>Phone</strong> columns. When you’re finished, the editor should look something like this:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532857">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532857">
                     <img title="image" alt="image" src="images/Download_035.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="566" width="604"></a>
             </p>
             <p>
@@ -1378,12 +1376,12 @@ container and drag it right until I see the placeholder indent, and then
  to drag stuff onto it):
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532859">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532859">
                     <img title="image" alt="image" src="images/Download.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 15px auto; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="546" width="463"></a>
             </p>
             <p>Now do the same thing to the Phone container, and the editor should something look like:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532861">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532861">
                     <img title="image" alt="image" src="images/Download_087.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="566" width="604"></a>
             </p>
             <p>
@@ -1429,7 +1427,7 @@ follows with just two nested field collections with two fields each:
             </table>
             <p>Again, leave the HR content area empty. Once you've configured the accordion, the editor looks like:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532863">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532863">
                     <img title="image" alt="image" src="images/Download_064.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="619" width="604"></a>
             </p>
             <p>Now beauty is in the eye of the beholder, but I still think pretty is a stretch.</p>
@@ -1455,7 +1453,7 @@ form. Go ahead and go to the new form for your list and it should look
 like this (assuming you've saved your changes of course):
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532865">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532865">
                     <img title="image" alt="image" src="images/Download_026.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="524" width="604"></a>
             </p>
             <p>
@@ -1531,7 +1529,7 @@ Go back to the new Contact form and you will see
  should look something like this:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532867">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532867">
                     <img title="image" alt="image" src="images/Download_099.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="720" width="604"></a>
             </p>
             <p>With the following caveats:</p>
@@ -1572,7 +1570,7 @@ containers in SPEasyForms, it doesn’t contain fields, it just contains a
             </div>
             <div style="height: 20px"></div>
             <div>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532869">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532869">
                     <img title="image" alt="image" src="images/Download_100.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="951" width="604"></a>
             </div>
             <div style="height: 20px"></div>
@@ -1596,7 +1594,7 @@ know nothing about HTML, CSS, or JavaScript. To add an
                 </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532871">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532871">
                     <img title="image_thumb3_thumb" alt="image_thumb3_thumb" src="images/Download_075.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="240" width="604"></a>
             </p>
             <ul>
@@ -1608,45 +1606,45 @@ background colors it helps to create multiple divs
 is that many browsers will help you out and remove any empty divs 
 automatically.
                 </li>
-                <li>Now move the cursor back to the first line, hit the background color icon <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532873">
+                <li>Now move the cursor back to the first line, hit the background color icon <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532873">
                     <img title="image_thumb7_thumb" alt="image_thumb7_thumb" src="images/Download_056.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="23" width="25"></a>
                     (all of the buttons have a tooltip explaining what they do, some of 
 them even have shortcut keys), and select the darkest green:
                 </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532875">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532875">
                     <img title="image_thumb5_thumb" alt="image_thumb5_thumb" src="images/Download_028.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="238" width="604"></a>
             </p>
             <ul>
-                <li>Hit the <strong>Font Color</strong> icon <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532877">
+                <li>Hit the <strong>Font Color</strong> icon <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532877">
                     <img title="image_thumb10_thumb" alt="image_thumb10_thumb" src="images/Download_003.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="19" width="19"></a>
                     and select <strong>white</strong>. </li>
-                <li>Hit the <strong>Font </strong>icon <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532879">
+                <li>Hit the <strong>Font </strong>icon <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532879">
                     <img title="image_thumb8_thumb" alt="image_thumb8_thumb" src="images/Download_016.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="22" width="24"></a>
                     and select <strong>Comic Sans MS</strong>. </li>
-                <li>Hit the <strong>Font Size</strong> icon <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532881">
+                <li>Hit the <strong>Font Size</strong> icon <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532881">
                     <img title="image_thumb9_thumb" alt="image_thumb9_thumb" src="images/Download_043.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="20" width="26"></a>
                     and select <strong>6</strong>. </li>
-                <li>Hit the <strong>Bold</strong>&nbsp;<a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532883"><img title="image_thumb11_thumb" alt="image_thumb11_thumb" src="images/Download_066.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="17" width="18"></a>,
-                    <strong>Italic</strong> <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532885">
+                <li>Hit the <strong>Bold</strong>&nbsp;<a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532883"><img title="image_thumb11_thumb" alt="image_thumb11_thumb" src="images/Download_066.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="17" width="18"></a>,
+                    <strong>Italic</strong> <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532885">
                         <img title="image_thumb12_thumb" alt="image_thumb12_thumb" src="images/Download_090.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="17" width="13"></a>,
- and <strong>Center</strong>&nbsp;<a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532887"><img title="image_thumb13_thumb" alt="image_thumb13_thumb" src="images/Download_027.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="20" width="22"></a>
+ and <strong>Center</strong>&nbsp;<a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532887"><img title="image_thumb13_thumb" alt="image_thumb13_thumb" src="images/Download_027.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="20" width="22"></a>
                     icons. </li>
                 <li>Now type in <strong>Primary Fields</strong> and the editor should look something like:
                 </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532889">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532889">
                     <img title="image_thumb15_thumb" alt="image_thumb15_thumb" src="images/Download_055.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="238" width="604"></a>
             </p>
             <ul>
-                <li>Now move the cursor to the second line (or div), hit the background icon <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532891">
+                <li>Now move the cursor to the second line (or div), hit the background icon <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532891">
                     <img title="image_thumb16_thumb" alt="image_thumb16_thumb" src="images/Download_074.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="23" width="25"></a>,
  and select a lighter green, which gives you something like: </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532893">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532893">
                     <img title="image_thumb20_thumb" alt="image_thumb20_thumb" src="images/Download_058.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="237" width="604"></a>
             </p>
             <p>
@@ -1668,7 +1666,7 @@ you.
                 Now looking back at the original form picture at the top of this post, it’s a tad fancier than the one we just created.&nbsp;
             </div>
             <div>
-                To achieve this, I had to switch the editor to source mode <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532895">
+                To achieve this, I had to switch the editor to source mode <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532895">
                     <img title="image_thumb22_thumb" alt="image_thumb22_thumb" src="images/Download_072.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="23" width="21"></a>.
  The source code I ended up with looks like:
             </div>
@@ -1773,7 +1771,7 @@ link to it in the snippet container rich text editor.
             </ol>
             <h3>3.7 Stack</h3>
             <p>
-                The <strong>Stack</strong> container is new to 2015.01.01, and 
+                The <strong>Stack</strong> container is new to versions 2015+, and 
 really wouldn’t have been useful in the previous version because there 
 were no nested containers, but with nested containers it can be useful.
             </p>
@@ -1802,7 +1800,7 @@ container.
                     <strong>Basic Information</strong> stack. The stack should now look like this in the properties pane:</li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535808">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535808">
                     <img title="image" alt="image" src="images/Download_096.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 15px auto; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="207" width="290"></a>
             </p>
             <p>
@@ -1817,7 +1815,7 @@ already stacked on top of each other.
                 <li>Drag the <strong>Accordion</strong> container to the top of this stack. This stack should now look like this in the properties pane:</li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535810">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535810">
                     <img title="image" alt="image" src="images/Download_098.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 15px auto 10px; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="183" width="287"></a>
             </p>
             <ul>
@@ -1829,7 +1827,7 @@ already stacked on top of each other.
                 </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535812">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535812">
                     <img title="image" alt="image" src="images/Download_073.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 10px auto 20px; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="610" width="291"></a>
             </p>
             <p>
@@ -1838,12 +1836,12 @@ container stacks on them. If I save my configuration and go to the new
 form, it looks like:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535814">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535814">
                     <img title="image" alt="image" src="images/Download_053.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="266" width="604"></a>
             </p>
             <p>and if I click the <strong>Miscellaneous</strong> tab it looks like:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535816">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535816">
                     <img title="image" alt="image" src="images/Download_037.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="226" width="604"></a>
             </p>
             <p>
@@ -1876,12 +1874,12 @@ allows you to paginate a form so users can step through it.
 troubleshooting guides, etc. But when it came time to write this section
  I drew a blank on a good example, so I used a rather whimsical list 
 with a new form that looks like:
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535818">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535818">
                     <img title="image_thumb1" alt="image_thumb1" src="images/Download_042.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 20px 0px 10px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="220" width="604"></a>
             </p>
             <p>And I’m going to configure the <strong>Wizard</strong> container to have one page for each question, after which the SPEasyForms settings page looks like:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535820">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535820">
                     <img title="image" alt="image" src="images/Download_089.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 13px 0px 10px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="364" width="604"></a>
             </p>
             <p>
@@ -1890,17 +1888,17 @@ sub-containers on a page as you like. I just didn’t have a lot of fields
  so one per page works. Now when a user opens the new form, they see:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535822">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535822">
                     <img title="image_thumb5" alt="image_thumb5" src="images/Download_104.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 20px auto; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="274" width="512"></a>
             </p>
             <p>If they hit the next button and they’ll see:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535824">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535824">
                     <img title="image_thumb8" alt="image_thumb8" src="images/Download_020.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 20px auto; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="263" width="511"></a>
             </p>
             <p>If they keep hitting next until they get to the end they’ll see:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535826">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535826">
                     <img title="image_thumb10" alt="image_thumb10" src="images/Download_046.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 20px auto; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="261" width="509"></a>
             </p>
             <p>
@@ -1924,7 +1922,7 @@ branching logic, so if I add the following visibility
  rules to my SPEasyForms configuration:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535828">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535828">
                     <img title="image" alt="image" src="images/Download_092.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="84" width="604"></a>
             </p>
             <p>
@@ -1973,7 +1971,7 @@ these requirements and more.
                     <strong>Conditional Visibility Dialog</strong> for the field: </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533348">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533348">
                     <img title="image" alt="image" src="images/Download_011.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="149" width="604"></a>
             </p>
             <ul>
@@ -1983,7 +1981,7 @@ these requirements and more.
             <h3>4.1 Simple Rules</h3>
             <p>For a new rule, the <strong>Add/Edit Visibility Dialog</strong> comes up looking like this:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533025">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533025">
                     <img title="image" alt="image" src="images/Download_091.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px 11px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="242" width="604"></a>
             </p>
             <p>
@@ -1994,7 +1992,7 @@ Choose Hidden as the State and click the OK button.
  The Conditional Visibility Dialog now looks like this:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533350">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533350">
                     <img title="image" alt="image" src="images/Download_038.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="174" width="604"></a>
             </p>
             <p>
@@ -2032,7 +2030,7 @@ the most common use case for conditional visibility. To accomplish this,
  SharePoint groups and then create a rule using those groups, like so:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533029">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533029">
                     <img title="image" alt="image" src="images/Download_002.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="239" width="604"></a>
             </p>
             <p>
@@ -2077,7 +2075,7 @@ require multiple rules and we're still not ready
 something like:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533031">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533031">
                     <img title="image" alt="image" src="images/Download_088.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="239" width="604"></a>
             </p>
             <p>
@@ -2145,7 +2143,7 @@ conditions in a rule are
                 <strong>ANDed</strong> together, so:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533033">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533033">
                     <img title="image" alt="image" src="images/Download_065.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="256" width="604"></a>
             </p>
             <p>
@@ -2176,7 +2174,7 @@ previous sections, but it bears repeating succinctly and in one place to
             <h3>4.5 Multiple Rules for a Field and Precedence</h3>
             <p>Consider the following rules for the <strong>Full Name</strong> field:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533352">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533352">
                     <img title="image" alt="image" src="images/Download_057.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="212" width="604"></a>
             </p>
             <p>Rules are evaluated as follows:</p>
@@ -2197,7 +2195,7 @@ results, you need to reorder these rules like
  so (which you can do via drag and drop):
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533354">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533354">
                     <img title="image" alt="image" src="images/Download_081.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="212" width="604"></a>
             </p>
             <p>
@@ -2256,7 +2254,7 @@ operations, these requirements are not in the order in which they should
  really care about such technical details. The configuration for <strong>Job Title</strong> should look something like:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533356">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533356">
                     <img title="image" alt="image" src="images/Download_060.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="229" width="604"></a>
             </p>
             <p>
@@ -2275,7 +2273,7 @@ for yourself. If you configure the above rules
  for all four of the fields named above, the <strong>Conditional Visibility View</strong> will look like:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532897">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532897">
                     <img title="image" alt="image" src="images/Download_019.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="399" width="604"></a>
             </p>
             <p>
@@ -2303,7 +2301,7 @@ immediate.
                 Lets move on to the second set of requirements, starting with the field <strong>EmployeeId</strong>. The configuration for this field should look like:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533358">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533358">
                     <img title="image" alt="image" src="images/Download_047.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="212" width="604"></a>
             </p>
             <p>
@@ -2318,7 +2316,7 @@ fields like this and the
                 <strong>Configuration Visibility View</strong> should now look like this:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532899">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532899">
                     <img title="image" alt="image" src="images/Download_069.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px 11px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="596" width="604"></a>
             </p>
             <p>
@@ -2415,7 +2413,7 @@ applied to this field:
                 </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535840">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535840">
                     <img title="image" alt="image" src="images/Download_014.png" style="border-top: 0px; border-right: 0px; border-bottom: 0px; float: none; padding-top: 0px; padding-left: 0px; border-left: 0px; margin: 10px auto; display: block; padding-right: 0px" border="0" height="247" width="415"></a>
             </p>
             <ul>
@@ -2453,12 +2451,12 @@ our scenario, my requirement is going to be:
             </ul>
             <p>I’ve already created the <strong>JobTitles</strong> list and populated it, and it looks like this:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533045">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533045">
                     <img title="image" alt="image" src="images/Download_080.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="439" width="604"></a>
             </p>
             <p>So when I click on the shuffle icon button next to <strong>Job Title</strong> I am presented with the following dialog:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533047">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533047">
                     <img title="image" alt="image" src="images/Download_008.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 15px auto 16px; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="203" width="413"></a>
             </p>
             <p>
@@ -2479,7 +2477,7 @@ go back to the form and I should have Autocomplete functionality on the
                 <strong>Job Title</strong> field:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533049">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533049">
                     <img title="image" alt="image" src="images/Download_007.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="229" width="604"></a>
             </p>
             <p>
@@ -2527,15 +2525,15 @@ lets talk about the requirements for our scenario:
             </ul>
             <p>Pretty standard stuff in terms of cascading lookup requirements. The lookup lists look like:</p>
             <p align="center">
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533051">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533051">
                     <img title="image" alt="image" src="images/Download_033.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="218" width="244"></a>
             </p>
             <p align="center">
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533053">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533053">
                     <img title="image" alt="image" src="images/Download_009.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="360" width="244"></a>
             </p>
             <p align="center">
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533055">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533055">
                     <img title="image" alt="image" src="images/Download_077.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="413" width="244"></a>
             </p>
             <p align="left">
@@ -2578,7 +2576,7 @@ SalesDivision field). That brings up the
                 <strong>Cascading Lookup Dialog</strong>:
             </p>
             <p align="left">
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533057">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533057">
                     <img title="image" alt="image" src="images/Download_101.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 10px auto; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="301" width="511"></a>
             </p>
             <p align="left">
@@ -2590,7 +2588,7 @@ order to configure the rest, I first need to select
  after which the dialog looks like this:
             </p>
             <p align="left">
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533059">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533059">
                     <img title="image" alt="image" src="images/Download_107.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 10px auto; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="299" width="512"></a>
             </p>
             <p align="left">
@@ -2603,7 +2601,7 @@ names in the child form. If that were not true,
 SalesState cascading look up, and the form fields now look like:
             </p>
             <p align="center">
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533061">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533061">
                     <img title="image" alt="image" src="images/Download_023.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="73" width="450"></a>
             </p>
             <p align="left">
@@ -2612,7 +2610,7 @@ SalesDivision or SalesState. Select a SalesRegion, and SalesDivision
 gets appropriate options:
             </p>
             <p align="left">
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533063">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533063">
                     <img title="image" alt="image" src="images/Download_062.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 10px auto; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="126" width="461"></a>
             </p>
             <p>And if you configured SalesState correctly, select a SalesDivision and SalesState should have appropriate options.</p>
@@ -2622,7 +2620,7 @@ the dialog, blank out the relationship list control, and hit Ok.
             </p>
             <p>And that is all you need to know about cascading look ups. No really, no caveat.</p>
             <h3>5.3 Lookup Detail Adapter</h3>
-            <p>The lookup detail adapter was originally delivered as an AddOn to 2014.01, and provides the following functionality:</p>
+            <p>The lookup detail adapter was originally delivered as an AddOn to 2014.01.x, and provides the following functionality:</p>
             <ul>
                 <li>You can tie a field to another lookup field in the list and another column in the lookup list.
                 </li>
@@ -2648,12 +2646,12 @@ selected value of the lookup field in the list item changes.
                 An example of how this might be used is a poor man’s shopping cart. Say you had a list of inventory items that looks like:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532901">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532901">
                     <img title="image_thumb7" alt="image_thumb7" src="images/Download_093.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="383" width="599"></a>
             </p>
             <p>And you have a list named <strong>Cart</strong> whose new form looks like:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532903">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532903">
                     <img title="image_thumb11" alt="image_thumb11" src="images/Download_012.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="261" width="604"></a>
             </p>
             <p>
@@ -2688,12 +2686,12 @@ and <em>just don’t do that please</em>.
             </p>
             <p>So my initial SPEasyForms configuration looks like this:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533360">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533360">
                     <img title="image" alt="image" src="images/Download_039.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 9px 0px 10px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="394" width="604"></a>
             </p>
             <p>With the following visibility rule:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533362">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533362">
                     <img title="image" alt="image" src="images/Download_030.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px 11px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="82" width="604"></a>
             </p>
             <p>Now we’re ready to configure our Lookup Detail Adapters, so follow these steps to configure the Item field as a lookup detail:</p>
@@ -2701,14 +2699,14 @@ and <em>just don’t do that please</em>.
                 <li>Click the configure field control adapter button next to the Item field: </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533364">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533364">
                     <img title="image" alt="image" src="images/Download_004.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 10px auto 9px; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="292" width="470"></a>
             </p>
             <ul>
                 <li>Select <strong>Lookup Detail </strong>from the list of available adapters: </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535842">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535842">
                     <img title="image" alt="image" src="images/Download_054.png" style="border-top: 0px; border-right: 0px; border-bottom: 0px; float: none; padding-top: 0px; padding-left: 0px; border-left: 0px; margin: 10px auto; display: block; padding-right: 0px" border="0" height="247" width="415"></a>
             </p>
             <ul>
@@ -2717,7 +2715,7 @@ and <em>just don’t do that please</em>.
                 </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532913">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532913">
                     <img title="image_thumb21" alt="image_thumb21" src="images/Download_095.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="229" width="604"></a>
             </p>
             <ul>
@@ -2729,12 +2727,12 @@ and <em>just don’t do that please</em>.
                 <li>Now we’re done and the adapters should look like: </li>
             </ul>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533366">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533366">
                     <img title="image" alt="image" src="images/Download_006.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px 11px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="306" width="604"></a>
             </p>
             <p>Now if you go to the new form and select ‘<strong><em>Secrets of the Javascript Ninja</em></strong>’ on the left, it will fill in the inputs to the right like so:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1532917">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1532917">
                     <img title="image_thumb27" alt="image_thumb27" src="images/Download_051.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="278" width="604"></a>
             </p>
             <p>
@@ -2749,12 +2747,12 @@ only, you’ll need to configure conditional visibility rules
  separately, like so:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533368">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533368">
                     <img title="image" alt="image" src="images/Download_044.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="402" width="604"></a>
             </p>
             <p>Now if you go to the new form and select ‘<strong><em>Secrets of the Javascript Ninja</em></strong>’ on the left, it will fill in the inputs to the right and they’ll be read only like so:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533370">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533370">
                     <img title="image" alt="image" src="images/Download_045.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="302" width="604"></a>
             </p>
             <p>
@@ -2772,7 +2770,7 @@ SharePoint list item doesn’t work that way (although I
  to add an adapter, you get this dialog prompt:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533065">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533065">
                     <img title="image" alt="image" src="images/Download_083.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 15px auto; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="160" width="414"></a>
             </p>
             <p>
@@ -2791,7 +2789,7 @@ to configure as the default to current user
 this dialog prompt:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535832">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535832">
                     <img title="image" alt="image" src="images/Download_076.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; float: none; padding-top: 0px; padding-left: 0px; margin: 15px auto; display: block; padding-right: 0px; border-top-width: 0px" border="0" height="176" width="412"></a>
             </p>
             <p>
@@ -2804,12 +2802,12 @@ going to drag all three fields to the Rating field collection on the
 Miscellaneous tab, after which my editor should look like:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535834">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535834">
                     <img title="image" alt="image" src="images/Download_068.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="334" width="604"></a>
             </p>
             <p>If I save this and go to the new or edit form, the Miscellaneous tab now looks like:</p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1535836">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1535836">
                     <img title="image" alt="image" src="images/Download_010.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px 11px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="302" width="604"></a>
             </p>
             <p>
@@ -2826,7 +2824,7 @@ little to the left of the first star to change the rating to 0 stars
  in the previous sections, this view should look like this:
             </p>
             <p>
-                <a href="http://download-codeplex.sec.s-msft.com/Download?ProjectName=speasyforms&amp;DownloadId=1533372">
+                <a href="/Download?ProjectName=speasyforms&amp;DownloadId=1533372">
                     <img title="image" alt="image" src="images/Download_018.png" style="border-left-width: 0px; border-right-width: 0px; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; margin: 10px 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" height="314" width="604"></a>
             </p>
             <p>
@@ -2859,7 +2857,7 @@ fields.
             <h2>6. Wrapping It Up</h2>
             <p>
                 Well, that’s it. I think I’ve now described all of the functionality 
-that will be included in the 2015.01.01 release. Hopefully somebody 
+that is included in the current release. Hopefully somebody 
 else finds it useful.
             </p>
             <p>

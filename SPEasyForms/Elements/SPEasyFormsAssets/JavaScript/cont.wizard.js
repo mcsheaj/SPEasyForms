@@ -112,7 +112,7 @@
         },
 
         // an opportunity to do validation tasks prior to committing an item
-        preSaveItem: function (options) {
+        postValidationAction: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             // check if there are validation errors on the container
             var outerDiv = $("#spEasyFormsWizardDiv" + opt.currentContainerLayout.index);

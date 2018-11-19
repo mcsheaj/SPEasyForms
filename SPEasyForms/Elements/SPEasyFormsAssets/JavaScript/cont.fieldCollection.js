@@ -44,7 +44,7 @@
             }
         },
 
-        preSaveItem: function (options) {
+        postValidationAction: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var container = $("div.speasyforms-container[data-containerindex='" + opt.currentContainerLayout.index + "']");
             if (container.find("span[role='alert']").length > 0) {

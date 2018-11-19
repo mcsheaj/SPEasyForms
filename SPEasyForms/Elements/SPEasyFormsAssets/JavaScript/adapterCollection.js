@@ -162,17 +162,6 @@
             return result;
         },
 
-        preSaveItem: function (options) {
-            var opt = $.extend({}, $.spEasyForms.defaults, options);
-            var result = true;
-            $.each(adapterCollection.adapterImplementations, function (idx, impl) {
-                if (typeof (impl.preSaveItem) === "function") {
-                    result = result && impl.preSaveItem(opt);
-                }
-            });
-            return result;
-        },
-
         drawAdapter: function (options) {
             var opt = $.extend({}, $.spEasyForms.defaults, options);
             var displayName = opt.fieldName;
