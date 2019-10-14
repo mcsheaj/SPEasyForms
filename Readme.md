@@ -2,7 +2,7 @@
 
 Full documentation is available on [speasyforms.intellipointsol.com](https://speasyforms.intellipointsol.com/Help/speasyforms_help.html).
 
-### Latest Release is 2018.03, which fixes:
+### Latest Release is 2018.04, which fixes:
 
 [Issue 78: PreSaveAction does not get called on forms with SPEasyForms configuration](https://github.com/mcsheaj/SPEasyForms/issues/78)
 
