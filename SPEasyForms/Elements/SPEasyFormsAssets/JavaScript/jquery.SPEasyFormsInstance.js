@@ -15,7 +15,7 @@
  */
 
 /* global spefjQuery:true, ssw, PreSaveItem:true, _spPageContextInfo, ssw_init, ExecuteOrDelayUntilScriptLoaded, SP, SPClientTemplates, RegisterModuleInit */
- 
+
 // save a reference to our instance of jQuery just in case
 //spefjQuery = jQuery.noConflict(true);
 
@@ -270,9 +270,9 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         spEasyForms.toEditor(opt);
                     }
                 }
-                    /***
-                     * If it looks like a transformable form, try to transform it.
-                     ***/
+                /***
+                 * If it looks like a transformable form, try to transform it.
+                 ***/
                 else if (spEasyForms.isTransformable(opt)) {
                     spEasyForms.transform(opt);
                     if (_spPageContextInfo.webUIVersion === 4) {
@@ -291,15 +291,15 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                         });
                     }
                 }
-                    /***
-                     * If it looks like a transformable list settings page, insert an SPEasyForms list settings link.
-                     ***/
+                /***
+                 * If it looks like a transformable list settings page, insert an SPEasyForms list settings link.
+                 ***/
                 else if (spEasyForms.isConfigurableListSettings(opt)) {
                     spEasyForms.insertListSettingsLink(opt);
                 }
-                    /***
-                     * If it looks like a site settings page, insert an SPEasyForms site settings link.
-                     ***/
+                /***
+                 * If it looks like a site settings page, insert an SPEasyForms site settings link.
+                 ***/
                 else if (window.location.href.toLowerCase().indexOf("/settings.aspx") > 0) {
                     spEasyForms.insertSiteSettingsLink(opt);
                 }
@@ -419,7 +419,7 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if ($.spEasyForms.visibilityRuleCollection.getFormType(opt) === "new" && window.location.href.toLowerCase().indexOf("&type=1&") >= 0) {
                 return false;
             }
-                // if we're on any other form for a folder
+            // if we're on any other form for a folder
             else if (window.location.href.toLowerCase().indexOf("&contenttypeid=0x0120") >= 0) {
                 return false;
             }
@@ -445,6 +445,14 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
             if (opt.currentConfig.layout.def.length === 1 &&
                 $.isEmptyObject(opt.currentConfig.adapters.def) &&
                 $.isEmptyObject(opt.currentConfig.visibility.def)) {
+                var dlg = SP.UI.ModalDialog.get_childDialog();
+                if (dlg !== null) {
+                    setTimeout(function () {
+                        //if ($(".ms-formtable").css("display") === "none" || $("#spEasyFormsContainersPre").length > 0) {
+                        $.spEasyForms.utilities.resizeModalDialog();
+                        //}
+                    }, 3000);
+                }
                 return; // no configuration, get out of dodge
             }
             // convert all lookups to simple selects, only for 2010 and
@@ -569,8 +577,8 @@ function shouldSPEasyFormsRibbonButtonBeEnabled() {
                     var settings = $.spEasyForms.utilities.siteRelativePathAsAbsolutePath("/Style Library/SPEasyFormsAssets/2018.03/Pages/SPEasyFormsSiteSettings.aspx") +
                         "?Source=" + encodeURIComponent(source);
                     var newItem = "<li class='ms-linksection-listItem'>" +
-	                    "<a title='Restore or permanently remove items that users have deleted on this site.' href='" + settings + "'>SPEasyForms</a>" +
-		                "</li>";
+                        "<a title='Restore or permanently remove items that users have deleted on this site.' href='" + settings + "'>SPEasyForms</a>" +
+                        "</li>";
                     siteCollectionAdministrationList.append(newItem);
                 }
             }
